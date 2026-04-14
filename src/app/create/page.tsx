@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import TopNavBar from '@/components/TopNavBar';
 import BottomNavBar from '@/components/BottomNavBar';
 import { createContent } from '@/lib/db';
+import { supabase } from '@/lib/supabase';
 import type { ContentType } from '@/lib/types';
 
 export default function CreatePage() {
@@ -28,6 +29,8 @@ export default function CreatePage() {
   // Общие
   const [genres, setGenres] = useState('');
   const [submitted, setSubmitted] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState('');
 
   if (!user) {
     return (
@@ -129,6 +132,43 @@ export default function CreatePage() {
     }
   };
 
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Валидация размера (500КБ)
+    if (file.size > 500 * 1024) {
+      setUploadError('Файл слишком большой. Максимальный размер — 500КБ.');
+      return;
+    }
+
+    setUploading(true);
+    setUploadError('');
+
+    try {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${Math.random()}.${fileExt}`;
+      const filePath = `${user?.id}/${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('covers')
+        .upload(filePath, file);
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('covers')
+        .getPublicUrl(filePath);
+
+      setImageUrl(publicUrl);
+    } catch (err) {
+      console.error(err);
+      setUploadError('Ошибка при загрузке изображения.');
+    } finally {
+      setUploading(false);
+    }
+  };
+
   const inputClass = 'w-full px-4 py-3 rounded-xl bg-surface-container-low text-on-surface placeholder:text-on-surface-variant/50 focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all text-sm';
   const labelClass = 'block text-xs font-semibold text-on-surface-variant uppercase tracking-widest mb-2';
 
@@ -205,14 +245,75 @@ export default function CreatePage() {
             </div>
 
             <div>
-              <label className={labelClass}>Ссылка на обложку</label>
-              <input
-                type="url"
-                value={imageUrl}
-                onChange={e => setImageUrl(e.target.value)}
-                placeholder="https://example.com/image.jpg"
-                className={inputClass}
-              />
+              <label className={labelClass}>Обложка</label>
+              <div className="space-y-3">
+                {/* Выбор файла */}
+                <div className="relative group">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileUpload}
+                    className="hidden"
+                    id="cover-upload"
+                    disabled={uploading}
+                  />
+                  <label
+                    htmlFor="cover-upload"
+                    className={`flex items-center justify-center gap-2 w-full py-4 border-2 border-dashed rounded-xl cursor-pointer transition-all ${
+                      uploading 
+                        ? 'opacity-50 cursor-not-allowed border-primary/30' 
+                        : 'border-on-surface-variant/20 hover:border-primary/50 hover:bg-primary/5'
+                    }`}
+                  >
+                    {uploading ? (
+                      <div className="flex items-center gap-2">
+                        <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
+                        <span className="text-sm font-medium">Загрузка...</span>
+                      </div>
+                    ) : (
+                      <>
+                        <span className="material-symbols-outlined text-primary">upload_file</span>
+                        <span className="text-sm font-medium">Загрузить фото (макс. 500КБ)</span>
+                      </>
+                    )}
+                  </label>
+                </div>
+
+                {uploadError && (
+                  <p className="text-xs text-error font-medium px-1">{uploadError}</p>
+                )}
+
+                <div className="flex items-center gap-3">
+                  <div className="h-px bg-on-surface-variant/10 flex-1"></div>
+                  <span className="text-[10px] font-bold text-on-surface-variant uppercase tracking-tighter">или укажите URL</span>
+                  <div className="h-px bg-on-surface-variant/10 flex-1"></div>
+                </div>
+
+                <input
+                  type="url"
+                  value={imageUrl}
+                  onChange={e => setImageUrl(e.target.value)}
+                  placeholder="https://example.com/image.jpg"
+                  className={inputClass}
+                />
+
+                {imageUrl && (
+                  <div className="relative mt-2 rounded-xl overflow-hidden aspect-[2/3] max-w-[120px] bg-surface-container border border-on-surface-variant/10 group">
+                    <img 
+                      src={imageUrl} 
+                      alt="Preview" 
+                      className="w-full h-full object-cover"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setImageUrl('')}
+                      className="absolute top-1 right-1 w-6 h-6 bg-black/50 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                    >
+                      <span className="material-symbols-outlined text-[16px]">close</span>
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
 
             <div>
