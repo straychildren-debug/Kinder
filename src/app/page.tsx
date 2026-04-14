@@ -126,37 +126,16 @@ export default function Home() {
 
         {/* Боковая панель */}
           <aside className="md:col-span-4 space-y-12">
-            {/* Быстрое создание */}
-            {user && (
-              <Link
-                href="/create"
-                className="block bg-primary/5 hover:bg-primary/10 rounded-2xl p-6 transition-colors group"
-              >
-                <div className="flex items-center gap-4 mb-3">
-                  <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                    <span className="material-symbols-outlined text-primary">add_circle</span>
-                  </div>
-                  <div>
-                    <p className="font-bold text-sm">Добавить публикацию</p>
-                    <p className="text-xs text-on-surface-variant">Фильм или книгу</p>
-                  </div>
-                </div>
-                <p className="text-xs text-on-surface-variant leading-relaxed">
-                  Поделитесь с сообществом — ваша находка попадёт в ленту после модерации
-                </p>
-              </Link>
-            )}
-
             {/* Если не авторизован */}
             {!user && (
-              <div className="bg-surface-container-low rounded-2xl p-6 space-y-4">
-                <h3 className="text-lg font-semibold">Присоединяйтесь!</h3>
+              <div className="bg-surface-container-low rounded-2xl p-6 space-y-4 shadow-sm border border-outline-variant/5">
+                <h3 className="text-lg font-bold">Присоединяйтесь!</h3>
                 <p className="text-sm text-on-surface-variant leading-relaxed">
                   Войдите, чтобы создавать контент, оставлять рецензии и участвовать в рейтинге
                 </p>
                 <Link
                   href="/login"
-                  className="block w-full py-3 glass-btn text-white rounded-xl font-semibold text-center text-sm transition-transform active:scale-95"
+                  className="block w-full py-3.5 glass-btn text-white rounded-xl font-bold text-center text-sm transition-transform active:scale-95 shadow-lg shadow-primary/10"
                 >
                   Войти
                 </Link>

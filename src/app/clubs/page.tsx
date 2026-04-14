@@ -3,6 +3,13 @@ import TopNavBar from "@/components/TopNavBar";
 import BottomNavBar from "@/components/BottomNavBar";
 
 export default function Clubs() {
+  const [showToast, setShowToast] = React.useState(false);
+
+  const handleCreateClick = () => {
+    setShowToast(true);
+    setTimeout(() => setShowToast(false), 3000);
+  };
+
   return (
     <>
       <TopNavBar />
@@ -14,11 +21,22 @@ export default function Clubs() {
             <h1 className="text-5xl font-bold tracking-tight text-on-surface">Клубы</h1>
           </div>
           {/* FAB-style Glassmorphism Action */}
-          <button className="glass-action text-white px-6 py-3 rounded-xl flex items-center justify-center gap-2 shadow-xl shadow-primary/10 hover:scale-105 active:scale-95 transition-all">
+          <button 
+            onClick={handleCreateClick}
+            className="glass-action text-white px-6 py-3 rounded-xl flex items-center justify-center gap-2 shadow-xl shadow-primary/10 hover:scale-105 active:scale-95 transition-all"
+          >
             <span className="material-symbols-outlined">add_circle</span>
             <span className="font-semibold text-sm">Создать клуб</span>
           </button>
         </header>
+
+        {/* Плавающее уведомление */}
+        {showToast && (
+          <div className="fixed bottom-28 left-1/2 -translate-x-1/2 bg-surface-container-highest text-on-surface px-6 py-3 rounded-2xl shadow-2xl border border-primary/20 flex items-center gap-3 animate-in fade-in slide-in-from-bottom-4 duration-300 z-[100]">
+            <span className="material-symbols-outlined text-primary">info</span>
+            <span className="text-sm font-bold tracking-tight text-on-surface">Функционал создания клубов находится в разработке</span>
+          </div>
+        )}
 
         {/* Bento Grid Layout for Featured Clubs */}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-6 mb-12">
@@ -180,7 +198,12 @@ export default function Clubs() {
         <section className="mt-20 p-12 bg-surface-container-low rounded-3xl text-center">
           <h3 className="text-2xl font-bold mb-4">Не нашли то, что искали?</h3>
           <p className="text-on-surface-variant max-w-xl mx-auto mb-8 text-sm">Создайте собственное сообщество и пригласите единомышленников для обсуждения любимых произведений.</p>
-          <button className="bg-primary text-white px-10 py-4 rounded-xl font-bold hover:bg-primary-dim transition-all shadow-lg shadow-primary/20">Начать новое обсуждение</button>
+          <button 
+            onClick={handleCreateClick}
+            className="bg-primary text-white px-10 py-4 rounded-xl font-bold hover:bg-primary-dim transition-all shadow-lg shadow-primary/20"
+          >
+            Начать новое обсуждение
+          </button>
         </section>
       </main>
       <BottomNavBar activeTab="clubs" />
