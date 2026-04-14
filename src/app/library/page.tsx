@@ -31,11 +31,6 @@ export default function Library() {
               <h2 className="text-5xl md:text-6xl font-bold text-on-surface tracking-tighter leading-none mb-4">Библиотека смыслов</h2>
               <p className="text-on-surface-variant text-lg max-w-md">Курируемая подборка литературы, которая вдохновляет великое кино и меняет восприятие реальности.</p>
             </div>
-            {/* Glassmorphism Action Button */}
-            <button className="glass-button text-white px-8 py-4 rounded-xl flex items-center gap-3 transition-transform active:scale-95 shadow-lg shadow-primary/10">
-              <span className="material-symbols-outlined">add</span>
-              <span className="font-semibold tracking-tight">Добавить книгу</span>
-            </button>
           </div>
 
           {/* Bento Featured Grid */}

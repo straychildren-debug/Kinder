@@ -239,6 +239,14 @@ export default function CreatePage() {
     <>
       <TopNavBar />
       <main className="pt-24 pb-32 px-6 max-w-3xl mx-auto">
+        <button 
+          onClick={() => router.back()}
+          className="flex items-center gap-1 text-on-surface-variant hover:text-primary transition-colors mb-6 group"
+        >
+          <span className="material-symbols-outlined text-[20px] transition-transform group-hover:-translate-x-0.5">arrow_back</span>
+          <span className="text-sm font-semibold">Назад</span>
+        </button>
+
         <section className="mb-8">
           <span className="text-[10px] font-semibold uppercase tracking-widest text-on-surface-variant">Создание</span>
           <h2 className="text-3xl font-bold leading-tight tracking-tight mt-1">Добавить публикацию</h2>

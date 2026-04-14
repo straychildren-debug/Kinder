@@ -155,28 +155,49 @@ export default function Profile() {
                   </button>
                 </div>
               ) : (
-                <div className="space-y-4">
+                <div className="grid gap-4">
                   {userContent.map(item => (
-                    <div key={item.id} className="bg-surface-container-lowest rounded-2xl overflow-hidden flex shadow-sm">
-                      <div className="w-24 h-24 md:w-32 md:h-32 shrink-0">
-                        <img alt={item.title} className="w-full h-full object-cover" src={item.imageUrl} />
+                    <div key={item.id} className="bg-surface-container-lowest rounded-2xl overflow-hidden flex shadow-sm border border-outline-variant/5 hover:shadow-md transition-shadow">
+                      <div className="w-24 h-24 md:w-32 md:h-32 shrink-0 bg-surface-container flex items-center justify-center">
+                        {item.imageUrl ? (
+                          <img alt={item.title} className="w-full h-full object-cover" src={item.imageUrl} />
+                        ) : (
+                          <span className="material-symbols-outlined text-on-surface-variant/20 text-3xl">image</span>
+                        )}
                       </div>
-                      <div className="flex-1 p-4 flex flex-col justify-between">
-                        <div>
-                          <div className="flex items-center gap-2 mb-1">
-                            <h3 className="font-bold text-sm">{item.title}</h3>
-                            <span className={`text-[9px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full ${
+                      <div className="flex-1 p-4 md:p-6 flex flex-col justify-between min-w-0">
+                        <div className="space-y-1">
+                          <div className="flex flex-wrap items-start justify-between gap-2">
+                            <h3 className="font-bold text-sm md:text-base text-on-surface truncate pr-2 flex-1">{item.title}</h3>
+                            <span className={`text-[9px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full shrink-0 ${
                               item.status === 'approved' ? 'bg-green-100 text-green-700' :
                               item.status === 'pending' ? 'bg-amber-100 text-amber-700' :
+                              item.status === 'draft' ? 'bg-surface-container-high text-on-surface-variant' :
                               'bg-red-100 text-red-700'
                             }`}>
                               {item.status === 'approved' ? 'Опубликовано' :
-                               item.status === 'pending' ? 'На модерации' : 'Отклонено'}
+                               item.status === 'pending' ? 'На модерации' : 
+                               item.status === 'draft' ? 'Черновик' : 'Отклонено'}
                             </span>
                           </div>
-                          <p className="text-xs text-on-surface-variant line-clamp-2">{item.description}</p>
+                          <p className="text-xs text-on-surface-variant line-clamp-2 leading-relaxed">{item.description}</p>
                         </div>
-                        <span className="text-[10px] text-on-surface-variant">{new Date(item.createdAt).toLocaleDateString()}</span>
+                        <div className="flex items-center gap-3 mt-4">
+                          <div className="flex items-center gap-1.5 py-1 px-2 bg-surface-container rounded-lg">
+                            <span className="material-symbols-outlined text-[14px] text-on-surface-variant">calendar_today</span>
+                            <span className="text-[10px] font-bold text-on-surface-variant">{new Date(item.createdAt).toLocaleDateString()}</span>
+                          </div>
+                          {item.type && (
+                            <div className="flex items-center gap-1.5 py-1 px-2 bg-surface-container rounded-lg">
+                              <span className="material-symbols-outlined text-[14px] text-on-surface-variant">
+                                {item.type === 'movie' ? 'movie' : 'menu_book'}
+                              </span>
+                              <span className="text-[10px] font-bold text-on-surface-variant uppercase tracking-tighter">
+                                {item.type === 'movie' ? 'Фильм' : 'Книга'}
+                              </span>
+                            </div>
+                          )}
+                        </div>
                       </div>
                     </div>
                   ))}
