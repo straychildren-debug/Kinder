@@ -5,7 +5,7 @@ import BottomNavBar from "@/components/BottomNavBar";
 export default function BookDetails() {
   return (
     <>
-      <TopNavBar leftIcon="arrow_back" rightIcon="share" />
+      <TopNavBar />
       <main className="pt-24 pb-32 px-4 md:px-12 max-w-7xl mx-auto">
         {/* Hero Section: Book Details */}
         <section className="grid grid-cols-1 md:grid-cols-12 gap-12 items-start mb-20">

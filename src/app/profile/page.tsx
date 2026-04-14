@@ -1,46 +1,112 @@
+'use client';
+
 import React from "react";
 import TopNavBar from "@/components/TopNavBar";
 import BottomNavBar from "@/components/BottomNavBar";
+import { useAuth } from "@/components/AuthProvider";
+import { getContentByUser } from "@/lib/db";
+import { ContentItem } from "@/lib/types";
+import { useRouter } from "next/navigation";
 
 export default function Profile() {
+  const { user } = useAuth();
+  const router = useRouter();
+  const [userContent, setUserContent] = React.useState<ContentItem[]>([]);
+  const [loading, setLoading] = React.useState(true);
+
+  React.useEffect(() => {
+    async function load() {
+      if (user) {
+        const content = await getContentByUser(user.id);
+        setUserContent(content);
+      }
+      setLoading(false);
+    }
+    load();
+  }, [user]);
+
+  if (!user) {
+    return (
+      <>
+        <TopNavBar />
+        <main className="pt-24 pb-32 px-6 max-w-3xl mx-auto flex flex-col items-center justify-center min-h-[60vh] space-y-6">
+          <span className="material-symbols-outlined text-6xl text-on-surface-variant/30">person</span>
+          <h2 className="text-2xl font-bold">Войдите в аккаунт</h2>
+          <p className="text-on-surface-variant text-center">
+            Чтобы просматривать профиль, необходимо авторизоваться
+          </p>
+          <button
+            onClick={() => router.push('/login')}
+            className="px-8 py-3 glass-btn text-white rounded-xl font-semibold transition-transform active:scale-95"
+          >
+            Войти
+          </button>
+        </main>
+        <BottomNavBar />
+      </>
+    );
+  }
+
+  const approvedCount = userContent.filter(c => c.status === 'approved').length;
+  const pendingCount = userContent.filter(c => c.status === 'pending').length;
+
+  if (loading) {
+    return (
+      <>
+        <TopNavBar />
+        <main className="pt-24 pb-32 px-6 max-w-7xl mx-auto flex items-center justify-center min-h-[60vh]">
+          <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+        </main>
+        <BottomNavBar />
+      </>
+    );
+  }
+
   return (
     <>
       <TopNavBar />
       <main className="pt-24 pb-32 px-6 max-w-7xl mx-auto">
-        {/* Hero Section / User Profile */}
         <section className="grid grid-cols-1 md:grid-cols-12 gap-8 mb-16 items-start">
           <div className="md:col-span-4 flex flex-col items-center md:items-start space-y-6">
             <div className="relative group">
               <div className="w-48 h-48 rounded-3xl overflow-hidden shadow-2xl transition-transform duration-500 group-hover:scale-[1.02]">
-                <img
-                  alt="User Avatar"
-                  className="w-full h-full object-cover"
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuCCsGKGj36vgW6CPCQdpSQxlsEumutf5W60_C4V9oqOWrA5GjVy3KOfr7g65EJLTUNEZngqPXqdk3DLL-sYjp5C487YIDPG0QaiE88f3BKILJh41Hvj0oiMwRbEyJ8oGiv_2DMSrNn8U3N5lyXm9ZkQ1NO_PHtqp0dIO-eOueGZMlvoqGhAtdbU9ra9rM3J_4nIQAHLr25skNrQg8-crUygTgjz4O1dQVQ05ZLH1Nx2WaXfJ4q30sHVbdZjQqWef1m1lCA99uorZBgy"
-                />
+                {user.avatarUrl ? (
+                  <img alt={user.name} className="w-full h-full object-cover" src={user.avatarUrl} />
+                ) : (
+                  <div className="w-full h-full bg-primary/10 flex items-center justify-center text-5xl font-bold text-primary">
+                    {user.name.charAt(0)}
+                  </div>
+                )}
               </div>
-              <div className="absolute -bottom-2 -right-2 w-12 h-12 bg-surface-container-lowest rounded-2xl flex items-center justify-center shadow-lg">
-                <span className="material-symbols-outlined text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>verified</span>
-              </div>
+              {user.role !== 'user' && (
+                <div className="absolute -bottom-2 -right-2 w-12 h-12 bg-surface-container-lowest rounded-2xl flex items-center justify-center shadow-lg">
+                  <span className="material-symbols-outlined text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>verified</span>
+                </div>
+              )}
             </div>
             <div className="text-center md:text-left space-y-2">
-              <h1 className="text-3xl font-bold tracking-tight text-on-surface">Анастасия Волкова</h1>
-              <p className="text-on-surface-variant font-medium">Кинокритик и Библиофил</p>
+              <h1 className="text-3xl font-bold tracking-tight text-on-surface">{user.name}</h1>
+              <p className="text-on-surface-variant font-medium">{user.bio || user.email}</p>
+              {user.role !== 'user' && (
+                <span className="inline-block px-3 py-1 bg-primary/10 text-primary text-xs font-bold uppercase tracking-widest rounded-full">
+                  {user.role === 'admin' ? 'Администратор' : 'Модератор'}
+                </span>
+              )}
               <div className="flex items-center justify-center md:justify-start gap-4 pt-2">
                 <div className="text-center">
-                  <span className="block text-xl font-bold">142</span>
+                  <span className="block text-xl font-bold">{user.stats?.reviews || 0}</span>
                   <span className="text-[10px] uppercase tracking-widest text-on-surface-variant font-semibold">Рецензии</span>
                 </div>
                 <div className="text-center px-4 border-x border-outline-variant/20">
-                  <span className="block text-xl font-bold">2.4k</span>
+                  <span className="block text-xl font-bold">{user.stats?.followers || 0}</span>
                   <span className="text-[10px] uppercase tracking-widest text-on-surface-variant font-semibold">Подписчики</span>
                 </div>
                 <div className="text-center">
-                  <span className="block text-xl font-bold">89</span>
+                  <span className="block text-xl font-bold">{user.stats?.awards || 0}</span>
                   <span className="text-[10px] uppercase tracking-widest text-on-surface-variant font-semibold">Награды</span>
                 </div>
               </div>
             </div>
-            {/* Glassmorphism Edit Button */}
             <button className="w-full md:w-auto px-8 py-4 glass-action text-white rounded-xl font-semibold flex items-center justify-center gap-2 transition-transform active:scale-95 shadow-lg shadow-primary/20">
               <span className="material-symbols-outlined text-[20px]">edit</span>
               Редактировать профиль
@@ -48,128 +114,79 @@ export default function Profile() {
           </div>
 
           <div className="md:col-span-8 space-y-12">
-            {/* Achievements Bento */}
+            {/* Статистика активности */}
             <div>
-              <h2 className="text-[10px] uppercase tracking-[0.2em] font-bold text-on-surface-variant mb-6">Награды</h2>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                <div className="bg-surface-container-lowest p-6 rounded-xl space-y-4 transition-all hover:bg-white">
-                  <span className="material-symbols-outlined text-3xl text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>auto_awesome</span>
-                  <div>
-                    <h3 className="font-bold text-on-surface">Золотое перо</h3>
-                    <p className="text-xs text-on-surface-variant leading-relaxed">За 50+ детальных обзоров классики</p>
-                  </div>
+              <h2 className="text-[10px] uppercase tracking-[0.2em] font-bold text-on-surface-variant mb-6">Активность</h2>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="bg-surface-container-lowest p-5 rounded-xl text-center">
+                  <span className="block text-2xl font-bold">{userContent.length}</span>
+                  <span className="text-[10px] uppercase tracking-widest text-on-surface-variant font-semibold">Публикаций</span>
                 </div>
-                <div className="bg-surface-container-low p-6 rounded-xl space-y-4">
-                  <span className="material-symbols-outlined text-3xl text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>movie_filter</span>
-                  <div>
-                    <h3 className="font-bold text-on-surface">Киноман 2024</h3>
-                    <p className="text-xs text-on-surface-variant leading-relaxed">Просмотрено 100 фильмов за год</p>
-                  </div>
+                <div className="bg-surface-container-lowest p-5 rounded-xl text-center">
+                  <span className="block text-2xl font-bold">{approvedCount}</span>
+                  <span className="text-[10px] uppercase tracking-widest text-on-surface-variant font-semibold">Одобрено</span>
                 </div>
-                <div className="bg-surface-container-lowest p-6 rounded-xl space-y-4 col-span-2 md:col-span-1">
-                  <span className="material-symbols-outlined text-3xl text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>history_edu</span>
-                  <div>
-                    <h3 className="font-bold text-on-surface">Архивариус</h3>
-                    <p className="text-xs text-on-surface-variant leading-relaxed">Редкие находки немого кино</p>
-                  </div>
+                <div className="bg-surface-container-lowest p-5 rounded-xl text-center">
+                  <span className="block text-2xl font-bold">{pendingCount}</span>
+                  <span className="text-[10px] uppercase tracking-widest text-on-surface-variant font-semibold">На проверке</span>
+                </div>
+                <div className="bg-surface-container-lowest p-5 rounded-xl text-center">
+                  <span className="block text-2xl font-bold">{user.stats?.avgRating || 0}</span>
+                  <span className="text-[10px] uppercase tracking-widest text-on-surface-variant font-semibold">Ср. рейтинг</span>
                 </div>
               </div>
             </div>
 
-            {/* Reviews List */}
+            {/* Мои публикации */}
             <div className="space-y-8">
               <div className="flex justify-between items-end">
-                <h2 className="text-[10px] uppercase tracking-[0.2em] font-bold text-on-surface-variant">Мои рецензии</h2>
-                <span className="text-sm font-semibold text-primary">Показать все</span>
+                <h2 className="text-[10px] uppercase tracking-[0.2em] font-bold text-on-surface-variant">Мои публикации</h2>
               </div>
-              <div className="space-y-6">
-                {/* Review Card 1 */}
-                <div className="bg-surface-container-lowest rounded-2xl overflow-hidden flex flex-col md:flex-row shadow-sm">
-                  <div className="md:w-1/3 h-48 md:h-auto">
-                    <img
-                      alt="Movie Poster"
-                      className="w-full h-full object-cover"
-                      src="https://lh3.googleusercontent.com/aida-public/AB6AXuCB3RI_Wr6b1ecVojyUG3mVKrL0PhqwzNo5KjyW2jTMsJ2C8XsJRZK4p2NvUub3DJP4MNQmDQRACEClsqu9NhI0iWWokA9zZES96cZiO-8FHiRomGH8c2qMaA-AovaB9ZOoW3YK_26EhAaPpXkYBSQvGxIyn-bENaacETr5UlOaIK2v4-mZ8ZZjxYy0pddfGXOBPJeAnyMhH52Vn4hdfa-4pr0CyZsvSUyMNxOKTiXZKlFb7Mm0QIpZTXs9oeJlpAjMtX21Jq1IZQI9"
-                    />
-                  </div>
-                  <div className="md:w-2/3 p-8 flex flex-col justify-between space-y-6">
-                    <div className="space-y-4">
-                      <div className="flex justify-between items-start">
-                        <div>
-                          <h3 className="text-xl font-bold text-on-surface">Начало (2010)</h3>
-                          <p className="text-xs font-semibold text-primary uppercase tracking-widest mt-1">Фильм • Кристофер Нолан</p>
-                        </div>
-                        <div className="bg-secondary-container px-3 py-1 rounded-lg text-on-secondary-container font-bold flex items-center gap-1">
-                          <span>9.5</span>
-                          <span className="material-symbols-outlined text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
-                        </div>
-                      </div>
-                      <p className="text-on-surface-variant text-sm leading-relaxed italic">
-                        &quot;Глубокое погружение в архитектуру сновидений. Нолан мастерски сплетает уровни реальности, создавая не просто блокбастер, а интеллектуальный лабиринт...&quot;
-                      </p>
-                    </div>
-                    <div className="flex items-center justify-between pt-4 border-t border-outline-variant/10">
-                      <div className="flex items-center gap-4">
-                        <button className="flex items-center gap-1.5 text-on-surface-variant hover:text-primary transition-colors">
-                          <span className="material-symbols-outlined text-[20px]" style={{ fontVariationSettings: "'FILL' 1" }}>favorite</span>
-                          <span className="text-xs font-bold">1.2k</span>
-                        </button>
-                        <button className="flex items-center gap-1.5 text-on-surface-variant hover:text-primary transition-colors">
-                          <span className="material-symbols-outlined text-[20px]">chat_bubble</span>
-                          <span className="text-xs font-bold">45</span>
-                        </button>
-                      </div>
-                      <span className="text-[10px] text-on-surface-variant font-medium">Опубликовано 2 дня назад</span>
-                    </div>
-                  </div>
-                </div>
 
-                {/* Review Card 2 */}
-                <div className="bg-surface-container-lowest rounded-2xl overflow-hidden flex flex-col md:flex-row shadow-sm">
-                  <div className="md:w-1/3 h-48 md:h-auto">
-                    <img
-                      alt="Book Cover"
-                      className="w-full h-full object-cover"
-                      src="https://lh3.googleusercontent.com/aida-public/AB6AXuCzQuDOEEnGmglIaorywKmINTAFmtc8gBAdRSYjboOmRFwBoiElcirmLavLEhwMq6U76kjnntgiAsxdQCnQXQ0adO8SzlFp13oveUnGpV2CME1F-HczVveD-NMnrk4vjHlOoEK-W36O2h9FgVHt0T6jr-6wrM0oJAPeWfd2gbOg7xVWM1E9M7UI5UVroul2Rhkopwo59SpJ_mUutlYFFQVKcu-ic2H52rYi8Un48lBv9w1S0ozSoVM_0bIBT0dy7DvEvyJogNGQKS_X"
-                    />
-                  </div>
-                  <div className="md:w-2/3 p-8 flex flex-col justify-between space-y-6">
-                    <div className="space-y-4">
-                      <div className="flex justify-between items-start">
-                        <div>
-                          <h3 className="text-xl font-bold text-on-surface">Преступление и наказание</h3>
-                          <p className="text-xs font-semibold text-primary uppercase tracking-widest mt-1">Книга • Ф. Достоевский</p>
-                        </div>
-                        <div className="bg-secondary-container px-3 py-1 rounded-lg text-on-secondary-container font-bold flex items-center gap-1">
-                          <span>10</span>
-                          <span className="material-symbols-outlined text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
-                        </div>
-                      </div>
-                      <p className="text-on-surface-variant text-sm leading-relaxed italic">
-                        &quot;Психологическая бездна, в которую Достоевский заставляет нас заглянуть. Это не просто история убийства, а монументальное исследование человеческой совести...&quot;
-                      </p>
-                    </div>
-                    <div className="flex items-center justify-between pt-4 border-t border-outline-variant/10">
-                      <div className="flex items-center gap-4">
-                        <button className="flex items-center gap-1.5 text-on-surface-variant hover:text-primary transition-colors">
-                          <span className="material-symbols-outlined text-[20px]" style={{ fontVariationSettings: "'FILL' 1" }}>favorite</span>
-                          <span className="text-xs font-bold">856</span>
-                        </button>
-                        <button className="flex items-center gap-1.5 text-on-surface-variant hover:text-primary transition-colors">
-                          <span className="material-symbols-outlined text-[20px]">chat_bubble</span>
-                          <span className="text-xs font-bold">12</span>
-                        </button>
-                      </div>
-                      <span className="text-[10px] text-on-surface-variant font-medium">Опубликовано 1 неделю назад</span>
-                    </div>
-                  </div>
+              {userContent.length === 0 ? (
+                <div className="bg-surface-container-lowest rounded-2xl p-8 text-center space-y-4">
+                  <span className="material-symbols-outlined text-4xl text-on-surface-variant/20">library_add</span>
+                  <p className="text-on-surface-variant">У вас пока нет публикаций</p>
+                  <button
+                    onClick={() => router.push('/create')}
+                    className="px-6 py-2.5 glass-btn text-white rounded-xl font-semibold text-sm transition-transform active:scale-95"
+                  >
+                    Создать первую
+                  </button>
                 </div>
-              </div>
+              ) : (
+                <div className="space-y-4">
+                  {userContent.map(item => (
+                    <div key={item.id} className="bg-surface-container-lowest rounded-2xl overflow-hidden flex shadow-sm">
+                      <div className="w-24 h-24 md:w-32 md:h-32 shrink-0">
+                        <img alt={item.title} className="w-full h-full object-cover" src={item.imageUrl} />
+                      </div>
+                      <div className="flex-1 p-4 flex flex-col justify-between">
+                        <div>
+                          <div className="flex items-center gap-2 mb-1">
+                            <h3 className="font-bold text-sm">{item.title}</h3>
+                            <span className={`text-[9px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full ${
+                              item.status === 'approved' ? 'bg-green-100 text-green-700' :
+                              item.status === 'pending' ? 'bg-amber-100 text-amber-700' :
+                              'bg-red-100 text-red-700'
+                            }`}>
+                              {item.status === 'approved' ? 'Опубликовано' :
+                               item.status === 'pending' ? 'На модерации' : 'Отклонено'}
+                            </span>
+                          </div>
+                          <p className="text-xs text-on-surface-variant line-clamp-2">{item.description}</p>
+                        </div>
+                        <span className="text-[10px] text-on-surface-variant">{new Date(item.createdAt).toLocaleDateString()}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         </section>
       </main>
-      <BottomNavBar activeTab="profile" />
+      <BottomNavBar />
     </>
   );
 }

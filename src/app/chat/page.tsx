@@ -4,13 +4,7 @@ import TopNavBar from "@/components/TopNavBar";
 export default function Chat() {
   return (
     <>
-      <TopNavBar
-        title="Внутри клуба"
-        subtitle="Обсуждение: Дюна"
-        leftIcon="arrow_back"
-        rightIcon=""
-        avatarUrl="https://lh3.googleusercontent.com/aida-public/AB6AXuCfX9Amj0iiK2D4aRiZDhsWgBh9vuWkyIV4ql4QSxHI8o4eO6oEiH3j2SYh1Fi_o3_tJdjXW5N8NvBvRYmDxKk83l92gKbJXbS8HoRq-CnmbTg6HKmienlUpvOUiV_MdFomrGLs7enuuV_96cSxP0c-q0vrIH7g7CERpZrI6WZLkjAQYn2cd5PsPpBW6fGOi4zkQExNDlZ_aaiC_YK8q9ASGjVkuN06SEOxb0sgcnKyB5D9WPc7ryiR3dYB1DoWdI_PYpaajX1a-uGl"
-      />
+      <TopNavBar title="Внутри клуба" />
       <main className="pt-24 pb-32 px-4 max-w-2xl mx-auto min-h-screen">
         {/* Marathon Banner (Asymmetric Layout) */}
         <section className="mb-10 relative overflow-hidden rounded-xl bg-surface-container-low p-6 shadow-sm">

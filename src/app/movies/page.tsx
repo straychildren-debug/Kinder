@@ -1,13 +1,28 @@
-import React from "react";
+'use client';
+
+import React, { useEffect, useState } from "react";
 import TopNavBar from "@/components/TopNavBar";
 import BottomNavBar from "@/components/BottomNavBar";
+import { getApprovedContent } from "@/lib/db";
+import { ContentItem } from "@/lib/types";
 
 export default function Movies() {
+  const [movies, setMovies] = useState<ContentItem[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function load() {
+      const allContent = await getApprovedContent();
+      // To show "popular", could sort by rating if available, but for now just filter by movie type
+      setMovies(allContent.filter(c => c.type === 'movie'));
+      setLoading(false);
+    }
+    load();
+  }, []);
+
   return (
     <>
-      <TopNavBar
-        avatarUrl="https://lh3.googleusercontent.com/aida-public/AB6AXuDjylr903Ta97Jo3qG0aVvlHf91os-WtINXnq1ZQItqkXz29CYusE1v7QEXu05IBCun4WdAMSAiWdeh80ZsuG89wnPMT_jpzv13_UsuCoDx6B_wFRxOS7-ikdqaUzfC4RJyYZVs1kbiq1tfeNSUYUYdSFy3XsMl4DSzJpjOei6cgXk5zuMP69-dulNNJTcSzM_WFJhutU4xC5sxwJoXX9zsbWLhsaNmM73HXW-G7g3V7FMlRe4LUE8Tmqe7YGCRiIeys4ACN-p7LeVF"
-      />
+      <TopNavBar />
       <main className="pt-24 px-6 max-w-5xl mx-auto space-y-12 pb-24">
         {/* Hero Section: Curated Feature */}
         <section className="relative h-[450px] rounded-xl overflow-hidden shadow-2xl">
@@ -40,42 +55,39 @@ export default function Movies() {
               <span className="text-sm text-on-surface-variant font-medium cursor-pointer hover:text-primary transition-colors">Показать все</span>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
-              {/* Movie Card 1 */}
-              <div className="group cursor-pointer">
-                <div className="aspect-[2/3] rounded-lg overflow-hidden mb-4 bg-surface-container">
-                  <img
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                    alt="Movie"
-                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuBvIBvc6TAlSkHdVN61s0ZZzNTse-q7pE1qJP4IWg8uGUn7Fw3qiGk9E2Iya5hZgAAN_j1j6pgmOcalvw-hGAswtnhSauJ9hBKSmYjhQf7u1UUL9i1tqF6kj_Gplruq3q7Qijum_pQ6pY2ZXE-nQqy4PMlmzXwA2Vq_9iX__TqJJsfelagkYTrotepZEmwqrInZkI2k0NL-aIrto_1VwrKqE_9bc0LJs3aGenTZ8eTRbQoD2xen2ifVj0nCjIZZsJEWJYoFONrOmwER"
-                  />
-                </div>
-                <div className="flex justify-between items-start">
-                  <div>
-                    <h4 className="font-semibold text-lg">Оппенгеймер</h4>
-                    <p className="text-sm text-on-surface-variant">Кристофер Нолан</p>
+              {loading ? (
+                <div className="col-span-1 sm:col-span-2 flex justify-center p-12"><div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div></div>
+              ) : movies.length === 0 ? (
+                <p className="col-span-1 sm:col-span-2 text-on-surface-variant">Пока нет фильмов. Добавьте первый!</p>
+              ) : (
+                movies.slice(0, 4).map(movie => (
+                  <div key={movie.id} className="group cursor-pointer">
+                    <div className="aspect-[2/3] rounded-lg overflow-hidden mb-4 bg-surface-container">
+                      {movie.imageUrl ? (
+                        <img
+                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                          alt={movie.title}
+                          src={movie.imageUrl}
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center bg-surface-container border-2 border-dashed border-outline-variant/30 rounded-xl">
+                          <span className="material-symbols-outlined text-outline-variant">movie</span>
+                        </div>
+                      )}
+                    </div>
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <h4 className="font-semibold text-lg">{movie.title}</h4>
+                        <p className="text-sm text-on-surface-variant">{movie.author || 'Неизвестный режиссер'}</p>
+                      </div>
+                      {movie.rating && (
+                        <span className="bg-secondary-container px-2 py-0.5 rounded text-[11px] font-bold text-on-secondary-container">{movie.rating}</span>
+                      )}
+                    </div>
+                    <p className="text-[10px] mt-2 text-on-surface-variant/60 font-medium">Добавлено пользователем</p>
                   </div>
-                  <span className="bg-secondary-container px-2 py-0.5 rounded text-[11px] font-bold text-on-secondary-container">8.9</span>
-                </div>
-                <p className="text-[10px] mt-2 text-on-surface-variant/60 font-medium">Добавлено @kinoman_24</p>
-              </div>
-              {/* Movie Card 2 */}
-              <div className="group cursor-pointer">
-                <div className="aspect-[2/3] rounded-lg overflow-hidden mb-4 bg-surface-container">
-                  <img
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                    alt="Movie"
-                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuBFVYiXZNi90qh_jGpJE6JwgKNuiLbW1ZT6Wm6l9OJ2QWMvOjAAJq2xeQu1Pocc7p9mb_gyXsCL_K8KEiX0Svb5QOJmxtTSmX5gN6pvzpe1WgJUvgx19-lfUsFib7_cQJQzvEkBEmC86WZ_dI1iljl3-VibhNzhKz8-GlCRkLu4zSZRV6nqDLCUSTdtZ6h_m590BFDFXm1-NUwcbwqFULrFQ_DxLDUE89XmlgaqQfHBM48aZPH-GzxohkRJmXmWAzc8VtJ-TiZgm-ym"
-                  />
-                </div>
-                <div className="flex justify-between items-start">
-                  <div>
-                    <h4 className="font-semibold text-lg">Интерстеллар</h4>
-                    <p className="text-sm text-on-surface-variant">Кристофер Нолан</p>
-                  </div>
-                  <span className="bg-secondary-container px-2 py-0.5 rounded text-[11px] font-bold text-on-secondary-container">8.7</span>
-                </div>
-                <p className="text-[10px] mt-2 text-on-surface-variant/60 font-medium">Добавлено @book_worm</p>
-              </div>
+                ))
+              )}
             </div>
           </div>
 

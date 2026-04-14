@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import AuthProvider from "@/components/AuthProvider";
 
 export const metadata: Metadata = {
-  title: "The Cinematic Library",
-  description: "Community and Library for Film and Book Lovers",
+  title: "Кинотека — Сообщество кино и литературы",
+  description: "Создавайте, обсуждайте и делитесь рецензиями на фильмы и книги вместе с сообществом",
 };
 
 export default function RootLayout({
@@ -17,7 +18,9 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
         <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
       </head>
-      <body>{children}</body>
+      <body>
+        <AuthProvider>{children}</AuthProvider>
+      </body>
     </html>
   );
 }
