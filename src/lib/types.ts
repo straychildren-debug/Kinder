@@ -1,7 +1,7 @@
 // ===== Типы данных для приложения Kinder =====
 
 export type ContentType = 'book' | 'movie';
-export type ContentStatus = 'pending' | 'approved' | 'rejected';
+export type ContentStatus = 'draft' | 'pending' | 'approved' | 'rejected';
 
 export interface User {
   id: string;

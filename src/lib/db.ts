@@ -141,8 +141,34 @@ export async function createContent(content: Partial<ContentItem> & { createdBy:
   return mapContentItem(data);
 }
 
+// Функция для обновления контента (например, редактирования черновика)
+export async function updateContent(id: string, content: Partial<ContentItem>) {
+  const { title, type, description, imageUrl, status, createdBy, ...metadata } = content;
+
+  const updateData: any = {};
+  if (title !== undefined) updateData.title = title;
+  if (type !== undefined) updateData.type = type;
+  if (description !== undefined) updateData.description = description;
+  if (imageUrl !== undefined) updateData.image_url = imageUrl;
+  if (status !== undefined) updateData.status = status;
+  if (Object.keys(metadata).length > 0) updateData.metadata = metadata;
+
+  const { data, error } = await supabase
+    .from('content')
+    .update(updateData)
+    .eq('id', id)
+    .select()
+    .single();
+
+  if (error) {
+    console.error('Error updating content:', error);
+    throw error;
+  }
+  return mapContentItem(data);
+}
+
 // Функция для обновления статуса модератором
-export async function updateContentStatus(id: string, status: 'approved' | 'rejected') {
+export async function updateContentStatus(id: string, status: 'approved' | 'rejected' | 'draft') {
   const { data, error } = await supabase
     .from('content')
     .update({ status })

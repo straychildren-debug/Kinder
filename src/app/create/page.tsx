@@ -5,7 +5,7 @@ import { useAuth } from '@/components/AuthProvider';
 import { useRouter } from 'next/navigation';
 import TopNavBar from '@/components/TopNavBar';
 import BottomNavBar from '@/components/BottomNavBar';
-import { createContent } from '@/lib/db';
+import { createContent, updateContent } from '@/lib/db';
 import { supabase } from '@/lib/supabase';
 import type { ContentType } from '@/lib/types';
 
@@ -31,6 +31,9 @@ export default function CreatePage() {
   const [submitted, setSubmitted] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState('');
+  const [draftId, setDraftId] = useState<string | null>(null);
+  const [isSavingDraft, setIsSavingDraft] = useState(false);
+  const [draftSavedAt, setDraftSavedAt] = useState<Date | null>(null);
 
   if (!user) {
     return (
@@ -115,14 +118,21 @@ export default function CreatePage() {
             genre: parsedGenres 
           };
 
-      await createContent({
+      const contentData = {
         type,
-        title,
+        title: title || (type === 'movie' ? 'Без названия (фильм)' : 'Без названия (книга)'),
         description,
         imageUrl,
         createdBy: user.id,
-        ...metadata
-      });
+        ...metadata,
+        status: 'pending' as const
+      };
+
+      if (draftId) {
+        await updateContent(draftId, contentData);
+      } else {
+        await createContent(contentData);
+      }
       setSubmitted(true);
     } catch (err) {
       console.error(err);
@@ -166,6 +176,59 @@ export default function CreatePage() {
       setUploadError('Ошибка при загрузке изображения.');
     } finally {
       setUploading(false);
+    }
+  };
+
+  const handleSaveDraft = async () => {
+    if (!user) return;
+    setIsSavingDraft(true);
+    setErrorText('');
+    setDraftSavedAt(null);
+
+    try {
+      const parsedGenres = genres ? genres.split(',').map(s => s.trim()) : [];
+      
+      const metadata = type === 'movie' 
+        ? { 
+            director, 
+            actors: actors ? actors.split(',').map(s => s.trim()) : [], 
+            year: year ? parseInt(year) : undefined, 
+            duration, 
+            genre: parsedGenres 
+          }
+        : { 
+            author, 
+            pages: pages ? parseInt(pages) : undefined, 
+            publisher, 
+            isbn, 
+            genre: parsedGenres 
+          };
+
+      const contentData = {
+        type,
+        title: title || (type === 'movie' ? 'Черновик фильма' : 'Черновик книги'),
+        description,
+        imageUrl,
+        createdBy: user.id,
+        ...metadata,
+        status: 'draft' as const
+      };
+
+      if (draftId) {
+        await updateContent(draftId, contentData);
+      } else {
+        const newDraft = await createContent(contentData);
+        setDraftId(newDraft.id);
+      }
+      setDraftSavedAt(new Date());
+      
+      // Скрываем уведомление через 3 секунды
+      setTimeout(() => setDraftSavedAt(null), 3000);
+    } catch (err) {
+      console.error(err);
+      setErrorText('Ошибка при сохранении черновика.');
+    } finally {
+      setIsSavingDraft(false);
     }
   };
 
@@ -460,20 +523,46 @@ export default function CreatePage() {
             </div>
           )}
 
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className="w-full py-4 glass-btn text-white rounded-xl font-semibold text-base flex items-center justify-center gap-2 transition-transform active:scale-95 shadow-lg shadow-primary/20 disabled:opacity-50"
-          >
-            {isSubmitting ? (
-              <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-            ) : (
-              <>
-                <span className="material-symbols-outlined">send</span>
-                Отправить на модерацию
-              </>
-            )}
-          </button>
+          <div className="flex flex-col sm:flex-row gap-3">
+            <button
+              type="button"
+              onClick={handleSaveDraft}
+              disabled={isSubmitting || isSavingDraft}
+              className="flex-1 py-4 bg-surface-container-high text-on-surface rounded-xl font-semibold text-base flex items-center justify-center gap-2 transition-transform active:scale-95 disabled:opacity-50"
+            >
+              {isSavingDraft ? (
+                <div className="w-5 h-5 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
+              ) : (
+                <>
+                  <span className="material-symbols-outlined">save</span>
+                  Сохранить черновик
+                </>
+              )}
+            </button>
+
+            <button
+              type="submit"
+              disabled={isSubmitting || isSavingDraft}
+              className="flex-[2] py-4 glass-btn text-white rounded-xl font-semibold text-base flex items-center justify-center gap-2 transition-transform active:scale-95 shadow-lg shadow-primary/20 disabled:opacity-50"
+            >
+              {isSubmitting ? (
+                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+              ) : (
+                <>
+                  <span className="material-symbols-outlined">send</span>
+                  Отправить на модерацию
+                </>
+              )}
+            </button>
+          </div>
+
+          {/* Плавающее уведомление о сохранении черновика */}
+          {draftSavedAt && (
+            <div className="fixed bottom-28 left-1/2 -translate-x-1/2 bg-surface-container-high text-on-surface px-4 py-2 rounded-full shadow-lg border border-primary/20 flex items-center gap-2 animate-in fade-in slide-in-from-bottom-4 duration-300 z-50">
+              <span className="material-symbols-outlined text-primary text-sm">check_circle</span>
+              <span className="text-xs font-medium">Черновик сохранён в {draftSavedAt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+            </div>
+          )}
         </form>
       </main>
       <BottomNavBar />
