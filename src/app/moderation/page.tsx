@@ -17,7 +17,7 @@ export default function ModerationPage() {
 
   useEffect(() => {
     async function load() {
-      if (user && (user.role === 'moderator' || user.role === 'admin')) {
+      if (user && (user.role === 'moderator' || user.role === 'admin' || user.role === 'superadmin')) {
         const items = await getPendingContent();
         setPendingItems(items);
       }
@@ -26,7 +26,7 @@ export default function ModerationPage() {
     load();
   }, [user]);
 
-  if (!user || (user.role !== 'moderator' && user.role !== 'admin')) {
+  if (!user || (user.role !== 'moderator' && user.role !== 'admin' && user.role !== 'superadmin')) {
     return (
       <>
         <TopNavBar />

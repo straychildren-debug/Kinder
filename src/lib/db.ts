@@ -57,6 +57,42 @@ export async function getUsersRanked(): Promise<User[]> {
   });
 }
 
+export async function searchProfiles(query: string): Promise<User[]> {
+  const { data, error } = await supabase
+    .from('profiles')
+    .select('*')
+    .or(`name.ilike.%${query}%,email.ilike.%${query}%`)
+    .limit(20);
+
+  if (error || !data) {
+    console.error('Error searching profiles:', error);
+    return [];
+  }
+
+  return data.map(d => ({
+    id: d.id,
+    name: d.name,
+    email: d.email,
+    avatarUrl: d.avatar_url,
+    bio: d.bio,
+    role: d.role,
+    stats: d.stats,
+    joinedAt: d.joined_at,
+  }));
+}
+
+export async function updateUserRole(userId: string, role: string): Promise<void> {
+  const { error } = await supabase
+    .from('profiles')
+    .update({ role })
+    .eq('id', userId);
+
+  if (error) {
+    console.error('Error updating user role:', error);
+    throw error;
+  }
+}
+
 // ===== Контент =====
 
 function mapContentItem(row: any): ContentItem {

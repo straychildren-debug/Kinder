@@ -263,6 +263,8 @@ export default function ClubDetail() {
   };
 
   const isOwnerOrAdmin = membership?.role === 'owner' || membership?.role === 'admin';
+  const isGlobalManager = user?.role === 'admin' || user?.role === 'superadmin';
+  const canDeleteMessages = isOwnerOrAdmin || isGlobalManager;
 
   // Loading state
   if (loading) {
@@ -488,7 +490,7 @@ export default function ClubDetail() {
                         <span className="text-[10px] font-medium text-outline-variant">
                           {formatTime(msg.createdAt)}
                         </span>
-                        {(isMine || isOwnerOrAdmin) && (
+                        {(isMine || canDeleteMessages) && (
                           <button
                             onClick={() => handleDeleteMessage(msg.id)}
                             className="text-[10px] font-bold text-error/40 hover:text-error transition-colors"

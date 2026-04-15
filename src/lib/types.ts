@@ -9,7 +9,7 @@ export interface User {
   email: string;
   avatarUrl: string;
   bio: string;
-  role: 'user' | 'moderator' | 'admin';
+  role: 'user' | 'moderator' | 'admin' | 'superadmin';
   stats: {
     publications: number;
     reviews: number;

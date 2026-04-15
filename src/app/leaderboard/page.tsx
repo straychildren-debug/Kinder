@@ -62,7 +62,9 @@ export default function Leaderboard() {
                       <h3 className="text-2xl font-semibold mb-1">{top3[0].name}</h3>
                       <div className="flex items-center gap-2 text-on-surface-variant">
                         <span className="material-symbols-outlined text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>verified</span>
-                        <span className="text-sm font-medium">{top3[0].role === 'admin' ? 'Администратор' : 'Ведущий критик'}</span>
+                        <span className="text-sm font-medium">
+                          {top3[0].role === 'superadmin' ? 'Суперадмин' : top3[0].role === 'admin' ? 'Администратор' : 'Ведущий критик'}
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -159,7 +161,12 @@ export default function Leaderboard() {
                     <div>
                       <p className="font-medium text-sm">{user.name}</p>
                       <div className="flex gap-1 mt-1">
-                        <span className="bg-tertiary-container text-[9px] px-1.5 py-0.5 rounded text-on-tertiary-container font-bold uppercase">{user.role}</span>
+                        <span className={`text-[9px] px-1.5 py-0.5 rounded font-bold uppercase ${
+                          user.role === 'superadmin' ? 'bg-purple-100 text-purple-700' : 
+                          user.role === 'admin' ? 'bg-blue-100 text-blue-700' : 'bg-tertiary-container text-on-tertiary-container'
+                        }`}>
+                          {user.role === 'superadmin' ? 'Суперадмин' : user.role === 'admin' ? 'Админ' : user.role}
+                        </span>
                       </div>
                     </div>
                   </div>

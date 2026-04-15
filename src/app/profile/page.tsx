@@ -88,8 +88,10 @@ export default function Profile() {
               <h1 className="text-3xl font-bold tracking-tight text-on-surface">{user.name}</h1>
               <p className="text-on-surface-variant font-medium">{user.bio || user.email}</p>
               {user.role !== 'user' && (
-                <span className="inline-block px-3 py-1 bg-primary/10 text-primary text-xs font-bold uppercase tracking-widest rounded-full">
-                  {user.role === 'admin' ? 'Администратор' : 'Модератор'}
+                <span className={`inline-block px-3 py-1 text-xs font-bold uppercase tracking-widest rounded-full ${
+                  user.role === 'superadmin' ? 'bg-purple-100 text-purple-700' : 'bg-primary/10 text-primary'
+                }`}>
+                  {user.role === 'superadmin' ? 'Суперадмин' : user.role === 'admin' ? 'Администратор' : 'Модератор'}
                 </span>
               )}
               <div className="flex items-center justify-center md:justify-start gap-4 pt-2">

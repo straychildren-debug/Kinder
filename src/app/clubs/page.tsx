@@ -53,10 +53,10 @@ export default function Clubs() {
       router.push('/login');
       return;
     }
-    // Администраторы могут создавать клубы без ограничений
-    const isAdmin = user.role === 'admin';
+    // Администраторы и суперадминистраторы могут создавать клубы без ограничений
+    const isPowerUser = user.role === 'admin' || user.role === 'superadmin';
     
-    if (!isAdmin && approvedCount !== null && approvedCount < 20) {
+    if (!isPowerUser && approvedCount !== null && approvedCount < 20) {
       setShowTooltip(true);
       if (tooltipTimeout.current) clearTimeout(tooltipTimeout.current);
       tooltipTimeout.current = setTimeout(() => setShowTooltip(false), 3000);

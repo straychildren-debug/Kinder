@@ -59,8 +59,10 @@ export default function ProfileSidebar({ isOpen, onClose }: ProfileSidebarProps)
                 )}
               </div>
               {user.role !== 'user' && (
-                <span className="px-3 py-1 bg-primary/10 text-primary text-xs font-bold uppercase tracking-widest rounded-full">
-                  {user.role === 'admin' ? 'Администратор' : 'Модератор'}
+                <span className={`px-3 py-1 text-xs font-bold uppercase tracking-widest rounded-full ${
+                  user.role === 'superadmin' ? 'bg-purple-100 text-purple-700' : 'bg-primary/10 text-primary'
+                }`}>
+                  {user.role === 'superadmin' ? 'Суперадмин' : user.role === 'admin' ? 'Администратор' : 'Модератор'}
                 </span>
               )}
             </div>
@@ -99,7 +101,7 @@ export default function ProfileSidebar({ isOpen, onClose }: ProfileSidebarProps)
                 <span className="material-symbols-outlined text-[20px]">add_circle</span>
                 <span className="text-sm font-medium">Добавить контент</span>
               </Link>
-              {(user.role === 'moderator' || user.role === 'admin') && (
+              {(user.role === 'moderator' || user.role === 'admin' || user.role === 'superadmin') && (
                 <Link
                   href="/moderation"
                   onClick={onClose}
@@ -110,8 +112,18 @@ export default function ProfileSidebar({ isOpen, onClose }: ProfileSidebarProps)
                   <span className="ml-auto bg-error text-on-error text-xs font-bold px-2 py-0.5 rounded-full">2</span>
                 </Link>
               )}
+              {(user.role === 'admin' || user.role === 'superadmin') && (
+                <Link
+                  href="/users"
+                  onClick={onClose}
+                  className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-surface-container-low transition-colors"
+                >
+                  <span className="material-symbols-outlined text-[20px]">manage_accounts</span>
+                  <span className="text-sm font-medium">Управление ролями</span>
+                </Link>
+              )}
               <Link
-                href="/users"
+                href="/leaderboard"
                 onClick={onClose}
                 className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-surface-container-low transition-colors"
               >
