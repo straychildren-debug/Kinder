@@ -23,6 +23,8 @@ export default function MarathonModal({
 }: MarathonModalProps) {
   const [title, setTitle] = useState('');
   const [endsAt, setEndsAt] = useState('');
+  const [items, setItems] = useState<string[]>([]);
+  const [newItemTerm, setNewItemTerm] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -44,10 +46,11 @@ export default function MarathonModal({
     setLoading(true);
     setError('');
     try {
-      const marathon = await createMarathon(clubId, title.trim(), endDate.toISOString(), userId);
+      const marathon = await createMarathon(clubId, title.trim(), endDate.toISOString(), userId, items);
       onMarathonChange(marathon);
       setTitle('');
       setEndsAt('');
+      setItems([]);
       onClose();
     } catch {
       setError('Не удалось создать марафон');
@@ -142,6 +145,57 @@ export default function MarathonModal({
                 placeholder="Например: Книга «1984» Оруэлл"
                 className="w-full px-4 py-3 rounded-xl bg-surface-container-low border border-outline-variant/20 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all placeholder:text-on-surface-variant/50"
               />
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-on-surface-variant mb-2">Список контента для марафона</label>
+              <div className="flex gap-2 mb-2">
+                <input
+                  type="text"
+                  value={newItemTerm}
+                  onChange={(e) => setNewItemTerm(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault();
+                      if (newItemTerm.trim()) {
+                        setItems([...items, newItemTerm.trim()]);
+                        setNewItemTerm('');
+                      }
+                    }
+                  }}
+                  placeholder="Добавить книгу или фильм..."
+                  className="w-full px-4 py-3 rounded-xl bg-surface-container-low border border-outline-variant/20 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all placeholder:text-on-surface-variant/50"
+                />
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (newItemTerm.trim()) {
+                      setItems([...items, newItemTerm.trim()]);
+                      setNewItemTerm('');
+                    }
+                  }}
+                  className="bg-primary text-white px-4 rounded-xl flex items-center justify-center hover:bg-primary-dim transition-colors"
+                >
+                  <span className="material-symbols-outlined">add</span>
+                </button>
+              </div>
+              
+              {items.length > 0 && (
+                <div className="flex flex-col gap-2">
+                  {items.map((item, idx) => (
+                    <div key={idx} className="flex items-center justify-between p-3 rounded-lg bg-surface-container-lowest border border-outline-variant/10 text-sm font-medium">
+                      <span className="truncate">{item}</span>
+                      <button
+                        type="button"
+                        onClick={() => setItems(items.filter((_, i) => i !== idx))}
+                        className="text-on-surface-variant hover:text-error transition-colors"
+                      >
+                        <span className="material-symbols-outlined text-sm">close</span>
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
 
             <div>

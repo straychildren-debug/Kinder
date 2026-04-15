@@ -39,3 +39,14 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# backups and temporary scripts
+/sync_backup/
+add-superadmin.js
+update-rls.js
+grant-admin.js
+verify-admin.js
+test-api.js
+test-db.js
+apply-updates.js
+apply-schema.js

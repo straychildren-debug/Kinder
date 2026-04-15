@@ -7,7 +7,7 @@ CREATE TABLE public.clubs (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     name TEXT NOT NULL,
     description TEXT,
-    category TEXT NOT NULL CHECK (category IN ('кино', 'книги', 'арт')),
+    category TEXT NOT NULL CHECK (category IN ('кино', 'книги')),
     image_url TEXT,
     owner_id UUID REFERENCES public.profiles(id) ON DELETE CASCADE NOT NULL,
     created_at TIMESTAMPTZ DEFAULT NOW()
@@ -211,3 +211,43 @@ FOR DELETE USING (
     bucket_id = 'club-files' AND
     auth.uid() = owner
 );
+
+-- 7. Marathon Items table
+CREATE TABLE public.club_marathon_items (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    marathon_id UUID REFERENCES public.club_marathons(id) ON DELETE CASCADE NOT NULL,
+    title TEXT NOT NULL,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+ALTER TABLE public.club_marathon_items ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Marathon items viewable by everyone" ON public.club_marathon_items FOR SELECT USING (true);
+CREATE POLICY "Marathon items insertable by admin/owner" ON public.club_marathon_items FOR INSERT WITH CHECK (
+    EXISTS (
+        SELECT 1 FROM public.club_members cm
+        JOIN public.club_marathons m ON m.club_id = cm.club_id
+        WHERE cm.user_id = auth.uid()
+        AND cm.role IN ('owner', 'admin')
+        AND m.id = marathon_id
+    )
+);
+
+-- 8. Marathon Participants table
+CREATE TABLE public.club_marathon_participants (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    marathon_id UUID REFERENCES public.club_marathons(id) ON DELETE CASCADE NOT NULL,
+    user_id UUID REFERENCES public.profiles(id) ON DELETE CASCADE NOT NULL,
+    item_id UUID REFERENCES public.club_marathon_items(id) ON DELETE CASCADE NOT NULL,
+    is_completed BOOLEAN DEFAULT false,
+    review_text TEXT,
+    updated_at TIMESTAMPTZ DEFAULT NOW(),
+    UNIQUE(user_id, item_id)
+);
+
+ALTER TABLE public.club_marathon_participants ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Marathon progress viewable by everyone" ON public.club_marathon_participants FOR SELECT USING (true);
+CREATE POLICY "Users can insert own progress" ON public.club_marathon_participants FOR INSERT WITH CHECK (auth.uid() = user_id);
+CREATE POLICY "Users can update own progress" ON public.club_marathon_participants FOR UPDATE USING (auth.uid() = user_id);
+

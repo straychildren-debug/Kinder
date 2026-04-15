@@ -58,7 +58,7 @@ export interface Review {
 
 // ===== Клубы =====
 
-export type ClubCategory = 'кино' | 'книги' | 'арт';
+export type ClubCategory = 'кино' | 'книги';
 export type ClubRole = 'owner' | 'admin' | 'member';
 
 export interface Club {
@@ -78,11 +78,13 @@ export interface ClubMember {
   clubId: string;
   userId: string;
   role: ClubRole;
+  status? : 'pending' | 'approved' | 'rejected'; // Сохраняем для совместимости с логикой модерации, если она есть
   joinedAt: string;
   lastReadAt?: string;
   // Joined profile data
   userName?: string;
   userAvatar?: string;
+  user?: User; // Для отображения информации о пользователе (join)
 }
 
 export interface ClubMessage {
@@ -96,14 +98,40 @@ export interface ClubMessage {
   // Joined sender data
   senderName?: string;
   senderAvatar?: string;
+  user?: User; // Для профиля отправителя
 }
 
 export interface ClubMarathon {
   id: string;
   clubId: string;
   title: string;
+  type?: ContentType;
+  description?: string;
+  startDate?: string;
   endsAt: string;
-  createdBy: string;
+  status?: 'active' | 'completed';
   isActive: boolean;
+  createdBy: string;
   createdAt: string;
+  items?: MarathonItem[];
 }
+
+export interface MarathonItem {
+  id: string;
+  marathonId: string;
+  title: string;
+}
+
+export interface MarathonParticipantProgress {
+  id: string;
+  marathonId: string;
+  userId: string;
+  itemId: string;
+  isCompleted: boolean;
+  reviewText: string | null;
+  updatedAt: string;
+  userName?: string;
+  userAvatar?: string;
+}
+
+
