@@ -67,6 +67,7 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
   }, []);
 
   const loginWithGoogle = useCallback(async (): Promise<boolean> => {
+    if (typeof window === 'undefined') return false;
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: { redirectTo: window.location.origin },

@@ -14,7 +14,7 @@ async function run() {
   try {
     await client.connect();
     console.log('Connected to Supabase PostgreSQL...');
-    const sql = fs.readFileSync('schema.sql', 'utf8');
+    const sql = fs.readFileSync('storage_setup.sql', 'utf8');
     await client.query(sql);
     console.log('SQL executed successfully!');
   } catch (err) {

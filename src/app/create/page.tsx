@@ -5,8 +5,7 @@ import { useAuth } from '@/components/AuthProvider';
 import { useRouter } from 'next/navigation';
 import TopNavBar from '@/components/TopNavBar';
 import BottomNavBar from '@/components/BottomNavBar';
-import { createContent, updateContent } from '@/lib/db';
-import { supabase } from '@/lib/supabase';
+import { createContent, updateContent, uploadCover } from '@/lib/db';
 import type { ContentType } from '@/lib/types';
 
 export default function CreatePage() {
@@ -16,21 +15,28 @@ export default function CreatePage() {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [imageUrl, setImageUrl] = useState('');
-  // Фильм
+  const [coverFile, setCoverFile] = useState<File | null>(null);
+  const [coverPreview, setCoverPreview] = useState<string | null>(null);
+  
+  // Состояние фильма
   const [director, setDirector] = useState('');
   const [actors, setActors] = useState('');
   const [year, setYear] = useState('');
   const [duration, setDuration] = useState('');
-  // Книга
+  
+  // Состояние книги
   const [author, setAuthor] = useState('');
   const [pages, setPages] = useState('');
   const [publisher, setPublisher] = useState('');
   const [isbn, setIsbn] = useState('');
+  
   // Общие
   const [genres, setGenres] = useState('');
   const [submitted, setSubmitted] = useState(false);
-  const [uploading, setUploading] = useState(false);
-  const [uploadError, setUploadError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorText, setErrorText] = useState('');
+
+  // Черновики (из удаленной ветки)
   const [draftId, setDraftId] = useState<string | null>(null);
   const [isSavingDraft, setIsSavingDraft] = useState(false);
   const [draftSavedAt, setDraftSavedAt] = useState<Date | null>(null);
@@ -72,7 +78,7 @@ export default function CreatePage() {
           </p>
           <div className="flex gap-3">
             <button
-              onClick={() => { setSubmitted(false); setTitle(''); setDescription(''); }}
+              onClick={() => { setSubmitted(false); setTitle(''); setDescription(''); setDraftId(null); }}
               className="px-6 py-3 bg-surface-container-low rounded-xl font-semibold text-sm hover:bg-surface-container-high transition-colors"
             >
               Добавить ещё
@@ -90,8 +96,65 @@ export default function CreatePage() {
     );
   }
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [errorText, setErrorText] = useState('');
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > 1024 * 1024) {
+      setErrorText('Размер файла не должен превышать 1МБ');
+      return;
+    }
+
+    setCoverFile(file);
+    setErrorText('');
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setCoverPreview(reader.result as string);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const removeFile = () => {
+    setCoverFile(null);
+    setCoverPreview(null);
+    setImageUrl('');
+  };
+
+  const getContentPayload = async (status: 'pending' | 'draft') => {
+    let finalImageUrl = imageUrl;
+    if (coverFile) {
+      finalImageUrl = await uploadCover(coverFile);
+    }
+
+    const parsedGenres = genres ? genres.split(',').map(s => s.trim()) : [];
+    
+    const metadata = type === 'movie' 
+      ? { 
+          director, 
+          actors: actors ? actors.split(',').map(s => s.trim()) : [], 
+          year: year ? parseInt(year) : undefined, 
+          duration, 
+          genre: parsedGenres 
+        }
+      : { 
+          author, 
+          pages: pages ? parseInt(pages) : undefined, 
+          publisher, 
+          isbn, 
+          genre: parsedGenres 
+        };
+
+    return {
+      type,
+      title: title || (status === 'draft' ? (type === 'movie' ? 'Черновик фильма' : 'Черновик книги') : (type === 'movie' ? 'Без названия (фильм)' : 'Без названия (книга)')),
+      description,
+      imageUrl: finalImageUrl,
+      createdBy: user.id,
+      ...metadata,
+      status
+    };
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -100,33 +163,7 @@ export default function CreatePage() {
     setErrorText('');
     
     try {
-      const parsedGenres = genres ? genres.split(',').map(s => s.trim()) : [];
-      
-      const metadata = type === 'movie' 
-        ? { 
-            director, 
-            actors: actors ? actors.split(',').map(s => s.trim()) : [], 
-            year: year ? parseInt(year) : undefined, 
-            duration, 
-            genre: parsedGenres 
-          }
-        : { 
-            author, 
-            pages: pages ? parseInt(pages) : undefined, 
-            publisher, 
-            isbn, 
-            genre: parsedGenres 
-          };
-
-      const contentData = {
-        type,
-        title: title || (type === 'movie' ? 'Без названия (фильм)' : 'Без названия (книга)'),
-        description,
-        imageUrl,
-        createdBy: user.id,
-        ...metadata,
-        status: 'pending' as const
-      };
+      const contentData = await getContentPayload('pending');
 
       if (draftId) {
         await updateContent(draftId, contentData);
@@ -142,43 +179,6 @@ export default function CreatePage() {
     }
   };
 
-  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    // Валидация размера (500КБ)
-    if (file.size > 500 * 1024) {
-      setUploadError('Файл слишком большой. Максимальный размер — 500КБ.');
-      return;
-    }
-
-    setUploading(true);
-    setUploadError('');
-
-    try {
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${Math.random()}.${fileExt}`;
-      const filePath = `${user?.id}/${fileName}`;
-
-      const { error: uploadError } = await supabase.storage
-        .from('covers')
-        .upload(filePath, file);
-
-      if (uploadError) throw uploadError;
-
-      const { data: { publicUrl } } = supabase.storage
-        .from('covers')
-        .getPublicUrl(filePath);
-
-      setImageUrl(publicUrl);
-    } catch (err) {
-      console.error(err);
-      setUploadError('Ошибка при загрузке изображения.');
-    } finally {
-      setUploading(false);
-    }
-  };
-
   const handleSaveDraft = async () => {
     if (!user) return;
     setIsSavingDraft(true);
@@ -186,33 +186,7 @@ export default function CreatePage() {
     setDraftSavedAt(null);
 
     try {
-      const parsedGenres = genres ? genres.split(',').map(s => s.trim()) : [];
-      
-      const metadata = type === 'movie' 
-        ? { 
-            director, 
-            actors: actors ? actors.split(',').map(s => s.trim()) : [], 
-            year: year ? parseInt(year) : undefined, 
-            duration, 
-            genre: parsedGenres 
-          }
-        : { 
-            author, 
-            pages: pages ? parseInt(pages) : undefined, 
-            publisher, 
-            isbn, 
-            genre: parsedGenres 
-          };
-
-      const contentData = {
-        type,
-        title: title || (type === 'movie' ? 'Черновик фильма' : 'Черновик книги'),
-        description,
-        imageUrl,
-        createdBy: user.id,
-        ...metadata,
-        status: 'draft' as const
-      };
+      const contentData = await getContentPayload('draft');
 
       if (draftId) {
         await updateContent(draftId, contentData);
@@ -221,8 +195,6 @@ export default function CreatePage() {
         setDraftId(newDraft.id);
       }
       setDraftSavedAt(new Date());
-      
-      // Скрываем уведомление через 3 секунды
       setTimeout(() => setDraftSavedAt(null), 3000);
     } catch (err) {
       console.error(err);
@@ -284,7 +256,6 @@ export default function CreatePage() {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Основная информация */}
           <div className="bg-surface-container-lowest rounded-2xl p-6 space-y-5">
             <h3 className="text-sm font-bold text-on-surface-variant uppercase tracking-widest flex items-center gap-2">
               <span className="material-symbols-outlined text-[18px]">info</span>
@@ -317,74 +288,77 @@ export default function CreatePage() {
 
             <div>
               <label className={labelClass}>Обложка</label>
-              <div className="space-y-3">
-                {/* Выбор файла */}
-                <div className="relative group">
+              
+              {!coverPreview && !imageUrl ? (
+                <div className="relative">
                   <input
                     type="file"
                     accept="image/*"
-                    onChange={handleFileUpload}
+                    onChange={handleFileChange}
                     className="hidden"
                     id="cover-upload"
-                    disabled={uploading}
                   />
                   <label
                     htmlFor="cover-upload"
-                    className={`flex items-center justify-center gap-2 w-full py-4 border-2 border-dashed rounded-xl cursor-pointer transition-all ${
-                      uploading 
-                        ? 'opacity-50 cursor-not-allowed border-primary/30' 
-                        : 'border-on-surface-variant/20 hover:border-primary/50 hover:bg-primary/5'
-                    }`}
+                    className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-on-surface-variant/20 rounded-xl bg-surface-container-low hover:bg-surface-container-high cursor-pointer transition-colors group"
                   >
-                    {uploading ? (
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
-                        <span className="text-sm font-medium">Загрузка...</span>
-                      </div>
-                    ) : (
-                      <>
-                        <span className="material-symbols-outlined text-primary">upload_file</span>
-                        <span className="text-sm font-medium">Загрузить фото (макс. 500КБ)</span>
-                      </>
-                    )}
+                    <span className="material-symbols-outlined text-3xl text-on-surface-variant/50 group-hover:text-primary transition-colors">add_photo_alternate</span>
+                    <span className="text-xs text-on-surface-variant/70 mt-2 font-medium">Кликните для выбора фото (до 1МБ)</span>
                   </label>
+                  
+                  <div className="mt-3 flex items-center gap-3">
+                    <div className="h-px flex-1 bg-on-surface-variant/10"></div>
+                    <span className="text-[10px] uppercase tracking-widest text-on-surface-variant/40 font-bold">ИЛИ ССЫЛКА</span>
+                    <div className="h-px flex-1 bg-on-surface-variant/10"></div>
+                  </div>
+                  
+                  <input
+                    type="url"
+                    value={imageUrl}
+                    onChange={e => setImageUrl(e.target.value)}
+                    placeholder="https://example.com/image.jpg"
+                    className={inputClass + " mt-3"}
+                  />
                 </div>
-
-                {uploadError && (
-                  <p className="text-xs text-error font-medium px-1">{uploadError}</p>
-                )}
-
-                <div className="flex items-center gap-3">
-                  <div className="h-px bg-on-surface-variant/10 flex-1"></div>
-                  <span className="text-[10px] font-bold text-on-surface-variant uppercase tracking-tighter">или укажите URL</span>
-                  <div className="h-px bg-on-surface-variant/10 flex-1"></div>
-                </div>
-
-                <input
-                  type="url"
-                  value={imageUrl}
-                  onChange={e => setImageUrl(e.target.value)}
-                  placeholder="https://example.com/image.jpg"
-                  className={inputClass}
-                />
-
-                {imageUrl && (
-                  <div className="relative mt-2 rounded-xl overflow-hidden aspect-[2/3] max-w-[120px] bg-surface-container border border-on-surface-variant/10 group">
-                    <img 
-                      src={imageUrl} 
-                      alt="Preview" 
-                      className="w-full h-full object-cover"
-                    />
+              ) : (
+                <div className="relative aspect-[16/9] w-full rounded-xl overflow-hidden bg-surface-container-high group">
+                  <img 
+                    src={coverPreview || imageUrl} 
+                    alt="Preview" 
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-4">
                     <button
                       type="button"
-                      onClick={() => setImageUrl('')}
-                      className="absolute top-1 right-1 w-6 h-6 bg-black/50 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                      onClick={removeFile}
+                      className="w-12 h-12 rounded-full bg-error text-white flex items-center justify-center shadow-lg hover:scale-110 active:scale-95 transition-transform"
+                      title="Удалить"
                     >
-                      <span className="material-symbols-outlined text-[16px]">close</span>
+                      <span className="material-symbols-outlined">delete</span>
                     </button>
+                    <label
+                      htmlFor="cover-upload"
+                      className="w-12 h-12 rounded-full bg-white text-on-surface flex items-center justify-center shadow-lg cursor-pointer hover:scale-110 active:scale-95 transition-transform"
+                      title="Заменить"
+                    >
+                      <span className="material-symbols-outlined">sync</span>
+                    </label>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleFileChange}
+                      className="hidden"
+                      id="cover-upload"
+                    />
                   </div>
-                )}
-              </div>
+                  
+                  {coverFile && (
+                    <div className="absolute top-3 left-3 px-3 py-1.5 rounded-lg bg-primary text-white text-[10px] font-bold uppercase tracking-wider shadow-md">
+                      Выбрано: {(coverFile.size / 1024).toFixed(0)} КБ
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
 
             <div>
@@ -536,7 +510,7 @@ export default function CreatePage() {
               type="button"
               onClick={handleSaveDraft}
               disabled={isSubmitting || isSavingDraft}
-              className="flex-1 py-4 bg-surface-container-high text-on-surface rounded-xl font-semibold text-base flex items-center justify-center gap-2 transition-transform active:scale-95 disabled:opacity-50"
+              className="flex-1 py-4 bg-surface-container-high text-on-surface rounded-xl font-semibold text-base flex items-center justify-center gap-2 transition-all active:scale-95 disabled:opacity-50 hover:bg-surface-container-highest"
             >
               {isSavingDraft ? (
                 <div className="w-5 h-5 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
