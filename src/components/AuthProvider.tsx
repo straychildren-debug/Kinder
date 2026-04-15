@@ -3,6 +3,7 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { User } from '@/lib/types';
 import { supabase } from '@/lib/supabase';
+import { getUserById } from '@/lib/db';
 import type { Session } from '@supabase/supabase-js';
 
 interface AuthContextType {
@@ -12,6 +13,7 @@ interface AuthContextType {
   loginWithGoogle: () => Promise<boolean>;
   register: (name: string, email: string, password: string) => Promise<boolean>;
   logout: () => void;
+  refreshUser: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -24,7 +26,7 @@ export function useAuth() {
   return context;
 }
 
-/** Map a Supabase session to the app-level User type */
+/** Map a Supabase session to the app-level User type (fallback) */
 function sessionToUser(session: Session): User {
   const meta = session.user.user_metadata ?? {};
   return {
@@ -43,23 +45,51 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  const fetchProfile = useCallback(async (session: Session | null) => {
+    if (!session) {
+      setUser(null);
+      setIsLoading(false);
+      return;
+    }
+
+    try {
+      // Пытаемся получить полный профиль (с ролью) из таблицы profiles
+      const profile = await getUserById(session.user.id);
+      if (profile) {
+        setUser(profile);
+      } else {
+        // Фолбэк на данные из сессии, если профиль еще не создан
+        setUser(sessionToUser(session));
+      }
+    } catch (err) {
+      console.error('Error fetching user profile:', err);
+      setUser(sessionToUser(session));
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  const refreshUser = useCallback(async () => {
+    const { data: { session } } = await supabase.auth.getSession();
+    await fetchProfile(session);
+  }, [fetchProfile]);
+
   // Restore session on mount & listen for auth changes
   useEffect(() => {
     // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session ? sessionToUser(session) : null);
-      setIsLoading(false);
+      fetchProfile(session);
     });
 
     // Listen for login / logout / token refresh
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (_event, session) => {
-        setUser(session ? sessionToUser(session) : null);
+        fetchProfile(session);
       },
     );
 
     return () => subscription.unsubscribe();
-  }, []);
+  }, [fetchProfile]);
 
   const login = useCallback(async (email: string, password: string): Promise<boolean> => {
     const { error } = await supabase.auth.signInWithPassword({ email, password });
@@ -92,7 +122,7 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, isLoading, login, loginWithGoogle, register, logout }}>
+    <AuthContext.Provider value={{ user, isLoading, login, loginWithGoogle, register, logout, refreshUser }}>
       {children}
     </AuthContext.Provider>
   );
