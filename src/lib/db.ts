@@ -574,7 +574,7 @@ export async function createMarathon(
   title: string,
   endsAt: string,
   createdBy: string,
-  items: string[]
+  items: { contentId: string, title: string }[]
 ): Promise<ClubMarathon> {
   // Deactivate any existing active marathon first
   await supabase
@@ -601,7 +601,7 @@ export async function createMarathon(
   }
 
   if (items && items.length > 0) {
-    const itemsData = items.map(t => ({ marathon_id: data.id, title: t }));
+    const itemsData = items.map(t => ({ marathon_id: data.id, title: t.title, content_id: t.contentId }));
     await supabase.from('club_marathon_items').insert(itemsData);
   }
 
@@ -628,6 +628,7 @@ export async function getMarathonItems(marathonId: string): Promise<MarathonItem
     id: d.id,
     marathonId: d.marathon_id,
     title: d.title,
+    contentId: d.content_id,
   }));
 }
 

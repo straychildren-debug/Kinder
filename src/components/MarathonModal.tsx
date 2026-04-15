@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import { ClubMarathon } from '@/lib/types';
-import { createMarathon, endMarathon } from '@/lib/db';
+import { ClubMarathon, ContentItem } from '@/lib/types';
+import { createMarathon, endMarathon, getApprovedContent } from '@/lib/db';
 
 interface MarathonModalProps {
   isOpen: boolean;
@@ -23,10 +23,17 @@ export default function MarathonModal({
 }: MarathonModalProps) {
   const [title, setTitle] = useState('');
   const [endsAt, setEndsAt] = useState('');
-  const [items, setItems] = useState<string[]>([]);
-  const [newItemTerm, setNewItemTerm] = useState('');
+  const [items, setItems] = useState<{contentId: string, title: string}[]>([]);
+  const [selectedContentId, setSelectedContentId] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [availableContent, setAvailableContent] = useState<ContentItem[]>([]);
+
+  React.useEffect(() => {
+    if (isOpen) {
+      getApprovedContent().then(setAvailableContent).catch(console.error);
+    }
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -150,31 +157,31 @@ export default function MarathonModal({
             <div>
               <label className="block text-xs font-semibold text-on-surface-variant mb-2">Список контента для марафона</label>
               <div className="flex gap-2 mb-2">
-                <input
-                  type="text"
-                  value={newItemTerm}
-                  onChange={(e) => setNewItemTerm(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                      e.preventDefault();
-                      if (newItemTerm.trim()) {
-                        setItems([...items, newItemTerm.trim()]);
-                        setNewItemTerm('');
-                      }
-                    }
-                  }}
-                  placeholder="Добавить книгу или фильм..."
-                  className="w-full px-4 py-3 rounded-xl bg-surface-container-low border border-outline-variant/20 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all placeholder:text-on-surface-variant/50"
-                />
+                <select
+                  value={selectedContentId}
+                  onChange={(e) => setSelectedContentId(e.target.value)}
+                  className="w-full px-4 py-3 rounded-xl bg-surface-container-low border border-outline-variant/20 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all text-on-surface"
+                >
+                  <option value="">Выберите публикацию (книгу или фильм)...</option>
+                  {availableContent.map(c => (
+                    <option key={c.id} value={c.id}>
+                      {c.type === 'movie' ? '🎬' : '📚'} {c.title}
+                    </option>
+                  ))}
+                </select>
                 <button
                   type="button"
                   onClick={() => {
-                    if (newItemTerm.trim()) {
-                      setItems([...items, newItemTerm.trim()]);
-                      setNewItemTerm('');
+                    if (selectedContentId) {
+                      const selected = availableContent.find(c => c.id === selectedContentId);
+                      if (selected && !items.find(i => i.contentId === selected.id)) {
+                        setItems([...items, { contentId: selected.id, title: selected.title }]);
+                      }
+                      setSelectedContentId('');
                     }
                   }}
-                  className="bg-primary text-white px-4 rounded-xl flex items-center justify-center hover:bg-primary-dim transition-colors"
+                  disabled={!selectedContentId}
+                  className="bg-primary text-white px-4 rounded-xl flex items-center justify-center hover:bg-primary-dim transition-colors disabled:opacity-50"
                 >
                   <span className="material-symbols-outlined">add</span>
                 </button>
@@ -184,7 +191,7 @@ export default function MarathonModal({
                 <div className="flex flex-col gap-2">
                   {items.map((item, idx) => (
                     <div key={idx} className="flex items-center justify-between p-3 rounded-lg bg-surface-container-lowest border border-outline-variant/10 text-sm font-medium">
-                      <span className="truncate">{item}</span>
+                      <span className="truncate">{item.title}</span>
                       <button
                         type="button"
                         onClick={() => setItems(items.filter((_, i) => i !== idx))}
