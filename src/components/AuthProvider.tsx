@@ -14,6 +14,8 @@ interface AuthContextType {
   logout: () => void;
 }
 
+import { getUserById } from '@/lib/db';
+
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function useAuth() {
@@ -45,16 +47,34 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
 
   // Restore session on mount & listen for auth changes
   useEffect(() => {
+    async function loadProfile(session: Session | null) {
+      if (!session) {
+        setUser(null);
+        setIsLoading(false);
+        return;
+      }
+
+      // Try to fetch custom profile with correct role
+      const profile = await getUserById(session.user.id);
+      
+      if (profile) {
+        setUser(profile);
+      } else {
+        // Fallback to basic session info if profile doesn't exist yet
+        setUser(sessionToUser(session));
+      }
+      setIsLoading(false);
+    }
+
     // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session ? sessionToUser(session) : null);
-      setIsLoading(false);
+      loadProfile(session);
     });
 
     // Listen for login / logout / token refresh
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (_event, session) => {
-        setUser(session ? sessionToUser(session) : null);
+        loadProfile(session);
       },
     );
 
