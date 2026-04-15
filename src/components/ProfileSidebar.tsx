@@ -54,9 +54,6 @@ export default function ProfileSidebar({ isOpen, onClose }: ProfileSidebarProps)
               <div>
                 <h3 className="text-xl font-bold">{user.name}</h3>
                 <p className="text-sm text-on-surface-variant">{user.email}</p>
-                <div className="bg-error/5 p-2 rounded-lg mt-2 text-[8px] text-error font-mono text-left break-all opacity-50">
-                  DEBUG: ID={user.id} | ROLE={user.role}
-                </div>
                 {user.bio && (
                   <p className="text-sm text-on-surface-variant mt-2 italic">{user.bio}</p>
                 )}
