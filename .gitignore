@@ -39,3 +39,11 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# backups and local scripts
+/sync_backup/
+*.js
+!next.config.js
+!postcss.config.js
+!tailwind.config.js
+!eslint.config.js

@@ -3,21 +3,34 @@
 import React from 'react';
 import TopNavBar from '@/components/TopNavBar';
 import BottomNavBar from '@/components/BottomNavBar';
-import { getUsersRanked } from '@/lib/db';
+import { getUsersRanked, updateUserRole } from '@/lib/db';
 import { User } from '@/lib/types';
+import { useAuth } from '@/components/AuthProvider';
 
 export default function UsersPage() {
+  const { user: currentUser } = useAuth();
   const [rankedUsers, setRankedUsers] = React.useState<User[]>([]);
   const [loading, setLoading] = React.useState(true);
 
+  const loadUsers = async () => {
+    setLoading(true);
+    const users = await getUsersRanked();
+    setRankedUsers(users);
+    setLoading(false);
+  };
+
   React.useEffect(() => {
-    async function load() {
-      const users = await getUsersRanked();
-      setRankedUsers(users);
-      setLoading(false);
-    }
-    load();
+    loadUsers();
   }, []);
+
+  const handleRoleChange = async (targetUserId: string, newRole: User['role']) => {
+    try {
+      await updateUserRole(targetUserId, newRole);
+      setRankedUsers((prev: User[]) => prev.map((u: User) => u.id === targetUserId ? { ...u, role: newRole } : u));
+    } catch (err) {
+      alert('Ошибка при смене роли. Возможно, недостаточно прав.');
+    }
+  };
 
   const getMedalIcon = (index: number) => {
     if (index === 0) return '🥇';
@@ -51,7 +64,7 @@ export default function UsersPage() {
           <>
             {/* Топ-3 подиум */}
         <div className="grid grid-cols-3 gap-4 mb-10">
-          {rankedUsers.slice(0, 3).map((user, i) => {
+          {rankedUsers.slice(0, 3).map((user: User, i: number) => {
             const order = i === 0 ? 'order-2' : i === 1 ? 'order-1' : 'order-3';
             const size = i === 0 ? 'scale-105' : '';
             return (
@@ -85,7 +98,7 @@ export default function UsersPage() {
         {/* Полный рейтинг */}
         <div className="space-y-3">
           <h3 className="text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-4">Полный рейтинг</h3>
-          {rankedUsers.map((user, index) => (
+          {rankedUsers.map((user: User, index: number) => (
             <div
               key={user.id}
               className={`${getMedalBg(index)} rounded-2xl p-5 flex items-center gap-4 transition-all hover:shadow-sm`}
@@ -111,10 +124,26 @@ export default function UsersPage() {
               {/* Инфо */}
               <div className="flex-1 min-w-0">
                 <p className="font-bold text-sm truncate">{user.name}</p>
-                <p className="text-xs text-on-surface-variant">
-                  {user.bio ? user.bio.slice(0, 50) + (user.bio.length > 50 ? '...' : '') : 'Участник сообщества'}
+                <p className="text-xs text-on-surface-variant font-medium">
+                  {user.role === 'superadmin' ? '⚡ Суперадмин' : user.role === 'admin' ? '🛡️ Админ' : user.role === 'moderator' ? '🔍 Модератор' : '👤 Пользователь'}
                 </p>
               </div>
+
+              {/* Role Management for Superadmin */}
+              {currentUser?.role === 'superadmin' && currentUser.id !== user.id && (
+                <div className="shrink-0 flex items-center">
+                  <select
+                    value={user.role}
+                    onChange={(e) => handleRoleChange(user.id, e.target.value as User['role'])}
+                    className="bg-surface-container-high text-[10px] font-bold uppercase tracking-tight py-1 px-2 rounded-md border-none focus:ring-1 focus:ring-primary/30 outline-none cursor-pointer hover:bg-surface-container-highest transition-colors"
+                  >
+                    <option value="user">USER</option>
+                    <option value="moderator">MOD</option>
+                    <option value="admin">ADMIN</option>
+                    <option value="superadmin">SUPER</option>
+                  </select>
+                </div>
+              )}
 
               {/* Статистика */}
               <div className="hidden md:flex items-center gap-6 shrink-0">

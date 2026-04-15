@@ -9,7 +9,7 @@ export interface User {
   email: string;
   avatarUrl: string;
   bio: string;
-  role: 'user' | 'moderator' | 'admin';
+  role: 'user' | 'moderator' | 'admin' | 'superadmin';
   stats: {
     publications: number;
     reviews: number;
@@ -78,11 +78,13 @@ export interface ClubMember {
   clubId: string;
   userId: string;
   role: ClubRole;
+  status? : 'pending' | 'approved' | 'rejected'; // Сохраняем для совместимости с логикой модерации, если она есть
   joinedAt: string;
   lastReadAt?: string;
   // Joined profile data
   userName?: string;
   userAvatar?: string;
+  user?: User; // Для отображения информации о пользователе (join)
 }
 
 export interface ClubMessage {
@@ -96,14 +98,29 @@ export interface ClubMessage {
   // Joined sender data
   senderName?: string;
   senderAvatar?: string;
+  user?: User; // Для профиля отправителя
 }
 
 export interface ClubMarathon {
   id: string;
   clubId: string;
   title: string;
+  type?: ContentType;
+  description?: string;
+  startDate?: string;
   endsAt: string;
-  createdBy: string;
+  status?: 'active' | 'completed';
   isActive: boolean;
+  createdBy: string;
   createdAt: string;
+  items?: ContentItem[]; // Подгруженные книги/фильмы
 }
+
+export interface MarathonParticipant {
+  marathonId: string;
+  userId: string;
+  contentId: string;
+  status: 'reading' | 'completed';
+  completedAt?: string;
+}
+

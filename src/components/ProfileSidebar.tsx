@@ -60,7 +60,7 @@ export default function ProfileSidebar({ isOpen, onClose }: ProfileSidebarProps)
               </div>
               {user.role !== 'user' && (
                 <span className="px-3 py-1 bg-primary/10 text-primary text-xs font-bold uppercase tracking-widest rounded-full">
-                  {user.role === 'admin' ? 'Администратор' : 'Модератор'}
+                  {user.role === 'superadmin' ? 'Суперадминистратор' : user.role === 'admin' ? 'Администратор' : 'Модератор'}
                 </span>
               )}
             </div>
@@ -99,7 +99,7 @@ export default function ProfileSidebar({ isOpen, onClose }: ProfileSidebarProps)
                 <span className="material-symbols-outlined text-[20px]">add_circle</span>
                 <span className="text-sm font-medium">Добавить контент</span>
               </Link>
-              {(user.role === 'moderator' || user.role === 'admin') && (
+              {(user.role === 'moderator' || user.role === 'admin' || user.role === 'superadmin') && (
                 <Link
                   href="/moderation"
                   onClick={onClose}

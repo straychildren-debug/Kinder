@@ -1,5 +1,5 @@
 import { supabase } from './supabase';
-import { User, ContentItem, Review, Club, ClubMember, ClubMessage, ClubMarathon } from './types';
+import { User, ContentItem, Review, Club, ClubMember, ClubMessage, ClubMarathon, ClubRole, ClubCategory } from './types';
 
 // ===== Пользователи (Профили) =====
 
@@ -55,6 +55,18 @@ export async function getUsersRanked(): Promise<User[]> {
     const scoreB = (b.stats?.publications || 0) * 3 + (b.stats?.reviews || 0) * 2 + (b.stats?.avgRating || 0) * 10 + (b.stats?.awards || 0);
     return scoreB - scoreA;
   });
+}
+
+export async function updateUserRole(userId: string, newRole: User['role']): Promise<void> {
+  const { error } = await supabase
+    .from('profiles')
+    .update({ role: newRole })
+    .eq('id', userId);
+
+  if (error) {
+    console.error('Error updating user role:', error);
+    throw error;
+  }
 }
 
 // ===== Контент =====
@@ -207,6 +219,13 @@ export async function uploadCover(file: File): Promise<string> {
 }
 
 // ===== Клубы =====
+
+export async function canCreateClub(user: User): Promise<boolean> {
+  if (user.role === 'admin' || user.role === 'moderator' || user.role === 'superadmin') return true;
+  
+  const count = await getUserApprovedCount(user.id);
+  return count >= 20;
+}
 
 export async function getClubs(userId?: string): Promise<Club[]> {
   if (userId) {
@@ -633,7 +652,7 @@ export async function getUserMembership(clubId: string, userId: string): Promise
     id: data.id,
     clubId: data.club_id,
     userId: data.user_id,
-    role: data.role,
+    role: data.role as ClubRole,
     joinedAt: data.joined_at,
   };
 }
