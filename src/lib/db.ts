@@ -1,5 +1,5 @@
 import { supabase } from './supabase';
-import { User, ContentItem, Review, Club, ClubMember, ClubMessage, ClubMarathon, ClubRole, ClubCategory } from './types';
+import { User, ContentItem, Review, Club, ClubMember, ClubMessage, ClubMarathon, ClubRole, ClubCategory, MarathonItem, MarathonParticipantProgress } from './types';
 
 // ===== Пользователи (Профили) =====
 
@@ -549,7 +549,8 @@ export async function createMarathon(
   clubId: string,
   title: string,
   endsAt: string,
-  createdBy: string
+  createdBy: string,
+  items: string[]
 ): Promise<ClubMarathon> {
   // Deactivate any existing active marathon first
   await supabase
@@ -575,6 +576,11 @@ export async function createMarathon(
     throw error;
   }
 
+  if (items && items.length > 0) {
+    const itemsData = items.map(t => ({ marathon_id: data.id, title: t }));
+    await supabase.from('club_marathon_items').insert(itemsData);
+  }
+
   return {
     id: data.id,
     clubId: data.club_id,
@@ -584,6 +590,65 @@ export async function createMarathon(
     isActive: data.is_active,
     createdAt: data.created_at,
   };
+}
+
+export async function getMarathonItems(marathonId: string): Promise<MarathonItem[]> {
+  const { data, error } = await supabase
+    .from('club_marathon_items')
+    .select('*')
+    .eq('marathon_id', marathonId)
+    .order('created_at', { ascending: true });
+  
+  if (error) return [];
+  return data.map((d: any) => ({
+    id: d.id,
+    marathonId: d.marathon_id,
+    title: d.title,
+  }));
+}
+
+export async function getMarathonProgress(marathonId: string): Promise<MarathonParticipantProgress[]> {
+  const { data, error } = await supabase
+    .from('club_marathon_participants')
+    .select('*, profiles:user_id(name, avatar_url)')
+    .eq('marathon_id', marathonId);
+
+  if (error) return [];
+  return data.map((d: any) => ({
+    id: d.id,
+    marathonId: d.marathon_id,
+    userId: d.user_id,
+    itemId: d.item_id,
+    isCompleted: d.is_completed,
+    reviewText: d.review_text,
+    updatedAt: d.updated_at,
+    userName: d.profiles?.name,
+    userAvatar: d.profiles?.avatar_url,
+  }));
+}
+
+export async function updateMarathonProgressItem(
+  marathonId: string,
+  userId: string,
+  itemId: string,
+  isCompleted: boolean,
+  reviewText: string
+): Promise<void> {
+  const { error } = await supabase
+    .from('club_marathon_participants')
+    .upsert({
+      marathon_id: marathonId,
+      user_id: userId,
+      item_id: itemId,
+      is_completed: isCompleted,
+      review_text: reviewText || null,
+      updated_at: new Date().toISOString(),
+    }, { onConflict: 'user_id, item_id' });
+    
+  if (error) {
+    console.error('Error updating progress:', error);
+    throw error;
+  }
 }
 
 export async function endMarathon(marathonId: string): Promise<void> {

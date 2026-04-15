@@ -11,13 +11,11 @@ import { useRouter } from 'next/navigation';
 const CATEGORY_LABELS: Record<string, string> = {
   'кино': 'КИНО',
   'книги': 'КНИГИ',
-  'арт': 'АРТ',
 };
 
 const CATEGORY_ICONS: Record<string, string> = {
   'кино': 'movie',
   'книги': 'menu_book',
-  'арт': 'palette',
 };
 
 type FilterTab = 'all' | ClubCategory;
@@ -194,7 +192,7 @@ export default function Clubs() {
 
         {/* Filter Tabs */}
         <div className="flex gap-8 mb-8 border-b border-outline-variant/20 overflow-x-auto whitespace-nowrap scrollbar-hide">
-          {([['all', 'Все сообщества'], ['кино', 'Кино'], ['книги', 'Книги'], ['арт', 'Арт']] as [FilterTab, string][]).map(([key, label]) => (
+          {([['all', 'Все сообщества'], ['кино', 'Кино'], ['книги', 'Книги']] as [FilterTab, string][]).map(([key, label]) => (
             <button
               key={key}
               onClick={() => setActiveFilter(key)}
@@ -398,7 +396,7 @@ function CreateClubModal({
           <div>
             <label className="block text-xs font-semibold text-on-surface-variant mb-2">Категория</label>
             <div className="flex gap-3">
-              {(['кино', 'книги', 'арт'] as ClubCategory[]).map((cat) => (
+              {(['кино', 'книги'] as ClubCategory[]).map((cat) => (
                 <button
                   key={cat}
                   type="button"

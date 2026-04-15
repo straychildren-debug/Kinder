@@ -58,7 +58,7 @@ export interface Review {
 
 // ===== Клубы =====
 
-export type ClubCategory = 'кино' | 'книги' | 'арт';
+export type ClubCategory = 'кино' | 'книги';
 export type ClubRole = 'owner' | 'admin' | 'member';
 
 export interface Club {
@@ -113,14 +113,25 @@ export interface ClubMarathon {
   isActive: boolean;
   createdBy: string;
   createdAt: string;
-  items?: ContentItem[]; // Подгруженные книги/фильмы
+  items?: MarathonItem[];
 }
 
-export interface MarathonParticipant {
+export interface MarathonItem {
+  id: string;
+  marathonId: string;
+  title: string;
+}
+
+export interface MarathonParticipantProgress {
+  id: string;
   marathonId: string;
   userId: string;
-  contentId: string;
-  status: 'reading' | 'completed';
-  completedAt?: string;
+  itemId: string;
+  isCompleted: boolean;
+  reviewText: string | null;
+  updatedAt: string;
+  userName?: string;
+  userAvatar?: string;
 }
+
 

@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { useAuth } from '@/components/AuthProvider';
 import ClubSettingsModal from '@/components/ClubSettingsModal';
+import MarathonDetailsModal from '@/components/MarathonDetailsModal';
 import { Club, ClubMessage, ClubMarathon, ClubMember } from '@/lib/types';
 import {
   getClubById,
@@ -67,6 +68,7 @@ export default function ClubDetail() {
   const [messageText, setMessageText] = useState('');
   const [sending, setSending] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
+  const [showMarathonDetails, setShowMarathonDetails] = useState(false);
   const [uploading, setUploading] = useState(false);
 
   const chatEndRef = useRef<HTMLDivElement>(null);
@@ -362,13 +364,18 @@ export default function ClubDetail() {
           <>
             {/* Marathon Widget (Expanded) */}
             {marathon && countdown && (
-              <section className="mb-8 glass-marathon-widget rounded-2xl p-6 shadow-sm">
+              <section 
+                onClick={() => setShowMarathonDetails(true)}
+                className="mb-8 glass-marathon-widget rounded-2xl p-6 shadow-sm cursor-pointer hover:shadow-md hover:-translate-y-1 transition-all group relative"
+              >
+                <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <span className="material-symbols-outlined text-primary bg-primary/10 rounded-full p-2">open_in_new</span>
+                </div>
                 <div className="flex items-start justify-between mb-4">
                   <div>
                     <span className="text-[10px] font-bold text-primary uppercase tracking-[0.15em] mb-1 block">Марафон активен</span>
                     <h2 className="text-lg font-bold tracking-tight">{marathon.title}</h2>
                   </div>
-                  <span className="material-symbols-outlined text-primary text-2xl">timer</span>
                 </div>
                 <div className="flex gap-3 justify-center">
                   {[
@@ -564,6 +571,16 @@ export default function ClubDetail() {
           userRole={membership!.role}
           activeMarathon={marathon}
           onMarathonChange={setMarathon}
+        />
+      )}
+
+      {/* Marathon Details Modal */}
+      {marathon && user && (
+        <MarathonDetailsModal
+          isOpen={showMarathonDetails}
+          onClose={() => setShowMarathonDetails(false)}
+          marathon={marathon}
+          userId={user.id}
         />
       )}
     </>
