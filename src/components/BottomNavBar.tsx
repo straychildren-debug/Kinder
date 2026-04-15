@@ -37,7 +37,7 @@ export default function BottomNavBar({ activeTab = 'home' }: BottomNavBarProps) 
         <span className="material-symbols-outlined" style={getIconStyle('clubs')}>groups</span>
         <span className="font-['Inter'] text-[10px] font-semibold uppercase tracking-widest mt-1">Клубы</span>
       </Link>
-      <Link className={getTabClass('users')} href="/users">
+      <Link className={getTabClass('users')} href="/leaderboard">
         <span className="material-symbols-outlined" style={getIconStyle('users')}>leaderboard</span>
         <span className="font-['Inter'] text-[10px] font-semibold uppercase tracking-widest mt-1">Рейтинг</span>
       </Link>
