@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { ClubMarathon, ContentItem } from '@/lib/types';
 import { createMarathon, endMarathon, getApprovedContent } from '@/lib/db';
+import Link from 'next/link';
 
 interface MarathonModalProps {
   isOpen: boolean;
@@ -185,6 +186,17 @@ export default function MarathonModal({
                 >
                   <span className="material-symbols-outlined">add</span>
                 </button>
+              </div>
+              <div className="flex justify-between items-center mb-4 mt-1 px-1">
+                <span className="text-[10px] text-on-surface-variant font-medium">Нет нужной книги или фильма?</span>
+                <Link
+                  href="/create"
+                  onClick={onClose}
+                  className="text-xs font-bold text-primary flex items-center gap-1 hover:underline"
+                >
+                  <span className="material-symbols-outlined text-[14px]">add_circle</span>
+                  Создать публикацию
+                </Link>
               </div>
               
               {items.length > 0 && (
