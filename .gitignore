@@ -40,10 +40,13 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# backups and local scripts
+# backups and temporary scripts
 /sync_backup/
-*.js
-!next.config.js
-!postcss.config.js
-!tailwind.config.js
-!eslint.config.js
+add-superadmin.js
+update-rls.js
+grant-admin.js
+verify-admin.js
+test-api.js
+test-db.js
+apply-updates.js
+apply-schema.js
