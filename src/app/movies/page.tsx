@@ -6,10 +6,12 @@ import BottomNavBar from "@/components/BottomNavBar";
 import Link from "next/link";
 import { getApprovedContent } from "@/lib/db";
 import { ContentItem } from "@/lib/types";
+import ContentDetailsModal from "@/components/ContentDetailsModal";
 
 export default function Movies() {
   const [movies, setMovies] = useState<ContentItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedContent, setSelectedContent] = useState<ContentItem | null>(null);
 
   useEffect(() => {
     async function load() {
@@ -59,7 +61,11 @@ export default function Movies() {
         ) : (
           <div className="space-y-4">
             {movies.map(movie => (
-              <div key={movie.id} className="group flex bg-surface p-4 rounded-[24px] border border-on-surface/5 shadow-sm hover:shadow-md transition-all hover:scale-[1.01] cursor-pointer">
+              <div 
+                key={movie.id} 
+                className="group flex bg-surface p-4 rounded-[24px] border border-on-surface/5 shadow-sm hover:shadow-md transition-all hover:scale-[1.01] cursor-pointer"
+                onClick={() => setSelectedContent(movie)}
+              >
                 {/* Movie Poster */}
                 <div className="relative w-20 aspect-[4/5] flex-shrink-0 rounded-[14px] overflow-hidden bg-on-surface/5 shadow-md">
                   {movie.imageUrl ? (
@@ -113,6 +119,14 @@ export default function Movies() {
               </div>
             ))}
           </div>
+        )}
+
+        {/* Details Modal */}
+        {selectedContent && (
+          <ContentDetailsModal 
+            content={selectedContent} 
+            onClose={() => setSelectedContent(null)} 
+          />
         )}
       </main>
       <BottomNavBar activeTab="movies" />

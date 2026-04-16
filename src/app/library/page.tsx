@@ -5,10 +5,12 @@ import TopNavBar from "@/components/TopNavBar";
 import BottomNavBar from "@/components/BottomNavBar";
 import { getApprovedContent } from "@/lib/db";
 import { ContentItem } from "@/lib/types";
+import ContentDetailsModal from "@/components/ContentDetailsModal";
 
 export default function Library() {
   const [books, setBooks] = useState<ContentItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedContent, setSelectedContent] = useState<ContentItem | null>(null);
 
   useEffect(() => {
     async function load() {
@@ -44,7 +46,11 @@ export default function Library() {
         ) : (
           <div className="space-y-4">
             {books.map(book => (
-              <div key={book.id} className="group flex bg-surface p-4 rounded-[24px] border border-on-surface/5 shadow-sm hover:shadow-md transition-all hover:scale-[1.01] cursor-pointer">
+              <div 
+                key={book.id} 
+                className="group flex bg-surface p-4 rounded-[24px] border border-on-surface/5 shadow-sm hover:shadow-md transition-all hover:scale-[1.01] cursor-pointer"
+                onClick={() => setSelectedContent(book)}
+              >
                 {/* Book Thumbnail */}
                 <div className="relative w-20 aspect-[4/5] flex-shrink-0 rounded-[14px] overflow-hidden bg-on-surface/5 shadow-md">
                   {book.imageUrl ? (
@@ -90,6 +96,14 @@ export default function Library() {
               </div>
             ))}
           </div>
+        )}
+
+        {/* Details Modal */}
+        {selectedContent && (
+          <ContentDetailsModal 
+            content={selectedContent} 
+            onClose={() => setSelectedContent(null)} 
+          />
         )}
       </main>
       <BottomNavBar activeTab="books" />

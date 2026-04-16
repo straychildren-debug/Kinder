@@ -151,6 +151,22 @@ export async function getContentByUser(userId: string): Promise<ContentItem[]> {
   return data.map(mapContentItem);
 }
 
+export async function getContentById(id: string): Promise<ContentItem | null> {
+  const { data, error } = await supabase
+    .from('content')
+    .select('*, profiles:created_by(*)')
+    .eq('id', id)
+    .single();
+
+  if (error || !data) {
+    console.error('Error fetching content by id:', error);
+    return null;
+  }
+  
+  // Create a richer object if we want author profile data, but sticking to standard ContentItem for now
+  return mapContentItem(data);
+}
+
 // Функция для создания контента
 export async function createContent(content: Partial<ContentItem> & { createdBy: string; type: 'movie' | 'book'; title: string }) {
   // Выделяем базовые поля и metadata
@@ -217,6 +233,130 @@ export async function updateContentStatus(id: string, status: 'approved' | 'reje
     throw error;
   }
   return mapContentItem(data);
+}
+
+// ===== Reviews (Рецензии) =====
+
+export async function getReviewsForContent(contentId: string): Promise<Review[]> {
+  // Fetch reviews, grabbing user profile, and trying to count comments/ratings if possible. 
+  // Since we don't have views, we'll do basic joins.
+  const { data, error } = await supabase
+    .from('reviews')
+    .select(`
+      *,
+      profiles:user_id(name, avatar_url),
+      review_comments(count),
+      review_ratings(rating)
+    `)
+    .eq('content_id', contentId)
+    .order('created_at', { ascending: false });
+
+  if (error || !data) {
+    console.error('Error fetching reviews:', error);
+    return [];
+  }
+
+  return data.map((r: any) => {
+    // calculate average rating for review itself
+    const ratings = r.review_ratings || [];
+    const avgRating = ratings.length > 0 
+      ? ratings.reduce((sum: number, item: any) => sum + item.rating, 0) / ratings.length 
+      : 0;
+
+    return {
+      id: r.id,
+      contentId: r.content_id,
+      userId: r.user_id,
+      text: r.text,
+      rating: r.rating,
+      likes: r.likes,
+      commentCount: r.review_comments?.[0]?.count ?? 0,
+      avgRating: Number(avgRating.toFixed(1)),
+      reviewRatingCount: ratings.length,
+      createdAt: r.created_at,
+      user: r.profiles ? { 
+        id: r.user_id, 
+        name: r.profiles.name, 
+        avatarUrl: r.profiles.avatar_url 
+      } as User : undefined
+    };
+  });
+}
+
+export async function submitReview(contentId: string, userId: string, text: string, rating: number) {
+  const { data, error } = await supabase
+    .from('reviews')
+    .insert([{
+      content_id: contentId,
+      user_id: userId,
+      text,
+      rating
+    }])
+    .select()
+    .single();
+
+  if (error) {
+    console.error('Error submitting review:', error);
+    throw error;
+  }
+  return data;
+}
+
+export async function rateReview(reviewId: string, userId: string, rating: number) {
+  const { data, error } = await supabase
+    .from('review_ratings')
+    .upsert({
+      review_id: reviewId,
+      user_id: userId,
+      rating
+    }, { onConflict: 'review_id, user_id' });
+
+  if (error) {
+    console.error('Error rating review:', error);
+    throw error;
+  }
+  return data;
+}
+
+export async function addReviewComment(reviewId: string, userId: string, text: string) {
+  const { data, error } = await supabase
+    .from('review_comments')
+    .insert([{
+      review_id: reviewId,
+      user_id: userId,
+      text
+    }])
+    .select('*, profiles:user_id(name, avatar_url)')
+    .single();
+
+  if (error) {
+    console.error('Error adding review comment:', error);
+    throw error;
+  }
+  return data;
+}
+
+export async function getReviewComments(reviewId: string) {
+  const { data, error } = await supabase
+    .from('review_comments')
+    .select('*, profiles:user_id(name, avatar_url)')
+    .eq('review_id', reviewId)
+    .order('created_at', { ascending: true });
+
+  if (error || !data) return [];
+
+  return data.map((c: any) => ({
+    id: c.id,
+    reviewId: c.review_id,
+    userId: c.user_id,
+    text: c.text,
+    createdAt: c.created_at,
+    user: c.profiles ? { 
+      id: c.user_id, 
+      name: c.profiles.name, 
+      avatarUrl: c.profiles.avatar_url 
+    } as User : undefined
+  }));
 }
 
 // ===== Storage (Обложки) =====

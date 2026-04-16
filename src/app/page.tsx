@@ -7,11 +7,13 @@ import { getApprovedContent } from "@/lib/db";
 import { useAuth } from "@/components/AuthProvider";
 import Link from "next/link";
 import { ContentItem } from "@/lib/types";
+import ContentDetailsModal from "@/components/ContentDetailsModal";
 
 export default function Home() {
   const { user } = useAuth();
   const [approvedContent, setApprovedContent] = useState<ContentItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedContent, setSelectedContent] = useState<ContentItem | null>(null);
 
   useEffect(() => {
     async function load() {
@@ -54,7 +56,11 @@ export default function Home() {
           ) : (
             <div className="space-y-10">
               {approvedContent.map((item, index) => (
-                <article key={item.id} className="group overflow-hidden bg-surface rounded-[40px] border border-on-surface/5 shadow-xl hover:shadow-2xl transition-all duration-500">
+                <article 
+                  key={item.id} 
+                  onClick={() => setSelectedContent(item)}
+                  className="group cursor-pointer overflow-hidden bg-surface rounded-[40px] border border-on-surface/5 shadow-xl hover:shadow-2xl transition-all duration-500"
+                >
                   {/* Content Image - Clean and Visible */}
                   <div className="relative aspect-[3/2] md:aspect-video w-full overflow-hidden">
                     <img
@@ -83,13 +89,6 @@ export default function Home() {
                             </span>
                           </div>
                        </div>
-                       
-                       {item.rating && (
-                          <div className="bg-accent-lilac/30 px-3 py-1 rounded-full flex items-center gap-1 border border-accent-lilac/50">
-                            <span className="material-symbols-outlined text-on-accent-lilac text-[12px]" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
-                            <span className="text-on-accent-lilac text-[12px] font-black">{item.rating}</span>
-                          </div>
-                       )}
                     </div>
 
                     <h2 className="text-4xl md:text-5xl font-black text-on-surface leading-[0.9] tracking-tighter mb-6">
@@ -102,24 +101,33 @@ export default function Home() {
 
                     <div className="flex items-center justify-between pt-6 border-t border-on-surface/5">
                       <div className="flex items-center gap-6">
-                        <button className="flex items-center gap-2 group/btn">
+                        <div className="flex items-center gap-2 group/btn">
                           <span className="material-symbols-outlined text-[20px] text-on-surface group-hover/btn:scale-110 transition-transform" style={{ fontVariationSettings: "'FILL' 0" }}>favorite</span>
                           <span className="text-[12px] font-black text-on-surface">{item.likeCount || 0}</span>
-                        </button>
-                        <button className="flex items-center gap-2 group/btn">
+                        </div>
+                        <div className="flex items-center gap-2 group/btn">
                           <span className="material-symbols-outlined text-[20px] text-on-surface group-hover/btn:scale-110 transition-transform">chat_bubble</span>
                           <span className="text-[12px] font-black text-on-surface">{item.reviewCount || 0}</span>
-                        </button>
+                        </div>
                       </div>
 
-                      <button className="bg-on-surface text-surface px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all hover:scale-105 active:scale-95 shadow-lg shadow-on-surface/10">
-                        {item.type === 'movie' ? 'Смотреть' : 'Читать'}
-                      </button>
+                      <div className="flex items-center gap-2 bg-on-surface text-surface px-5 py-2.5 rounded-2xl shadow-lg shadow-on-surface/10">
+                        <span className="material-symbols-outlined text-accent-lilac text-[16px]" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+                        <span className="text-[14px] font-black tracking-tight">{item.rating ? item.rating.toFixed(1) : '—'}</span>
+                      </div>
                     </div>
                   </div>
                 </article>
               ))}
             </div>
+          )}
+
+          {/* Details Modal */}
+          {selectedContent && (
+            <ContentDetailsModal 
+              content={selectedContent} 
+              onClose={() => setSelectedContent(null)} 
+            />
           )}
 
           {/* Social Proof & Sidebar Elements */}

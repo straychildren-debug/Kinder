@@ -52,8 +52,29 @@ export interface Review {
   userId: string;
   text: string;
   rating: number;
-  likes: number;
+  likes: number; // Left for backwards compatibility, maybe we replace with avgRating slowly
+  avgRating?: number; // Fetched dynamically: the average of review_ratings 
+  reviewRatingCount?: number; // Number of people who rated this review
+  commentCount?: number;
   createdAt: string;
+  user?: User; // Joined user info
+}
+
+export interface ReviewRating {
+  id: string;
+  reviewId: string;
+  userId: string;
+  rating: number;
+  createdAt: string;
+}
+
+export interface ReviewComment {
+  id: string;
+  reviewId: string;
+  userId: string;
+  text: string;
+  createdAt: string;
+  user?: User;
 }
 
 // ===== Клубы =====
