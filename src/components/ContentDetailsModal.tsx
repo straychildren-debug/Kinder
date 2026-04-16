@@ -289,10 +289,10 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
                      {/* Comments Toggle */}
                      <button 
                        onClick={() => toggleComments(review.id)}
-                       className="flex items-center gap-2 text-on-surface-variant hover:text-on-surface transition-colors bg-surface-container px-4 py-2 rounded-full"
+                       className="flex items-center gap-2 text-on-surface-variant hover:text-on-surface transition-colors bg-surface-container px-3 py-1.5 rounded-full"
                      >
                        <span className="material-symbols-outlined text-[18px]">chat_bubble</span>
-                       <span className="text-[11px] font-black uppercase tracking-widest">{review.commentCount || 0} комментариев</span>
+                       <span className="text-[12px] font-black tracking-widest">{review.commentCount || 0}</span>
                      </button>
                   </div>
 
@@ -328,21 +328,21 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
                       
                       {/* Add Comment Input */}
                       {user && (
-                        <div className="flex gap-3">
+                        <div className="flex gap-2">
                           <input 
                             type="text"
                             value={newCommentText}
                             onChange={e => setNewCommentText(e.target.value)}
-                            placeholder="Написать комментарий (можно использовать эмодзи)..."
-                            className="flex-1 bg-surface border border-on-surface/10 rounded-full px-5 text-sm focus:outline-none focus:border-accent-lilac"
+                            placeholder="Написать комментарий..."
+                            className="flex-1 bg-surface border border-on-surface/10 rounded-full px-5 py-2.5 text-sm focus:outline-none focus:border-accent-lilac"
                             onKeyDown={e => e.key === 'Enter' && handleSubmitComment(review.id)}
                           />
                           <button 
                             onClick={() => handleSubmitComment(review.id)}
                             disabled={!newCommentText.trim()}
-                            className="w-10 h-10 bg-on-surface text-surface rounded-full flex items-center justify-center disabled:opacity-50 transition-transform active:scale-95 shadow-md shadow-on-surface/10"
+                            className="w-10 h-10 bg-on-surface text-surface rounded-full flex items-center justify-center disabled:opacity-50 transition-transform active:scale-95 shadow-md shadow-on-surface/10 shrink-0"
                           >
-                            <span className="material-symbols-outlined text-[18px]">send</span>
+                            <span className="material-symbols-outlined text-[20px] font-bold">arrow_upward</span>
                           </button>
                         </div>
                       )}
