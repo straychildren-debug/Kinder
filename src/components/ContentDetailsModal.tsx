@@ -392,23 +392,28 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
                       )}
                       
                       {/* Add Comment Input */}
-                      {user && (
-                        <div className="flex gap-2">
+                      {user ? (
+                        <div className="flex gap-2 sticky bottom-0 bg-surface py-2">
                           <input 
                             type="text"
                             value={newCommentText}
                             onChange={e => setNewCommentText(e.target.value)}
                             placeholder="Написать комментарий..."
-                            className="flex-1 bg-surface border border-on-surface/10 rounded-full px-5 py-2.5 text-sm focus:outline-none focus:border-accent-lilac"
+                            className="flex-1 bg-surface-container-lowest border border-on-surface/10 rounded-full px-5 py-2.5 text-sm font-medium focus:outline-none focus:border-accent-lilac shadow-sm"
                             onKeyDown={e => e.key === 'Enter' && handleSubmitComment(review.id)}
                           />
                           <button 
                             onClick={() => handleSubmitComment(review.id)}
                             disabled={!newCommentText.trim()}
-                            className="w-10 h-10 bg-on-surface text-surface rounded-full flex items-center justify-center disabled:opacity-50 transition-transform active:scale-95 shadow-md shadow-on-surface/10 shrink-0"
+                            className="w-10 h-10 bg-on-surface text-surface rounded-full flex items-center justify-center disabled:opacity-50 transition-all hover:scale-105 active:scale-95 shadow-lg shadow-on-surface/10 shrink-0"
                           >
                             <span className="material-symbols-outlined text-[20px] font-bold">arrow_upward</span>
                           </button>
+                        </div>
+                      ) : (
+                        <div className="text-center py-4 bg-surface-container-lowest rounded-2xl border border-dashed border-on-surface/10">
+                           <p className="text-[10px] font-black uppercase tracking-widest text-on-surface-variant mb-2">Обсуждение доступно участникам</p>
+                           <Link href="/login" className="text-accent-lilac font-black text-xs uppercase tracking-widest hover:underline decoration-2">Войти в аккаунт</Link>
                         </div>
                       )}
                     </div>
