@@ -110,13 +110,13 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
   return (
     <div className="fixed inset-0 z-[100] flex flex-col bg-background animate-in slide-in-from-bottom-8 duration-300">
       {/* Header */}
-      <div className="sticky top-0 bg-surface/80 backdrop-blur-xl border-b border-on-surface/5 z-10 px-4 py-4 flex items-center justify-between">
-        <h2 className="text-xl font-black text-on-surface tracking-tight truncate max-w-[80%]">
+      <div className="sticky top-0 bg-surface/80 backdrop-blur-xl border-b border-on-surface/5 z-10 px-4 py-4 flex items-center gap-4">
+        <button onClick={onClose} className="p-2 -ml-2 rounded-full hover:bg-surface-container-high transition-colors text-on-surface flex-shrink-0 flex items-center justify-center">
+          <span className="material-symbols-outlined">arrow_back</span>
+        </button>
+        <h2 className="text-xl font-black text-on-surface tracking-tight truncate flex-1 leading-none pt-1">
           {content.title}
         </h2>
-        <button onClick={onClose} className="p-2 rounded-full bg-surface-container hover:bg-surface-container-high transition-colors text-on-surface">
-          <span className="material-symbols-outlined">close</span>
-        </button>
       </div>
 
       <div className="flex-1 overflow-y-auto pb-safe">
