@@ -24,11 +24,11 @@ export default function BookDetails() {
           {/* Content Area */}
           <div className="lg:col-span-7 flex flex-col pt-10">
             <div className="space-y-6 mb-12">
-              <span className="text-[10px] font-black uppercase tracking-[0.4em] text-on-surface-variant opacity-40 italic block underline underline-offset-8">Архив классики</span>
+              <span className="text-[10px] font-black uppercase tracking-[0.4em] text-on-surface-variant opacity-40  block underline underline-offset-8">Архив классики</span>
               <h2 className="text-6xl md:text-8xl font-black text-on-surface tracking-tighter leading-[0.85]">О дивный<br/>новый мир</h2>
               <div className="flex items-center gap-4">
                  <div className="w-10 h-1 rounded-full bg-on-surface"></div>
-                 <p className="text-2xl font-black tracking-tight text-on-surface opacity-60 italic">Олдос Хаксли</p>
+                 <p className="text-2xl font-black tracking-tight text-on-surface opacity-60 ">Олдос Хаксли</p>
               </div>
             </div>
 
@@ -41,8 +41,8 @@ export default function BookDetails() {
             </div>
 
             <div className="space-y-6 mb-12">
-              <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-on-surface-variant opacity-40 italic">Аннотация</h3>
-              <p className="text-on-surface text-lg font-medium leading-[1.6] opacity-80 italic max-w-2xl border-l-2 border-black/5 pl-8">
+              <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-on-surface-variant opacity-40 ">Аннотация</h3>
+              <p className="text-on-surface text-lg font-medium leading-[1.6] opacity-80  max-w-2xl border-l-2 border-black/5 pl-8">
                 Культовая антиутопия Олдоса Хаксли о генетически программируемом обществе потребления. В этом мире нет места страданиям, но нет и места человечности. Каждому суждена своя роль — от Альф до Эпсилонов, и каждый обязан быть счастлив под воздействием сомы.
               </p>
             </div>
@@ -59,7 +59,7 @@ export default function BookDetails() {
 
         {/* Action Bar */}
         <div className="sticky top-24 z-40 bg-surface/80 backdrop-blur-3xl py-6 flex justify-between items-center mb-16 border-b border-black/5">
-          <h3 className="text-2xl font-black tracking-tighter text-on-surface italic">Мнение сообщества</h3>
+          <h3 className="text-2xl font-black tracking-tighter text-on-surface ">Мнение сообщества</h3>
           <button className="bg-on-surface text-surface px-8 py-4 rounded-2xl flex items-center gap-3 hover:scale-105 active:scale-95 transition-all shadow-2xl shadow-black/20">
             <span className="material-symbols-outlined text-[18px]">edit_note</span>
             <span className="font-black text-[10px] uppercase tracking-widest">Оставить рецензию</span>
@@ -80,14 +80,14 @@ export default function BookDetails() {
                     />
                     <div className="space-y-1">
                       <p className="font-black text-sm tracking-tighter">Александр Воронин</p>
-                      <p className="text-[9px] font-black uppercase tracking-widest text-on-surface-variant opacity-30 italic">Золотое перо • 12 мин назад</p>
+                      <p className="text-[9px] font-black uppercase tracking-widest text-on-surface-variant opacity-30 ">Золотое перо • 12 мин назад</p>
                     </div>
                   </div>
                   <div className="flex gap-1 text-on-surface opacity-10">
                     {[1,2,3,4,5].map(i => <span key={i} className="material-symbols-outlined text-[14px]" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>)}
                   </div>
                 </div>
-                <p className="text-on-surface leading-[1.5] text-2xl font-black tracking-tight italic opacity-90">
+                <p className="text-on-surface leading-[1.5] text-2xl font-black tracking-tight  opacity-90">
                   &laquo;Пророческая работа, которая с каждым десятилетием становится все актуальнее. Хаксли пугает не насилием, а комфортом, который лишает нас души.&raquo;
                 </p>
                 <div className="pt-10 flex gap-8 border-t border-black/5">
@@ -112,9 +112,9 @@ export default function BookDetails() {
                     <div className="absolute -left-6 top-4 w-[2px] h-full bg-black/5"></div>
                     <div className="flex items-center gap-3">
                       <span className="text-sm font-black tracking-tighter">{comment.name}</span>
-                      <span className="text-[9px] font-black uppercase tracking-widest text-on-surface-variant opacity-20 italic">{comment.time}</span>
+                      <span className="text-[9px] font-black uppercase tracking-widest text-on-surface-variant opacity-20 ">{comment.time}</span>
                     </div>
-                    <p className="text-sm font-medium text-on-surface-variant italic opacity-70 leading-relaxed">{comment.text}</p>
+                    <p className="text-sm font-medium text-on-surface-variant  opacity-70 leading-relaxed">{comment.text}</p>
                   </div>
                 ))}
              </div>
@@ -123,7 +123,7 @@ export default function BookDetails() {
           {/* Sidebar */}
           <div className="lg:col-span-4 space-y-10">
             <div className="bg-surface-container rounded-[40px] p-10 border border-black/5 space-y-8">
-              <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-on-surface-variant opacity-40 italic">Распределение</h4>
+              <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-on-surface-variant opacity-40 ">Распределение</h4>
               <div className="space-y-6">
                 {[
                   { star: 5, pct: 85 },
@@ -144,13 +144,13 @@ export default function BookDetails() {
 
             <article className="bg-white p-8 rounded-[32px] border border-black/5 shadow-sm space-y-4 group hover:shadow-xl transition-all">
               <div className="flex items-center gap-4">
-                <div className="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center font-black italic text-xs text-on-surface/20">М</div>
+                <div className="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center font-black  text-xs text-on-surface/20">М</div>
                 <div>
                   <p className="font-black text-xs tracking-tighter">Мария Петрова</p>
-                  <p className="text-[8px] font-black text-on-surface-variant uppercase tracking-widest opacity-30 italic">Вчера</p>
+                  <p className="text-[8px] font-black text-on-surface-variant uppercase tracking-widest opacity-30 ">Вчера</p>
                 </div>
               </div>
-              <p className="text-xs font-medium text-on-surface-variant italic opacity-70 leading-relaxed line-clamp-3">
+              <p className="text-xs font-medium text-on-surface-variant  opacity-70 leading-relaxed line-clamp-3">
                 Книга, которую нужно перечитывать каждые пять лет. Каждый раз открываешь новые смыслы в диалогах с Мустафой Мондом.
               </p>
             </article>

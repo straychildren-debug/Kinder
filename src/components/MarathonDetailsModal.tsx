@@ -95,7 +95,7 @@ export default function MarathonDetailsModal({ isOpen, onClose, marathon, userId
       >
         <div className="flex items-center justify-between mb-8 flex-shrink-0">
           <div>
-            <span className="text-[10px] font-black text-on-surface-variant uppercase tracking-[0.4em] block mb-2 opacity-40 italic">Детали марафона</span>
+            <span className="text-[10px] font-black text-on-surface-variant uppercase tracking-[0.4em] block mb-2 opacity-40 ">Детали марафона</span>
             <h2 className="text-4xl font-black tracking-tighter leading-none">{marathon.title}</h2>
           </div>
           <button onClick={onClose} className="w-12 h-12 rounded-2xl bg-surface-container flex items-center justify-center hover:bg-on-surface hover:text-surface transition-all active:scale-90">
@@ -147,7 +147,7 @@ export default function MarathonDetailsModal({ isOpen, onClose, marathon, userId
                         />
                         <span className="material-symbols-outlined absolute inset-0 text-white text-[16px] pointer-events-none opacity-0 peer-checked:opacity-100 flex items-center justify-center">check</span>
                      </div>
-                     <h4 className={`text-xl font-black tracking-tighter transition-all italic ${myProgress[item.id]?.isCompleted ? 'text-on-surface-variant/20 line-through' : 'text-on-surface'}`}>
+                     <h4 className={`text-xl font-black tracking-tighter transition-all  ${myProgress[item.id]?.isCompleted ? 'text-on-surface-variant/20 line-through' : 'text-on-surface'}`}>
                        {item.title}
                      </h4>
                    </div>
@@ -157,7 +157,7 @@ export default function MarathonDetailsModal({ isOpen, onClose, marathon, userId
                        value={myProgress[item.id]?.review || ''}
                        onChange={(e) => setMyProgress(prev => ({...prev, [item.id]: {...prev[item.id], review: e.target.value}}))}
                        placeholder="Ваши мысли после ознакомления..."
-                       className="w-full text-xs font-black p-6 rounded-2xl bg-surface-container/30 border border-transparent focus:outline-none focus:bg-white focus:border-black/5 focus:shadow-sm min-h-[120px] transition-all placeholder:text-on-surface-variant/20 italic"
+                       className="w-full text-xs font-black p-6 rounded-2xl bg-surface-container/30 border border-transparent focus:outline-none focus:bg-white focus:border-black/5 focus:shadow-sm min-h-[120px] transition-all placeholder:text-on-surface-variant/20 "
                      />
                      <div className="flex justify-end">
                        <button
@@ -189,7 +189,7 @@ export default function MarathonDetailsModal({ isOpen, onClose, marathon, userId
                          {userProg.userAvatar ? (
                            <img src={userProg.userAvatar} alt="Avatar" className="w-14 h-14 rounded-[20px] object-cover grayscale brightness-90 border border-black/5 shadow-sm" />
                          ) : (
-                           <div className="w-14 h-14 rounded-[20px] bg-surface-container flex items-center justify-center text-[14px] font-black italic text-on-surface/20 border border-black/5">
+                           <div className="w-14 h-14 rounded-[20px] bg-surface-container flex items-center justify-center text-[14px] font-black  text-on-surface/20 border border-black/5">
                              {(userProg.userName || '?').charAt(0).toUpperCase()}
                            </div>
                          )}
@@ -198,7 +198,7 @@ export default function MarathonDetailsModal({ isOpen, onClose, marathon, userId
                          </div>
                        </div>
                        <div className="flex-grow">
-                         <h4 className="font-black text-lg tracking-tighter italic">{userProg.userName || 'Strand Person'}</h4>
+                         <h4 className="font-black text-lg tracking-tighter ">{userProg.userName || 'Strand Person'}</h4>
                          <div className="flex items-center gap-4 mt-1">
                            <div className="flex-1 h-1.5 bg-surface-container rounded-full overflow-hidden">
                              <div className="bg-on-surface h-full" style={{ width: `${percent}%` }}></div>
@@ -221,17 +221,17 @@ export default function MarathonDetailsModal({ isOpen, onClose, marathon, userId
                                  <span className="material-symbols-outlined text-on-surface-variant/10 text-[20px]">circle</span>
                                )}
                              </div>
-                             <span className="text-sm font-black tracking-tighter opacity-80 italic">{matchingItem?.title || 'Archive Item'}</span>
+                             <span className="text-sm font-black tracking-tighter opacity-80 ">{matchingItem?.title || 'Archive Item'}</span>
                              {p.reviewText && (
                                <div className="mt-3 p-5 rounded-2xl bg-surface-container/30 border-l-4 border-on-surface">
-                                 <p className="text-xs text-on-surface-variant font-medium italic leading-relaxed opacity-70">&laquo;{p.reviewText}&raquo;</p>
+                                 <p className="text-xs text-on-surface-variant font-medium  leading-relaxed opacity-70">&laquo;{p.reviewText}&raquo;</p>
                                </div>
                              )}
                            </div>
                          );
                        })}
                        {userProg.progress.filter(p => p.isCompleted || p.reviewText).length === 0 && (
-                         <p className="text-[10px] font-black uppercase tracking-widest text-on-surface-variant/20 italic">Только начал путь в этом марафоне...</p>
+                         <p className="text-[10px] font-black uppercase tracking-widest text-on-surface-variant/20 ">Только начал путь в этом марафоне...</p>
                        )}
                      </div>
                    </div>

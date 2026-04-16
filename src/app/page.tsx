@@ -65,10 +65,10 @@ export default function Home() {
                     {/* Editorial Gradient Overlay */}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
                     
-                    {/* Floating Info */}
-                    <div className="absolute bottom-10 left-8 right-8">
+                    {/* Floating Info with Glassmorphism Backing */}
+                    <div className="absolute bottom-6 left-6 right-6 p-8 rounded-[40px] bg-black/10 backdrop-blur-xl border border-white/10 shadow-2xl">
                        <div className="flex items-center gap-2 mb-4">
-                         <span className="bg-white/10 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-black text-white uppercase tracking-[0.2em] border border-white/10">
+                         <span className="bg-white/20 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-black text-white uppercase tracking-[0.2em] border border-white/10">
                            {item.type === 'movie' ? 'Кино' : 'Книга'}
                          </span>
                          {item.rating && (
@@ -79,7 +79,7 @@ export default function Home() {
                          )}
                        </div>
                        
-                       <h2 className="text-4xl md:text-5xl font-black text-white leading-[0.9] tracking-tighter mb-4 group-hover:translate-x-2 transition-transform duration-500">
+                       <h2 className="text-4xl md:text-5xl font-black text-white leading-[0.9] tracking-tighter mb-6 group-hover:translate-x-2 transition-transform duration-500 max-w-sm">
                          {item.title}
                        </h2>
                        
@@ -94,7 +94,7 @@ export default function Home() {
                            </div>
                          </div>
                          
-                         <button className="bg-white/10 hover:bg-white/20 backdrop-blur-md px-5 py-2 rounded-full text-[10px] font-black text-white uppercase tracking-widest border border-white/10 transition-colors">
+                         <button className="bg-white/20 hover:bg-white/30 backdrop-blur-md px-5 py-2.5 rounded-full text-[10px] font-black text-white uppercase tracking-widest border border-white/10 transition-all active:scale-95">
                             {item.type === 'movie' ? 'Трейлер' : 'Анонс'}
                          </button>
                        </div>

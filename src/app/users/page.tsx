@@ -79,9 +79,9 @@ export default function UsersManagementPage() {
       <TopNavBar />
       <main className="pt-24 pb-32 px-6 max-w-5xl mx-auto">
         <section className="mb-12">
-          <span className="text-[10px] font-black uppercase tracking-[0.3em] text-on-surface-variant mb-2 block opacity-40 italic">Система доступа</span>
+          <span className="text-[10px] font-black uppercase tracking-[0.3em] text-on-surface-variant mb-2 block opacity-40 ">Система доступа</span>
           <h1 className="text-5xl font-black tracking-tighter text-on-surface leading-[0.9]">Права и<br/>пользователи</h1>
-          <p className="text-on-surface-variant text-sm mt-6 font-medium opacity-70 italic leading-relaxed max-w-lg">
+          <p className="text-on-surface-variant text-sm mt-6 font-medium opacity-70  leading-relaxed max-w-lg">
             Управляйте экосистемой Kinder. Назначайте роли, контролируйте доступы и поддерживайте порядок в сообществе.
           </p>
         </section>
@@ -128,10 +128,10 @@ export default function UsersManagementPage() {
             <table className="w-full text-left border-collapse">
               <thead>
                 <tr className="bg-surface-container/30">
-                  <th className="px-8 py-6 text-[9px] font-black uppercase tracking-[0.3em] text-on-surface-variant opacity-40 italic">Пользователь</th>
-                  <th className="px-8 py-6 text-[9px] font-black uppercase tracking-[0.3em] text-on-surface-variant opacity-40 italic">Email-адрес</th>
-                  <th className="px-8 py-6 text-[9px] font-black uppercase tracking-[0.3em] text-on-surface-variant opacity-40 italic">Уровень доступа</th>
-                  <th className="px-8 py-6 text-[9px] font-black uppercase tracking-[0.3em] text-on-surface-variant opacity-40 italic text-right">Настройка</th>
+                  <th className="px-8 py-6 text-[9px] font-black uppercase tracking-[0.3em] text-on-surface-variant opacity-40 ">Пользователь</th>
+                  <th className="px-8 py-6 text-[9px] font-black uppercase tracking-[0.3em] text-on-surface-variant opacity-40 ">Email-адрес</th>
+                  <th className="px-8 py-6 text-[9px] font-black uppercase tracking-[0.3em] text-on-surface-variant opacity-40 ">Уровень доступа</th>
+                  <th className="px-8 py-6 text-[9px] font-black uppercase tracking-[0.3em] text-on-surface-variant opacity-40  text-right">Настройка</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-black/5">
@@ -143,7 +143,7 @@ export default function UsersManagementPage() {
                   </tr>
                 ) : users.length === 0 ? (
                   <tr>
-                    <td colSpan={4} className="px-8 py-32 text-center text-on-surface-variant/40 italic font-black text-[11px] uppercase tracking-widest">
+                    <td colSpan={4} className="px-8 py-32 text-center text-on-surface-variant/40  font-black text-[11px] uppercase tracking-widest">
                       База данных пуста
                     </td>
                   </tr>
@@ -185,7 +185,7 @@ export default function UsersManagementPage() {
                               <option value="admin">ADMIN</option>
                               {currentUser.role === 'superadmin' && <option value="superadmin">SUPERADMIN</option>}
                             </select>
-                            <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-[16px] italic">expand_more</span>
+                            <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-[16px] ">expand_more</span>
                           </div>
                         </div>
                       </td>

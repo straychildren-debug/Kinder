@@ -102,7 +102,7 @@ export default function MarathonModal({
       >
         <div className="flex items-center justify-between mb-12">
           <div>
-            <span className="text-[10px] font-black text-on-surface-variant uppercase tracking-[0.4em] block mb-2 opacity-40 italic">Событие клуба</span>
+            <span className="text-[10px] font-black text-on-surface-variant uppercase tracking-[0.4em] block mb-2 opacity-40 ">Событие клуба</span>
             <h2 className="text-4xl font-black tracking-tighter leading-none">Марафон</h2>
           </div>
           <button onClick={onClose} className="w-12 h-12 rounded-2xl bg-surface-container flex items-center justify-center hover:bg-on-surface hover:text-surface transition-all active:scale-90">
@@ -117,8 +117,8 @@ export default function MarathonModal({
               <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></div>
               <span className="text-[9px] font-black text-green-500 uppercase tracking-widest">Активный поток</span>
             </div>
-            <h3 className="text-xl font-black tracking-tighter italic">{activeMarathon.title}</h3>
-            <p className="text-xs text-on-surface-variant/40 font-black uppercase tracking-widest italic">
+            <h3 className="text-xl font-black tracking-tighter ">{activeMarathon.title}</h3>
+            <p className="text-xs text-on-surface-variant/40 font-black uppercase tracking-widest ">
               До {new Date(activeMarathon.endsAt).toLocaleDateString('ru-RU', {
                 day: 'numeric',
                 month: 'long',
@@ -140,7 +140,7 @@ export default function MarathonModal({
         {/* Create new marathon form */}
         <form onSubmit={handleCreate} className="space-y-10">
           <div>
-            <h3 className="text-[10px] font-black text-on-surface-variant uppercase tracking-[0.3em] mb-8 opacity-40 italic">
+            <h3 className="text-[10px] font-black text-on-surface-variant uppercase tracking-[0.3em] mb-8 opacity-40 ">
               {activeMarathon ? 'Настройка нового' : 'Новое соревнование'}
             </h3>
 
@@ -152,7 +152,7 @@ export default function MarathonModal({
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   placeholder="Например: Осень с Оруэллом"
-                  className="w-full px-6 py-4 rounded-2xl bg-surface-container/30 border border-transparent text-sm font-black focus:outline-none focus:bg-white focus:border-black/5 focus:shadow-sm transition-all placeholder:text-on-surface-variant/20 italic"
+                  className="w-full px-6 py-4 rounded-2xl bg-surface-container/30 border border-transparent text-sm font-black focus:outline-none focus:bg-white focus:border-black/5 focus:shadow-sm transition-all placeholder:text-on-surface-variant/20 "
                 />
               </div>
 
@@ -162,11 +162,11 @@ export default function MarathonModal({
                   <select
                     value={selectedContentId}
                     onChange={(e) => setSelectedContentId(e.target.value)}
-                    className="flex-1 px-6 py-4 rounded-2xl bg-surface-container/30 border border-transparent text-sm font-black focus:outline-none focus:bg-white focus:border-black/5 focus:shadow-sm transition-all text-on-surface appearance-none cursor-pointer italic"
+                    className="flex-1 px-6 py-4 rounded-2xl bg-surface-container/30 border border-transparent text-sm font-black focus:outline-none focus:bg-white focus:border-black/5 focus:shadow-sm transition-all text-on-surface appearance-none cursor-pointer "
                   >
-                    <option value="" className="font-sans not-italic">Выбрать из библиотеки...</option>
+                    <option value="" className="font-sans not-">Выбрать из библиотеки...</option>
                     {availableContent.map(c => (
-                      <option key={c.id} value={c.id} className="font-sans not-italic">
+                      <option key={c.id} value={c.id} className="font-sans not-">
                         {c.type === 'movie' ? '🎬' : '📚'} {c.title}
                       </option>
                     ))}
@@ -189,7 +189,7 @@ export default function MarathonModal({
                   </button>
                 </div>
                 <div className="flex justify-between items-center mt-3 px-1">
-                  <span className="text-[9px] text-on-surface-variant font-black uppercase tracking-widest opacity-20 italic">Нет нужной книги?</span>
+                  <span className="text-[9px] text-on-surface-variant font-black uppercase tracking-widest opacity-20 ">Нет нужной книги?</span>
                   <Link
                     href="/create"
                     onClick={onClose}
@@ -203,7 +203,7 @@ export default function MarathonModal({
                   <div className="flex flex-col gap-3 mt-6">
                     {items.map((item, idx) => (
                       <div key={idx} className="flex items-center justify-between p-5 rounded-2xl bg-white border border-black/5 shadow-sm group/item">
-                        <span className="text-sm font-black tracking-tighter truncate italic">{item.title}</span>
+                        <span className="text-sm font-black tracking-tighter truncate ">{item.title}</span>
                         <button
                           type="button"
                           onClick={() => setItems(items.filter((_, i) => i !== idx))}
@@ -223,14 +223,14 @@ export default function MarathonModal({
                   type="datetime-local"
                   value={endsAt}
                   onChange={(e) => setEndsAt(e.target.value)}
-                  className="w-full px-6 py-4 rounded-2xl bg-surface-container/30 border border-transparent text-sm font-black focus:outline-none focus:bg-white focus:border-black/5 focus:shadow-sm transition-all cursor-pointer italic appearance-none"
+                  className="w-full px-6 py-4 rounded-2xl bg-surface-container/30 border border-transparent text-sm font-black focus:outline-none focus:bg-white focus:border-black/5 focus:shadow-sm transition-all cursor-pointer  appearance-none"
                 />
               </div>
 
               {/* Preview countdown */}
               {preview && (
                 <div className="p-8 rounded-[32px] bg-surface-container/20 border border-black/5 space-y-6">
-                  <span className="text-[9px] font-black text-on-surface-variant uppercase tracking-[0.3em] block mb-2 opacity-40 italic text-center">Виджет времени</span>
+                  <span className="text-[9px] font-black text-on-surface-variant uppercase tracking-[0.3em] block mb-2 opacity-40  text-center">Виджет времени</span>
                   <div className="flex gap-6 justify-center">
                     <div className="flex flex-col items-center">
                       <div className="text-3xl font-black tracking-tighter">{preview.d}</div>
@@ -251,7 +251,7 @@ export default function MarathonModal({
           </div>
 
           {error && (
-            <div className="p-4 rounded-xl bg-red-50 text-red-600 text-[10px] font-black uppercase tracking-widest text-center italic">
+            <div className="p-4 rounded-xl bg-red-50 text-red-600 text-[10px] font-black uppercase tracking-widest text-center ">
               {error}
             </div>
           )}

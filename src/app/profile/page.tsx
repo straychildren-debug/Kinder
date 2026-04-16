@@ -35,7 +35,7 @@ export default function Profile() {
           </div>
           <div className="text-center space-y-4">
             <h2 className="text-4xl font-black tracking-tighter">Войдите в аккаунт</h2>
-            <p className="text-on-surface-variant text-sm font-medium opacity-60 max-w-xs mx-auto italic leading-relaxed">
+            <p className="text-on-surface-variant text-sm font-medium opacity-60 max-w-xs mx-auto  leading-relaxed">
               Чтобы просматривать профиль, делиться контентом и участвовать в жизни сообщества, необходимо авторизоваться
             </p>
           </div>
@@ -77,7 +77,7 @@ export default function Profile() {
                 {user.avatarUrl ? (
                   <img alt={user.name} className="w-full h-full object-cover" src={user.avatarUrl} />
                 ) : (
-                  <div className="w-full h-full bg-surface-container flex items-center justify-center text-6xl font-black text-on-surface/10 italic">
+                  <div className="w-full h-full bg-surface-container flex items-center justify-center text-6xl font-black text-on-surface/10 ">
                     {user.name.charAt(0)}
                   </div>
                 )}
@@ -91,11 +91,11 @@ export default function Profile() {
             
             <div className="text-center md:text-left space-y-4">
               <div className="space-y-1">
-                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-on-surface-variant opacity-40 italic">Пользователь</span>
+                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-on-surface-variant opacity-40 ">Пользователь</span>
                 <h1 className="text-5xl font-black tracking-tighter text-on-surface leading-none">{user.name}</h1>
               </div>
               
-              <p className="text-on-surface-variant font-medium text-sm italic opacity-70 max-w-xs">{user.bio || user.email}</p>
+              <p className="text-on-surface-variant font-medium text-sm  opacity-70 max-w-xs">{user.bio || user.email}</p>
               
               {user.role !== 'user' && (
                 <span className={`inline-block px-4 py-1.5 text-[9px] font-black uppercase tracking-widest rounded-full border ${
@@ -130,7 +130,7 @@ export default function Profile() {
           <div className="md:col-span-8 space-y-16">
             {/* Статистика активности */}
             <div className="bg-surface p-10 rounded-[40px] border border-black/5 shadow-sm">
-              <h2 className="text-[10px] uppercase tracking-[0.3em] font-black text-on-surface-variant mb-8 opacity-40 italic">Активность сообщества</h2>
+              <h2 className="text-[10px] uppercase tracking-[0.3em] font-black text-on-surface-variant mb-8 opacity-40 ">Активность сообщества</h2>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
                 <div className="space-y-1">
                   <span className="block text-4xl font-black tracking-tighter">{userContent.length}</span>
@@ -154,15 +154,15 @@ export default function Profile() {
             {/* Мои публикации */}
             <div className="space-y-10">
               <div className="flex justify-between items-end">
-                <h2 className="text-[10px] uppercase tracking-[0.3em] font-black text-on-surface-variant opacity-40 italic">Моя история</h2>
+                <h2 className="text-[10px] uppercase tracking-[0.3em] font-black text-on-surface-variant opacity-40 ">Моя история</h2>
               </div>
 
               {userContent.length === 0 ? (
                 <div className="bg-surface rounded-[40px] p-16 text-center space-y-6 border border-black/5 shadow-sm border-dashed">
                   <div className="w-20 h-20 bg-surface-container rounded-full flex items-center justify-center mx-auto mb-4">
-                    <span className="material-symbols-outlined text-4xl text-on-surface-variant/20 italic">auto_stories</span>
+                    <span className="material-symbols-outlined text-4xl text-on-surface-variant/20 ">auto_stories</span>
                   </div>
-                  <p className="text-on-surface-variant font-medium text-sm italic opacity-60">Ваша полка пока пуста. Пора добавить что-то интересное!</p>
+                  <p className="text-on-surface-variant font-medium text-sm  opacity-60">Ваша полка пока пуста. Пора добавить что-то интересное!</p>
                   <button
                     onClick={() => router.push('/create')}
                     className="px-10 py-4 bg-on-surface text-surface rounded-2xl font-black text-[11px] uppercase tracking-[0.2em] transition-transform active:scale-95 shadow-2xl shadow-black/20"
@@ -178,7 +178,7 @@ export default function Profile() {
                         {item.imageUrl ? (
                           <img alt={item.title} className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" src={item.imageUrl} />
                         ) : (
-                          <span className="material-symbols-outlined text-on-surface-variant/20 text-4xl italic">image</span>
+                          <span className="material-symbols-outlined text-on-surface-variant/20 text-4xl ">image</span>
                         )}
                       </div>
                       <div className="flex-1 p-6 md:p-10 flex flex-col justify-between min-w-0">
@@ -196,7 +196,7 @@ export default function Profile() {
                                item.status === 'draft' ? 'Черновик' : 'Отклонено'}
                             </span>
                           </div>
-                          <p className="text-sm text-on-surface-variant font-medium line-clamp-2 leading-relaxed opacity-60 italic">{item.description}</p>
+                          <p className="text-sm text-on-surface-variant font-medium line-clamp-2 leading-relaxed opacity-60 ">{item.description}</p>
                         </div>
                         <div className="flex items-center gap-6 mt-6 pt-6 border-t border-black/5">
                           <div className="flex items-center gap-2">

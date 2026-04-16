@@ -46,7 +46,7 @@ export default function Library() {
             {books.map(book => (
               <div key={book.id} className="group flex bg-surface p-4 rounded-[24px] border border-black/5 shadow-sm hover:shadow-md transition-all hover:scale-[1.01] cursor-pointer">
                 {/* Book Thumbnail */}
-                <div className="relative w-24 aspect-[2/3] flex-shrink-0 rounded-[16px] overflow-hidden bg-surface-container-high shadow-md">
+                <div className="relative w-20 aspect-[2/3] flex-shrink-0 rounded-[14px] overflow-hidden bg-surface-container-high shadow-md">
                   {book.imageUrl ? (
                     <img
                       alt={book.title}
@@ -68,7 +68,7 @@ export default function Library() {
                 
                 {/* Book Metadata */}
                 <div className="ml-5 flex flex-col justify-center">
-                  <h4 className="font-black text-on-surface text-lg leading-tight mb-1 group-hover:text-on-surface-variant transition-colors italic">
+                  <h4 className="font-black text-on-surface text-lg leading-tight mb-1 group-hover:text-on-surface-variant transition-colors">
                     {book.title}
                   </h4>
                   <div className="flex items-center gap-2 flex-wrap">
@@ -82,7 +82,7 @@ export default function Library() {
                     )}
                   </div>
                   {book.description && (
-                    <p className="mt-2 text-xs text-on-surface-variant line-clamp-2 max-w-md italic opacity-70">
+                    <p className="mt-2 text-xs text-on-surface-variant line-clamp-2 max-w-md opacity-70">
                       {book.description}
                     </p>
                   )}

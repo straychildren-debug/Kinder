@@ -55,7 +55,7 @@ export default function ProfileSidebar({ isOpen, onClose }: ProfileSidebarProps)
                 <h3 className="text-xl font-bold">{user.name}</h3>
                 <p className="text-sm text-on-surface-variant">{user.email}</p>
                 {user.bio && (
-                  <p className="text-sm text-on-surface-variant mt-2 italic">{user.bio}</p>
+                  <p className="text-sm text-on-surface-variant mt-2">{user.bio}</p>
                 )}
               </div>
               {user.role !== 'user' && (

@@ -61,7 +61,7 @@ export default function Movies() {
             {movies.map(movie => (
               <div key={movie.id} className="group flex bg-surface p-4 rounded-[24px] border border-black/5 shadow-sm hover:shadow-md transition-all hover:scale-[1.01] cursor-pointer">
                 {/* Movie Poster */}
-                <div className="relative w-24 aspect-[2/3] flex-shrink-0 rounded-[16px] overflow-hidden bg-surface-container-high shadow-md">
+                <div className="relative w-20 aspect-[2/3] flex-shrink-0 rounded-[14px] overflow-hidden bg-surface-container-high shadow-md">
                   {movie.imageUrl ? (
                     <img
                       alt={movie.title}
@@ -83,7 +83,7 @@ export default function Movies() {
                 
                 {/* Movie Metadata */}
                 <div className="ml-5 flex flex-col justify-center">
-                  <h4 className="font-black text-on-surface text-lg leading-tight mb-1 group-hover:text-on-surface-variant transition-colors italic">
+                  <h4 className="font-black text-on-surface text-lg leading-tight mb-1 group-hover:text-on-surface-variant transition-colors">
                     {movie.title}
                   </h4>
                   <div className="flex items-center gap-2 flex-wrap mb-1">
@@ -99,13 +99,13 @@ export default function Movies() {
                   </div>
                   
                   {movie.actors && movie.actors.length > 0 && (
-                    <p className="text-[10px] font-medium text-on-surface-variant/60 italic line-clamp-1">
+                    <p className="text-[10px] font-medium text-on-surface-variant/60 line-clamp-1">
                       В ролях: {movie.actors.join(', ')}
                     </p>
                   )}
                   
                   {movie.description && (
-                    <p className="mt-2 text-xs text-on-surface-variant line-clamp-2 max-w-md italic opacity-70">
+                    <p className="mt-2 text-xs text-on-surface-variant line-clamp-2 max-w-md opacity-70">
                       {movie.description}
                     </p>
                   )}

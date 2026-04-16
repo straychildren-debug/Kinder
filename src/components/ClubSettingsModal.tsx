@@ -93,7 +93,7 @@ export default function ClubSettingsModal({
           {/* Header */}
           <div className="flex items-center justify-between mb-12">
             <div>
-              <span className="text-[10px] font-black text-on-surface-variant uppercase tracking-[0.4em] block mb-2 opacity-40 italic">Панель управления</span>
+              <span className="text-[10px] font-black text-on-surface-variant uppercase tracking-[0.4em] block mb-2 opacity-40 ">Панель управления</span>
               <h2 className="text-4xl font-black tracking-tighter leading-none">Настройки клуба</h2>
             </div>
             <button onClick={onClose} className="w-12 h-12 rounded-2xl bg-surface-container flex items-center justify-center hover:bg-on-surface hover:text-surface transition-all active:scale-90">
@@ -103,7 +103,7 @@ export default function ClubSettingsModal({
 
           {/* Marathon Section */}
           <section className="mb-12">
-            <h3 className="text-[10px] font-black text-on-surface-variant uppercase tracking-[0.3em] mb-6 opacity-40 italic">Контентные марафоны</h3>
+            <h3 className="text-[10px] font-black text-on-surface-variant uppercase tracking-[0.3em] mb-6 opacity-40 ">Контентные марафоны</h3>
             {activeMarathon ? (
               <div className="p-8 rounded-[32px] bg-white border border-black/5 shadow-sm flex items-center justify-between group hover:shadow-2xl transition-all duration-500">
                 <div className="space-y-1">
@@ -111,7 +111,7 @@ export default function ClubSettingsModal({
                     <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></div>
                     <span className="text-[9px] font-black text-green-500 uppercase tracking-widest">Активен сейчас</span>
                   </div>
-                  <p className="font-black text-lg tracking-tighter italic">{activeMarathon.title}</p>
+                  <p className="font-black text-lg tracking-tighter ">{activeMarathon.title}</p>
                 </div>
                 <button
                   onClick={() => setShowMarathonModal(true)}
@@ -128,7 +128,7 @@ export default function ClubSettingsModal({
                 <div className="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center group-hover:bg-on-surface group-hover:text-surface transition-all">
                    <span className="material-symbols-outlined text-2xl">add_circle</span>
                 </div>
-                <span className="text-[11px] font-black uppercase tracking-[0.2em] italic">Запустить соревнование</span>
+                <span className="text-[11px] font-black uppercase tracking-[0.2em] ">Запустить соревнование</span>
               </button>
             )}
           </section>
@@ -136,7 +136,7 @@ export default function ClubSettingsModal({
           {/* Members Section */}
           <section>
             <div className="flex items-center justify-between mb-6">
-              <h3 className="text-[10px] font-black text-on-surface-variant uppercase tracking-[0.3em] opacity-40 italic">
+              <h3 className="text-[10px] font-black text-on-surface-variant uppercase tracking-[0.3em] opacity-40 ">
                 Список участников ({members.length})
               </h3>
             </div>
@@ -161,7 +161,7 @@ export default function ClubSettingsModal({
                           className="w-11 h-11 rounded-[16px] object-cover grayscale brightness-90 group-hover:grayscale-0 transition-all border border-black/5 shadow-sm"
                         />
                       ) : (
-                        <div className="w-11 h-11 rounded-[16px] bg-surface-container flex items-center justify-center text-[11px] font-black italic text-on-surface/20 border border-black/5">
+                        <div className="w-11 h-11 rounded-[16px] bg-surface-container flex items-center justify-center text-[11px] font-black  text-on-surface/20 border border-black/5">
                           {(member.userName || '?').charAt(0).toUpperCase()}
                         </div>
                       )}

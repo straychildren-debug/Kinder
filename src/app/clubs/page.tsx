@@ -264,7 +264,7 @@ export default function Clubs() {
                 </div>
                 <div className="p-6">
                   <h4 className="font-black text-on-surface text-lg mb-2 tracking-tight line-clamp-1">{club.name}</h4>
-                  <p className="text-xs text-on-surface-variant font-medium line-clamp-2 mb-8 opacity-70 leading-relaxed italic">{club.description}</p>
+                  <p className="text-xs text-on-surface-variant font-medium line-clamp-2 mb-8 opacity-70 leading-relaxed ">{club.description}</p>
                   <div className="flex items-center justify-between">
                     <span className="text-[10px] font-black uppercase tracking-widest text-on-surface-variant opacity-40">{club.memberCount} участников</span>
                     <button className="w-10 h-10 rounded-2xl bg-surface-container flex items-center justify-center group-hover:bg-on-surface transition-colors">
@@ -280,7 +280,7 @@ export default function Clubs() {
         {/* Suggestion Section */}
         <section className="mt-24 p-16 bg-surface rounded-[40px] border border-black/5 text-center shadow-sm">
           <h3 className="text-3xl font-black mb-4 text-on-surface tracking-tight">Не нашли то, что искали?</h3>
-          <p className="text-on-surface-variant max-w-xl mx-auto mb-10 text-sm font-medium opacity-70 italic leading-relaxed">Создайте собственное сообщество и пригласите единомышленников для обсуждения любимых произведений в свободном формате.</p>
+          <p className="text-on-surface-variant max-w-xl mx-auto mb-10 text-sm font-medium opacity-70  leading-relaxed">Создайте собственное сообщество и пригласите единомышленников для обсуждения любимых произведений в свободном формате.</p>
           <button
             onClick={handleCreateClick}
             className="bg-on-surface text-surface px-10 py-4 rounded-2xl font-black text-[11px] uppercase tracking-[0.2em] hover:scale-105 transition-transform shadow-2xl shadow-black/20"

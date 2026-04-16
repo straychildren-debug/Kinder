@@ -36,7 +36,7 @@ export default function ModerationPage() {
           </div>
           <div className="text-center space-y-4">
             <h2 className="text-4xl font-black tracking-tighter">Доступ ограничен</h2>
-            <p className="text-on-surface-variant text-sm font-medium opacity-60 max-w-xs mx-auto italic leading-relaxed">
+            <p className="text-on-surface-variant text-sm font-medium opacity-60 max-w-xs mx-auto  leading-relaxed">
               Страница модерации доступна только участникам совета сообщества. Свяжитесь с администрацией для получения прав.
             </p>
           </div>
@@ -69,9 +69,9 @@ export default function ModerationPage() {
       <TopNavBar />
       <main className="pt-24 pb-32 px-6 max-w-4xl mx-auto">
         <section className="mb-12">
-          <span className="text-[10px] font-black uppercase tracking-[0.3em] text-on-surface-variant mb-2 block opacity-40 italic">Панель управления</span>
+          <span className="text-[10px] font-black uppercase tracking-[0.3em] text-on-surface-variant mb-2 block opacity-40 ">Панель управления</span>
           <h1 className="text-5xl font-black tracking-tighter text-on-surface leading-[0.9]">Секция<br/>модерации</h1>
-          <p className="text-on-surface-variant text-sm mt-6 font-medium opacity-70 italic leading-relaxed max-w-lg">
+          <p className="text-on-surface-variant text-sm mt-6 font-medium opacity-70  leading-relaxed max-w-lg">
             Ваша роль — защитник качества сообщества. Проверьте последние публикации и вынесите вердикт.
           </p>
         </section>
@@ -79,21 +79,21 @@ export default function ModerationPage() {
         {/* Статистика */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
           <div className="bg-white rounded-[32px] p-8 border border-black/5 shadow-sm flex flex-col justify-between group hover:shadow-2xl transition-all duration-500">
-            <span className="text-[9px] font-black uppercase tracking-widest text-amber-500 mb-4 italic">Ожидают проверки</span>
+            <span className="text-[9px] font-black uppercase tracking-widest text-amber-500 mb-4 ">Ожидают проверки</span>
             <div className="flex items-baseline gap-2">
               <span className="text-5xl font-black tracking-tighter text-on-surface">{pendingItems.length}</span>
               <span className="text-[10px] font-black uppercase tracking-widest opacity-20">постов</span>
             </div>
           </div>
           <div className="bg-white rounded-[32px] p-8 border border-black/5 shadow-sm flex flex-col justify-between opacity-40">
-            <span className="text-[9px] font-black uppercase tracking-widest text-green-600 mb-4 italic">Всего одобрено</span>
+            <span className="text-[9px] font-black uppercase tracking-widest text-green-600 mb-4 ">Всего одобрено</span>
             <div className="flex items-baseline gap-2">
               <span className="text-5xl font-black tracking-tighter text-on-surface">1.2k</span>
               <span className="text-[10px] font-black uppercase tracking-widest opacity-20">актив</span>
             </div>
           </div>
           <div className="bg-white rounded-[32px] p-8 border border-black/5 shadow-sm flex flex-col justify-between opacity-40">
-            <span className="text-[9px] font-black uppercase tracking-widest text-red-600 mb-4 italic">Отклонено</span>
+            <span className="text-[9px] font-black uppercase tracking-widest text-red-600 mb-4 ">Отклонено</span>
             <div className="flex items-baseline gap-2">
               <span className="text-5xl font-black tracking-tighter text-on-surface">84</span>
               <span className="text-[10px] font-black uppercase tracking-widest opacity-20">спам</span>
@@ -109,9 +109,9 @@ export default function ModerationPage() {
         ) : pendingItems.length === 0 ? (
           <div className="bg-surface rounded-[40px] p-20 text-center space-y-6 border border-black/5 shadow-sm border-dashed">
             <div className="w-20 h-20 bg-surface-container rounded-full flex items-center justify-center mx-auto mb-4">
-              <span className="material-symbols-outlined text-4xl text-on-surface-variant/20 italic">task_alt</span>
+              <span className="material-symbols-outlined text-4xl text-on-surface-variant/20 ">task_alt</span>
             </div>
-            <p className="text-on-surface-variant font-medium text-sm italic opacity-60">Очередь пуста. Вы отлично справляетесь!</p>
+            <p className="text-on-surface-variant font-medium text-sm  opacity-60">Очередь пуста. Вы отлично справляетесь!</p>
           </div>
         ) : (
           <div className="space-y-8">
@@ -131,7 +131,7 @@ export default function ModerationPage() {
                             className="w-full h-full object-cover grayscale brightness-90"
                           />
                         ) : (
-                          <div className="w-full h-full flex items-center justify-center italic text-on-surface-variant/10 text-6xl font-black">
+                          <div className="w-full h-full flex items-center justify-center  text-on-surface-variant/10 text-6xl font-black">
                             {item.type === 'movie' ? 'FILM' : 'BOOK'}
                           </div>
                         )}
@@ -152,24 +152,24 @@ export default function ModerationPage() {
                           </div>
 
                           <div className="space-y-6">
-                            <p className="text-on-surface-variant font-medium text-sm leading-relaxed italic opacity-70">"{item.description}"</p>
+                            <p className="text-on-surface-variant font-medium text-sm leading-relaxed  opacity-70">"{item.description}"</p>
 
                             <div className="flex flex-wrap gap-3">
                               {item.type === 'movie' && item.director && (
                                 <div className="bg-surface-container px-4 py-2 rounded-2xl flex items-center gap-2 border border-black/5">
-                                  <span className="text-[9px] font-black uppercase tracking-widest opacity-30 italic">Реж.</span>
+                                  <span className="text-[9px] font-black uppercase tracking-widest opacity-30 ">Реж.</span>
                                   <span className="text-[10px] font-black uppercase tracking-tighter">{item.director}</span>
                                 </div>
                               )}
                               {item.type === 'book' && item.author && (
                                 <div className="bg-surface-container px-4 py-2 rounded-2xl flex items-center gap-2 border border-black/5">
-                                  <span className="text-[9px] font-black uppercase tracking-widest opacity-30 italic">Автор</span>
+                                  <span className="text-[9px] font-black uppercase tracking-widest opacity-30 ">Автор</span>
                                   <span className="text-[10px] font-black uppercase tracking-tighter">{item.author}</span>
                                 </div>
                               )}
                               {item.year && (
                                 <div className="bg-surface-container px-4 py-2 rounded-2xl flex items-center gap-2 border border-black/5">
-                                  <span className="text-[9px] font-black uppercase tracking-widest opacity-30 italic">Год</span>
+                                  <span className="text-[9px] font-black uppercase tracking-widest opacity-30 ">Год</span>
                                   <span className="text-[10px] font-black uppercase tracking-tighter">{item.year}</span>
                                 </div>
                               )}
@@ -177,11 +177,11 @@ export default function ModerationPage() {
                           </div>
                           
                           <div className="pt-8 border-t border-black/5 flex items-center gap-4">
-                            <div className="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center text-xs font-black italic text-on-surface/20">
+                            <div className="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center text-xs font-black  text-on-surface/20">
                               ID
                             </div>
                             <div className="flex-1 min-w-0">
-                              <span className="block text-[9px] font-black uppercase tracking-widest opacity-30 italic">Автор публикации</span>
+                              <span className="block text-[9px] font-black uppercase tracking-widest opacity-30 ">Автор публикации</span>
                               <span className="block text-xs font-black truncate">{item.createdBy}</span>
                             </div>
                           </div>

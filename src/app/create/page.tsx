@@ -222,7 +222,7 @@ export default function CreatePage() {
         <section className="mb-12">
           <span className="text-[10px] font-black uppercase tracking-[0.3em] text-on-surface-variant mb-2 block opacity-40">Публикация</span>
           <h1 className="text-5xl font-black tracking-tighter text-on-surface leading-[0.9]">Добавить<br/>контент</h1>
-          <p className="text-on-surface-variant text-sm mt-6 font-medium opacity-70 italic leading-relaxed">
+          <p className="text-on-surface-variant text-sm mt-6 font-medium opacity-70  leading-relaxed">
             Поделитесь своими открытиями. После отправки публикация будет проверена сообществом модераторов.
           </p>
         </section>
@@ -439,7 +439,7 @@ export default function CreatePage() {
             <span className="material-symbols-outlined text-on-surface opacity-20 text-4xl">verified_user</span>
             <div>
               <p className="text-[10px] font-black uppercase tracking-widest mb-1">Проверка модератором</p>
-              <p className="text-xs text-on-surface-variant font-medium opacity-60 leading-relaxed italic">
+              <p className="text-xs text-on-surface-variant font-medium opacity-60 leading-relaxed ">
                 Все новые материалы проходят ручную проверку. Обычно это занимает от пары часов до суток. Спасибо за терпение!
               </p>
             </div>

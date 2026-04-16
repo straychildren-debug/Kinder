@@ -18,7 +18,7 @@ export default function TopNavBar({ title = 'Кинотека' }: TopNavBarProps
       <header className="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-xl border-b border-black/5 flex justify-between items-center px-6 py-4">
         <div className="flex items-center gap-4">
           <Link href="/" className="flex flex-col">
-            <h1 className="text-2xl font-black tracking-tighter text-on-surface uppercase italic">
+            <h1 className="text-2xl font-black tracking-tighter text-on-surface uppercase">
               {title}
             </h1>
             <span className="text-[10px] font-bold text-on-surface-variant uppercase tracking-[0.2em] -mt-1">

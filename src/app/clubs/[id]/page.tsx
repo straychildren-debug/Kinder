@@ -299,7 +299,7 @@ export default function ClubDetail() {
               <h1 className="text-xl font-black tracking-tighter leading-none">{club.name}</h1>
               <div className="flex items-center gap-2">
                 <div className="w-1 h-1 rounded-full bg-green-500 animate-pulse"></div>
-                <span className="text-[9px] font-black uppercase tracking-widest text-on-surface-variant opacity-40 italic">
+                <span className="text-[9px] font-black uppercase tracking-widest text-on-surface-variant opacity-40 ">
                   {club.memberCount} участников
                 </span>
               </div>
@@ -354,7 +354,7 @@ export default function ClubDetail() {
           <div className="flex flex-col items-center justify-center min-h-[70vh] text-center space-y-10">
             <div className="relative">
               <div className="w-32 h-32 rounded-[48px] bg-surface-container flex items-center justify-center border border-black/5 shadow-2xl rotate-3">
-                <span className="material-symbols-outlined text-6xl text-on-surface-variant/30 italic">key_visualizer</span>
+                <span className="material-symbols-outlined text-6xl text-on-surface-variant/30 ">key_visualizer</span>
               </div>
               <div className="absolute -bottom-4 -right-4 w-12 h-12 bg-white rounded-[20px] flex items-center justify-center shadow-2xl border border-black/5">
                 <span className="material-symbols-outlined text-on-surface text-2xl">lock</span>
@@ -362,7 +362,7 @@ export default function ClubDetail() {
             </div>
             <div className="space-y-4">
               <h2 className="text-4xl font-black tracking-tighter">Закрытый клуб</h2>
-              <p className="text-on-surface-variant text-sm font-medium opacity-60 max-w-xs mx-auto italic leading-relaxed">
+              <p className="text-on-surface-variant text-sm font-medium opacity-60 max-w-xs mx-auto  leading-relaxed">
                 Этот чат доступен только проверенным участникам «{club.name}». Присоединяйтесь к нам!
               </p>
             </div>
@@ -385,12 +385,12 @@ export default function ClubDetail() {
                 className="mb-12 bg-white rounded-[40px] p-10 border border-black/5 shadow-sm cursor-pointer hover:shadow-2xl hover:scale-[1.01] transition-all group overflow-hidden relative"
               >
                 <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-100 transition-opacity translate-x-4 -translate-y-4 group-hover:translate-x-0 group-hover:translate-y-0 duration-700">
-                  <span className="material-symbols-outlined text-5xl italic">arrow_outward</span>
+                  <span className="material-symbols-outlined text-5xl ">arrow_outward</span>
                 </div>
                 
                 <div className="flex items-start justify-between mb-8 relative z-10">
                   <div className="space-y-1">
-                    <span className="text-[10px] font-black text-on-surface uppercase tracking-[0.4em] mb-2 block opacity-40 italic">Текущий марафон</span>
+                    <span className="text-[10px] font-black text-on-surface uppercase tracking-[0.4em] mb-2 block opacity-40 ">Текущий марафон</span>
                     <h2 className="text-3xl font-black tracking-tighter leading-none">{marathon.title}</h2>
                   </div>
                 </div>
@@ -430,14 +430,14 @@ export default function ClubDetail() {
             {/* Date Divider */}
             <div className="flex items-center gap-6 mb-12 opacity-20">
               <div className="h-[1px] flex-grow bg-on-surface"></div>
-              <span className="text-[9px] font-black uppercase tracking-[0.5em] italic">Архив сообщений</span>
+              <span className="text-[9px] font-black uppercase tracking-[0.5em] ">Архив сообщений</span>
               <div className="h-[1px] flex-grow bg-on-surface"></div>
             </div>
 
             {/* Chat messages */}
             {messages.length === 0 && (
               <div className="text-center py-20 bg-surface">
-                <div className="w-20 h-20 rounded-full bg-surface-container flex items-center justify-center mx-auto mb-6 opacity-30 italic font-black text-2xl">?</div>
+                <div className="w-20 h-20 rounded-full bg-surface-container flex items-center justify-center mx-auto mb-6 opacity-30  font-black text-2xl">?</div>
                 <p className="text-[11px] font-black uppercase tracking-widest text-on-surface-variant opacity-40">Чат пуст. Напишите первым.</p>
               </div>
             )}
@@ -466,7 +466,7 @@ export default function ClubDetail() {
                               src={msg.senderAvatar}
                             />
                           ) : (
-                            <div className="w-10 h-10 rounded-[14px] bg-surface-container flex items-center justify-center text-[11px] font-black italic text-on-surface/20 border border-black/5">
+                            <div className="w-10 h-10 rounded-[14px] bg-surface-container flex items-center justify-center text-[11px] font-black  text-on-surface/20 border border-black/5">
                               {(msg.senderName || '?').charAt(0).toUpperCase()}
                             </div>
                           )
@@ -476,7 +476,7 @@ export default function ClubDetail() {
 
                     <div className={`flex flex-col ${isMine ? 'items-end' : 'items-start'}`}>
                       {!isMine && !isContinuous && (
-                        <span className="text-[10px] font-black uppercase tracking-widest text-on-surface-variant mb-2 opacity-40 italic ml-1">
+                        <span className="text-[10px] font-black uppercase tracking-widest text-on-surface-variant mb-2 opacity-40  ml-1">
                           {msg.senderName || 'Anonymous'}
                         </span>
                       )}
@@ -518,7 +518,7 @@ export default function ClubDetail() {
 
                         {/* Text */}
                         {msg.text && (
-                          <p className="text-sm font-medium leading-relaxed italic">{msg.text}</p>
+                          <p className="text-sm font-medium leading-relaxed ">{msg.text}</p>
                         )}
                         
                         {/* Delete button (only for mine or managers, and only on hover) */}
@@ -534,7 +534,7 @@ export default function ClubDetail() {
                       
                       {!isContinuous && (
                         <div className={`flex items-center gap-2 mt-2 ${isMine ? 'flex-row-reverse' : ''}`}>
-                          <span className="text-[9px] font-black text-on-surface-variant uppercase tracking-widest opacity-20 italic">
+                          <span className="text-[9px] font-black text-on-surface-variant uppercase tracking-widest opacity-20 ">
                             {formatTime(msg.createdAt)}
                           </span>
                         </div>
