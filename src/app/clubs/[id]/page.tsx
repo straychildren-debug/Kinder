@@ -1095,7 +1095,6 @@ export default function ClubDetail() {
             )}
           </div>
         </div>
-      </header>
         {/* Marathon Status Bar */}
         {marathon && countdown && (
           <div className="border-t border-on-surface/5 bg-on-surface text-surface py-2.5">
