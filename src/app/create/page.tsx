@@ -289,23 +289,23 @@ function CreatePageContent() {
               key={t}
               type="button"
               onClick={() => setType(t)}
-              className={`flex-1 py-4 rounded-2xl font-black text-[11px] uppercase tracking-widest flex items-center justify-center gap-3 transition-all border ${
+              className={`flex-1 py-3 rounded-xl font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-3 transition-all border ${
                 type === t
-                  ? 'bg-on-surface text-surface border-on-surface shadow-2xl shadow-on-surface/20'
+                  ? 'bg-on-surface text-surface border-on-surface shadow-lg shadow-on-surface/10'
                   : 'bg-surface text-on-surface-variant border-on-surface/5 hover:bg-surface-container'
               }`}
             >
-              <span className="material-symbols-outlined text-[20px]">{t === 'movie' ? 'movie' : 'menu_book'}</span>
+              <span className="material-symbols-outlined text-[18px]">{t === 'movie' ? 'movie' : 'menu_book'}</span>
               {t === 'movie' ? 'Фильм' : 'Книга'}
             </button>
           ))}
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-8">
-          <div className="bg-surface rounded-[32px] p-8 space-y-8 shadow-sm border border-on-surface/5">
+          <div className="bg-surface rounded-3xl p-6 space-y-8 shadow-sm border border-on-surface/5">
             <div className="flex items-center gap-3 border-b border-on-surface/5 pb-6">
-              <div className="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center">
-                <span className="material-symbols-outlined text-[20px] text-on-surface">info</span>
+              <div className="w-9 h-9 rounded-xl bg-surface-container flex items-center justify-center">
+                <span className="material-symbols-outlined text-[18px] text-on-surface">info</span>
               </div>
               <h3 className="text-sm font-black text-on-surface uppercase tracking-widest">Основная информация</h3>
             </div>
@@ -319,7 +319,7 @@ function CreatePageContent() {
                   onChange={e => setTitle(e.target.value)}
                   placeholder={type === 'movie' ? 'Например: Начало' : 'Например: Мастер и Маргарита'}
                   required
-                  className="w-full px-5 py-4 rounded-2xl bg-surface-container text-on-surface placeholder:text-on-surface-variant/30 focus:outline-none focus:ring-2 focus:ring-on-surface/5 transition-all text-sm font-medium border border-on-surface/5 shadow-inner"
+                  className="w-full px-5 py-3 rounded-xl bg-surface-container text-on-surface placeholder:text-on-surface-variant/30 focus:outline-none focus:ring-2 focus:ring-on-surface/5 transition-all text-sm font-medium border border-on-surface/5 shadow-inner"
                 />
               </div>
 
@@ -331,7 +331,7 @@ function CreatePageContent() {
                   placeholder="Расскажите о своих впечатлениях..."
                   required
                   rows={4}
-                  className="w-full px-5 py-4 rounded-2xl bg-surface-container text-on-surface placeholder:text-on-surface-variant/30 focus:outline-none focus:ring-2 focus:ring-on-surface/5 transition-all text-sm font-medium border border-on-surface/5 shadow-inner resize-none"
+                  className="w-full px-5 py-3 rounded-xl bg-surface-container text-on-surface placeholder:text-on-surface-variant/30 focus:outline-none focus:ring-2 focus:ring-on-surface/5 transition-all text-sm font-medium border border-on-surface/5 shadow-inner resize-none"
                 />
               </div>
 
@@ -349,7 +349,7 @@ function CreatePageContent() {
                     />
                     <label
                       htmlFor="cover-upload"
-                      className="flex flex-col items-center justify-center w-full h-40 border-2 border-dashed border-on-surface/5 rounded-[24px] bg-surface-container-low hover:bg-surface-container-high cursor-pointer transition-all group"
+                      className="flex flex-col items-center justify-center w-full h-40 border-2 border-dashed border-on-surface/5 rounded-3xl bg-surface-container-low hover:bg-surface-container-high cursor-pointer transition-all group"
                     >
                       <span className="material-symbols-outlined text-4xl text-on-surface-variant/20 group-hover:text-on-surface transition-colors">add_photo_alternate</span>
                       <span className="text-[10px] font-black uppercase tracking-widest text-on-surface-variant opacity-40 mt-4">Выбрать файл</span>
@@ -370,7 +370,7 @@ function CreatePageContent() {
                     />
                   </div>
                 ) : (
-                  <div className="relative aspect-[16/9] w-full rounded-[24px] overflow-hidden bg-surface-container border border-on-surface/5 group">
+                  <div className="relative aspect-[16/9] w-full rounded-3xl overflow-hidden bg-surface-container border border-on-surface/5 group">
                     <img 
                       src={coverPreview || imageUrl} 
                       alt="Preview" 
@@ -403,17 +403,17 @@ function CreatePageContent() {
                   value={genres}
                   onChange={e => setGenres(e.target.value)}
                   placeholder="Драма, Фантастика (через запятую)"
-                  className="w-full px-5 py-4 rounded-2xl bg-surface-container text-on-surface placeholder:text-on-surface-variant/30 focus:outline-none focus:ring-2 focus:ring-on-surface/5 transition-all text-sm font-medium border border-on-surface/5 shadow-inner"
+                  className="w-full px-5 py-3 rounded-xl bg-surface-container text-on-surface placeholder:text-on-surface-variant/30 focus:outline-none focus:ring-2 focus:ring-on-surface/5 transition-all text-sm font-medium border border-on-surface/5 shadow-inner"
                 />
               </div>
             </div>
           </div>
 
           {/* Детали специфичные для контента */}
-          <div className="bg-surface rounded-[32px] p-8 space-y-8 shadow-sm border border-on-surface/5">
+          <div className="bg-surface rounded-3xl p-6 space-y-8 shadow-sm border border-on-surface/5">
             <div className="flex items-center gap-3 border-b border-on-surface/5 pb-6">
-              <div className="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center">
-                <span className="material-symbols-outlined text-[20px] text-on-surface">
+              <div className="w-9 h-9 rounded-xl bg-surface-container flex items-center justify-center">
+                <span className="material-symbols-outlined text-[18px] text-on-surface">
                   {type === 'movie' ? 'movie' : 'menu_book'}
                 </span>
               </div>
@@ -433,7 +433,7 @@ function CreatePageContent() {
                       onChange={e => setDirector(e.target.value)}
                       placeholder="Имя режиссёра"
                       required
-                      className="w-full px-5 py-4 rounded-2xl bg-surface-container text-on-surface placeholder:text-on-surface-variant/30 focus:outline-none focus:ring-2 focus:ring-on-surface/5 transition-all text-sm font-medium border border-on-surface/5 shadow-inner"
+                      className="w-full px-5 py-3 rounded-xl bg-surface-container text-on-surface placeholder:text-on-surface-variant/30 focus:outline-none focus:ring-2 focus:ring-on-surface/5 transition-all text-sm font-medium border border-on-surface/5 shadow-inner"
                     />
                   </div>
                   <div>
@@ -443,7 +443,7 @@ function CreatePageContent() {
                       value={actors}
                       onChange={e => setActors(e.target.value)}
                       placeholder="Главные роли (через запятую)"
-                      className="w-full px-5 py-4 rounded-2xl bg-surface-container text-on-surface placeholder:text-on-surface-variant/30 focus:outline-none focus:ring-2 focus:ring-on-surface/5 transition-all text-sm font-medium border border-on-surface/5 shadow-inner"
+                      className="w-full px-5 py-3 rounded-xl bg-surface-container text-on-surface placeholder:text-on-surface-variant/30 focus:outline-none focus:ring-2 focus:ring-on-surface/5 transition-all text-sm font-medium border border-on-surface/5 shadow-inner"
                     />
                   </div>
                 </>
@@ -457,7 +457,7 @@ function CreatePageContent() {
                       onChange={e => setAuthor(e.target.value)}
                       placeholder="Имя автора"
                       required
-                      className="w-full px-5 py-4 rounded-2xl bg-surface-container text-on-surface placeholder:text-on-surface-variant/30 focus:outline-none focus:ring-2 focus:ring-on-surface/5 transition-all text-sm font-medium border border-on-surface/5 shadow-inner"
+                      className="w-full px-5 py-3 rounded-xl bg-surface-container text-on-surface placeholder:text-on-surface-variant/30 focus:outline-none focus:ring-2 focus:ring-on-surface/5 transition-all text-sm font-medium border border-on-surface/5 shadow-inner"
                     />
                   </div>
                 </>
@@ -471,7 +471,7 @@ function CreatePageContent() {
                     value={year}
                     onChange={e => setYear(e.target.value)}
                     placeholder="2024"
-                    className="w-full px-5 py-4 rounded-2xl bg-surface-container text-on-surface focus:outline-none focus:ring-2 focus:ring-on-surface/5 transition-all text-sm font-medium border border-on-surface/5 shadow-inner"
+                    className="w-full px-5 py-3 rounded-xl bg-surface-container text-on-surface focus:outline-none focus:ring-2 focus:ring-on-surface/5 transition-all text-sm font-medium border border-on-surface/5 shadow-inner"
                   />
                 </div>
                 <div>
@@ -483,14 +483,14 @@ function CreatePageContent() {
                     value={type === 'movie' ? duration : pages}
                     onChange={e => type === 'movie' ? setDuration(e.target.value) : setPages(e.target.value)}
                     placeholder={type === 'movie' ? '2ч 15мин' : '450'}
-                    className="w-full px-5 py-4 rounded-2xl bg-surface-container text-on-surface focus:outline-none focus:ring-2 focus:ring-on-surface/5 transition-all text-sm font-medium border border-on-surface/5 shadow-inner"
+                    className="w-full px-5 py-3 rounded-xl bg-surface-container text-on-surface focus:outline-none focus:ring-2 focus:ring-on-surface/5 transition-all text-sm font-medium border border-on-surface/5 shadow-inner"
                   />
                 </div>
               </div>
             </div>
           </div>
 
-          <div className="p-8 bg-surface border border-on-surface/5 rounded-[32px] flex items-start gap-4">
+          <div className="p-6 bg-surface border border-on-surface/5 rounded-3xl flex items-start gap-4">
             <span className="material-symbols-outlined text-on-surface opacity-20 text-4xl">verified_user</span>
             <div>
               <p className="text-[10px] font-black uppercase tracking-widest mb-1">Проверка модератором</p>
@@ -512,18 +512,18 @@ function CreatePageContent() {
               type="button"
               onClick={handleSaveDraft}
               disabled={isSubmitting || isSavingDraft}
-              className="flex-1 py-5 bg-surface text-on-surface-variant border border-on-surface/5 rounded-2xl font-black text-[11px] uppercase tracking-widest flex items-center justify-center gap-3 transition-all hover:bg-surface-container disabled:opacity-50"
+              className="flex-1 py-4 bg-surface text-on-surface-variant border border-on-surface/5 rounded-xl font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-3 transition-all hover:bg-surface-container disabled:opacity-50"
             >
-              <span className="material-symbols-outlined text-[18px]">save</span>
+              <span className="material-symbols-outlined text-[16px]">save</span>
               {isSavingDraft ? 'Сохранение...' : 'В черновики'}
             </button>
 
             <button
               type="submit"
               disabled={isSubmitting || isSavingDraft}
-              className="flex-[2] py-5 bg-on-surface text-surface rounded-2xl font-black text-[11px] uppercase tracking-[0.2em] flex items-center justify-center gap-3 transition-all active:scale-95 shadow-2xl shadow-on-surface/20 disabled:opacity-50"
+              className="flex-[2] py-4 bg-on-surface text-surface rounded-xl font-black text-[10px] uppercase tracking-[0.2em] flex items-center justify-center gap-3 transition-all active:scale-95 shadow-lg shadow-on-surface/10 disabled:opacity-50"
             >
-              <span className="material-symbols-outlined text-[18px]">{isSubmitting ? 'sync' : 'publish'}</span>
+              <span className="material-symbols-outlined text-[16px]">{isSubmitting ? 'sync' : 'publish'}</span>
               {isSubmitting ? 'Отправка...' : 'Опубликовать'}
             </button>
           </div>

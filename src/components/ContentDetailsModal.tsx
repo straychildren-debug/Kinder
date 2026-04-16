@@ -177,12 +177,12 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
                </div>
                
                {/* Global Rating Badge */}
-               <div className="flex flex-col items-center justify-center bg-on-surface text-surface rounded-xl p-3 shadow-md">
+               <div className="flex flex-col items-center justify-center bg-on-surface text-surface rounded-xl py-1.5 px-4 shadow-md">
                  <div className="flex items-center gap-1">
-                   <span className="material-symbols-outlined text-[18px] text-accent-lilac" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
-                   <span className="text-xl font-black">{content.rating?.toFixed(1) || '—'}</span>
+                   <span className="material-symbols-outlined text-[16px] text-accent-lilac" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+                   <span className="text-lg font-black">{content.rating?.toFixed(1) || '—'}</span>
                  </div>
-                 <span className="text-[9px] uppercase tracking-widest font-black opacity-80">{content.reviewCount || 0} оценок</span>
+                 <span className="text-[8px] uppercase tracking-widest font-black opacity-60 leading-none mt-0.5">{content.reviewCount || 0} оценок</span>
                </div>
             </div>
 
@@ -236,7 +236,7 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
             {!showReviewForm && user && !reviews.find(r => r.userId === user.id) && (
               <button 
                 onClick={() => setShowReviewForm(true)}
-                className="bg-accent-lilac text-on-accent-lilac px-5 py-2.5 rounded-xl font-black text-[12px] uppercase tracking-widest shadow-sm hover:scale-105 transition-transform"
+                className="bg-accent-lilac/90 text-on-accent-lilac px-4 py-2 rounded-xl font-black text-[11px] uppercase tracking-widest shadow-sm hover:scale-105 transition-transform"
               >
                 Написать
               </button>
@@ -281,14 +281,14 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
                 <div className="flex justify-end gap-3">
                   <button 
                     onClick={() => setShowReviewForm(false)}
-                    className="px-5 py-2.5 rounded-xl font-black text-on-surface-variant text-[11px] uppercase tracking-widest hover:bg-surface-container transition-colors"
+                    className="px-4 py-2 rounded-xl font-black text-on-surface-variant text-[10px] uppercase tracking-widest hover:bg-surface-container transition-colors"
                   >
                     Отмена
                   </button>
                   <button 
                     onClick={handleSubmitReview}
                     disabled={submittingReview || newReviewRating === 0 || !newReviewText.trim()}
-                    className="bg-on-surface text-surface px-6 py-2.5 rounded-xl font-black text-[11px] uppercase tracking-widest disabled:opacity-50 hover:bg-on-surface/90 transition-colors shadow-md shadow-on-surface/5"
+                    className="bg-on-surface text-surface px-5 py-2 rounded-xl font-black text-[10px] uppercase tracking-widest disabled:opacity-50 hover:bg-on-surface/90 transition-colors shadow-md shadow-on-surface/5"
                   >
                     {submittingReview ? 'Отправка...' : 'Опубликовать'}
                   </button>

@@ -41,7 +41,7 @@ export default function Library() {
         {loading ? (
           <ListSkeletonList count={6} />
         ) : books.length === 0 ? (
-          <div className="text-center py-20 px-6 bg-surface rounded-[32px] border border-on-surface/5 shadow-sm">
+          <div className="text-center py-20 px-6 bg-surface rounded-3xl border border-on-surface/5 shadow-sm">
              <div className="text-6xl mb-4 grayscale opacity-40">📚</div>
              <p className="text-on-surface-variant font-black uppercase text-[10px] tracking-widest">В библиотеке пока нет книг</p>
           </div>
@@ -54,7 +54,7 @@ export default function Library() {
                 onClick={() => setSelectedContent(book)}
               >
                 {/* Book Thumbnail */}
-                <div className="relative w-20 aspect-[4/5] flex-shrink-0 rounded-[14px] overflow-hidden bg-on-surface/5 shadow-md">
+                <div className="relative w-20 aspect-[4/5] flex-shrink-0 rounded-xl overflow-hidden bg-on-surface/5 shadow-md">
                   {book.imageUrl ? (
                     <Image
                       src={book.imageUrl}

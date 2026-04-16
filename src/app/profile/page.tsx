@@ -45,7 +45,7 @@ export default function Profile() {
           </div>
           <button
             onClick={() => router.push('/login')}
-            className="px-10 py-4 bg-on-surface text-surface rounded-2xl font-black text-[11px] uppercase tracking-[0.2em] transition-transform active:scale-95 shadow-2xl shadow-on-surface/20"
+            className="px-6 py-3 bg-on-surface text-surface rounded-xl font-black text-[10px] uppercase tracking-[0.2em] transition-transform active:scale-95 shadow-lg shadow-on-surface/10"
           >
             Войти
           </button>
@@ -77,7 +77,7 @@ export default function Profile() {
         <section className="grid grid-cols-1 md:grid-cols-12 gap-12 mb-20 items-start">
           <div className="md:col-span-4 flex flex-col items-center md:items-start space-y-8">
             <div className="relative group">
-              <div className="w-56 h-56 rounded-[48px] overflow-hidden shadow-[0_32px_64px_-16px_rgba(0,0,0,0.15)] transition-all duration-700 group-hover:scale-[1.05] group-hover:-rotate-2 border-4 border-white">
+              <div className="w-56 h-56 rounded-3xl overflow-hidden shadow-[0_32px_64px_-16px_rgba(0,0,0,0.15)] transition-all duration-700 group-hover:scale-[1.05] group-hover:-rotate-2 border-4 border-white">
                 {user.avatarUrl ? (
                   <img alt={user.name} className="w-full h-full object-cover" src={user.avatarUrl} />
                 ) : (
@@ -125,7 +125,7 @@ export default function Profile() {
               </div>
             </div>
             
-            <button className="w-full py-5 bg-on-surface text-surface rounded-2xl font-black text-[11px] uppercase tracking-[0.2em] flex items-center justify-center gap-3 transition-all active:scale-95 shadow-2xl shadow-on-surface/20">
+            <button className="w-full py-3.5 bg-on-surface text-surface rounded-xl font-black text-[10px] uppercase tracking-[0.2em] flex items-center justify-center gap-3 transition-all active:scale-95 shadow-lg shadow-on-surface/10">
               <span className="material-symbols-outlined text-[18px]">edit_note</span>
               Настройки аккаунта
             </button>
@@ -133,7 +133,7 @@ export default function Profile() {
 
           <div className="md:col-span-8 space-y-16">
             {/* Статистика активности */}
-            <div className="bg-surface p-10 rounded-[40px] border border-on-surface/5 shadow-sm">
+            <div className="bg-surface p-7 rounded-3xl border border-on-surface/5 shadow-sm">
               <h2 className="text-[10px] uppercase tracking-[0.3em] font-black text-on-surface-variant mb-8 opacity-40 ">Активность сообщества</h2>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
                 <div className="space-y-1">
@@ -174,14 +174,14 @@ export default function Profile() {
               </div>
 
               {userContent.length === 0 ? (
-                <div className="bg-surface rounded-[40px] p-16 text-center space-y-6 border border-on-surface/5 shadow-sm border-dashed">
+                <div className="bg-surface rounded-3xl p-10 text-center space-y-6 border border-on-surface/5 shadow-sm border-dashed">
                   <div className="w-20 h-20 bg-surface-container rounded-full flex items-center justify-center mx-auto mb-4">
                     <span className="material-symbols-outlined text-4xl text-on-surface-variant/20 ">auto_stories</span>
                   </div>
                   <p className="text-on-surface-variant font-medium text-sm  opacity-60">Ваша полка пока пуста. Пора добавить что-то интересное!</p>
                   <button
                     onClick={() => router.push('/create')}
-                    className="px-10 py-4 bg-on-surface text-surface rounded-2xl font-black text-[11px] uppercase tracking-[0.2em] transition-transform active:scale-95 shadow-2xl shadow-on-surface/20"
+                    className="px-6 py-3 bg-on-surface text-surface rounded-xl font-black text-[10px] uppercase tracking-[0.2em] transition-transform active:scale-95 shadow-lg shadow-on-surface/10"
                   >
                     Создать
                   </button>
@@ -189,7 +189,7 @@ export default function Profile() {
               ) : (
                 <div className="grid gap-6">
                   {userContent.map(item => (
-                    <div key={item.id} className="bg-white rounded-[32px] overflow-hidden flex shadow-sm border border-on-surface/5 hover:shadow-2xl hover:scale-[1.01] transition-all group">
+                    <div key={item.id} className="bg-white rounded-3xl overflow-hidden flex shadow-sm border border-on-surface/5 hover:shadow-2xl hover:scale-[1.01] transition-all group">
                       <div className="w-32 h-32 md:w-44 md:h-44 shrink-0 bg-surface-container flex items-center justify-center overflow-hidden border-r border-on-surface/5">
                         {item.imageUrl ? (
                           <img alt={item.title} className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" src={item.imageUrl} />
@@ -214,14 +214,14 @@ export default function Profile() {
                           </div>
                           <p className="text-sm text-on-surface-variant font-medium line-clamp-2 leading-relaxed opacity-60 ">{item.description}</p>
                           {item.status === 'rejected' && item.rejectionReason && (
-                            <div className="mt-4 p-5 bg-red-50 border border-red-100 rounded-[28px] animate-in fade-in slide-in-from-top-2 duration-500 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                            <div className="mt-4 p-4 bg-red-50 border border-red-100 rounded-2xl animate-in fade-in slide-in-from-top-2 duration-500 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
                               <div className="space-y-1">
                                 <span className="block text-[9px] font-black uppercase tracking-widest text-red-600 mb-1 opacity-60">Причина отклонения:</span>
                                 <p className="text-xs font-bold text-red-700 leading-relaxed italic">"{item.rejectionReason}"</p>
                               </div>
                               <button
                                 onClick={() => router.push(`/create?editContentId=${item.id}`)}
-                                className="px-5 py-2.5 bg-red-600 text-white rounded-xl font-black text-[9px] uppercase tracking-widest shadow-lg shadow-red-500/20 hover:bg-red-700 active:scale-95 transition-all flex items-center gap-2 shrink-0"
+                                className="px-4 py-2 bg-red-600 text-white rounded-xl font-black text-[9px] uppercase tracking-widest shadow-lg shadow-red-500/20 hover:bg-red-700 active:scale-95 transition-all flex items-center gap-2 shrink-0"
                               >
                                 <span className="material-symbols-outlined text-[16px]">edit</span>
                                 Исправить

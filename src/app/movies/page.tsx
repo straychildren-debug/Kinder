@@ -55,7 +55,7 @@ export default function Movies() {
              <p className="text-xl font-black text-on-surface mb-3 tracking-tight">Пока нет фильмов. Добавьте первый!</p>
              <Link 
                href="/create" 
-               className="mt-6 px-8 py-4 bg-on-surface text-surface rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-xl hover:scale-105 transition-transform"
+               className="mt-6 px-6 py-3 bg-on-surface text-surface rounded-xl font-black text-[9px] uppercase tracking-widest shadow-md shadow-on-surface/5 hover:scale-105 transition-transform"
              >
                Добавить фильм
              </Link>
@@ -69,7 +69,7 @@ export default function Movies() {
                 onClick={() => setSelectedContent(movie)}
               >
                 {/* Movie Poster */}
-                <div className="relative w-20 aspect-[4/5] flex-shrink-0 rounded-[14px] overflow-hidden bg-on-surface/5 shadow-md">
+                <div className="relative w-20 aspect-[4/5] flex-shrink-0 rounded-xl overflow-hidden bg-on-surface/5 shadow-md">
                   {movie.imageUrl ? (
                     <Image
                       src={movie.imageUrl}

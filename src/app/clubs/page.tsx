@@ -142,20 +142,20 @@ export default function Clubs() {
                 placeholder="Поиск клубов..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-3.5 rounded-2xl bg-surface border border-on-surface/5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-on-surface/5 transition-all shadow-sm"
+                className="w-full pl-10 pr-4 py-3 rounded-xl bg-surface border border-on-surface/5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-on-surface/5 transition-all shadow-sm"
               />
             </div>
             <div className="relative w-full sm:w-auto">
               <button
                 id="create-club-btn"
                 onClick={handleCreateClick}
-                className="bg-on-surface text-surface px-6 py-3.5 rounded-2xl flex items-center justify-center gap-2 shadow-xl shadow-on-surface/10 hover:scale-105 active:scale-95 transition-all w-full sm:w-auto"
+                className="bg-on-surface text-surface px-5 py-2.5 rounded-xl flex items-center justify-center gap-2 shadow-md shadow-on-surface/5 hover:scale-105 active:scale-95 transition-all w-full sm:w-auto"
               >
                 <span className="material-symbols-outlined">add_circle</span>
                 <span className="font-black text-[11px] uppercase tracking-widest">Создать клуб</span>
               </button>
               {showTooltip && (
-                <div className="absolute right-0 top-full mt-2 z-50 bg-on-surface text-surface p-4 rounded-2xl shadow-2xl whitespace-nowrap">
+                <div className="absolute right-0 top-full mt-2 z-50 bg-on-surface text-surface p-4 rounded-xl shadow-2xl whitespace-nowrap">
                   <div className="flex items-center gap-2">
                     <span className="material-symbols-outlined text-amber-400 text-base">info</span>
                     <span className="text-[10px] font-black uppercase tracking-widest">Нужно ≥ 20 публикаций ({approvedCount})</span>
@@ -173,7 +173,7 @@ export default function Clubs() {
             {heroMain && (
               <div
                 onClick={() => handleJoin(heroMain.id)}
-                className="md:col-span-8 bg-surface rounded-[40px] overflow-hidden relative group shadow-2xl border border-on-surface/5 cursor-pointer"
+                className="md:col-span-8 bg-surface rounded-3xl overflow-hidden relative group shadow-xl border border-on-surface/5 cursor-pointer"
               >
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-10 opacity-80"></div>
                 {heroMain.imageUrl ? (
@@ -203,7 +203,7 @@ export default function Clubs() {
                     </div>
                     <div className="text-right flex-shrink-0">
                       <span className="text-white/40 text-[10px] font-black uppercase tracking-widest block mb-4">{heroMain.memberCount} участников</span>
-                      <button className="bg-white text-on-surface px-8 py-3 rounded-2xl font-black text-[11px] uppercase tracking-widest hover:scale-105 transition-transform shadow-xl">
+                      <button className="bg-white text-on-surface px-6 py-2.5 rounded-xl font-black text-[11px] uppercase tracking-widest hover:scale-105 transition-transform shadow-lg">
                         Вступить
                       </button>
                     </div>
@@ -216,10 +216,10 @@ export default function Clubs() {
             {heroSide && (
               <div
                 onClick={() => handleJoin(heroSide.id)}
-                className="md:col-span-4 bg-surface p-10 rounded-[40px] flex flex-col justify-between shadow-sm border border-on-surface/5 cursor-pointer hover:shadow-xl transition-all duration-500 hover:scale-[1.02]"
+                className="md:col-span-4 bg-surface p-8 rounded-3xl flex flex-col justify-between shadow-sm border border-on-surface/5 cursor-pointer hover:shadow-xl transition-all duration-500 hover:scale-[1.02]"
               >
                 <div>
-                  <div className="w-16 h-16 rounded-[24px] bg-surface-container flex items-center justify-center mb-10 shadow-inner">
+                  <div className="w-14 h-14 rounded-xl bg-surface-container flex items-center justify-center mb-10 shadow-inner">
                     <span className="material-symbols-outlined text-on-surface text-4xl">
                       {CATEGORY_ICONS[heroSide.category] || 'groups'}
                     </span>
@@ -258,7 +258,7 @@ export default function Clubs() {
 
         {/* Empty State */}
         {!loading && filteredClubs.length === 0 && (
-          <div className="text-center py-24 bg-surface rounded-[40px] border border-on-surface/5">
+          <div className="text-center py-24 bg-surface rounded-3xl border border-on-surface/5">
             <span className="material-symbols-outlined text-8xl text-on-surface/5 mb-6 block">groups</span>
             <h3 className="text-2xl font-black mb-2 text-on-surface tracking-tight">Пока нет клубов</h3>
             <p className="text-on-surface-variant text-[10px] font-black uppercase tracking-widest opacity-40">Станьте первым — создайте клуб!</p>
@@ -308,7 +308,7 @@ export default function Clubs() {
                   <p className="text-xs text-on-surface-variant font-medium line-clamp-2 mb-8 opacity-70 leading-relaxed ">{club.description}</p>
                   <div className="flex items-center justify-between">
                     <span className="text-[10px] font-black uppercase tracking-widest text-on-surface-variant opacity-40">{club.memberCount} участников</span>
-                    <button className="w-10 h-10 rounded-2xl bg-surface-container flex items-center justify-center group-hover:bg-on-surface transition-colors">
+                    <button className="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center group-hover:bg-on-surface transition-colors">
                       <span className="material-symbols-outlined text-on-surface-variant text-xl group-hover:text-surface">login</span>
                     </button>
                   </div>
@@ -320,12 +320,12 @@ export default function Clubs() {
         )}
 
         {/* Suggestion Section */}
-        <section className="mt-24 p-16 bg-surface rounded-[40px] border border-on-surface/5 text-center shadow-sm">
+        <section className="mt-24 p-12 bg-surface rounded-3xl border border-on-surface/5 text-center shadow-sm">
           <h3 className="text-3xl font-black mb-4 text-on-surface tracking-tight">Не нашли то, что искали?</h3>
           <p className="text-on-surface-variant max-w-xl mx-auto mb-10 text-sm font-medium opacity-70  leading-relaxed">Создайте собственное сообщество и пригласите единомышленников для обсуждения любимых произведений в свободном формате.</p>
           <button
             onClick={handleCreateClick}
-            className="bg-on-surface text-surface px-10 py-4 rounded-2xl font-black text-[11px] uppercase tracking-[0.2em] hover:scale-105 transition-transform shadow-2xl shadow-on-surface/20"
+            className="bg-on-surface text-surface px-6 py-3 rounded-xl font-black text-[10px] uppercase tracking-[0.2em] hover:scale-105 transition-transform shadow-lg shadow-on-surface/10"
           >
             Начать новое обсуждение
           </button>
