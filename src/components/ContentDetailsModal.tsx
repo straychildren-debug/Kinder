@@ -369,15 +369,47 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
                   {/* Comments Section */}
                   {expandedReviewId === review.id && (
                     <div className="mt-6 pt-6 border-t border-on-surface/5 animate-in slide-in-from-top-4 duration-300">
+                      {/* Add Comment Input - Moved to top for visibility */}
+                      <div className="mb-6">
+                        {user ? (
+                          <div className="flex gap-2 bg-surface-container-low p-3 rounded-2xl border border-on-surface/5">
+                            <input 
+                              type="text"
+                              value={newCommentText}
+                              onChange={e => setNewCommentText(e.target.value)}
+                              placeholder="Написать комментарий..."
+                              className="flex-1 bg-surface border border-on-surface/10 rounded-full px-5 py-2.5 text-sm font-medium focus:outline-none focus:border-accent-lilac"
+                              onKeyDown={e => e.key === 'Enter' && handleSubmitComment(review.id)}
+                            />
+                            <button 
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleSubmitComment(review.id);
+                              }}
+                              disabled={!newCommentText.trim()}
+                              className="w-10 h-10 bg-on-surface text-surface rounded-full flex items-center justify-center disabled:opacity-50 transition-all hover:scale-105 active:scale-95 shadow-md shrink-0 cursor-pointer"
+                            >
+                              <span className="material-symbols-outlined text-[20px] font-bold">arrow_upward</span>
+                            </button>
+                          </div>
+                        ) : (
+                          <div className="text-center py-4 bg-surface-container-lowest rounded-2xl border border-dashed border-on-surface/10">
+                             <p className="text-[10px] font-black uppercase tracking-widest text-on-surface-variant mb-2">Обсуждение доступно участникам</p>
+                             <Link href="/login" className="text-accent-lilac font-black text-xs uppercase tracking-widest hover:underline decoration-2">Войти в аккаунт</Link>
+                          </div>
+                        )}
+                      </div>
+
                       {loadingComments ? (
                          <div className="text-center py-4 text-on-surface-variant text-sm">Загрузка...</div>
                       ) : (
-                        <div className="space-y-4 mb-6">
+                        <div className="space-y-4">
                           {reviewComments.length === 0 ? (
-                            <p className="text-center text-xs text-on-surface-variant">Нет комментариев. Оставьте свое мнение!</p>
+                            <p className="text-center text-xs text-on-surface-variant opacity-60">Пока нет комментариев. Будьте первым!</p>
                           ) : (
                             reviewComments.map(comment => (
-                              <div key={comment.id} className="flex gap-3 bg-surface-container-lowest p-4 rounded-2xl">
+                              <div key={comment.id} className="flex gap-3 bg-surface-container-lowest p-4 rounded-2xl border border-on-surface/5">
                                 <div className="w-8 h-8 rounded-full bg-surface overflow-hidden flex-shrink-0 border border-on-surface/5 flex items-center justify-center font-bold text-on-surface text-xs">
                                   {comment.user?.avatarUrl ? <img src={comment.user.avatarUrl} className="w-full h-full object-cover" /> : comment.user?.name.charAt(0) || 'U'}
                                 </div>
@@ -393,36 +425,6 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
                               </div>
                             ))
                           )}
-                        </div>
-                      )}
-                      
-                      {/* Add Comment Input */}
-                      {user ? (
-                        <div className="flex gap-2 sticky bottom-0 bg-surface py-4 border-t border-on-surface/5 mt-4">
-                          <input 
-                            type="text"
-                            value={newCommentText}
-                            onChange={e => setNewCommentText(e.target.value)}
-                            placeholder="Написать комментарий..."
-                            className="flex-1 bg-surface-container-lowest border border-on-surface/10 rounded-full px-5 py-2.5 text-sm font-medium focus:outline-none focus:border-accent-lilac shadow-sm"
-                            onKeyDown={e => e.key === 'Enter' && handleSubmitComment(review.id)}
-                          />
-                          <button 
-                            type="button"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleSubmitComment(review.id);
-                            }}
-                            disabled={!newCommentText.trim()}
-                            className="w-10 h-10 bg-on-surface text-surface rounded-full flex items-center justify-center disabled:opacity-50 transition-all hover:scale-105 active:scale-95 shadow-lg shadow-on-surface/10 shrink-0 cursor-pointer"
-                          >
-                            <span className="material-symbols-outlined text-[20px] font-bold">arrow_upward</span>
-                          </button>
-                        </div>
-                      ) : (
-                        <div className="text-center py-4 bg-surface-container-lowest rounded-2xl border border-dashed border-on-surface/10">
-                           <p className="text-[10px] font-black uppercase tracking-widest text-on-surface-variant mb-2">Обсуждение доступно участникам</p>
-                           <Link href="/login" className="text-accent-lilac font-black text-xs uppercase tracking-widest hover:underline decoration-2">Войти в аккаунт</Link>
                         </div>
                       )}
                     </div>
