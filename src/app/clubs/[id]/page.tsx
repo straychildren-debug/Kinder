@@ -178,7 +178,7 @@ function PollCard({
   const showResults = hasVoted || !poll.isActive;
 
   return (
-    <div className="bg-white rounded-[28px] p-6 border border-on-surface/5 shadow-sm my-6 animate-in fade-in slide-in-from-bottom-2 duration-500">
+    <div className="glass-panel rounded-[28px] p-6 my-6 animate-in fade-in slide-in-from-bottom-2 duration-500">
       <div className="flex items-start justify-between mb-4">
         <div className="flex items-center gap-2">
           <span className="material-symbols-outlined text-primary text-[18px]" style={{ fontVariationSettings: "'FILL' 1" }}>ballot</span>
@@ -206,8 +206,8 @@ function PollCard({
               disabled={!poll.isActive}
               className={`w-full text-left rounded-2xl p-4 transition-all relative overflow-hidden group ${
                 opt.votedByMe 
-                  ? 'bg-primary/10 border-2 border-primary/30' 
-                  : 'bg-surface-container border-2 border-transparent hover:border-primary/10'
+                  ? 'bg-primary/20 border-2 border-primary/30' 
+                  : 'bg-white/10 border-2 border-transparent hover:border-white/20'
               } ${!poll.isActive ? 'cursor-default' : 'cursor-pointer active:scale-[0.98]'}`}
             >
               {showResults && (
@@ -426,7 +426,7 @@ function SearchPanel({ clubId, onClose, onScrollTo }: {
     <div className="fixed inset-0 z-[100] glass-modal-overlay flex items-start justify-center pt-20 px-4" onClick={onClose}>
       <div className="glass-modal rounded-[28px] w-full max-w-md overflow-hidden" onClick={e => e.stopPropagation()}>
         <div className="p-5">
-          <div className="flex items-center gap-3 bg-surface-container rounded-2xl px-4">
+          <div className="flex items-center gap-3 bg-white/10 rounded-2xl px-4 border border-white/10">
             <span className="material-symbols-outlined text-on-surface-variant/40 text-[20px]">search</span>
             <input
               autoFocus
@@ -483,7 +483,7 @@ function MentionsPopup({ members, onSelect, position }: {
 
   return (
     <div
-      className="absolute z-50 bg-white rounded-2xl shadow-2xl border border-on-surface/10 py-2 min-w-[200px] max-h-[200px] overflow-y-auto animate-in fade-in slide-in-from-bottom-2 duration-200"
+      className="absolute z-50 glass-panel rounded-2xl py-2 min-w-[200px] max-h-[200px] overflow-y-auto animate-in fade-in slide-in-from-bottom-2 duration-200"
       style={{ bottom: '100%', left: 0, marginBottom: '8px' }}
     >
       {members.map(m => (
@@ -1030,9 +1030,9 @@ export default function ClubDetail() {
   if (!club) return null;
 
   return (
-    <>
+    <div className="min-h-screen mesh-bg">
       {/* Header */}
-      <header className="fixed top-0 w-full z-50 bg-white shadow-[0_1px_0_0_rgba(0,0,0,0.05)]">
+      <header className="fixed top-0 w-full z-50 glass-panel border-b-none">
         <div className="max-w-2xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <button
@@ -1095,8 +1095,7 @@ export default function ClubDetail() {
             )}
           </div>
         </div>
-
-
+      </header>
         {/* Marathon Status Bar */}
         {marathon && countdown && (
           <div className="border-t border-on-surface/5 bg-on-surface text-surface py-2.5">
@@ -1135,7 +1134,7 @@ export default function ClubDetail() {
         )}
       </header>
 
-      <main className={`${marathon && countdown ? (pinnedMessageIds.size > 0 ? 'pt-[10.5rem]' : 'pt-[8rem]') : (pinnedMessageIds.size > 0 ? 'pt-[7.5rem]' : 'pt-[5rem]')} pb-32 px-6 max-w-2xl mx-auto min-h-screen bg-surface`}>
+      <main className={`${marathon && countdown ? (pinnedMessageIds.size > 0 ? 'pt-[10.5rem]' : 'pt-[8rem]') : (pinnedMessageIds.size > 0 ? 'pt-[7.5rem]' : 'pt-[5rem]')} pb-40 px-6 max-w-2xl mx-auto min-h-screen`}>
         {/* Not a member — join prompt */}
         {!membership && (
           <div className="flex flex-col items-center justify-center min-h-[70vh] text-center space-y-10">
@@ -1169,7 +1168,7 @@ export default function ClubDetail() {
             {marathon && countdown && (
               <section 
                 onClick={() => setShowMarathonDetails(true)}
-                className="mb-12 bg-white rounded-[40px] p-10 border border-on-surface/5 shadow-sm cursor-pointer hover:shadow-2xl hover:scale-[1.01] transition-all group overflow-hidden relative"
+                className="mb-12 glass-panel rounded-[40px] p-10 cursor-pointer hover:shadow-2xl hover:scale-[1.01] transition-all group overflow-hidden relative"
               >
                 <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-100 transition-opacity translate-x-4 -translate-y-4 group-hover:translate-x-0 group-hover:translate-y-0 duration-700">
                   <span className="material-symbols-outlined text-5xl ">arrow_outward</span>
@@ -1286,8 +1285,8 @@ export default function ClubDetail() {
                           !msg.text && !msg.replyToId && msg.fileType === 'image' 
                             ? '' 
                             : isMine 
-                              ? 'bg-on-surface text-surface rounded-[24px] rounded-br-[4px] p-5 shadow-2xl shadow-on-surface/10' 
-                              : 'bg-white text-on-surface rounded-[24px] rounded-bl-[4px] p-5 shadow-sm border border-on-surface/5'
+                              ? 'glass-bubble-sent rounded-[24px] rounded-br-[4px] p-5' 
+                              : 'glass-bubble-received rounded-[24px] rounded-bl-[4px] p-5'
                         } ${isPinned ? 'ring-2 ring-amber-400/30 ring-offset-1' : ''}`}
                       >
                         {/* Pin indicator */}
@@ -1464,11 +1463,11 @@ export default function ClubDetail() {
 
       {/* Chat Input Bar */}
       {membership && (
-        <div className="fixed bottom-0 left-0 w-full z-50 bg-gradient-to-t from-surface via-surface/80 to-transparent pt-10 pb-10">
-          <div className="max-w-2xl mx-auto px-6">
+        <div className="fixed bottom-0 left-0 right-0 z-50 p-6">
+          <div className="max-w-2xl mx-auto glass-input-container rounded-[32px] p-2 flex flex-col gap-2">
             {/* Reply preview */}
             {replyingTo && (
-              <div className="mb-2 bg-white rounded-t-2xl border border-b-0 border-on-surface/10 px-5 py-3 flex items-center gap-3 animate-in fade-in slide-in-from-bottom-2 duration-200">
+              <div className="mb-2 glass-panel rounded-t-2xl border border-b-0 border-on-surface/10 px-5 py-3 flex items-center gap-3 animate-in fade-in slide-in-from-bottom-2 duration-200">
                 <div className="w-1 h-8 bg-primary rounded-full shrink-0" />
                 <div className="flex-1 min-w-0">
                   <span className="text-[10px] font-black uppercase tracking-widest text-primary/60 block">
@@ -1484,7 +1483,7 @@ export default function ClubDetail() {
 
             {/* Edit mode */}
             {editingMessageId && (
-              <div className="mb-2 bg-white rounded-t-2xl border border-b-0 border-on-surface/10 px-5 py-3 animate-in fade-in slide-in-from-bottom-2 duration-200">
+              <div className="mb-2 glass-panel rounded-t-2xl border border-b-0 border-on-surface/10 px-5 py-3 animate-in fade-in slide-in-from-bottom-2 duration-200">
                 <div className="flex items-center gap-3 mb-2">
                   <span className="material-symbols-outlined text-primary text-[16px]">edit</span>
                   <span className="text-[10px] font-black uppercase tracking-widest text-primary/60">Редактирование</span>
@@ -1509,7 +1508,7 @@ export default function ClubDetail() {
 
             {/* Recording state */}
             {isRecording ? (
-              <div className="bg-white p-3 rounded-[32px] flex items-center gap-4 border border-red-200 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.1)]">
+              <div className="glass-panel p-3 rounded-[32px] flex items-center gap-4 border border-red-200 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.1)]">
                 <button
                   onClick={cancelRecording}
                   className="w-12 h-12 flex items-center justify-center text-red-400 hover:text-red-600 hover:bg-red-50 rounded-2xl transition-all"
@@ -1540,7 +1539,7 @@ export default function ClubDetail() {
                 </button>
               </div>
             ) : !editingMessageId && (
-              <div className={`bg-white p-3 ${replyingTo ? 'rounded-b-[32px] rounded-t-none border-t-0' : 'rounded-[32px]'} flex items-center gap-4 border border-on-surface/10 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.1)] focus-within:shadow-[0_48px_80px_-20px_rgba(0,0,0,0.15)] transition-all relative`}>
+              <div className={`bg-white/40 p-3 ${replyingTo ? 'rounded-b-[32px] rounded-t-none border-t-0' : 'rounded-[32px]'} flex items-center gap-4 border border-on-surface/10 transition-all relative`}>
                 {/* Mentions popup */}
                 {mentionQuery !== null && mentionResults.length > 0 && (
                   <MentionsPopup
@@ -1678,6 +1677,6 @@ export default function ClubDetail() {
         activeMarathon={marathon}
         onMarathonChange={setMarathon}
       />
-    </>
+    </div>
   );
 }

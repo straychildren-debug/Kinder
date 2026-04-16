@@ -91,9 +91,9 @@ export default function ClubSettingsModal({
 
   return (
     <>
-      <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-white/20 backdrop-blur-3xl" onClick={onClose}>
+      <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 glass-modal-overlay" onClick={onClose}>
         <div
-          className="bg-white rounded-[40px] p-10 w-full max-w-xl shadow-[0_64px_128px_-16px_rgba(0,0,0,0.2)] max-h-[85vh] overflow-y-auto border border-on-surface/5 animate-in zoom-in-95 fade-in duration-500"
+          className="glass-modal rounded-[40px] p-10 w-full max-w-xl max-h-[85vh] overflow-y-auto animate-in zoom-in-95 fade-in duration-500"
           onClick={(e) => e.stopPropagation()}
         >
           {/* Header */}
@@ -102,7 +102,7 @@ export default function ClubSettingsModal({
               <span className="text-[10px] font-black text-on-surface-variant uppercase tracking-[0.4em] block mb-2 opacity-40 ">Панель управления</span>
               <h2 className="text-4xl font-black tracking-tighter leading-none">Настройки</h2>
             </div>
-            <button onClick={onClose} className="w-12 h-12 rounded-2xl bg-surface-container flex items-center justify-center hover:bg-on-surface hover:text-surface transition-all active:scale-90">
+            <button onClick={onClose} className="w-12 h-12 rounded-2xl glass-btn flex items-center justify-center">
               <span className="material-symbols-outlined text-[20px]">close</span>
             </button>
           </div>
@@ -113,9 +113,9 @@ export default function ClubSettingsModal({
             <div className="grid grid-cols-2 gap-3">
               <button
                 onClick={() => { onClose(); onCreatePoll(); }}
-                className="p-6 rounded-[24px] bg-surface-container/30 hover:bg-white hover:shadow-xl hover:border-on-surface/5 border border-transparent transition-all flex flex-col items-center justify-center gap-3 group"
+                className="p-6 rounded-[24px] glass-panel hover:bg-white/20 transition-all flex flex-col items-center justify-center gap-3 group"
               >
-                <div className="w-10 h-10 rounded-xl bg-white border border-on-surface/5 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all">
+                <div className="w-10 h-10 rounded-xl bg-white/10 border border-white/10 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all">
                   <span className="material-symbols-outlined text-[20px]">ballot</span>
                 </div>
                 <span className="text-[9px] font-black uppercase tracking-widest">Новый опрос</span>
@@ -124,9 +124,9 @@ export default function ClubSettingsModal({
               {isOwnerOrAdmin && (
                 <button
                   onClick={() => setShowMarathonModal(true)}
-                  className="p-6 rounded-[24px] bg-surface-container/30 hover:bg-white hover:shadow-xl hover:border-on-surface/5 border border-transparent transition-all flex flex-col items-center justify-center gap-3 group text-primary"
+                  className="p-6 rounded-[24px] glass-panel hover:bg-white/20 transition-all flex flex-col items-center justify-center gap-3 group text-primary"
                 >
-                  <div className="w-10 h-10 rounded-xl bg-white border border-on-surface/5 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all">
+                  <div className="w-10 h-10 rounded-xl bg-white/10 border border-white/10 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all">
                     <span className="material-symbols-outlined text-[20px]" style={{ fontVariationSettings: "'FILL' 1" }}>bolt</span>
                   </div>
                   <span className="text-[9px] font-black uppercase tracking-widest">Марафон</span>
@@ -164,7 +164,7 @@ export default function ClubSettingsModal({
                 {members.map((member) => (
                   <div
                     key={member.id}
-                    className="flex items-center gap-4 p-4 rounded-[24px] bg-surface-container/30 border border-transparent hover:bg-white hover:border-on-surface/5 hover:shadow-sm transition-all duration-300 group"
+                    className="flex items-center gap-4 p-4 rounded-[24px] glass-panel hover:bg-white/20 transition-all duration-300 group"
                   >
                     {/* Avatar */}
                     <div className="relative">

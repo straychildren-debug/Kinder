@@ -88,9 +88,9 @@ export default function MarathonDetailsModal({ isOpen, onClose, marathon, userId
   }, {} as Record<string, { userName?: string; userAvatar?: string; progress: MarathonParticipantProgress[] }>);
 
   return (
-    <div className="fixed inset-0 z-[110] flex items-center justify-center p-6 bg-white/20 backdrop-blur-3xl" onClick={onClose}>
+    <div className="fixed inset-0 z-[110] flex items-center justify-center p-6 glass-modal-overlay" onClick={onClose}>
       <div
-        className="bg-white rounded-[40px] p-10 w-full max-w-2xl shadow-[0_64px_128px_-16px_rgba(0,0,0,0.2)] max-h-[85vh] overflow-hidden flex flex-col border border-on-surface/5 animate-in zoom-in-95 fade-in duration-500"
+        className="glass-modal rounded-[40px] p-10 w-full max-w-2xl max-h-[85vh] overflow-hidden flex flex-col animate-in zoom-in-95 fade-in duration-500"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between mb-8 flex-shrink-0">
@@ -98,7 +98,7 @@ export default function MarathonDetailsModal({ isOpen, onClose, marathon, userId
             <span className="text-[10px] font-black text-on-surface-variant uppercase tracking-[0.4em] block mb-2 opacity-40 ">Детали марафона</span>
             <h2 className="text-4xl font-black tracking-tighter leading-none">{marathon.title}</h2>
           </div>
-          <button onClick={onClose} className="w-12 h-12 rounded-2xl bg-surface-container flex items-center justify-center hover:bg-on-surface hover:text-surface transition-all active:scale-90">
+          <button onClick={onClose} className="w-12 h-12 rounded-2xl glass-btn flex items-center justify-center">
             <span className="material-symbols-outlined text-[20px]">close</span>
           </button>
         </div>
@@ -136,7 +136,7 @@ export default function MarathonDetailsModal({ isOpen, onClose, marathon, userId
                </div>
              ) : (
                items.map(item => (
-                 <div key={item.id} className="bg-white rounded-[32px] p-8 border border-on-surface/5 shadow-sm group hover:shadow-2xl transition-all duration-500">
+                 <div key={item.id} className="glass-panel rounded-[32px] p-8 group hover:scale-[1.01] transition-all duration-500">
                    <div className="flex items-start gap-6 mb-8">
                      <div className="relative mt-1">
                         <input
@@ -157,7 +157,7 @@ export default function MarathonDetailsModal({ isOpen, onClose, marathon, userId
                        value={myProgress[item.id]?.review || ''}
                        onChange={(e) => setMyProgress(prev => ({...prev, [item.id]: {...prev[item.id], review: e.target.value}}))}
                        placeholder="Ваши мысли после ознакомления..."
-                       className="w-full text-xs font-black p-6 rounded-2xl bg-surface-container/30 border border-transparent focus:outline-none focus:bg-white focus:border-on-surface/5 focus:shadow-sm min-h-[120px] transition-all placeholder:text-on-surface-variant/20 "
+                       className="w-full text-xs font-black p-6 rounded-2xl bg-white/10 border border-white/10 focus:outline-none focus:bg-white/20 min-h-[120px] transition-all placeholder:text-on-surface-variant/20 "
                      />
                      <div className="flex justify-end">
                        <button
@@ -183,7 +183,7 @@ export default function MarathonDetailsModal({ isOpen, onClose, marathon, userId
                  const percent = total > 0 ? Math.round((completedCount / total) * 100) : 0;
                  
                  return (
-                   <div key={idx} className="bg-white rounded-[32px] p-8 border border-on-surface/5 shadow-sm hover:shadow-xl transition-all duration-500">
+                   <div key={idx} className="glass-panel rounded-[32px] p-8 hover:scale-[1.01] transition-all duration-500">
                      <div className="flex items-center gap-5 mb-8 border-b border-on-surface/5 pb-8">
                        <div className="relative">
                          {userProg.userAvatar ? (
