@@ -108,6 +108,14 @@ export interface ClubMember {
   user?: User; // Для отображения информации о пользователе (join)
 }
 
+export interface ClubMessageReaction {
+  id: string;
+  messageId: string;
+  userId: string;
+  emoji: string;
+  createdAt: string;
+}
+
 export interface ClubMessage {
   id: string;
   clubId: string;
@@ -116,6 +124,8 @@ export interface ClubMessage {
   fileUrl: string | null;
   fileType: 'image' | 'file' | null;
   createdAt: string;
+  isEdited?: boolean;
+  reactions?: ClubMessageReaction[];
   // Joined sender data
   senderName?: string;
   senderAvatar?: string;

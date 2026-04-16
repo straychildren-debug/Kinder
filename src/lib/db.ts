@@ -326,7 +326,7 @@ export async function addReviewComment(reviewId: string, userId: string, text: s
       user_id: userId,
       text
     }])
-    .select('*, profiles:user_id(name, avatar_url)')
+    .select('*, profiles:user_id(name, avatar_url), reactions:club_message_reactions(*)')
     .single();
 
   if (error) {
@@ -887,3 +887,47 @@ export async function getUserMembership(clubId: string, userId: string): Promise
   };
 }
 
+
+export async function updateMessage(messageId: string, newText: string): Promise<void> {
+  const { error } = await supabase
+    .from('club_messages')
+    .update({ text: newText, is_edited: true })
+    .eq('id', messageId);
+
+  if (error) {
+    console.error('Error updating message:', error);
+    throw error;
+  }
+}
+
+export async function toggleReaction(messageId: string, userId: string, emoji: string): Promise<void> {
+  // First, check if already exists
+  const { data: existing, error: checkError } = await supabase
+    .from('club_message_reactions')
+    .select('id')
+    .eq('message_id', messageId)
+    .eq('user_id', userId)
+    .eq('emoji', emoji)
+    .maybeSingle();
+
+  if (checkError) throw checkError;
+
+  if (existing) {
+    // Remove
+    const { error } = await supabase
+      .from('club_message_reactions')
+      .delete()
+      .eq('id', existing.id);
+    if (error) throw error;
+  } else {
+    // Add
+    const { error } = await supabase
+      .from('club_message_reactions')
+      .insert({
+        message_id: messageId,
+        user_id: userId,
+        emoji
+      });
+    if (error) throw error;
+  }
+}

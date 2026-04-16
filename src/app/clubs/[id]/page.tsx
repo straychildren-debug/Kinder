@@ -1,7 +1,9 @@
 'use client';
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import {
+  updateMessage,
+  toggleReaction, useParams, useRouter } from 'next/navigation';
 import { useAuth } from '@/components/AuthProvider';
 import ClubSettingsModal from '@/components/ClubSettingsModal';
 import MarathonDetailsModal from '@/components/MarathonDetailsModal';
@@ -75,6 +77,9 @@ export default function ClubDetail() {
   const [showMarathonModal, setShowMarathonModal] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [expandedImage, setExpandedImage] = useState<string | null>(null);
+  const [editingMessageId, setEditingMessageId] = useState<string | null>(null);
+  const [editValue, setEditValue] = useState('');
+  const [showEmojiPickerFor, setShowEmojiPickerFor] = useState<string | null>(null);
 
   const chatEndRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -259,6 +264,26 @@ export default function ClubDetail() {
 
   const formatTime = (dateStr: string) => {
     return new Date(dateStr).toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+  };
+
+  const handleReaction = async (messageId: string, emoji: string) => {
+    if (!user) return;
+    try {
+      await toggleReaction(messageId, user.id, emoji);
+    } catch (err) {
+      console.error('Failed to toggle reaction:', err);
+    }
+  };
+
+  const handleSaveEdit = async () => {
+    if (!editingMessageId || !editValue.trim()) return;
+    try {
+      await updateMessage(editingMessageId, editValue.trim());
+      setMessages(prev => prev.map(m => m.id === editingMessageId ? { ...m, text: editValue.trim(), isEdited: true } : m));
+      setEditingMessageId(null);
+    } catch(err) {
+      console.error(err);
+    }
   };
 
   const handleDeleteMessage = async (messageId: string) => {
@@ -490,13 +515,18 @@ export default function ClubDetail() {
                         {/* Image message */}
                         {msg.fileType === 'image' && msg.fileUrl && (
                           <div 
-                            className={`overflow-hidden cursor-zoom-in ${!msg.text ? 'rounded-[24px] shadow-sm border border-on-surface/10' : 'rounded-[16px] mb-3 border border-on-surface/10'}`}
+                            className={`relative overflow-hidden cursor-zoom-in group/img ${!msg.text ? 'rounded-[16px] shadow-sm border border-on-surface/10' : 'rounded-[16px] mb-3 border border-on-surface/10'}`}
                             onClick={() => setExpandedImage(msg.fileUrl!)}
                           >
                             <img
                               src={msg.fileUrl}
                               alt="Attached image"
-                              className="max-w-[200px] md:max-w-[300px] max-h-[300px] object-cover transition-transform duration-500 hover:scale-105"
+                            />
+                            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover/img:opacity-100 transition-opacity flex items-center justify-center">
+                               <span className="material-symbols-outlined text-white">zoom_in</span>
+                            </div>
+
+                              className="w-[100px] h-[100px] object-cover transition-transform duration-500 hover:scale-105"
                             />
                           </div>
                         )}
