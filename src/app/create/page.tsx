@@ -2,11 +2,14 @@
 
 import React, { useState } from 'react';
 import { useAuth } from '@/components/AuthProvider';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
+import { Suspense } from 'react';
+import TopNavBar from '@/components/TopNavBar';
+import BottomNavBar from '@/components/BottomNavBar';
 import { createContent, updateContent, uploadCover, getContentById } from '@/lib/db';
 import type { ContentType } from '@/lib/types';
 
-export default function CreatePage() {
+function CreatePageContent() {
   const { user } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -537,5 +540,17 @@ export default function CreatePage() {
 
       <BottomNavBar />
     </>
+  );
+}
+
+export default function CreatePage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="w-12 h-12 border-[6px] border-on-surface/5 border-t-on-surface rounded-full animate-spin"></div>
+      </div>
+    }>
+      <CreatePageContent />
+    </Suspense>
   );
 }
