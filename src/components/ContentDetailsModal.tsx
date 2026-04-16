@@ -332,20 +332,20 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
                      {review.text}
                    </p>
 
-                   <div className="flex items-center justify-between border-t border-on-surface/5 pt-4">
-                      {/* Rate the Review */}
-                      <div className="flex items-center gap-4">
+                   <div className="flex items-center justify-between border-t border-on-surface/5 pt-4 gap-2">
+                      <div className="flex items-center">
                         <div className="flex items-center bg-surface-container-lowest rounded-full p-1 border border-on-surface/5">
-                          <span className="pl-3 pr-2 text-[10px] font-black uppercase text-on-surface-variant tracking-widest">
-                            {review.userId === user?.id ? 'Рейтинг рецензии' : 'Оцените рецензию'}: {review.avgRating && review.avgRating > 0 ? review.avgRating : '—'}
+                          <span className="pl-3 pr-2 text-[9px] font-black uppercase text-on-surface-variant tracking-widest leading-none">
+                            {review.userId === user?.id ? 'Рейтинг' : 'Оценить'}: {review.avgRating && review.avgRating > 0 ? (review.avgRating >= 4 ? '👍' : review.avgRating <= 2 ? '👎' : '😐') : '—'}
                           </span>
                           {(!user || review.userId !== user.id) && (
-                            <div className="flex gap-0.5 border-l border-on-surface/10 pl-2 pr-1">
-                              {[1,2,3,4,5].map(star => (
-                                <button key={star} onClick={() => handleRateReview(review.id, star)} className="hover:scale-110 transition-transform p-0.5">
-                                  <span className="material-symbols-outlined text-[16px] text-accent-lilac hover:text-on-surface transition-colors" style={{ fontVariationSettings: "'FILL' 0" }}>star</span>
-                                </button>
-                              ))}
+                            <div className="flex gap-1 border-l border-on-surface/10 ml-1 pl-2 pr-1">
+                              <button onClick={() => handleRateReview(review.id, 5)} className="hover:scale-125 transition-transform p-1 text-accent-lilac hover:text-green-500">
+                                <span className="material-symbols-outlined text-[18px]">thumb_up</span>
+                              </button>
+                              <button onClick={() => handleRateReview(review.id, 1)} className="hover:scale-125 transition-transform p-1 text-accent-lilac hover:text-red-500">
+                                <span className="material-symbols-outlined text-[18px]">thumb_down</span>
+                              </button>
                             </div>
                           )}
                         </div>
@@ -354,7 +354,7 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
                      {/* Comments Toggle */}
                      <button 
                        onClick={() => toggleComments(review.id)}
-                       className="flex items-center gap-2 text-on-surface-variant hover:text-on-surface transition-colors bg-surface-container px-3 py-1.5 rounded-full"
+                       className="flex items-center gap-2 text-on-surface-variant hover:text-on-surface transition-colors bg-surface-container px-3 py-1.5 rounded-full shrink-0"
                      >
                        <span className="material-symbols-outlined text-[18px]">chat_bubble</span>
                        <span className="text-[12px] font-black tracking-widest">{review.commentCount || 0}</span>
