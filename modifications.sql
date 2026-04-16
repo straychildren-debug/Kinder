@@ -1,5 +1,5 @@
 -- 1. Добавление колонки времени последнего прочтения
-ALTER TABLE public.club_members ADD COLUMN last_read_at TIMESTAMPTZ DEFAULT NOW();
+ALTER TABLE public.club_members ADD COLUMN IF NOT EXISTS last_read_at TIMESTAMPTZ DEFAULT NOW();
 
 -- 2. Функция для получения списка клубов с количеством непрочитанных сообщений
 -- Она возвращает все клубы, но для тех, где пользователь состоит, считает unread_count
