@@ -38,10 +38,10 @@ export default function TopNavBar({ title = 'Кинотека' }: TopNavBarProps
               <span className="text-lg md:text-xl font-black italic">K</span>
             </div>
             <div className="flex flex-col">
-              <span className="text-lg md:text-xl font-black tracking-tighter text-on-surface uppercase leading-none">
+              <span className="text-lg md:text-xl font-black tracking-tighter text-on-surface uppercase leading-tight">
                 Kinder
               </span>
-              <span className="text-[8px] font-bold text-on-surface-variant uppercase tracking-[0.2em] opacity-60">
+              <span className="text-[7px] font-black text-on-surface-muted uppercase tracking-[0.3em] leading-none mb-0.5">
                 сообщество
               </span>
             </div>
@@ -51,9 +51,9 @@ export default function TopNavBar({ title = 'Кинотека' }: TopNavBarProps
             {user && (
               <Link 
                 href="/create" 
-                className="w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center bg-accent-lilac/20 text-on-accent-lilac hover:bg-accent-lilac/40 transition-all border border-accent-lilac/10 shadow-sm"
+                className="w-10 h-10 rounded-full flex items-center justify-center bg-accent-lilac/10 text-on-accent-lilac hover:bg-accent-lilac/30 transition-all border border-accent-lilac/10 shadow-sm active:scale-95"
               >
-                <span className="material-symbols-outlined text-[22px] md:text-[24px]">add</span>
+                <span className="material-symbols-outlined text-[20px] md:text-[22px]">add</span>
               </Link>
             )}
 
@@ -62,22 +62,24 @@ export default function TopNavBar({ title = 'Кинотека' }: TopNavBarProps
               className="group relative flex items-center justify-center"
             >
               {unreadCount > 0 && (
-                <span className="absolute -top-1 -right-1 z-10 min-w-[18px] h-[18px] px-1 rounded-full bg-red-500 text-white text-[10px] font-black flex items-center justify-center shadow-sm border border-white">
+                <span className="absolute -top-1 -right-1 z-10 min-w-[18px] h-[18px] px-1 rounded-full bg-red-500 text-white text-[9px] font-black flex items-center justify-center shadow-lg shadow-red-500/20 border-2 border-white">
                   {unreadCount > 99 ? '99+' : unreadCount}
                 </span>
               )}
               {user?.avatarUrl ? (
-                <img
-                  alt="Профиль"
-                  src={user.avatarUrl}
-                  className="w-8 h-8 md:w-10 md:h-10 rounded-full border border-accent-lilac/20 group-hover:border-on-surface transition-all object-cover shadow-sm"
-                />
+                <div className="w-10 h-10 rounded-full border border-on-surface/5 group-hover:border-on-surface transition-all p-0.5 shadow-sm active:scale-95">
+                  <img
+                    alt="Профиль"
+                    src={user.avatarUrl}
+                    className="w-full h-full rounded-full object-cover"
+                  />
+                </div>
               ) : user ? (
-                <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-accent-lilac flex items-center justify-center text-on-accent-lilac font-black text-xs md:text-sm group-hover:ring-4 group-hover:ring-accent-lilac/20 transition-all border border-white/50 shadow-sm">
+                <div className="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-on-surface font-black text-sm group-hover:bg-on-surface group-hover:text-surface transition-all border border-on-surface/5 shadow-sm active:scale-95">
                   {user.name.charAt(0)}
                 </div>
               ) : (
-                <span className="material-symbols-outlined text-on-surface-variant group-hover:text-on-surface text-[28px] md:text-[32px] transition-colors">
+                <span className="material-symbols-outlined text-on-surface-muted group-hover:text-on-surface text-[32px] transition-colors active:scale-95">
                   account_circle
                 </span>
               )}

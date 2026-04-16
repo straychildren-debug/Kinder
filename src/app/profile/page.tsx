@@ -38,8 +38,8 @@ export default function Profile() {
             <span className="material-symbols-outlined text-4xl text-on-surface-variant/30">person</span>
           </div>
           <div className="text-center space-y-4">
-            <h2 className="text-4xl font-black tracking-tighter">Войдите в аккаунт</h2>
-            <p className="text-on-surface-variant text-sm font-medium opacity-60 max-w-xs mx-auto  leading-relaxed">
+            <h2 className="text-4xl font-black tracking-tighter text-on-surface">Войдите в аккаунт</h2>
+            <p className="text-on-surface-muted text-sm font-medium max-w-xs mx-auto leading-relaxed">
               Чтобы просматривать профиль, делиться контентом и участвовать в жизни сообщества, необходимо авторизоваться
             </p>
           </div>
@@ -93,13 +93,13 @@ export default function Profile() {
               )}
             </div>
             
-            <div className="text-center md:text-left space-y-4">
+            <div className="text-center md:text-left space-y-2">
               <div className="space-y-1">
-                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-on-surface-variant opacity-40 ">Пользователь</span>
+                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-on-surface-muted">Пользователь</span>
                 <h1 className="text-5xl font-black tracking-tighter text-on-surface leading-none">{user.name}</h1>
               </div>
               
-              <p className="text-on-surface-variant font-medium text-sm  opacity-70 max-w-xs">{user.bio || user.email}</p>
+              <p className="text-on-surface-muted font-medium text-sm max-w-xs">{user.bio || user.email}</p>
               
               {user.role !== 'user' && (
                 <span className={`inline-block px-4 py-1.5 text-[9px] font-black uppercase tracking-widest rounded-full border ${
@@ -109,18 +109,18 @@ export default function Profile() {
                 </span>
               )}
               
-              <div className="flex items-center justify-center md:justify-start gap-8 pt-4 border-t border-on-surface/5 mt-4">
+              <div className="flex items-center justify-center md:justify-start gap-8 pt-6 border-t border-on-surface/5 mt-4">
                 <div className="text-center md:text-left">
-                  <span className="block text-2xl font-black tracking-tighter">{user.stats?.reviews || 0}</span>
-                  <span className="text-[9px] uppercase tracking-widest text-on-surface-variant font-black opacity-40">Рецензии</span>
+                  <span className="block text-2xl font-black tracking-tighter text-on-surface leading-none mb-1">{user.stats?.reviews || 0}</span>
+                  <span className="text-[9px] uppercase tracking-widest text-on-surface-muted font-black">Рецензии</span>
                 </div>
                 <div className="text-center md:text-left">
-                  <span className="block text-2xl font-black tracking-tighter">{user.stats?.followers || 0}</span>
-                  <span className="text-[9px] uppercase tracking-widest text-on-surface-variant font-black opacity-40">Подписчики</span>
+                  <span className="block text-2xl font-black tracking-tighter text-on-surface leading-none mb-1">{user.stats?.followers || 0}</span>
+                  <span className="text-[9px] uppercase tracking-widest text-on-surface-muted font-black">Подписчики</span>
                 </div>
                 <div className="text-center md:text-left">
-                  <span className="block text-2xl font-black tracking-tighter">{user.stats?.awards || 0}</span>
-                  <span className="text-[9px] uppercase tracking-widest text-on-surface-variant font-black opacity-40">Награды</span>
+                  <span className="block text-2xl font-black tracking-tighter text-on-surface leading-none mb-1">{user.stats?.awards || 0}</span>
+                  <span className="text-[9px] uppercase tracking-widest text-on-surface-muted font-black">Награды</span>
                 </div>
               </div>
             </div>
@@ -134,23 +134,23 @@ export default function Profile() {
           <div className="md:col-span-8 space-y-16">
             {/* Статистика активности */}
             <div className="bg-surface p-7 rounded-3xl border border-on-surface/5 shadow-sm">
-              <h2 className="text-[10px] uppercase tracking-[0.3em] font-black text-on-surface-variant mb-8 opacity-40 ">Активность сообщества</h2>
+              <h2 className="text-[10px] uppercase tracking-[0.3em] font-black text-on-surface-muted mb-8">Активность сообщества</h2>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
                 <div className="space-y-1">
-                  <span className="block text-4xl font-black tracking-tighter">{userContent.length}</span>
-                  <span className="text-[9px] uppercase tracking-widest text-on-surface-variant font-black opacity-50">Публикаций</span>
+                  <span className="block text-4xl font-black tracking-tighter text-on-surface leading-none mb-1">{userContent.length}</span>
+                  <span className="text-[9px] uppercase tracking-widest text-on-surface-muted font-black">Публикаций</span>
                 </div>
                 <div className="space-y-1">
-                  <span className="block text-4xl font-black tracking-tighter text-green-600">{approvedCount}</span>
-                  <span className="text-[9px] uppercase tracking-widest text-on-surface-variant font-black opacity-50">Одобрено</span>
+                  <span className="block text-4xl font-black tracking-tighter text-green-600 leading-none mb-1">{approvedCount}</span>
+                  <span className="text-[9px] uppercase tracking-widest text-on-surface-muted font-black">Одобрено</span>
                 </div>
                 <div className="space-y-1">
-                  <span className="block text-4xl font-black tracking-tighter text-amber-500">{pendingCount}</span>
-                  <span className="text-[9px] uppercase tracking-widest text-on-surface-variant font-black opacity-50">На проверке</span>
+                  <span className="block text-4xl font-black tracking-tighter text-amber-500 leading-none mb-1">{pendingCount}</span>
+                  <span className="text-[9px] uppercase tracking-widest text-on-surface-muted font-black">На проверке</span>
                 </div>
                 <div className="space-y-1">
-                  <span className="block text-4xl font-black tracking-tighter">{(user.stats?.avgRating || 0).toFixed(1)}</span>
-                  <span className="text-[9px] uppercase tracking-widest text-on-surface-variant font-black opacity-50">Ср. рейтинг</span>
+                  <span className="block text-4xl font-black tracking-tighter text-on-surface leading-none mb-1">{(user.stats?.avgRating || 0).toFixed(1)}</span>
+                  <span className="text-[9px] uppercase tracking-widest text-on-surface-muted font-black">Ср. рейтинг</span>
                 </div>
               </div>
             </div>
@@ -163,7 +163,7 @@ export default function Profile() {
 
             {/* Хочу посмотреть/прочитать */}
             <div className="space-y-6">
-              <h2 className="text-[10px] uppercase tracking-[0.3em] font-black text-on-surface-variant opacity-40">Хочу посмотреть и прочитать</h2>
+              <h2 className="text-[10px] uppercase tracking-[0.3em] font-black text-on-surface-muted">Хочу посмотреть и прочитать</h2>
               <WishlistShelf userId={user.id} onOpenContent={(c) => setOpenedContent(c)} />
             </div>
 
@@ -212,7 +212,7 @@ export default function Profile() {
                                item.status === 'draft' ? 'Черновик' : 'Отклонено'}
                             </span>
                           </div>
-                          <p className="text-sm text-on-surface-variant font-medium line-clamp-2 leading-relaxed opacity-60 ">{item.description}</p>
+                          <p className="text-sm text-on-surface-muted font-medium line-clamp-2 leading-relaxed">{item.description}</p>
                           {item.status === 'rejected' && item.rejectionReason && (
                             <div className="mt-4 p-4 bg-red-50 border border-red-100 rounded-2xl animate-in fade-in slide-in-from-top-2 duration-500 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
                               <div className="space-y-1">
@@ -230,16 +230,16 @@ export default function Profile() {
                           )}
                         </div>
                         <div className="flex items-center gap-6 mt-6 pt-6 border-t border-on-surface/5">
-                          <div className="flex items-center gap-2">
-                            <span className="material-symbols-outlined text-[16px] text-on-surface-variant opacity-40">calendar_today</span>
-                            <span className="text-[10px] font-black text-on-surface-variant uppercase tracking-widest opacity-60">{new Date(item.createdAt).toLocaleDateString()}</span>
+                          <div className="flex items-center gap-2 leading-none">
+                            <span className="material-symbols-outlined text-[16px] text-on-surface-muted opacity-40">calendar_today</span>
+                            <span className="text-[10px] font-black text-on-surface-muted uppercase tracking-widest">{new Date(item.createdAt).toLocaleDateString()}</span>
                           </div>
                           {item.type && (
-                            <div className="flex items-center gap-2">
-                              <span className="material-symbols-outlined text-[16px] text-on-surface-variant opacity-40">
+                            <div className="flex items-center gap-2 leading-none">
+                              <span className="material-symbols-outlined text-[16px] text-on-surface-muted opacity-40">
                                 {item.type === 'movie' ? 'movie' : 'menu_book'}
                               </span>
-                              <span className="text-[10px] font-black text-on-surface-variant uppercase tracking-widest opacity-60">
+                              <span className="text-[10px] font-black text-on-surface-muted uppercase tracking-widest">
                                 {item.type === 'movie' ? 'Кино' : 'Книга'}
                               </span>
                             </div>

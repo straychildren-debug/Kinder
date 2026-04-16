@@ -47,8 +47,8 @@ export default function Leaderboard() {
           <div className="grid grid-cols-1 md:grid-cols-12 gap-6 mb-16">
             {/* Rank 1 */}
             {top3[0] && (
-              <div className="md:col-span-6 bg-surface rounded-3xl p-5 relative overflow-hidden group shadow-xl border border-on-surface/5">
-                <div className="absolute -top-4 -right-4 text-[120px] font-black text-on-surface/5 select-none leading-none">1</div>
+              <div className="md:col-span-6 bg-surface rounded-3xl p-5 relative overflow-hidden group shadow-xl border border-accent-amber/10 golden-glow">
+                <div className="absolute -top-4 -right-4 text-[120px] font-black text-accent-amber/10 select-none leading-none">1</div>
                 <div className="relative z-10">
                   <div className="flex items-center gap-6 mb-6">
                     <div className="w-20 h-20 rounded-xl overflow-hidden shadow-xl bg-surface-container flex items-center justify-center font-black text-xl text-on-surface">
@@ -59,7 +59,10 @@ export default function Leaderboard() {
                       )}
                     </div>
                     <div>
-                      <h3 className="text-2xl font-black tracking-tight mb-1 text-on-surface">{top3[0].name}</h3>
+                      <div className="flex items-center gap-2 mb-1">
+                         <span className="material-symbols-outlined text-accent-amber text-lg" style={{ fontVariationSettings: "'FILL' 1" }}>workspace_premium</span>
+                         <h3 className="text-2xl font-black tracking-tight text-on-surface">{top3[0].name}</h3>
+                      </div>
                       <div className="flex items-center gap-2 text-on-surface-variant">
                         <span className="material-symbols-outlined text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>verified</span>
                         <span className="text-[10px] font-black uppercase tracking-widest opacity-60">
@@ -70,16 +73,16 @@ export default function Leaderboard() {
                   </div>
                   <div className="grid grid-cols-3 gap-3">
                     <div className="bg-surface-container-low p-2.5 rounded-xl border border-on-surface/5 shadow-sm">
-                      <p className="text-[8px] uppercase font-black tracking-widest text-on-surface-variant mb-0.5 opacity-50">Лайки</p>
-                      <p className="text-xl font-black">{top3[0].stats?.avgRating || 0}</p>
+                      <p className="text-[8px] uppercase font-black tracking-widest text-on-surface-muted mb-0.5 opacity-50">Лайки</p>
+                      <p className="text-xl font-black text-on-surface">{top3[0].stats?.avgRating || 0}</p>
                     </div>
                     <div className="bg-surface-container-low p-2.5 rounded-xl border border-on-surface/5 shadow-sm">
-                      <p className="text-[8px] uppercase font-black tracking-widest text-on-surface-variant mb-0.5 opacity-50">Рецензии</p>
-                      <p className="text-xl font-black">{top3[0].stats?.reviews || 0}</p>
+                      <p className="text-[8px] uppercase font-black tracking-widest text-on-surface-muted mb-0.5 opacity-50">Рецензии</p>
+                      <p className="text-xl font-black text-on-surface">{top3[0].stats?.reviews || 0}</p>
                     </div>
-                    <div className="bg-on-surface p-2.5 rounded-xl shadow-md shadow-on-surface/10">
-                      <p className="text-[8px] uppercase font-black tracking-widest text-surface/50 mb-0.5">Очки</p>
-                      <p className="text-xl font-black text-surface">{(top3[0].stats?.publications || 0) * 10}</p>
+                    <div className="bg-accent-amber p-2.5 rounded-xl shadow-md shadow-accent-amber/20">
+                      <p className="text-[8px] uppercase font-black tracking-widest text-white/60 mb-0.5">Очки</p>
+                      <p className="text-xl font-black text-white">{(top3[0].stats?.publications || 0) * 10}</p>
                     </div>
                   </div>
                 </div>
@@ -92,7 +95,7 @@ export default function Leaderboard() {
               {top3[1] && (
                 <div className="bg-surface rounded-3xl p-4 flex items-center justify-between group shadow-sm border border-on-surface/5 hover:shadow-md transition-shadow">
                   <div className="flex items-center gap-4">
-                    <div className="text-2xl font-black text-on-surface-variant/20 mr-2 tracking-tighter">02</div>
+                    <div className="text-2xl font-black text-slate-300 mr-2 tracking-tighter">02</div>
                     <div className="w-14 h-14 rounded-xl overflow-hidden bg-surface-container flex items-center justify-center font-black text-lg text-on-surface border border-on-surface/5 shadow-inner">
                       {top3[1].avatarUrl ? (
                         <img alt={top3[1].name} className="w-full h-full object-cover" src={top3[1].avatarUrl} />
@@ -116,7 +119,7 @@ export default function Leaderboard() {
               {top3[2] && (
                 <div className="bg-surface rounded-3xl p-4 flex items-center justify-between group shadow-sm border border-on-surface/5 hover:shadow-md transition-shadow">
                   <div className="flex items-center gap-4">
-                    <div className="text-2xl font-black text-on-surface-variant/20 mr-2 tracking-tighter">03</div>
+                    <div className="text-2xl font-black text-orange-200 mr-2 tracking-tighter">03</div>
                     <div className="w-14 h-14 rounded-xl overflow-hidden bg-surface-container flex items-center justify-center font-black text-lg text-on-surface border border-on-surface/5 shadow-inner">
                       {top3[2].avatarUrl ? (
                         <img alt={top3[2].name} className="w-full h-full object-cover" src={top3[2].avatarUrl} />

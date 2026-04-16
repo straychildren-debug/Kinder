@@ -22,7 +22,7 @@ export default function BottomNavBar({ activeTab = 'home' }: BottomNavBarProps) 
   ];
 
   return (
-    <nav className="fixed bottom-0 left-0 w-full bg-white/90 backdrop-blur-3xl border-t border-on-surface/5 z-50 md:hidden pb-safe shadow-[0_-4px_20px_rgb(0,0,0,0.04)]">
+    <nav className="fixed bottom-0 left-0 w-full bg-white/80 backdrop-blur-3xl border-t border-on-surface/5 z-50 md:hidden pb-safe shadow-[0_-8px_30px_rgb(0,0,0,0.03)]">
       <div className="flex justify-around items-center px-4 py-3 gap-0">
         {tabs.map(tab => {
           const isActive = tab.id === activeTab;
@@ -35,15 +35,15 @@ export default function BottomNavBar({ activeTab = 'home' }: BottomNavBarProps) 
               {isActive && (
                 <motion.div 
                   layoutId="bottomNavHighlight"
-                  className="absolute inset-x-2 inset-y-1 bg-accent-lilac/20 rounded-xl z-0"
+                  className="absolute inset-x-3 inset-y-2 bg-on-surface/[0.03] rounded-2xl z-0"
                   initial={false}
-                  transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                  transition={{ type: 'spring', stiffness: 400, damping: 35 }}
                 />
               )}
               
               <span 
-                className={`material-symbols-outlined text-[26px] z-10 transition-colors duration-300 ${
-                  isActive ? 'text-[#6A5AE0] font-bold' : 'text-on-surface-variant/70'
+                className={`material-symbols-outlined text-[24px] z-10 transition-all duration-300 ${
+                  isActive ? 'text-on-surface scale-110' : 'text-on-surface-muted opacity-40'
                 }`} 
                 style={getIconStyle(tab.id)}
               >

@@ -130,7 +130,7 @@ export default function Clubs() {
         {/* Header Section */}
         <header className="mb-12 flex flex-col md:flex-row md:justify-between md:items-end gap-6">
           <div>
-            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-on-surface-variant mb-2 block opacity-60">Сообщество</span>
+            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-on-surface-muted mb-2 block">Сообщество</span>
             <h1 className="text-6xl font-black tracking-tighter text-on-surface leading-[0.9]">Клубы по<br/>интересам</h1>
           </div>
           {/* Action Row: Search and Create */}
@@ -142,17 +142,17 @@ export default function Clubs() {
                 placeholder="Поиск клубов..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 rounded-xl bg-surface border border-on-surface/5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-on-surface/5 transition-all shadow-sm"
+                className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-surface border border-on-surface/5 text-sm font-medium focus:outline-none focus:ring-4 focus:ring-on-surface/[0.03] transition-all shadow-sm placeholder:text-on-surface-muted"
               />
             </div>
             <div className="relative w-full sm:w-auto">
               <button
                 id="create-club-btn"
                 onClick={handleCreateClick}
-                className="bg-on-surface text-surface px-5 py-2.5 rounded-xl flex items-center justify-center gap-2 shadow-md shadow-on-surface/5 hover:scale-105 active:scale-95 transition-all w-full sm:w-auto"
+                className="bg-on-surface text-surface px-5 py-2.5 rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-on-surface/10 hover:scale-105 active:scale-95 transition-all w-full sm:w-auto"
               >
-                <span className="material-symbols-outlined">add_circle</span>
-                <span className="font-black text-[11px] uppercase tracking-widest">Создать клуб</span>
+                <span className="material-symbols-outlined text-[20px]">add_circle</span>
+                <span className="font-black text-[10px] uppercase tracking-widest leading-none">Создать клуб</span>
               </button>
               {showTooltip && (
                 <div className="absolute right-0 top-full mt-2 z-50 bg-on-surface text-surface p-4 rounded-xl shadow-2xl whitespace-nowrap">
@@ -197,13 +197,13 @@ export default function Clubs() {
                 <div className="absolute bottom-0 left-0 p-10 z-20 w-full">
                   <div className="flex justify-between items-end gap-6 flex-wrap">
                     <div className="flex-1 min-w-[300px]">
-                      <span className="inline-block px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-[10px] text-white font-black uppercase tracking-[0.2em] mb-4 border border-white/10">Популярное</span>
+                      <span className="inline-block px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-[9px] text-white font-black uppercase tracking-[0.2em] mb-4 border border-white/10 shadow-sm">Популярное</span>
                       <h2 className="text-4xl md:text-5xl font-black text-white mb-2 tracking-tighter leading-none">{heroMain.name}</h2>
-                      <p className="text-white/70 text-sm max-w-md font-medium">{heroMain.description}</p>
+                      <p className="text-white/70 text-sm max-w-md font-medium leading-relaxed">{heroMain.description}</p>
                     </div>
                     <div className="text-right flex-shrink-0">
-                      <span className="text-white/40 text-[10px] font-black uppercase tracking-widest block mb-4">{heroMain.memberCount} участников</span>
-                      <button className="bg-white text-on-surface px-6 py-2.5 rounded-xl font-black text-[11px] uppercase tracking-widest hover:scale-105 transition-transform shadow-lg">
+                      <span className="text-white/40 text-[9px] font-black uppercase tracking-widest block mb-4">{heroMain.memberCount} участников</span>
+                      <button className="bg-white text-on-surface px-6 py-2 rounded-xl font-black text-[10px] uppercase tracking-widest hover:scale-105 transition-transform shadow-xl">
                         Вступить
                       </button>
                     </div>
@@ -219,17 +219,17 @@ export default function Clubs() {
                 className="md:col-span-4 bg-surface p-8 rounded-3xl flex flex-col justify-between shadow-sm border border-on-surface/5 cursor-pointer hover:shadow-xl transition-all duration-500 hover:scale-[1.02]"
               >
                 <div>
-                  <div className="w-14 h-14 rounded-xl bg-surface-container flex items-center justify-center mb-10 shadow-inner">
+                  <div className="w-14 h-14 rounded-xl bg-surface-container flex items-center justify-center mb-10 shadow-inner border border-on-surface/[0.02]">
                     <span className="material-symbols-outlined text-on-surface text-4xl">
                       {CATEGORY_ICONS[heroSide.category] || 'groups'}
                     </span>
                   </div>
-                  <h3 className="text-2xl font-black mb-3 tracking-tight text-on-surface">{heroSide.name}</h3>
-                  <p className="text-on-surface-variant text-sm font-medium leading-relaxed opacity-70">{heroSide.description}</p>
+                  <h3 className="text-2xl font-black mb-2 tracking-tight text-on-surface leading-none">{heroSide.name}</h3>
+                  <p className="text-on-surface-muted text-sm font-medium leading-relaxed">{heroSide.description}</p>
                 </div>
                 <div className="pt-10 flex justify-between items-center">
-                  <span className="text-[10px] font-black uppercase tracking-widest text-on-surface-variant opacity-40">{heroSide.memberCount} участников</span>
-                  <button className="text-on-surface font-black text-[11px] uppercase tracking-widest hover:translate-x-1 transition-transform">Вступить →</button>
+                  <span className="text-[9px] font-black uppercase tracking-widest text-on-surface-muted opacity-40">{heroSide.memberCount} участников</span>
+                  <button className="text-on-surface font-black text-[10px] uppercase tracking-widest hover:translate-x-1 transition-transform leading-none">Вступить →</button>
                 </div>
               </div>
             )}
@@ -242,10 +242,10 @@ export default function Clubs() {
             <button
               key={key}
               onClick={() => setActiveFilter(key)}
-              className={`pb-4 border-b-[3px] text-[11px] font-black uppercase tracking-[0.2em] transition-all ${
+              className={`pb-4 border-b-[3px] text-[10px] font-black uppercase tracking-[0.2em] transition-all ${
                 activeFilter === key
                   ? 'border-on-surface text-on-surface'
-                  : 'border-transparent text-on-surface-variant hover:text-on-surface opacity-40 hover:opacity-100'
+                  : 'border-transparent text-on-surface-muted hover:text-on-surface hover:opacity-100'
               }`}
             >
               {label}
@@ -261,7 +261,7 @@ export default function Clubs() {
           <div className="text-center py-24 bg-surface rounded-3xl border border-on-surface/5">
             <span className="material-symbols-outlined text-8xl text-on-surface/5 mb-6 block">groups</span>
             <h3 className="text-2xl font-black mb-2 text-on-surface tracking-tight">Пока нет клубов</h3>
-            <p className="text-on-surface-variant text-[10px] font-black uppercase tracking-widest opacity-40">Станьте первым — создайте клуб!</p>
+            <p className="text-on-surface-muted text-[10px] font-black uppercase tracking-widest">Станьте первым — создайте клуб!</p>
           </div>
         )}
 
@@ -304,12 +304,12 @@ export default function Clubs() {
                   </div>
                 </div>
                 <div className="p-6">
-                  <h4 className="font-black text-on-surface text-lg mb-2 tracking-tight line-clamp-1">{club.name}</h4>
-                  <p className="text-xs text-on-surface-variant font-medium line-clamp-2 mb-8 opacity-70 leading-relaxed ">{club.description}</p>
+                  <h4 className="font-black text-on-surface text-lg mb-2 tracking-tight line-clamp-1 leading-none">{club.name}</h4>
+                  <p className="text-xs text-on-surface-muted font-medium line-clamp-2 mb-8 leading-relaxed ">{club.description}</p>
                   <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-black uppercase tracking-widest text-on-surface-variant opacity-40">{club.memberCount} участников</span>
-                    <button className="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center group-hover:bg-on-surface transition-colors">
-                      <span className="material-symbols-outlined text-on-surface-variant text-xl group-hover:text-surface">login</span>
+                    <span className="text-[9px] font-black uppercase tracking-widest text-on-surface-muted opacity-40">{club.memberCount} участников</span>
+                    <button className="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center group-hover:bg-on-surface transition-colors shadow-sm">
+                      <span className="material-symbols-outlined text-on-surface-muted text-xl group-hover:text-surface">login</span>
                     </button>
                   </div>
                 </div>
@@ -325,7 +325,7 @@ export default function Clubs() {
           <p className="text-on-surface-variant max-w-xl mx-auto mb-10 text-sm font-medium opacity-70  leading-relaxed">Создайте собственное сообщество и пригласите единомышленников для обсуждения любимых произведений в свободном формате.</p>
           <button
             onClick={handleCreateClick}
-            className="bg-on-surface text-surface px-6 py-3 rounded-xl font-black text-[10px] uppercase tracking-[0.2em] hover:scale-105 transition-transform shadow-lg shadow-on-surface/10"
+            className="bg-on-surface text-surface px-6 py-3 rounded-xl font-black text-[10px] uppercase tracking-[0.2em] hover:scale-105 active:scale-95 transition-transform shadow-xl shadow-on-surface/10"
           >
             Начать новое обсуждение
           </button>

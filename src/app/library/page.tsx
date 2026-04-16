@@ -32,7 +32,7 @@ export default function Library() {
         {/* Page Header */}
         <section className="py-8">
            <h1 className="text-6xl font-black tracking-tighter leading-none text-on-surface mb-2">Все книги</h1>
-           <span className="text-[10px] font-black text-on-surface-variant uppercase tracking-[0.3em]">
+           <span className="text-[10px] font-black text-on-surface-muted uppercase tracking-[0.3em]">
              каталог библиотеки
            </span>
         </section>
@@ -43,14 +43,14 @@ export default function Library() {
         ) : books.length === 0 ? (
           <div className="text-center py-20 px-6 bg-surface rounded-3xl border border-on-surface/5 shadow-sm">
              <div className="text-6xl mb-4 grayscale opacity-40">📚</div>
-             <p className="text-on-surface-variant font-black uppercase text-[10px] tracking-widest">В библиотеке пока нет книг</p>
+             <p className="text-on-surface-muted font-black uppercase text-[10px] tracking-widest">В библиотеке пока нет книг</p>
           </div>
         ) : (
           <div className="space-y-4">
             {books.map((book, index) => (
               <MotionListItem key={book.id} index={index}>
               <div
-                className="group flex bg-surface p-4 rounded-[24px] border border-on-surface/5 shadow-sm hover:shadow-md transition-all hover:scale-[1.01] cursor-pointer"
+                className="group flex bg-surface p-3.5 rounded-3xl border border-on-surface/5 shadow-sm hover:shadow-md transition-all hover:scale-[1.01] cursor-pointer"
                 onClick={() => setSelectedContent(book)}
               >
                 {/* Book Thumbnail */}
@@ -83,18 +83,18 @@ export default function Library() {
                   <h4 className="font-black text-on-surface text-lg leading-tight mb-1 group-hover:text-on-surface-variant transition-colors">
                     {book.title}
                   </h4>
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <p className="text-[11px] font-black text-on-surface-variant uppercase tracking-wider">
+                  <div className="flex items-center gap-2 flex-wrap leading-none">
+                    <p className="text-[11px] font-black text-on-surface-muted uppercase tracking-widest">
                       {book.author || 'Неизвестный автор'}
                     </p>
                     {book.year && (
-                      <span className="text-[11px] font-black text-on-surface-variant/40 uppercase tracking-wider">
+                      <span className="text-[11px] font-black text-on-surface-muted uppercase tracking-widest opacity-40">
                         • {book.year}
                       </span>
                     )}
                   </div>
                   {book.description && (
-                    <p className="mt-2 text-xs text-on-surface-variant line-clamp-2 max-w-md opacity-70">
+                    <p className="mt-2 text-xs text-on-surface-muted line-clamp-2 max-w-md opacity-70">
                       {book.description}
                     </p>
                   )}

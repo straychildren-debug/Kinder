@@ -34,7 +34,7 @@ export default function Movies() {
         {/* Page Header */}
         <section className="py-8">
            <h1 className="text-6xl font-black tracking-tighter leading-none text-on-surface mb-2">Все фильмы</h1>
-           <span className="text-[10px] font-black text-on-surface-variant uppercase tracking-[0.3em]">
+           <span className="text-[10px] font-black text-on-surface-muted uppercase tracking-[0.3em]">
              кинотека сообщества
            </span>
         </section>
@@ -65,7 +65,7 @@ export default function Movies() {
             {movies.map((movie, index) => (
               <MotionListItem key={movie.id} index={index}>
               <div
-                className="group flex bg-surface p-4 rounded-[24px] border border-on-surface/5 shadow-sm hover:shadow-md transition-all hover:scale-[1.01] cursor-pointer"
+                className="group flex bg-surface p-3.5 rounded-3xl border border-on-surface/5 shadow-sm hover:shadow-md transition-all hover:scale-[1.01] cursor-pointer"
                 onClick={() => setSelectedContent(movie)}
               >
                 {/* Movie Poster */}
@@ -100,12 +100,12 @@ export default function Movies() {
                   </h4>
                   <div className="flex items-center gap-2 flex-wrap mb-1">
                     {movie.year && (
-                      <span className="text-[11px] font-black text-red-500 uppercase tracking-wider">
+                      <span className="text-[11px] font-black text-red-500 uppercase tracking-widest leading-none">
                         {movie.year}
                       </span>
                     )}
-                    <span className="text-[11px] font-black text-on-surface-variant/40 uppercase tracking-wider">•</span>
-                    <p className="text-[11px] font-black text-on-surface-variant uppercase tracking-wider">
+                    <span className="text-[11px] font-black text-on-surface-muted uppercase leading-none opacity-40">•</span>
+                    <p className="text-[11px] font-black text-on-surface-muted uppercase tracking-widest leading-none">
                       {movie.director || 'Неизвестный режиссер'}
                     </p>
                   </div>
@@ -117,7 +117,7 @@ export default function Movies() {
                   )}
                   
                   {movie.description && (
-                    <p className="mt-2 text-xs text-on-surface-variant line-clamp-2 max-w-md opacity-70">
+                    <p className="mt-2 text-xs text-on-surface-muted line-clamp-2 max-w-md opacity-70">
                       {movie.description}
                     </p>
                   )}

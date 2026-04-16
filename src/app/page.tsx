@@ -34,26 +34,26 @@ export default function Home() {
       <TopNavBar />
       <main className="pt-24 px-4 pb-32 max-w-lg mx-auto md:max-w-7xl">
         {/* Search Bar */}
-        <section className="mb-8">
+        <section className="mb-10">
           <div className="relative group max-w-2xl mx-auto">
-            <span className="material-symbols-outlined absolute left-6 top-1/2 -translate-y-1/2 text-on-surface transition-all text-[24px] pointer-events-none z-10">
+            <span className="material-symbols-outlined absolute left-6 top-1/2 -translate-y-1/2 text-on-surface/40 transition-all text-[22px] pointer-events-none z-10">
               search
             </span>
             <input 
               type="text"
               placeholder="Поиск книг, фильмов или авторов..."
-              className="w-full bg-surface-container border-2 border-on-surface/5 rounded-2xl pl-16 pr-8 py-5 text-sm md:text-base font-medium focus:outline-none focus:border-accent-lilac focus:bg-white focus:shadow-xl focus:shadow-accent-lilac/5 transition-all duration-300 placeholder:text-on-surface-variant/40 shadow-sm"
+              className="w-full bg-surface-container border-2 border-on-surface/5 rounded-2xl pl-16 pr-8 py-4.5 text-sm md:text-base font-medium focus:outline-none focus:border-accent-lilac focus:bg-white focus:shadow-xl focus:shadow-accent-lilac/5 transition-all duration-300 placeholder:text-on-surface-muted shadow-sm"
             />
           </div>
         </section>
 
         {/* Category Tabs */}
-        <section className="flex gap-3 overflow-x-auto scrollbar-hide py-4 mb-2">
+        <section className="flex gap-3 overflow-x-auto scrollbar-hide py-4 mb-4">
           {['Новое сегодня', 'Все книги', 'Все фильмы', 'Клубы'].map((tab, i) => (
             <button 
               key={tab} 
-              className={`whitespace-nowrap px-5 py-2.5 rounded-xl text-[13px] font-black tracking-tight transition-all active:scale-95 ${
-                i === 0 ? 'bg-on-surface text-surface shadow-md shadow-on-surface/10' : 'bg-surface-container text-on-surface-variant hover:text-on-surface'
+              className={`whitespace-nowrap px-5 py-2.5 rounded-xl text-[13px] font-black tracking-tight transition-all active:scale-95 hover:translate-y-[-1px] ${
+                i === 0 ? 'bg-on-surface text-surface shadow-lg shadow-on-surface/10' : 'bg-surface-container text-on-surface-muted hover:text-on-surface hover:bg-surface-container-high'
               }`}
             >
               {tab}
@@ -106,8 +106,8 @@ export default function Home() {
                             {item.author?.charAt(0) || 'U'}
                           </div>
                           <div className="flex flex-col">
-                            <span className="text-sm font-black text-on-surface tracking-tight">{item.author || 'Автор'}</span>
-                            <span className="text-[9px] font-black text-on-surface-variant uppercase tracking-widest opacity-60">
+                            <span className="text-sm font-black text-on-surface tracking-tight leading-none mb-1">{item.author || 'Автор'}</span>
+                            <span className="text-[9px] font-black text-on-surface-muted uppercase tracking-widest">
                               {item.type === 'movie' ? 'Режиссер' : 'Писатель'}
                             </span>
                           </div>
@@ -118,25 +118,25 @@ export default function Home() {
                       {item.title}
                     </h2>
 
-                    <p className="text-on-surface-variant text-sm leading-relaxed line-clamp-2 font-medium mb-8 opacity-80">
+                    <p className="text-on-surface-muted text-sm leading-relaxed line-clamp-2 font-medium mb-8">
                       {item.description}
                     </p>
 
                     <div className="flex items-center justify-between pt-6 border-t border-on-surface/5">
                       <div className="flex items-center gap-6">
-                        <div className="flex items-center gap-2 group/btn">
-                          <span className="material-symbols-outlined text-[20px] text-on-surface group-hover/btn:scale-110 transition-transform" style={{ fontVariationSettings: "'FILL' 0" }}>favorite</span>
-                          <span className="text-[12px] font-black text-on-surface">{item.likeCount || 0}</span>
+                        <div className="flex items-center gap-2 group/btn cursor-pointer">
+                          <span className="material-symbols-outlined text-[20px] text-on-surface/40 group-hover/btn:text-red-500 group-hover/btn:scale-110 transition-all" style={{ fontVariationSettings: "'FILL' 0" }}>favorite</span>
+                          <span className="text-[12px] font-bold text-on-surface-muted">{item.likeCount || 0}</span>
                         </div>
-                        <div className="flex items-center gap-2 group/btn">
-                          <span className="material-symbols-outlined text-[20px] text-on-surface group-hover/btn:scale-110 transition-transform">chat_bubble</span>
-                          <span className="text-[12px] font-black text-on-surface">{item.reviewCount || 0}</span>
+                        <div className="flex items-center gap-2 group/btn cursor-pointer">
+                          <span className="material-symbols-outlined text-[20px] text-on-surface/40 group-hover/btn:text-on-surface group-hover/btn:scale-110 transition-all">chat_bubble</span>
+                          <span className="text-[12px] font-bold text-on-surface-muted">{item.reviewCount || 0}</span>
                         </div>
                       </div>
 
-                      <div className="flex items-center gap-2 bg-on-surface text-surface px-5 py-2.5 rounded-xl shadow-md shadow-on-surface/10">
+                      <div className="flex items-center gap-2 bg-on-surface text-surface px-4 py-2 rounded-xl shadow-lg shadow-on-surface/10">
                         <span className="material-symbols-outlined text-accent-lilac text-[16px]" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
-                        <span className="text-[14px] font-black tracking-tight">{item.rating ? item.rating.toFixed(1) : '—'}</span>
+                        <span className="text-[13px] font-black tracking-tight">{item.rating ? item.rating.toFixed(1) : '—'}</span>
                       </div>
                     </div>
                   </div>
@@ -186,8 +186,8 @@ export default function Home() {
                       <span className="material-symbols-outlined text-on-surface text-3xl">{item.icon}</span>
                     </div>
                     <div>
-                      <p className="text-base font-black tracking-tight text-on-surface">{item.name}</p>
-                      <p className="text-[10px] font-black text-on-surface-variant uppercase tracking-widest mt-1 opacity-60">
+                      <p className="text-base font-black tracking-tight text-on-surface leading-none mb-1">{item.name}</p>
+                      <p className="text-[10px] font-black text-on-surface-muted uppercase tracking-widest mt-1">
                          {item.detail}
                       </p>
                     </div>
