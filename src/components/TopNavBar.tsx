@@ -16,19 +16,24 @@ export default function TopNavBar({ title = 'Кинотека' }: TopNavBarProps
 
   return (
     <>
-      <nav className="fixed top-0 left-0 right-0 z-50 px-4 py-3">
-        <div className="max-w-7xl mx-auto bg-white/70 backdrop-blur-xl border border-white/40 shadow-xl shadow-accent-lilac/5 rounded-[32px] px-8 py-4 flex items-center justify-between">
-          <Link href="/" className="flex flex-col">
-            <h1 className="text-2xl font-black tracking-tighter text-on-surface uppercase">
-              {title}
-            </h1>
-            <span className="text-[10px] font-bold text-on-surface-variant uppercase tracking-[0.2em] -mt-1">
-              сообщество
-            </span>
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-2xl border-b border-on-surface/5 px-4 md:px-8 py-4">
+        <div className="max-w-full mx-auto flex items-center justify-between">
+          <Link href="/" className="flex items-center gap-2 md:gap-3 group">
+            <div className="w-9 h-9 md:w-10 md:h-10 bg-on-surface text-surface rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+              <span className="text-lg md:text-xl font-black italic">K</span>
+            </div>
+            <div className="flex flex-col">
+              <span className="text-lg md:text-xl font-black tracking-tighter text-on-surface uppercase leading-none">
+                Kinder
+              </span>
+              <span className="text-[8px] font-bold text-on-surface-variant uppercase tracking-[0.2em] opacity-60">
+                сообщество
+              </span>
+            </div>
           </Link>
           
-          <div className="flex items-center gap-6">
-            <button className="text-on-surface-variant hover:text-on-surface transition-colors flex items-center justify-center">
+          <div className="flex items-center gap-3 md:gap-6">
+            <button className="text-on-surface-variant hover:text-on-surface transition-colors flex items-center justify-center w-8 h-8 md:w-10 md:h-10">
               <span className="material-symbols-outlined text-[24px]">search</span>
             </button>
 
@@ -37,9 +42,9 @@ export default function TopNavBar({ title = 'Кинотека' }: TopNavBarProps
             {user && (
               <Link 
                 href="/create" 
-                className="w-10 h-10 rounded-full flex items-center justify-center bg-accent-lilac/30 text-on-accent-lilac hover:bg-accent-lilac/50 transition-all border border-accent-lilac/20 shadow-inner"
+                className="w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center bg-accent-lilac/20 text-on-accent-lilac hover:bg-accent-lilac/40 transition-all border border-accent-lilac/10 shadow-sm"
               >
-                <span className="material-symbols-outlined text-[24px]">add</span>
+                <span className="material-symbols-outlined text-[22px] md:text-[24px]">add</span>
               </Link>
             )}
 
@@ -51,14 +56,14 @@ export default function TopNavBar({ title = 'Кинотека' }: TopNavBarProps
                 <img
                   alt="Профиль"
                   src={user.avatarUrl}
-                  className="w-10 h-10 rounded-full border border-accent-lilac/30 group-hover:border-on-surface transition-all object-cover"
+                  className="w-8 h-8 md:w-10 md:h-10 rounded-full border border-accent-lilac/20 group-hover:border-on-surface transition-all object-cover shadow-sm"
                 />
               ) : user ? (
-                <div className="w-10 h-10 rounded-full bg-accent-lilac flex items-center justify-center text-on-accent-lilac font-black text-sm group-hover:ring-4 group-hover:ring-accent-lilac/20 transition-all border border-white/50 shadow-sm">
+                <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-accent-lilac flex items-center justify-center text-on-accent-lilac font-black text-xs md:text-sm group-hover:ring-4 group-hover:ring-accent-lilac/20 transition-all border border-white/50 shadow-sm">
                   {user.name.charAt(0)}
                 </div>
               ) : (
-                <span className="material-symbols-outlined text-on-surface-variant group-hover:text-on-surface text-[32px] transition-colors">
+                <span className="material-symbols-outlined text-on-surface-variant group-hover:text-on-surface text-[28px] md:text-[32px] transition-colors">
                   account_circle
                 </span>
               )}
