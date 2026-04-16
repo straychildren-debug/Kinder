@@ -22,7 +22,7 @@ export default function BottomNavBar({ activeTab = 'home' }: BottomNavBarProps) 
   ];
 
   return (
-    <nav className="fixed bottom-0 left-0 w-full bg-white/80 backdrop-blur-2xl border-t border-on-surface/5 z-50 md:hidden pb-safe">
+    <nav className="fixed bottom-0 left-0 w-full bg-white/98 backdrop-blur-3xl border-t border-on-surface/10 z-50 md:hidden pb-safe shadow-[0_-8px_30px_rgb(0,0,0,0.04)]">
       <div className="flex justify-around items-center px-4 py-5 gap-2">
         {tabs.map(tab => {
           const isActive = tab.id === activeTab;
