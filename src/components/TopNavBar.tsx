@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { useAuth } from './AuthProvider';
 import ProfileSidebar from './ProfileSidebar';
+import NotificationsBell from './NotificationsBell';
 import Link from 'next/link';
 
 interface TopNavBarProps {
@@ -30,7 +31,9 @@ export default function TopNavBar({ title = 'Кинотека' }: TopNavBarProps
             <button className="text-on-surface-variant hover:text-on-surface transition-colors flex items-center justify-center">
               <span className="material-symbols-outlined text-[24px]">search</span>
             </button>
-            
+
+            <NotificationsBell />
+
             {user && (
               <Link 
                 href="/create" 

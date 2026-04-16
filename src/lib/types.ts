@@ -218,4 +218,72 @@ export interface MarathonParticipantProgress {
   userAvatar?: string;
 }
 
+export type AwardType =
+  | 'first_review'
+  | 'ten_reviews'
+  | 'hundred_reviews'
+  | 'first_publication'
+  | 'ten_publications'
+  | 'first_club'
+  | 'marathon_winner';
+
+export interface Award {
+  id: string;
+  userId: string;
+  type: AwardType;
+  payload: Record<string, unknown>;
+  earnedAt: string;
+}
+
+export type ActivityType =
+  | 'reviewed_content'
+  | 'published_content'
+  | 'joined_club'
+  | 'completed_marathon'
+  | 'earned_award';
+
+export interface ActivityEvent {
+  id: string;
+  userId: string;
+  type: ActivityType;
+  refId: string | null;
+  refType: string | null;
+  payload: Record<string, unknown>;
+  createdAt: string;
+  // join
+  userName?: string;
+  userAvatar?: string;
+}
+
+export interface WishlistItem {
+  id: string;
+  userId: string;
+  contentId: string;
+  createdAt: string;
+  content?: ContentItem;
+}
+
+export type NotificationType =
+  | 'reply'
+  | 'reaction'
+  | 'mention'
+  | 'club_invite'
+  | 'marathon';
+
+export interface Notification {
+  id: string;
+  userId: string;              // recipient
+  actorId: string | null;      // who triggered
+  type: NotificationType;
+  clubId: string | null;
+  messageId: string | null;
+  payload: Record<string, unknown>;
+  createdAt: string;
+  readAt: string | null;
+  // joined info for UI
+  actorName?: string;
+  actorAvatar?: string;
+  clubName?: string;
+}
+
 

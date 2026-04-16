@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { ClubMarathon, MarathonItem, MarathonParticipantProgress } from '@/lib/types';
 import { getMarathonItems, getMarathonProgress, updateMarathonProgressItem } from '@/lib/db';
+import { motion } from 'framer-motion';
 
 interface Props {
   isOpen: boolean;
@@ -138,15 +139,33 @@ export default function MarathonDetailsModal({ isOpen, onClose, marathon, userId
                items.map(item => (
                  <div key={item.id} className="glass-panel rounded-[32px] p-8 group hover:scale-[1.01] transition-all duration-500">
                    <div className="flex items-start gap-6 mb-8">
-                     <div className="relative mt-1">
-                        <input
-                          type="checkbox"
-                          checked={myProgress[item.id]?.isCompleted || false}
-                          onChange={(e) => handleToggle(item.id, e.target.checked)}
-                          className="peer w-6 h-6 rounded-lg border-2 border-on-surface/10 bg-white checked:bg-on-surface checked:border-on-surface cursor-pointer appearance-none transition-all"
-                        />
-                        <span className="material-symbols-outlined absolute inset-0 text-white text-[16px] pointer-events-none opacity-0 peer-checked:opacity-100 flex items-center justify-center">check</span>
-                     </div>
+                     <motion.button
+                        type="button"
+                        onClick={() => handleToggle(item.id, !myProgress[item.id]?.isCompleted)}
+                        whileTap={{ scale: 0.82 }}
+                        animate={
+                          myProgress[item.id]?.isCompleted
+                            ? { scale: [1, 1.25, 1], transition: { duration: 0.4 } }
+                            : { scale: 1 }
+                        }
+                        className={`relative mt-1 w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-colors ${
+                          myProgress[item.id]?.isCompleted
+                            ? 'bg-on-surface border-on-surface'
+                            : 'bg-white border-on-surface/10'
+                        }`}
+                        aria-label="Toggle completion"
+                     >
+                        {myProgress[item.id]?.isCompleted && (
+                          <motion.span
+                            initial={{ scale: 0, rotate: -45 }}
+                            animate={{ scale: 1, rotate: 0 }}
+                            transition={{ type: 'spring', stiffness: 500, damping: 18 }}
+                            className="material-symbols-outlined text-white text-[16px]"
+                          >
+                            check
+                          </motion.span>
+                        )}
+                     </motion.button>
                      <h4 className={`text-xl font-black tracking-tighter transition-all  ${myProgress[item.id]?.isCompleted ? 'text-on-surface-variant/20 line-through' : 'text-on-surface'}`}>
                        {item.title}
                      </h4>

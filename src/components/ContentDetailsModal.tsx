@@ -3,7 +3,9 @@
 import React, { useEffect, useState } from 'react';
 import { ContentItem, Review, User, ReviewComment } from '@/lib/types';
 import { getReviewsForContent, submitReview, rateReview, addReviewComment, getReviewComments, getContentById } from '@/lib/db';
+import { addToWishlist, isInWishlist, removeFromWishlist } from '@/lib/wishlist';
 import { useAuth } from './AuthProvider';
+import { motion } from 'framer-motion';
 
 interface ContentDetailsModalProps {
   content: ContentItem | null;
@@ -28,6 +30,10 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
   const [newCommentText, setNewCommentText] = useState('');
   const [loadingComments, setLoadingComments] = useState(false);
 
+  // Wishlist state
+  const [wishlisted, setWishlisted] = useState(false);
+  const [wishlistBusy, setWishlistBusy] = useState(false);
+
   useEffect(() => {
     if (!initialContent) return;
     
@@ -40,9 +46,32 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
       const revs = await getReviewsForContent(initialContent!.id);
       setReviews(revs);
       setLoading(false);
+
+      if (user) {
+        const inList = await isInWishlist(user.id, initialContent!.id);
+        setWishlisted(inList);
+      } else {
+        setWishlisted(false);
+      }
     }
     load();
-  }, [initialContent?.id]);
+  }, [initialContent?.id, user]);
+
+  const handleToggleWishlist = async () => {
+    if (!user || !content || wishlistBusy) return;
+    setWishlistBusy(true);
+    const next = !wishlisted;
+    // Оптимистично переключаем UI
+    setWishlisted(next);
+    try {
+      if (next) await addToWishlist(user.id, content.id);
+      else await removeFromWishlist(user.id, content.id);
+    } catch (e) {
+      console.error(e);
+      setWishlisted(!next); // откат
+    }
+    setWishlistBusy(false);
+  };
 
   const handleSubmitReview = async () => {
     if (!user || !content || newReviewRating === 0 || !newReviewText.trim()) return;
@@ -159,6 +188,35 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
             <p className="text-on-surface-variant text-sm leading-relaxed mb-6 whitespace-pre-wrap">
               {content.description}
             </p>
+
+            {user && (
+              <motion.button
+                onClick={handleToggleWishlist}
+                disabled={wishlistBusy}
+                whileTap={{ scale: 0.95 }}
+                className={`mb-6 w-full flex items-center justify-center gap-3 py-4 rounded-2xl font-black text-[11px] uppercase tracking-[0.2em] border transition-colors ${
+                  wishlisted
+                    ? 'bg-accent-lilac/30 text-on-accent-lilac border-accent-lilac/40'
+                    : 'bg-surface-container text-on-surface border-on-surface/5 hover:bg-surface-container-high'
+                }`}
+              >
+                <motion.span
+                  key={wishlisted ? 'filled' : 'empty'}
+                  initial={{ scale: 0.5, rotate: -30 }}
+                  animate={{ scale: 1, rotate: 0 }}
+                  transition={{ type: 'spring', stiffness: 500, damping: 18 }}
+                  className="material-symbols-outlined text-[20px]"
+                  style={{ fontVariationSettings: wishlisted ? "'FILL' 1" : "'FILL' 0" }}
+                >
+                  bookmark
+                </motion.span>
+                {wishlisted
+                  ? 'В вашем списке'
+                  : content.type === 'movie'
+                  ? 'Хочу посмотреть'
+                  : 'Хочу прочитать'}
+              </motion.button>
+            )}
 
             {/* Metadata Grid */}
             <div className="grid grid-cols-2 gap-4 text-sm bg-surface-container-lowest p-4 rounded-2xl border border-on-surface/5">

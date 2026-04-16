@@ -6,8 +6,13 @@ import BottomNavBar from "@/components/BottomNavBar";
 import { getApprovedContent } from "@/lib/db";
 import { useAuth } from "@/components/AuthProvider";
 import Link from "next/link";
+import Image from "next/image";
 import { ContentItem } from "@/lib/types";
+import { defaultBlurDataURL } from "@/lib/image-blur";
 import ContentDetailsModal from "@/components/ContentDetailsModal";
+import { FeedSkeletonList } from "@/components/Skeleton";
+import { MotionListItem } from "@/components/Motion";
+import ActivityFeed from "@/components/ActivityFeed";
 
 export default function Home() {
   const { user } = useAuth();
@@ -45,9 +50,7 @@ export default function Home() {
         {/* Community Feed Content */}
         <div className="flex flex-col gap-10">
           {loading ? (
-            <div className="flex justify-center p-12">
-              <div className="w-10 h-10 border-4 border-on-surface border-t-transparent rounded-full animate-spin"></div>
-            </div>
+            <FeedSkeletonList count={3} />
           ) : approvedContent.length === 0 ? (
             <div className="text-center py-20 px-6 bg-surface rounded-[32px] border border-on-surface/5">
                <div className="text-6xl mb-4 grayscale opacity-40">🎬</div>
@@ -56,18 +59,24 @@ export default function Home() {
           ) : (
             <div className="space-y-10">
               {approvedContent.map((item, index) => (
-                <article 
-                  key={item.id} 
+                <MotionListItem key={item.id} index={index}>
+                <article
                   onClick={() => setSelectedContent(item)}
                   className="group cursor-pointer overflow-hidden bg-surface rounded-[40px] border border-on-surface/5 shadow-xl hover:shadow-2xl transition-all duration-500"
                 >
                   {/* Content Image - Clean and Visible */}
                   <div className="relative aspect-[3/2] md:aspect-video w-full overflow-hidden">
-                    <img
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-[1500ms] ease-out"
-                      alt={item.title}
-                      src={item.imageUrl}
-                    />
+                    {item.imageUrl && (
+                      <Image
+                        src={item.imageUrl}
+                        alt={item.title}
+                        fill
+                        sizes="(min-width: 768px) 42rem, 100vw"
+                        placeholder="blur"
+                        blurDataURL={defaultBlurDataURL}
+                        className="object-cover group-hover:scale-105 transition-transform duration-[1500ms] ease-out"
+                      />
+                    )}
                     <div className="absolute top-4 left-4">
                       <span className="bg-white/90 backdrop-blur-md px-4 py-1.5 rounded-full text-[10px] font-black text-on-surface uppercase tracking-[0.2em] shadow-sm border border-white">
                         {item.type === 'movie' ? 'Кино' : 'Книга'}
@@ -118,6 +127,7 @@ export default function Home() {
                     </div>
                   </div>
                 </article>
+                </MotionListItem>
               ))}
             </div>
           )}
@@ -129,6 +139,9 @@ export default function Home() {
               onClose={() => setSelectedContent(null)} 
             />
           )}
+
+          {/* Лента активности сообщества */}
+          <ActivityFeed />
 
           {/* Social Proof & Sidebar Elements */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-12">

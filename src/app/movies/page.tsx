@@ -7,6 +7,10 @@ import Link from "next/link";
 import { getApprovedContent } from "@/lib/db";
 import { ContentItem } from "@/lib/types";
 import ContentDetailsModal from "@/components/ContentDetailsModal";
+import { ListSkeletonList } from "@/components/Skeleton";
+import { MotionListItem } from "@/components/Motion";
+import Image from "next/image";
+import { defaultBlurDataURL } from "@/lib/image-blur";
 
 export default function Movies() {
   const [movies, setMovies] = useState<ContentItem[]>([]);
@@ -37,9 +41,7 @@ export default function Movies() {
 
         {/* Movie Grid / Empty State */}
         {loading ? (
-             <div className="flex justify-center p-12">
-               <div className="w-10 h-10 border-4 border-on-surface border-t-transparent rounded-full animate-spin"></div>
-             </div>
+          <ListSkeletonList count={6} />
         ) : movies.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-24 px-6 text-center">
              {/* Illustration Mockup */}
@@ -60,19 +62,23 @@ export default function Movies() {
           </div>
         ) : (
           <div className="space-y-4">
-            {movies.map(movie => (
-              <div 
-                key={movie.id} 
+            {movies.map((movie, index) => (
+              <MotionListItem key={movie.id} index={index}>
+              <div
                 className="group flex bg-surface p-4 rounded-[24px] border border-on-surface/5 shadow-sm hover:shadow-md transition-all hover:scale-[1.01] cursor-pointer"
                 onClick={() => setSelectedContent(movie)}
               >
                 {/* Movie Poster */}
                 <div className="relative w-20 aspect-[4/5] flex-shrink-0 rounded-[14px] overflow-hidden bg-on-surface/5 shadow-md">
                   {movie.imageUrl ? (
-                    <img
-                      alt={movie.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    <Image
                       src={movie.imageUrl}
+                      alt={movie.title}
+                      fill
+                      sizes="80px"
+                      placeholder="blur"
+                      blurDataURL={defaultBlurDataURL}
+                      className="object-cover group-hover:scale-105 transition-transform duration-500"
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center">
@@ -117,6 +123,7 @@ export default function Movies() {
                   )}
                 </div>
               </div>
+              </MotionListItem>
             ))}
           </div>
         )}

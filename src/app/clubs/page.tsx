@@ -6,7 +6,12 @@ import BottomNavBar from '@/components/BottomNavBar';
 import { useAuth } from '@/components/AuthProvider';
 import { Club, ClubCategory } from '@/lib/types';
 import { getClubs, createClub, joinClub, getUserApprovedCount, uploadCover } from '@/lib/db';
+import { supabase } from '@/lib/supabase';
 import { useRouter } from 'next/navigation';
+import { ClubSkeletonList } from '@/components/Skeleton';
+import { MotionListItem } from '@/components/Motion';
+import Image from 'next/image';
+import { defaultBlurDataURL } from '@/lib/image-blur';
 
 const CATEGORY_LABELS: Record<string, string> = {
   'кино': 'КИНО',
@@ -38,6 +43,35 @@ export default function Clubs() {
       getUserApprovedCount(user.id).then(setApprovedCount);
     }
   }, [user]);
+
+  // Realtime: увеличиваем unreadCount при новых сообщениях в клубах из списка.
+  // Подписываемся на все клубы текущего списка; сообщения от самого пользователя игнорируем.
+  useEffect(() => {
+    if (!user || clubs.length === 0) return;
+
+    const channel = supabase
+      .channel(`clubs-list-unread-${user.id}`)
+      .on(
+        'postgres_changes',
+        { event: 'INSERT', schema: 'public', table: 'club_messages' },
+        (payload) => {
+          const row = payload.new as { club_id: string; user_id: string };
+          if (row.user_id === user.id) return;
+          setClubs((prev) =>
+            prev.map((c) =>
+              c.id === row.club_id
+                ? { ...c, unreadCount: (c.unreadCount ?? 0) + 1 }
+                : c
+            )
+          );
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [user, clubs.length]);
 
   const loadClubs = async () => {
     setLoading(true);
@@ -143,11 +177,18 @@ export default function Clubs() {
               >
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-10 opacity-80"></div>
                 {heroMain.imageUrl ? (
-                  <img
-                    alt={heroMain.name}
-                    className="w-full h-[450px] object-cover group-hover:scale-110 transition-transform duration-[1500ms] ease-out"
-                    src={heroMain.imageUrl}
-                  />
+                  <div className="relative w-full h-[450px]">
+                    <Image
+                      src={heroMain.imageUrl}
+                      alt={heroMain.name}
+                      fill
+                      priority
+                      sizes="(min-width: 768px) 66vw, 100vw"
+                      placeholder="blur"
+                      blurDataURL={defaultBlurDataURL}
+                      className="object-cover group-hover:scale-110 transition-transform duration-[1500ms] ease-out"
+                    />
+                  </div>
                 ) : (
                   <div className="w-full h-[450px] bg-surface-container flex items-center justify-center">
                     <span className="material-symbols-outlined text-huge text-on-surface-variant/10">{CATEGORY_ICONS[heroMain.category] || 'groups'}</span>
@@ -213,11 +254,7 @@ export default function Clubs() {
         </div>
 
         {/* Loading */}
-        {loading && (
-          <div className="flex justify-center py-20">
-            <div className="w-10 h-10 border-4 border-on-surface border-t-transparent rounded-full animate-spin"></div>
-          </div>
-        )}
+        {loading && <ClubSkeletonList count={4} />}
 
         {/* Empty State */}
         {!loading && filteredClubs.length === 0 && (
@@ -231,18 +268,22 @@ export default function Clubs() {
         {/* Grid of Clubs */}
         {!loading && filteredClubs.length > 0 && (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {filteredClubs.map((club) => (
+            {filteredClubs.map((club, index) => (
+              <MotionListItem key={club.id} index={index}>
               <div
-                key={club.id}
                 onClick={() => handleJoin(club.id)}
                 className="bg-surface rounded-3xl overflow-hidden hover:shadow-2xl transition-all duration-500 hover:scale-[1.02] shadow-sm border border-on-surface/5 cursor-pointer group"
               >
                 <div className="h-44 bg-surface-container relative overflow-hidden">
                   {club.imageUrl ? (
-                    <img
-                      alt={club.name}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                    <Image
                       src={club.imageUrl}
+                      alt={club.name}
+                      fill
+                      sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
+                      placeholder="blur"
+                      blurDataURL={defaultBlurDataURL}
+                      className="object-cover group-hover:scale-110 transition-transform duration-700"
                     />
                   ) : (
                     <div className="w-full h-full bg-surface-container flex items-center justify-center">
@@ -273,6 +314,7 @@ export default function Clubs() {
                   </div>
                 </div>
               </div>
+              </MotionListItem>
             ))}
           </div>
         )}

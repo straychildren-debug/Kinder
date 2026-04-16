@@ -7,12 +7,16 @@ import { useAuth } from "@/components/AuthProvider";
 import { getContentByUser } from "@/lib/db";
 import { ContentItem } from "@/lib/types";
 import { useRouter } from "next/navigation";
+import AwardsShelf from "@/components/AwardsShelf";
+import WishlistShelf from "@/components/WishlistShelf";
+import ContentDetailsModal from "@/components/ContentDetailsModal";
 
 export default function Profile() {
   const { user } = useAuth();
   const router = useRouter();
   const [userContent, setUserContent] = React.useState<ContentItem[]>([]);
   const [loading, setLoading] = React.useState(true);
+  const [openedContent, setOpenedContent] = React.useState<ContentItem | null>(null);
 
   React.useEffect(() => {
     async function load() {
@@ -151,6 +155,18 @@ export default function Profile() {
               </div>
             </div>
 
+            {/* Достижения */}
+            <div className="space-y-6">
+              <h2 className="text-[10px] uppercase tracking-[0.3em] font-black text-on-surface-variant opacity-40">Достижения</h2>
+              <AwardsShelf userId={user.id} />
+            </div>
+
+            {/* Хочу посмотреть/прочитать */}
+            <div className="space-y-6">
+              <h2 className="text-[10px] uppercase tracking-[0.3em] font-black text-on-surface-variant opacity-40">Хочу посмотреть и прочитать</h2>
+              <WishlistShelf userId={user.id} onOpenContent={(c) => setOpenedContent(c)} />
+            </div>
+
             {/* Мои публикации */}
             <div className="space-y-10">
               <div className="flex justify-between items-end">
@@ -238,6 +254,12 @@ export default function Profile() {
           </div>
         </section>
       </main>
+      {openedContent && (
+        <ContentDetailsModal
+          content={openedContent}
+          onClose={() => setOpenedContent(null)}
+        />
+      )}
       <BottomNavBar />
     </>
   );
