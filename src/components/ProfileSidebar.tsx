@@ -24,7 +24,7 @@ export default function ProfileSidebar({ isOpen, onClose }: ProfileSidebarProps)
 
       {/* Боковая панель */}
       <aside
-        className="fixed top-0 right-0 h-full w-[340px] max-w-[85vw] bg-surface-container-lowest z-[70] shadow-2xl transform transition-transform duration-300 ease-out flex flex-col"
+        className="fixed top-0 right-0 h-full w-[340px] max-w-[85vw] bg-surface z-[70] shadow-2xl transform transition-transform duration-300 ease-out flex flex-col border-l border-on-surface/5"
         style={{ transform: isOpen ? 'translateX(0)' : 'translateX(100%)' }}
       >
         {/* Шапка */}
@@ -141,7 +141,7 @@ export default function ProfileSidebar({ isOpen, onClose }: ProfileSidebarProps)
             <Link
               href="/login"
               onClick={onClose}
-              className="w-full py-3 glass-btn text-white rounded-xl font-semibold text-center block transition-transform active:scale-95"
+              className="w-full py-4 bg-on-surface text-surface rounded-2xl font-black text-center text-[10px] uppercase tracking-[0.2em] transition-all hover:scale-[1.02] active:scale-95 shadow-xl shadow-on-surface/10"
             >
               Войти
             </Link>
