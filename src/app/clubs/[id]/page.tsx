@@ -74,6 +74,7 @@ export default function ClubDetail() {
   const [showMarathonDetails, setShowMarathonDetails] = useState(false);
   const [showMarathonModal, setShowMarathonModal] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [expandedImage, setExpandedImage] = useState<string | null>(null);
 
   const chatEndRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -484,19 +485,18 @@ export default function ClubDetail() {
                       )}
                       
                       <div
-                        className={`group relative ${
-                          isMine
-                            ? 'bg-on-surface text-surface rounded-[24px] rounded-br-[4px] p-5 shadow-2xl shadow-on-surface/10'
-                            : 'bg-white text-on-surface rounded-[24px] rounded-bl-[4px] p-5 shadow-sm border border-on-surface/5'
-                        }`}
+                        className={`group relative ${!msg.text && msg.fileType === 'image' ? '' : isMine ? 'bg-on-surface text-surface rounded-[24px] rounded-br-[4px] p-5 shadow-2xl shadow-on-surface/10' : 'bg-white text-on-surface rounded-[24px] rounded-bl-[4px] p-5 shadow-sm border border-on-surface/5'}`}
                       >
                         {/* Image message */}
                         {msg.fileType === 'image' && msg.fileUrl && (
-                          <div className="rounded-[16px] overflow-hidden mb-3 border border-on-surface/10">
+                          <div 
+                            className={`overflow-hidden cursor-zoom-in ${!msg.text ? 'rounded-[24px] shadow-sm border border-on-surface/10' : 'rounded-[16px] mb-3 border border-on-surface/10'}`}
+                            onClick={() => setExpandedImage(msg.fileUrl!)}
+                          >
                             <img
                               src={msg.fileUrl}
                               alt="Attached image"
-                              className="max-w-full max-h-[400px] object-cover grayscale brightness-90 hover:grayscale-0 transition-all duration-700 cursor-zoom-in"
+                              className="max-w-[200px] md:max-w-[300px] max-h-[300px] object-cover transition-transform duration-500 hover:scale-105"
                             />
                           </div>
                         )}
