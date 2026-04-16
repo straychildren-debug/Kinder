@@ -105,6 +105,7 @@ function mapContentItem(row: any): ContentItem {
     status: row.status,
     createdBy: row.created_by,
     createdAt: row.created_at,
+    rejectionReason: row.rejection_reason,
     ...row.metadata // Разворачиваем JSONB поле (director, author, rating и т.д.)
   };
 }
@@ -220,10 +221,13 @@ export async function updateContent(id: string, content: Partial<ContentItem>) {
 }
 
 // Функция для обновления статуса модератором
-export async function updateContentStatus(id: string, status: 'approved' | 'rejected' | 'draft') {
+export async function updateContentStatus(id: string, status: 'approved' | 'rejected' | 'draft', rejectionReason?: string) {
   const { data, error } = await supabase
     .from('content')
-    .update({ status })
+    .update({ 
+      status,
+      rejection_reason: rejectionReason || null
+    })
     .eq('id', id)
     .select()
     .single();

@@ -44,6 +44,7 @@ export interface ContentItem {
   rating?: number;
   reviewCount?: number;
   likeCount?: number;
+  rejectionReason?: string;
 }
 
 export interface Review {

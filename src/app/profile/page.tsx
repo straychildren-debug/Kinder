@@ -197,6 +197,12 @@ export default function Profile() {
                             </span>
                           </div>
                           <p className="text-sm text-on-surface-variant font-medium line-clamp-2 leading-relaxed opacity-60 ">{item.description}</p>
+                          {item.status === 'rejected' && item.rejectionReason && (
+                            <div className="mt-4 p-4 bg-red-50 border border-red-100 rounded-2xl animate-in fade-in slide-in-from-top-1 duration-500">
+                              <span className="block text-[9px] font-black uppercase tracking-widest text-red-600 mb-1 opacity-60">Причина отклонения:</span>
+                              <p className="text-xs font-bold text-red-700 leading-relaxed italic">"{item.rejectionReason}"</p>
+                            </div>
+                          )}
                         </div>
                         <div className="flex items-center gap-6 mt-6 pt-6 border-t border-on-surface/5">
                           <div className="flex items-center gap-2">
