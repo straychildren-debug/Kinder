@@ -15,8 +15,8 @@ export default function TopNavBar({ title = 'Кинотека' }: TopNavBarProps
 
   return (
     <>
-      <header className="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-xl border-b border-black/5 flex justify-between items-center px-6 py-4">
-        <div className="flex items-center gap-4">
+      <nav className="fixed top-0 left-0 right-0 z-50 px-4 py-3">
+        <div className="max-w-7xl mx-auto bg-white/70 backdrop-blur-xl border border-white/40 shadow-xl shadow-accent-lilac/5 rounded-[32px] px-8 py-4 flex items-center justify-between">
           <Link href="/" className="flex flex-col">
             <h1 className="text-2xl font-black tracking-tighter text-on-surface uppercase">
               {title}
@@ -25,43 +25,44 @@ export default function TopNavBar({ title = 'Кинотека' }: TopNavBarProps
               сообщество
             </span>
           </Link>
-        </div>
-        <div className="flex items-center gap-6">
-          <button className="text-on-surface-variant hover:text-on-surface transition-colors flex items-center justify-center">
-            <span className="material-symbols-outlined text-[24px]">search</span>
-          </button>
           
-          {user && (
-            <Link 
-              href="/create" 
-              className="w-10 h-10 rounded-full flex items-center justify-center bg-surface-container-high text-on-surface-variant hover:text-on-surface transition-all"
-            >
-              <span className="material-symbols-outlined text-[24px]">add</span>
-            </Link>
-          )}
-
-          <button
-            onClick={() => setSidebarOpen(true)}
-            className="group relative flex items-center justify-center"
-          >
-            {user?.avatarUrl ? (
-              <img
-                alt="Профиль"
-                src={user.avatarUrl}
-                className="w-10 h-10 rounded-full border border-black/5 group-hover:border-on-surface transition-all object-cover"
-              />
-            ) : user ? (
-              <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-on-primary font-bold text-sm group-hover:ring-4 group-hover:ring-primary/10 transition-all">
-                {user.name.charAt(0)}
-              </div>
-            ) : (
-              <span className="material-symbols-outlined text-on-surface-variant group-hover:text-on-surface text-[32px] transition-colors">
-                account_circle
-              </span>
+          <div className="flex items-center gap-6">
+            <button className="text-on-surface-variant hover:text-on-surface transition-colors flex items-center justify-center">
+              <span className="material-symbols-outlined text-[24px]">search</span>
+            </button>
+            
+            {user && (
+              <Link 
+                href="/create" 
+                className="w-10 h-10 rounded-full flex items-center justify-center bg-accent-lilac/30 text-on-accent-lilac hover:bg-accent-lilac/50 transition-all border border-accent-lilac/20 shadow-inner"
+              >
+                <span className="material-symbols-outlined text-[24px]">add</span>
+              </Link>
             )}
-          </button>
+
+            <button
+              onClick={() => setSidebarOpen(true)}
+              className="group relative flex items-center justify-center"
+            >
+              {user?.avatarUrl ? (
+                <img
+                  alt="Профиль"
+                  src={user.avatarUrl}
+                  className="w-10 h-10 rounded-full border border-accent-lilac/30 group-hover:border-on-surface transition-all object-cover"
+                />
+              ) : user ? (
+                <div className="w-10 h-10 rounded-full bg-accent-lilac flex items-center justify-center text-on-accent-lilac font-black text-sm group-hover:ring-4 group-hover:ring-accent-lilac/20 transition-all border border-white/50 shadow-sm">
+                  {user.name.charAt(0)}
+                </div>
+              ) : (
+                <span className="material-symbols-outlined text-on-surface-variant group-hover:text-on-surface text-[32px] transition-colors">
+                  account_circle
+                </span>
+              )}
+            </button>
+          </div>
         </div>
-      </header>
+      </nav>
 
       <ProfileSidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
     </>

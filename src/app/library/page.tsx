@@ -59,9 +59,9 @@ export default function Library() {
                     </div>
                   )}
                   {book.rating && (
-                    <div className="absolute top-1 right-1 bg-on-surface/90 backdrop-blur-sm px-1.5 py-0.5 rounded-full flex items-center gap-0.5">
-                      <span className="material-symbols-outlined text-surface text-[8px]" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
-                      <span className="text-surface text-[9px] font-black">{book.rating}</span>
+                    <div className="absolute top-1.5 right-1.5 bg-accent-lilac/90 backdrop-blur-md px-2 py-0.5 rounded-full flex items-center gap-0.5 border border-white/50 shadow-sm">
+                      <span className="material-symbols-outlined text-on-accent-lilac text-[9px]" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+                      <span className="text-on-accent-lilac text-[10px] font-black">{book.rating}</span>
                     </div>
                   )}
                 </div>

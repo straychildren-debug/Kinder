@@ -54,76 +54,67 @@ export default function Home() {
           ) : (
             <div className="space-y-10">
               {approvedContent.map((item, index) => (
-                <article key={item.id} className="group relative">
-                  {/* Content Image with Premium Overlay */}
-                  <div className="relative aspect-[3/2] md:aspect-video w-full rounded-[32px] overflow-hidden shadow-2xl transition-all group-hover:shadow-black/20">
+                <article key={item.id} className="group overflow-hidden bg-surface rounded-[40px] border border-black/5 shadow-xl hover:shadow-2xl transition-all duration-500">
+                  {/* Content Image - Clean and Visible */}
+                  <div className="relative aspect-[3/2] md:aspect-video w-full overflow-hidden">
                     <img
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-[1500ms] ease-out"
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-[1500ms] ease-out"
                       alt={item.title}
                       src={item.imageUrl}
                     />
-                    {/* Editorial Gradient Overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
-                    
-                    {/* Floating Info with Glassmorphism Backing */}
-                    <div className="absolute bottom-6 left-6 right-6 p-8 rounded-[40px] bg-black/10 backdrop-blur-xl border border-white/10 shadow-2xl">
-                       <div className="flex items-center gap-2 mb-4">
-                         <span className="bg-white/20 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-black text-white uppercase tracking-[0.2em] border border-white/10">
-                           {item.type === 'movie' ? 'Кино' : 'Книга'}
-                         </span>
-                         {item.rating && (
-                            <div className="bg-white/90 backdrop-blur-md px-3 py-1 rounded-full flex items-center gap-1 border border-black/5">
-                              <span className="material-symbols-outlined text-on-surface text-[10px]" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
-                              <span className="text-on-surface text-[11px] font-black">{item.rating}</span>
-                            </div>
-                         )}
-                       </div>
-                       
-                       <h2 className="text-4xl md:text-5xl font-black text-white leading-[0.9] tracking-tighter mb-6 group-hover:translate-x-2 transition-transform duration-500 max-w-sm">
-                         {item.title}
-                       </h2>
-                       
-                       <div className="flex items-center justify-between">
-                         <div className="flex items-center gap-3">
-                           <div className="w-8 h-8 rounded-full bg-white/20 backdrop-blur-md border border-white/10 flex items-center justify-center text-[10px] font-black text-white">
-                             {item.author?.charAt(0) || 'U'}
-                           </div>
-                           <div className="flex flex-col">
-                             <span className="text-xs font-bold text-white">{item.author || 'Автор'}</span>
-                             <span className="text-[9px] font-black text-white/50 uppercase tracking-widest">{item.type === 'movie' ? 'Режиссер' : 'Писатель'}</span>
-                           </div>
-                         </div>
-                         
-                         <button className="bg-white/20 hover:bg-white/30 backdrop-blur-md px-5 py-2.5 rounded-full text-[10px] font-black text-white uppercase tracking-widest border border-white/10 transition-all active:scale-95">
-                            {item.type === 'movie' ? 'Трейлер' : 'Анонс'}
-                         </button>
-                       </div>
+                    <div className="absolute top-4 left-4">
+                      <span className="bg-white/90 backdrop-blur-md px-4 py-1.5 rounded-full text-[10px] font-black text-on-surface uppercase tracking-[0.2em] shadow-sm border border-white">
+                        {item.type === 'movie' ? 'Кино' : 'Книга'}
+                      </span>
                     </div>
                   </div>
 
-                  {/* Metadata & Description */}
-                  <div className="mt-6 px-4 flex justify-between items-start">
-                    <div className="flex-1">
-                       <div className="flex items-center gap-3 mb-2">
-                          <div className="w-5 h-5 rounded-full bg-surface-container-high flex items-center justify-center text-[9px] font-black text-on-surface">U</div>
-                          <span className="text-xs font-black text-on-surface-variant uppercase tracking-widest opacity-60">Сообщество</span>
+                  {/* Editorial Content Card - Below the Image */}
+                  <div className="relative -mt-8 mx-4 mb-4 p-8 rounded-[32px] bg-white/70 backdrop-blur-xl border border-white shadow-2xl glass-card">
+                    <div className="flex items-center justify-between mb-6">
+                       <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 rounded-full bg-accent-lilac border border-white shadow-inner flex items-center justify-center text-[12px] font-black text-on-accent-lilac">
+                            {item.author?.charAt(0) || 'U'}
+                          </div>
+                          <div className="flex flex-col">
+                            <span className="text-sm font-black text-on-surface tracking-tight">{item.author || 'Автор'}</span>
+                            <span className="text-[9px] font-black text-on-surface-variant uppercase tracking-widest opacity-60">
+                              {item.type === 'movie' ? 'Режиссер' : 'Писатель'}
+                            </span>
+                          </div>
                        </div>
-                       <p className="text-on-surface-variant text-sm leading-relaxed line-clamp-2 max-w-xl font-medium">
-                         {item.description}
-                       </p>
+                       
+                       {item.rating && (
+                          <div className="bg-accent-lilac/30 px-3 py-1 rounded-full flex items-center gap-1 border border-accent-lilac/50">
+                            <span className="material-symbols-outlined text-on-accent-lilac text-[12px]" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+                            <span className="text-on-accent-lilac text-[12px] font-black">{item.rating}</span>
+                          </div>
+                       )}
                     </div>
-                    
-                    <div className="flex flex-col items-end gap-2">
-                       <div className="flex items-center gap-4">
-                          <span className="flex items-center gap-1.5 text-on-surface-variant text-[11px] font-black">
-                            <span className="material-symbols-outlined text-[18px] text-on-surface" style={{ fontVariationSettings: "'FILL' 1" }}>favorite</span>
-                            {item.likeCount || 0}
-                          </span>
-                          <span className="flex items-center gap-1.5 text-on-surface-variant text-[11px] font-black">
-                            <span className="material-symbols-outlined text-[18px]">chat_bubble</span>
-                            {item.reviewCount || 0}
-                          </span>
-                       </div>
+
+                    <h2 className="text-4xl md:text-5xl font-black text-on-surface leading-[0.9] tracking-tighter mb-6">
+                      {item.title}
+                    </h2>
+
+                    <p className="text-on-surface-variant text-sm leading-relaxed line-clamp-2 font-medium mb-8 opacity-80">
+                      {item.description}
+                    </p>
+
+                    <div className="flex items-center justify-between pt-6 border-t border-black/5">
+                      <div className="flex items-center gap-6">
+                        <button className="flex items-center gap-2 group/btn">
+                          <span className="material-symbols-outlined text-[20px] text-on-surface group-hover/btn:scale-110 transition-transform" style={{ fontVariationSettings: "'FILL' 0" }}>favorite</span>
+                          <span className="text-[12px] font-black text-on-surface">{item.likeCount || 0}</span>
+                        </button>
+                        <button className="flex items-center gap-2 group/btn">
+                          <span className="material-symbols-outlined text-[20px] text-on-surface group-hover/btn:scale-110 transition-transform">chat_bubble</span>
+                          <span className="text-[12px] font-black text-on-surface">{item.reviewCount || 0}</span>
+                        </button>
+                      </div>
+
+                      <button className="bg-on-surface text-surface px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all hover:scale-105 active:scale-95 shadow-lg shadow-black/10">
+                        {item.type === 'movie' ? 'Смотреть' : 'Читать'}
+                      </button>
                     </div>
                   </div>
                 </article>
