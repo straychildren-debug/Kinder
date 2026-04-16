@@ -36,13 +36,13 @@ export default function Home() {
         {/* Search Bar */}
         <section className="mb-8">
           <div className="relative group max-w-2xl mx-auto">
-            <span className="material-symbols-outlined absolute left-6 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-on-surface transition-colors text-[22px]">
+            <span className="material-symbols-outlined absolute left-6 top-1/2 -translate-y-1/2 text-on-surface transition-all text-[24px] pointer-events-none z-10">
               search
             </span>
             <input 
               type="text"
               placeholder="Поиск книг, фильмов или авторов..."
-              className="w-full bg-white/50 backdrop-blur-md border border-on-surface/10 rounded-[28px] pl-16 pr-8 py-5 text-sm md:text-base font-medium focus:outline-none focus:border-accent-lilac focus:bg-white focus:shadow-2xl focus:shadow-accent-lilac/10 transition-all duration-300 placeholder:text-on-surface-variant/50 shadow-sm"
+              className="w-full bg-surface-container border-2 border-on-surface/5 rounded-[28px] pl-16 pr-8 py-5 text-sm md:text-base font-medium focus:outline-none focus:border-accent-lilac focus:bg-white focus:shadow-2xl focus:shadow-accent-lilac/10 transition-all duration-300 placeholder:text-on-surface-variant/40 shadow-sm"
             />
           </div>
         </section>
