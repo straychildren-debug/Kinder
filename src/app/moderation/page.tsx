@@ -7,7 +7,7 @@ import { useAuth } from '@/components/AuthProvider';
 import { getPendingContent, updateContentStatus, getUserById } from '@/lib/db';
 import { ContentItem } from '@/lib/types';
 import { useRouter } from 'next/navigation';
-import ContentDetailsModal from '@/components/ContentDetailsModal';
+import ModerationActionModal from '@/components/ModerationActionModal';
 
 export default function ModerationPage() {
   const { user } = useAuth();
@@ -16,9 +16,7 @@ export default function ModerationPage() {
   const [loading, setLoading] = useState(true);
   const [processingId, setProcessingId] = useState<string | null>(null);
   const [showPending, setShowPending] = useState(false);
-  const [selectedContent, setSelectedContent] = useState<ContentItem | null>(null);
-  const [rejectionReasons, setRejectionReasons] = useState<Record<string, string>>({});
-  const [activeRejectionId, setActiveRejectionId] = useState<string | null>(null);
+  const [selectedForModeration, setSelectedForModeration] = useState<ContentItem | null>(null);
 
   useEffect(() => {
     async function load() {
@@ -32,6 +30,7 @@ export default function ModerationPage() {
   }, [user]);
 
   if (!user || (user.role !== 'moderator' && user.role !== 'admin' && user.role !== 'superadmin')) {
+    // ... (Unauthorized view remains the same)
     return (
       <>
         <TopNavBar />
@@ -57,13 +56,12 @@ export default function ModerationPage() {
     );
   }
 
-  const handleDecision = async (id: string, decision: 'approved' | 'rejected') => {
+  const handleDecision = async (id: string, decision: 'approved' | 'rejected', reason?: string) => {
     setProcessingId(id);
     try {
-      const reason = decision === 'rejected' ? rejectionReasons[id] : undefined;
       await updateContentStatus(id, decision, reason);
       setPendingItems(prev => prev.filter(item => item.id !== id));
-      setActiveRejectionId(null);
+      setSelectedForModeration(null);
     } catch (e) {
       console.error(e);
     } finally {
@@ -170,125 +168,36 @@ export default function ModerationPage() {
                     </button>
                   </div>
                 ) : (
-                  <div className="space-y-6">
-                    {pendingItems.map((item, index) => {
-                      const isProcessing = processingId === item.id;
-                      const isRejecting = activeRejectionId === item.id;
-                      
-                      return (
-                        <div 
-                          key={item.id} 
-                          className="animate-in fade-in slide-in-from-bottom-8 duration-700 fill-mode-both"
-                          style={{ animationDelay: `${index * 100}ms` }}
+                  <div className="space-y-3">
+                    {pendingItems.map((item, index) => (
+                      <div 
+                        key={item.id} 
+                        className="animate-in fade-in slide-in-from-bottom-4 duration-500 fill-mode-both"
+                        style={{ animationDelay: `${index * 50}ms` }}
+                      >
+                        <button 
+                          onClick={() => setSelectedForModeration(item)}
+                          className="w-full bg-white rounded-2xl p-4 border border-on-surface/5 shadow-sm hover:shadow-md hover:border-indigo-500/20 transition-all flex items-center gap-4 group text-left"
                         >
-                          <article 
-                            className={`bg-white rounded-[40px] overflow-hidden shadow-[0_32px_64px_-16px_rgba(0,0,0,0.06)] border border-on-surface/5 transition-all duration-500 ${isProcessing ? 'opacity-40 pointer-events-none blur-sm' : ''} group`}
-                          >
-                            <div className="flex flex-col md:flex-row">
-                              {/* Изображение (Широкое и эффектное) */}
-                              <div 
-                                onClick={() => setSelectedContent(item)}
-                                className="md:w-56 h-auto aspect-square md:aspect-auto shrink-0 relative overflow-hidden bg-[#f0f2f5] cursor-pointer group/img"
-                              >
-                                {item.imageUrl ? (
-                                  <img
-                                    src={item.imageUrl}
-                                    alt={item.title}
-                                    className="w-full h-full object-cover grayscale brightness-95 group-hover/img:scale-110 group-hover/img:grayscale-0 transition-all duration-1000"
-                                  />
-                                ) : (
-                                  <div className="w-full h-full flex items-center justify-center text-on-surface/10 text-3xl font-black">
-                                    {item.type === 'movie' ? 'FILM' : 'BOOK'}
-                                  </div>
-                                )}
-                                <div className="absolute inset-0 bg-gradient-to-r from-black/0 to-black/20 md:to-transparent opacity-0 group-hover/img:opacity-100 transition-opacity"></div>
-                                <span className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white opacity-0 group-hover/img:opacity-100 transition-all translate-y-2 group-hover/img:translate-y-0 shadow-2xl">
-                                  <span className="material-symbols-outlined text-[20px]">visibility</span>
-                                </span>
-                              </div>
-
-                              {/* Контент */}
-                              <div className="flex-1 px-8 py-8 flex flex-col justify-between gap-8">
-                                <div 
-                                  onClick={() => setSelectedContent(item)}
-                                  className="flex-1 cursor-pointer space-y-2"
-                                >
-                                  <div className="flex items-center gap-3">
-                                     <span className="text-[9px] font-black uppercase tracking-[0.2em] px-3 py-1 bg-surface-container rounded-full text-on-surface-variant opacity-70">
-                                       {item.type === 'movie' ? 'Кино' : 'Книга'}
-                                     </span>
-                                     <span className="text-[9px] font-black uppercase tracking-widest opacity-20">{new Date(item.createdAt).toLocaleDateString()}</span>
-                                  </div>
-                                  <h3 className="text-3xl font-black tracking-tighter text-[#1a1c1e] group-hover:text-indigo-600 transition-colors uppercase leading-[0.9] pt-2 mb-2">
-                                    {item.title}
-                                  </h3>
-                                  <p className="text-[13px] text-on-surface-variant font-medium opacity-60 line-clamp-2 max-w-xl italic">
-                                    {item.author || item.director || 'Автор не указан'} — {item.description}
-                                  </p>
-                                </div>
-
-                                {/* Кнопки действий (Премиум-стиль) */}
-                                <div className="flex items-center justify-between pt-6 border-t border-on-surface/5">
-                                   <div className="flex items-center gap-3">
-                                      <div className="w-10 h-10 rounded-[14px] bg-surface-container overflow-hidden border border-on-surface/5 flex items-center justify-center text-[10px] font-black text-on-surface/20">
-                                        ID
-                                      </div>
-                                      <span className="text-[10px] font-black uppercase tracking-widest opacity-30 ">{item.createdBy.slice(0, 8)}...</span>
-                                   </div>
-
-                                   <div className="flex items-center gap-3">
-                                      <button
-                                        onClick={() => setActiveRejectionId(isRejecting ? null : item.id)}
-                                        className={`w-14 h-14 rounded-full transition-all flex items-center justify-center shadow-lg ${isRejecting ? 'bg-[#ff3b30] text-white rotate-90 scale-110 shadow-[#ff3b30]/30' : 'bg-[#fff5f5] text-[#ff3b30] hover:bg-[#ffe5e5] shadow-black/5 hover:scale-110'}`}
-                                        title="Отклонить"
-                                      >
-                                        <span className="material-symbols-outlined text-[24px]">{isRejecting ? 'close_fullscreen' : 'close'}</span>
-                                      </button>
-                                      
-                                      <button
-                                        onClick={() => handleDecision(item.id, 'approved')}
-                                        className="h-14 px-10 rounded-full bg-[#1a1c1e] text-white font-black text-[11px] uppercase tracking-[0.2em] shadow-[0_20px_40px_-12px_rgba(26,28,30,0.3)] hover:translate-y-[-4px] hover:shadow-[0_25px_50px_-12px_rgba(26,28,30,0.4)] active:scale-95 transition-all flex items-center gap-3 group/btn"
-                                      >
-                                        <span className="material-symbols-outlined text-[20px] group-hover/btn:rotate-[360deg] transition-all duration-700">check_circle</span>
-                                        Опубликовать
-                                      </button>
-                                   </div>
-                                </div>
-                              </div>
-                            </div>
-
-                            {/* Поле ввода причины (Премиум) */}
-                            {isRejecting && (
-                              <div className="px-8 pb-8 pt-2 border-t border-[#ff3b30]/5 bg-[#fff5f5]/50 animate-in fade-in slide-in-from-top-4 duration-500">
-                                <div className="flex flex-col gap-4">
-                                  <div className="flex justify-between items-center px-1">
-                                    <span className="text-[10px] font-black uppercase tracking-widest text-[#ff3b30] ">Укажите причину отказа</span>
-                                    <span className="text-[10px] font-black uppercase tracking-widest opacity-20 italic">Будет отправлено автору</span>
-                                  </div>
-                                  <div className="flex flex-col md:flex-row gap-4">
-                                    <input
-                                      type="text"
-                                      value={rejectionReasons[item.id] || ''}
-                                      onChange={(e) => setRejectionReasons(prev => ({ ...prev, [item.id]: e.target.value }))}
-                                      placeholder="Например: Некорректное описание или низкое качество..."
-                                      className="flex-1 bg-white border border-[#ff3b30]/10 rounded-[20px] px-6 py-5 text-sm font-medium focus:outline-none focus:ring-4 focus:ring-[#ff3b30]/5 focus:border-[#ff3b30]/30 transition-all placeholder:opacity-30"
-                                      autoFocus
-                                    />
-                                    <button
-                                      onClick={() => handleDecision(item.id, 'rejected')}
-                                      disabled={!(rejectionReasons[item.id]?.trim())}
-                                      className="px-8 bg-[#ff3b30] text-white rounded-[20px] font-black text-[11px] uppercase tracking-[0.2em] shadow-xl shadow-[#ff3b30]/20 transition-all disabled:opacity-30 disabled:grayscale hover:bg-[#d70015] active:scale-95"
-                                    >
-                                      Отклонить пост
-                                    </button>
-                                  </div>
-                                </div>
-                              </div>
+                          <div className="w-12 h-16 rounded-lg overflow-hidden bg-surface-container shrink-0">
+                            {item.imageUrl ? (
+                              <img src={item.imageUrl} className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" />
+                            ) : (
+                              <div className="w-full h-full flex items-center justify-center text-[10px] font-black opacity-20">NA</div>
                             )}
-                          </article>
-                        </div>
-                      );
-                    })}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                             <div className="flex items-center gap-2 mb-0.5">
+                               <span className="text-[8px] font-bold uppercase tracking-widest opacity-40">{item.type === 'movie' ? 'Movie' : 'Book'}</span>
+                               <span className="text-[8px] font-bold opacity-20">{new Date(item.createdAt).toLocaleDateString()}</span>
+                             </div>
+                             <h3 className="font-black text-on-surface truncate uppercase tracking-tight">{item.title}</h3>
+                             <p className="text-[10px] text-on-surface-variant font-medium opacity-50 truncate">{item.author || item.director || 'Unknown'}</p>
+                          </div>
+                          <span className="material-symbols-outlined opacity-0 group-hover:opacity-100 transition-opacity text-indigo-500">chevron_right</span>
+                        </button>
+                      </div>
+                    ))}
                   </div>
                 )}
               </div>
@@ -296,11 +205,13 @@ export default function ModerationPage() {
           </div>
         )}
 
-        {/* Details Modal */}
-        {selectedContent && (
-          <ContentDetailsModal 
-            content={selectedContent} 
-            onClose={() => setSelectedContent(null)} 
+        {/* Action Modal */}
+        {selectedForModeration && (
+          <ModerationActionModal 
+            content={selectedForModeration}
+            onClose={() => setSelectedForModeration(null)}
+            onDecision={handleDecision}
+            isProcessing={processingId === selectedForModeration.id}
           />
         )}
       </main>
