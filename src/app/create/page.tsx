@@ -41,6 +41,42 @@ export default function CreatePage() {
   const [isSavingDraft, setIsSavingDraft] = useState(false);
   const [draftSavedAt, setDraftSavedAt] = useState<Date | null>(null);
 
+  React.useEffect(() => {
+    const handlePaste = (e: ClipboardEvent) => {
+      const items = e.clipboardData?.items;
+      if (!items) return;
+
+      for (let i = 0; i < items.length; i++) {
+        if (items[i].type.indexOf('image') !== -1) {
+          const file = items[i].getAsFile();
+          if (file) {
+            processFile(file);
+            break;
+          }
+        }
+      }
+    };
+
+    window.addEventListener('paste', handlePaste);
+    return () => window.removeEventListener('paste', handlePaste);
+  }, []);
+
+  const processFile = (file: File) => {
+    if (file.size > 1024 * 1024) {
+      setErrorText('Размер файла не должен превышать 1МБ');
+      return;
+    }
+
+    setCoverFile(file);
+    setErrorText('');
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setCoverPreview(reader.result as string);
+    };
+    reader.readAsDataURL(file);
+  };
+
   if (!user) {
     return (
       <>
@@ -98,21 +134,7 @@ export default function CreatePage() {
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (!file) return;
-
-    if (file.size > 1024 * 1024) {
-      setErrorText('Размер файла не должен превышать 1МБ');
-      return;
-    }
-
-    setCoverFile(file);
-    setErrorText('');
-
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setCoverPreview(reader.result as string);
-    };
-    reader.readAsDataURL(file);
+    if (file) processFile(file);
   };
 
   const removeFile = () => {

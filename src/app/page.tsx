@@ -56,7 +56,7 @@ export default function Home() {
               {approvedContent.map((item, index) => (
                 <article key={item.id} className="group relative">
                   {/* Content Image with Premium Overlay */}
-                  <div className="relative aspect-[4/5] md:aspect-video w-full rounded-[32px] overflow-hidden shadow-2xl transition-all group-hover:shadow-black/20">
+                  <div className="relative aspect-[3/2] md:aspect-video w-full rounded-[32px] overflow-hidden shadow-2xl transition-all group-hover:shadow-black/20">
                     <img
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-[1500ms] ease-out"
                       alt={item.title}

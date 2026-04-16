@@ -61,7 +61,7 @@ export default function Movies() {
             {movies.map(movie => (
               <div key={movie.id} className="group flex bg-surface p-4 rounded-[24px] border border-black/5 shadow-sm hover:shadow-md transition-all hover:scale-[1.01] cursor-pointer">
                 {/* Movie Poster */}
-                <div className="relative w-20 aspect-[2/3] flex-shrink-0 rounded-[14px] overflow-hidden bg-surface-container-high shadow-md">
+                <div className="relative w-20 aspect-[4/5] flex-shrink-0 rounded-[14px] overflow-hidden bg-black/5 shadow-md">
                   {movie.imageUrl ? (
                     <img
                       alt={movie.title}
