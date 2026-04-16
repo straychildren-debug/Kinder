@@ -333,7 +333,7 @@ export async function addReviewComment(reviewId: string, userId: string, text: s
       user_id: userId,
       text
     }])
-    .select('*, profiles:user_id(name, avatar_url), reactions:club_message_reactions(*)')
+    .select('*, profiles:user_id(name, avatar_url)')
     .single();
 
   if (error) {

@@ -6,6 +6,7 @@ import { getReviewsForContent, submitReview, rateReview, addReviewComment, getRe
 import { addToWishlist, isInWishlist, removeFromWishlist } from '@/lib/wishlist';
 import { useAuth } from './AuthProvider';
 import { motion } from 'framer-motion';
+import Link from 'next/link';
 
 interface ContentDetailsModalProps {
   content: ContentItem | null;
@@ -353,8 +354,12 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
 
                      {/* Comments Toggle */}
                      <button 
-                       onClick={() => toggleComments(review.id)}
-                       className="flex items-center gap-2 text-on-surface-variant hover:text-on-surface transition-colors bg-surface-container px-3 py-1.5 rounded-full shrink-0"
+                       type="button"
+                       onClick={(e) => {
+                         e.stopPropagation();
+                         toggleComments(review.id);
+                       }}
+                       className="flex items-center gap-2 text-on-surface-variant hover:text-on-surface transition-colors bg-surface-container px-3 py-1.5 rounded-full shrink-0 cursor-pointer relative z-10"
                      >
                        <span className="material-symbols-outlined text-[18px]">chat_bubble</span>
                        <span className="text-[12px] font-black tracking-widest">{review.commentCount || 0}</span>
@@ -393,7 +398,7 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
                       
                       {/* Add Comment Input */}
                       {user ? (
-                        <div className="flex gap-2 sticky bottom-0 bg-surface py-2">
+                        <div className="flex gap-2 sticky bottom-0 bg-surface py-4 border-t border-on-surface/5 mt-4">
                           <input 
                             type="text"
                             value={newCommentText}
@@ -403,9 +408,13 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
                             onKeyDown={e => e.key === 'Enter' && handleSubmitComment(review.id)}
                           />
                           <button 
-                            onClick={() => handleSubmitComment(review.id)}
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleSubmitComment(review.id);
+                            }}
                             disabled={!newCommentText.trim()}
-                            className="w-10 h-10 bg-on-surface text-surface rounded-full flex items-center justify-center disabled:opacity-50 transition-all hover:scale-105 active:scale-95 shadow-lg shadow-on-surface/10 shrink-0"
+                            className="w-10 h-10 bg-on-surface text-surface rounded-full flex items-center justify-center disabled:opacity-50 transition-all hover:scale-105 active:scale-95 shadow-lg shadow-on-surface/10 shrink-0 cursor-pointer"
                           >
                             <span className="material-symbols-outlined text-[20px] font-bold">arrow_upward</span>
                           </button>
