@@ -42,7 +42,7 @@ export default function Home() {
             <input 
               type="text"
               placeholder="Поиск книг, фильмов или авторов..."
-              className="w-full bg-surface-container border-2 border-on-surface/5 rounded-[28px] pl-16 pr-8 py-5 text-sm md:text-base font-medium focus:outline-none focus:border-accent-lilac focus:bg-white focus:shadow-2xl focus:shadow-accent-lilac/10 transition-all duration-300 placeholder:text-on-surface-variant/40 shadow-sm"
+              className="w-full bg-surface-container border-2 border-on-surface/5 rounded-2xl pl-16 pr-8 py-5 text-sm md:text-base font-medium focus:outline-none focus:border-accent-lilac focus:bg-white focus:shadow-xl focus:shadow-accent-lilac/5 transition-all duration-300 placeholder:text-on-surface-variant/40 shadow-sm"
             />
           </div>
         </section>
@@ -52,8 +52,8 @@ export default function Home() {
           {['Новое сегодня', 'Все книги', 'Все фильмы', 'Клубы'].map((tab, i) => (
             <button 
               key={tab} 
-              className={`whitespace-nowrap px-5 py-2.5 rounded-2xl text-[13px] font-black tracking-tight transition-all active:scale-95 ${
-                i === 0 ? 'bg-on-surface text-surface shadow-lg shadow-on-surface/10' : 'bg-surface-container text-on-surface-variant hover:text-on-surface'
+              className={`whitespace-nowrap px-5 py-2.5 rounded-xl text-[13px] font-black tracking-tight transition-all active:scale-95 ${
+                i === 0 ? 'bg-on-surface text-surface shadow-md shadow-on-surface/10' : 'bg-surface-container text-on-surface-variant hover:text-on-surface'
               }`}
             >
               {tab}
@@ -66,7 +66,7 @@ export default function Home() {
           {loading ? (
             <FeedSkeletonList count={3} />
           ) : approvedContent.length === 0 ? (
-            <div className="text-center py-20 px-6 bg-surface rounded-[32px] border border-on-surface/5">
+            <div className="text-center py-20 px-6 bg-surface rounded-3xl border border-on-surface/5">
                <div className="text-6xl mb-4 grayscale opacity-40">🎬</div>
                <p className="text-on-surface-variant font-black uppercase text-[10px] tracking-widest">Лента сообщества пока пуста</p>
             </div>
@@ -76,7 +76,7 @@ export default function Home() {
                 <MotionListItem key={item.id} index={index}>
                 <article
                   onClick={() => setSelectedContent(item)}
-                  className="group cursor-pointer overflow-hidden bg-surface rounded-[40px] border border-on-surface/5 shadow-xl hover:shadow-2xl transition-all duration-500"
+                  className="group cursor-pointer overflow-hidden bg-surface rounded-3xl border border-on-surface/5 shadow-md hover:shadow-lg transition-all duration-500"
                 >
                   {/* Content Image - Clean and Visible */}
                   <div className="relative aspect-[3/2] md:aspect-video w-full overflow-hidden">
@@ -99,7 +99,7 @@ export default function Home() {
                   </div>
 
                   {/* Editorial Content Card - Below the Image */}
-                  <div className="relative -mt-8 mx-4 mb-4 p-8 rounded-[32px] bg-white/70 backdrop-blur-xl border border-white shadow-2xl glass-card">
+                  <div className="relative -mt-8 mx-4 mb-4 p-8 rounded-3xl bg-white/70 backdrop-blur-xl border border-white shadow-lg shadow-black/5 glass-card">
                     <div className="flex items-center justify-between mb-6">
                        <div className="flex items-center gap-3">
                           <div className="w-10 h-10 rounded-full bg-accent-lilac border border-white shadow-inner flex items-center justify-center text-[12px] font-black text-on-accent-lilac">
@@ -134,7 +134,7 @@ export default function Home() {
                         </div>
                       </div>
 
-                      <div className="flex items-center gap-2 bg-on-surface text-surface px-5 py-2.5 rounded-2xl shadow-lg shadow-on-surface/10">
+                      <div className="flex items-center gap-2 bg-on-surface text-surface px-5 py-2.5 rounded-xl shadow-md shadow-on-surface/10">
                         <span className="material-symbols-outlined text-accent-lilac text-[16px]" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
                         <span className="text-[14px] font-black tracking-tight">{item.rating ? item.rating.toFixed(1) : '—'}</span>
                       </div>
@@ -160,7 +160,7 @@ export default function Home() {
           {/* Social Proof & Sidebar Elements */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-12">
              {!user && (
-               <div className="bg-surface p-10 rounded-[32px] border border-on-surface/5 space-y-6 shadow-sm">
+               <div className="bg-surface p-10 rounded-3xl border border-on-surface/5 space-y-6 shadow-sm">
                  <h3 className="text-3xl font-black tracking-tighter leading-none text-on-surface">Присоединяйтесь!</h3>
                  <p className="text-sm text-on-surface-variant leading-relaxed font-medium">
                    Войдите, чтобы создавать контент, оставлять рецензии и участвовать в рейтинге сообщества.
@@ -174,7 +174,7 @@ export default function Home() {
                </div>
              )}
 
-            <div className="bg-surface-container-low p-10 rounded-[32px] border border-on-surface/5">
+            <div className="bg-surface-container-low p-10 rounded-3xl border border-on-surface/5">
               <h3 className="text-xl font-black text-on-surface mb-8 tracking-tight">Лучшие авторы</h3>
               <div className="grid grid-cols-1 gap-8">
                 {[
@@ -182,7 +182,7 @@ export default function Home() {
                   { icon: 'movie_filter', name: 'Анастасия Волкова', detail: '142 рецензии • ★ 9.1' },
                 ].map((item, i) => (
                   <div key={i} className="flex items-center gap-6 group cursor-pointer">
-                    <div className="w-16 h-16 rounded-[24px] bg-surface border border-on-surface/5 flex items-center justify-center shadow-md transition-all group-hover:scale-105">
+                    <div className="w-16 h-16 rounded-xl bg-surface border border-on-surface/5 flex items-center justify-center shadow-sm transition-all group-hover:scale-105">
                       <span className="material-symbols-outlined text-on-surface text-3xl">{item.icon}</span>
                     </div>
                     <div>

@@ -77,7 +77,7 @@ export default function ProfileSidebar({ isOpen, onClose }: ProfileSidebarProps)
 
       {/* Боковая панель */}
       <aside
-        className="fixed top-0 right-0 h-full w-[340px] max-w-[85vw] bg-surface z-[70] shadow-2xl transform transition-transform duration-300 ease-out flex flex-col border-l border-on-surface/5"
+        className="fixed top-0 right-0 h-full w-[340px] max-w-[85vw] bg-surface z-[70] shadow-xl transform transition-transform duration-300 ease-out flex flex-col border-l border-on-surface/5"
         style={{ transform: isOpen ? 'translateX(0)' : 'translateX(100%)' }}
       >
         {/* Шапка */}
@@ -95,7 +95,7 @@ export default function ProfileSidebar({ isOpen, onClose }: ProfileSidebarProps)
           <div className="flex-1 overflow-y-auto px-6">
             {/* Аватар и имя */}
             <div className="flex flex-col items-center text-center py-6 space-y-4">
-              <div className="w-24 h-24 rounded-2xl overflow-hidden bg-surface-container-high shadow-lg">
+              <div className="w-24 h-24 rounded-xl overflow-hidden bg-surface-container-high shadow-md">
                 {user.avatarUrl ? (
                   <img src={user.avatarUrl} alt={user.name} className="w-full h-full object-cover" />
                 ) : (
@@ -212,7 +212,7 @@ export default function ProfileSidebar({ isOpen, onClose }: ProfileSidebarProps)
                       <div 
                         key={n.id} 
                         onClick={() => handleNotificationClick(n)}
-                        className={`group relative p-3 rounded-2xl transition-all cursor-pointer border ${isUnread ? 'bg-accent-lilac/[0.03] border-accent-lilac/10' : 'bg-surface border-transparent hover:bg-surface-container-low'}`}
+                        className={`group relative p-3 rounded-xl transition-all cursor-pointer border ${isUnread ? 'bg-accent-lilac/[0.03] border-accent-lilac/10' : 'bg-surface border-transparent hover:bg-surface-container-low'}`}
                       >
                         <div className="flex gap-3">
                           <div className="w-8 h-8 rounded-full bg-surface-container-high overflow-hidden shrink-0 shadow-sm border border-white">

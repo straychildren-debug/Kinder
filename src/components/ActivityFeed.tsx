@@ -105,7 +105,7 @@ export default function ActivityFeed() {
   }, []);
 
   return (
-    <aside className="bg-surface p-8 rounded-[32px] border border-on-surface/5 shadow-sm">
+    <aside className="bg-surface p-8 rounded-3xl border border-on-surface/5 shadow-sm">
       <div className="flex items-center justify-between mb-6">
         <h3 className="text-xl font-black text-on-surface tracking-tight">
           Лента сообщества
