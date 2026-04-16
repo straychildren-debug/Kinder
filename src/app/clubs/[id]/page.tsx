@@ -192,7 +192,8 @@ export default function ClubDetail() {
     if (!user || !membership || (!messageText.trim())) return;
     setSending(true);
     try {
-      await sendMessage(clubId, user.id, messageText.trim());
+      const newMsg = await sendMessage(clubId, user.id, messageText.trim());
+      setMessages(prev => prev.some(m => m.id === newMsg.id) ? prev : [...prev, newMsg]);
       setMessageText('');
     } catch (err) {
       console.error('Failed to send message:', err);
@@ -216,7 +217,8 @@ export default function ClubDetail() {
     try {
       const url = await uploadClubFile(file);
       const isImage = file.type.startsWith('image/');
-      await sendMessage(clubId, user.id, null, url, isImage ? 'image' : 'file');
+      const newMsg = await sendMessage(clubId, user.id, null, url, isImage ? 'image' : 'file');
+      setMessages(prev => prev.some(m => m.id === newMsg.id) ? prev : [...prev, newMsg]);
     } catch (err) {
       console.error('Failed to upload file:', err);
     } finally {
