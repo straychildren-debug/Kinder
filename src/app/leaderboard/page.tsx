@@ -35,7 +35,7 @@ export default function Leaderboard() {
             </div>
             <div className="flex gap-2">
               <button className="bg-surface-container-low px-5 py-2.5 rounded-2xl text-[11px] font-black uppercase tracking-widest hover:bg-surface-container-highest transition-colors">За месяц</button>
-              <button className="bg-on-surface text-surface px-5 py-2.5 rounded-2xl text-[11px] font-black uppercase tracking-widest shadow-lg shadow-black/10 transition-all hover:scale-95">За всё время</button>
+              <button className="bg-on-surface text-surface px-5 py-2.5 rounded-2xl text-[11px] font-black uppercase tracking-widest shadow-lg shadow-on-surface/10 transition-all hover:scale-95">За всё время</button>
             </div>
           </div>
         </section>
@@ -47,7 +47,7 @@ export default function Leaderboard() {
           <div className="grid grid-cols-1 md:grid-cols-12 gap-6 mb-16">
             {/* Rank 1 */}
             {top3[0] && (
-              <div className="md:col-span-6 bg-surface rounded-[32px] p-8 relative overflow-hidden group shadow-2xl border border-black/5">
+              <div className="md:col-span-6 bg-surface rounded-[32px] p-8 relative overflow-hidden group shadow-2xl border border-on-surface/5">
                 <div className="absolute -top-4 -right-4 text-[120px] font-black text-on-surface/5 select-none leading-none">1</div>
                 <div className="relative z-10">
                   <div className="flex items-center gap-6 mb-8">
@@ -69,15 +69,15 @@ export default function Leaderboard() {
                     </div>
                   </div>
                   <div className="grid grid-cols-3 gap-4">
-                    <div className="bg-surface-container-low p-4 rounded-2xl border border-black/5 shadow-sm">
+                    <div className="bg-surface-container-low p-4 rounded-2xl border border-on-surface/5 shadow-sm">
                       <p className="text-[9px] uppercase font-black tracking-widest text-on-surface-variant mb-1 opacity-50">Лайки</p>
                       <p className="text-2xl font-black">{top3[0].stats?.avgRating || 0}</p>
                     </div>
-                    <div className="bg-surface-container-low p-4 rounded-2xl border border-black/5 shadow-sm">
+                    <div className="bg-surface-container-low p-4 rounded-2xl border border-on-surface/5 shadow-sm">
                       <p className="text-[9px] uppercase font-black tracking-widest text-on-surface-variant mb-1 opacity-50">Рецензии</p>
                       <p className="text-2xl font-black">{top3[0].stats?.reviews || 0}</p>
                     </div>
-                    <div className="bg-on-surface p-4 rounded-2xl shadow-xl shadow-black/20">
+                    <div className="bg-on-surface p-4 rounded-2xl shadow-xl shadow-on-surface/20">
                       <p className="text-[9px] uppercase font-black tracking-widest text-surface/50 mb-1">Очки</p>
                       <p className="text-2xl font-black text-surface">{(top3[0].stats?.publications || 0) * 10}</p>
                     </div>
@@ -90,10 +90,10 @@ export default function Leaderboard() {
             <div className="md:col-span-6 flex flex-col gap-6">
               {/* Rank 2 */}
               {top3[1] && (
-                <div className="bg-surface rounded-[32px] p-6 flex items-center justify-between group shadow-sm border border-black/5 hover:shadow-md transition-shadow">
+                <div className="bg-surface rounded-[32px] p-6 flex items-center justify-between group shadow-sm border border-on-surface/5 hover:shadow-md transition-shadow">
                   <div className="flex items-center gap-4">
                     <div className="text-3xl font-black text-on-surface/10 mr-2 tracking-tighter">02</div>
-                    <div className="w-16 h-16 rounded-[24px] overflow-hidden bg-surface-container flex items-center justify-center font-black text-xl text-on-surface border border-black/5 shadow-inner">
+                    <div className="w-16 h-16 rounded-[24px] overflow-hidden bg-surface-container flex items-center justify-center font-black text-xl text-on-surface border border-on-surface/5 shadow-inner">
                       {top3[1].avatarUrl ? (
                         <img alt={top3[1].name} className="w-full h-full object-cover" src={top3[1].avatarUrl} />
                       ) : (
@@ -114,10 +114,10 @@ export default function Leaderboard() {
 
               {/* Rank 3 */}
               {top3[2] && (
-                <div className="bg-surface rounded-[32px] p-6 flex items-center justify-between group shadow-sm border border-black/5 hover:shadow-md transition-shadow">
+                <div className="bg-surface rounded-[32px] p-6 flex items-center justify-between group shadow-sm border border-on-surface/5 hover:shadow-md transition-shadow">
                   <div className="flex items-center gap-4">
                     <div className="text-3xl font-black text-on-surface/10 mr-2 tracking-tighter">03</div>
-                    <div className="w-16 h-16 rounded-[24px] overflow-hidden bg-surface-container flex items-center justify-center font-black text-xl text-on-surface border border-black/5 shadow-inner">
+                    <div className="w-16 h-16 rounded-[24px] overflow-hidden bg-surface-container flex items-center justify-center font-black text-xl text-on-surface border border-on-surface/5 shadow-inner">
                       {top3[2].avatarUrl ? (
                         <img alt={top3[2].name} className="w-full h-full object-cover" src={top3[2].avatarUrl} />
                       ) : (
@@ -148,10 +148,10 @@ export default function Leaderboard() {
             </h4>
             <div className="space-y-3">
               {restUsers.map((user, idx) => (
-                <div key={user.id} className="bg-surface rounded-[24px] p-4 flex items-center transition-all hover:bg-surface-container hover:scale-[1.01] shadow-sm border border-black/5">
+                <div key={user.id} className="bg-surface rounded-[24px] p-4 flex items-center transition-all hover:bg-surface-container hover:scale-[1.01] shadow-sm border border-on-surface/5">
                   <div className="w-8 text-center text-on-surface-variant font-black text-xs opacity-30">{4 + idx}</div>
                   <div className="flex items-center gap-4 flex-1 px-4">
-                    <div className="w-12 h-12 rounded-[16px] bg-surface-container overflow-hidden flex items-center justify-center text-on-surface font-black text-sm border border-black/5">
+                    <div className="w-12 h-12 rounded-[16px] bg-surface-container overflow-hidden flex items-center justify-center text-on-surface font-black text-sm border border-on-surface/5">
                       {user.avatarUrl ? (
                         <img alt={user.name} className="w-full h-full object-cover" src={user.avatarUrl} />
                       ) : (

@@ -37,16 +37,16 @@ export default function Library() {
              <div className="w-10 h-10 border-4 border-on-surface border-t-transparent rounded-full animate-spin"></div>
            </div>
         ) : books.length === 0 ? (
-          <div className="text-center py-20 px-6 bg-surface rounded-[32px] border border-black/5 shadow-sm">
+          <div className="text-center py-20 px-6 bg-surface rounded-[32px] border border-on-surface/5 shadow-sm">
              <div className="text-6xl mb-4 grayscale opacity-40">📚</div>
              <p className="text-on-surface-variant font-black uppercase text-[10px] tracking-widest">В библиотеке пока нет книг</p>
           </div>
         ) : (
           <div className="space-y-4">
             {books.map(book => (
-              <div key={book.id} className="group flex bg-surface p-4 rounded-[24px] border border-black/5 shadow-sm hover:shadow-md transition-all hover:scale-[1.01] cursor-pointer">
+              <div key={book.id} className="group flex bg-surface p-4 rounded-[24px] border border-on-surface/5 shadow-sm hover:shadow-md transition-all hover:scale-[1.01] cursor-pointer">
                 {/* Book Thumbnail */}
-                <div className="relative w-20 aspect-[4/5] flex-shrink-0 rounded-[14px] overflow-hidden bg-black/5 shadow-md">
+                <div className="relative w-20 aspect-[4/5] flex-shrink-0 rounded-[14px] overflow-hidden bg-on-surface/5 shadow-md">
                   {book.imageUrl ? (
                     <img
                       alt={book.title}

@@ -81,7 +81,7 @@ export default function LoginPage() {
         </div>
 
         {/* Form Container */}
-        <div className="bg-surface rounded-[40px] p-10 shadow-2xl border border-black/5 space-y-8">
+        <div className="bg-surface rounded-[40px] p-10 shadow-2xl border border-on-surface/5 space-y-8">
           <h2 className="text-2xl font-black text-center text-on-surface tracking-tight">
             {mode === 'login' ? 'С возвращением' : 'Новый аккаунт'}
           </h2>
@@ -90,7 +90,7 @@ export default function LoginPage() {
           <button
             onClick={handleGoogle}
             disabled={loading}
-            className="w-full py-4 px-4 rounded-2xl bg-surface-container hover:bg-surface-container-high transition-all flex items-center justify-center gap-3 font-black text-[11px] uppercase tracking-widest disabled:opacity-50 border border-black/5"
+            className="w-full py-4 px-4 rounded-2xl bg-surface-container hover:bg-surface-container-high transition-all flex items-center justify-center gap-3 font-black text-[11px] uppercase tracking-widest disabled:opacity-50 border border-on-surface/5"
           >
             <svg width="20" height="20" viewBox="0 0 24 24">
               <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/>
@@ -102,9 +102,9 @@ export default function LoginPage() {
           </button>
 
           <div className="flex items-center gap-6">
-            <div className="flex-1 h-px bg-black/5"></div>
+            <div className="flex-1 h-px bg-on-surface/5"></div>
             <span className="text-[9px] text-on-surface-variant font-black uppercase tracking-[0.3em] opacity-40">или</span>
-            <div className="flex-1 h-px bg-black/5"></div>
+            <div className="flex-1 h-px bg-on-surface/5"></div>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -118,7 +118,7 @@ export default function LoginPage() {
                   value={name}
                   onChange={e => setName(e.target.value)}
                   placeholder="Ваше имя"
-                  className="w-full px-5 py-4 rounded-2xl bg-surface-container text-on-surface placeholder:text-on-surface-variant/30 focus:outline-none focus:ring-2 focus:ring-black/5 transition-all text-sm font-medium border border-black/5 shadow-inner"
+                  className="w-full px-5 py-4 rounded-2xl bg-surface-container text-on-surface placeholder:text-on-surface-variant/30 focus:outline-none focus:ring-2 focus:ring-on-surface/5 transition-all text-sm font-medium border border-on-surface/5 shadow-inner"
                 />
               </div>
             )}
@@ -133,7 +133,7 @@ export default function LoginPage() {
                 onChange={e => setEmail(e.target.value)}
                 placeholder="email@example.com"
                 required
-                className="w-full px-5 py-4 rounded-2xl bg-surface-container text-on-surface placeholder:text-on-surface-variant/30 focus:outline-none focus:ring-2 focus:ring-black/5 transition-all text-sm font-medium border border-black/5 shadow-inner"
+                className="w-full px-5 py-4 rounded-2xl bg-surface-container text-on-surface placeholder:text-on-surface-variant/30 focus:outline-none focus:ring-2 focus:ring-on-surface/5 transition-all text-sm font-medium border border-on-surface/5 shadow-inner"
               />
             </div>
 
@@ -148,7 +148,7 @@ export default function LoginPage() {
                 placeholder="••••••••"
                 required
                 minLength={6}
-                className="w-full px-5 py-4 rounded-2xl bg-surface-container text-on-surface placeholder:text-on-surface-variant/30 focus:outline-none focus:ring-2 focus:ring-black/5 transition-all text-sm font-medium border border-black/5 shadow-inner"
+                className="w-full px-5 py-4 rounded-2xl bg-surface-container text-on-surface placeholder:text-on-surface-variant/30 focus:outline-none focus:ring-2 focus:ring-on-surface/5 transition-all text-sm font-medium border border-on-surface/5 shadow-inner"
               />
             </div>
 
@@ -167,7 +167,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-4 bg-on-surface text-surface rounded-2xl font-black text-[11px] uppercase tracking-[0.2em] transition-all active:scale-95 disabled:opacity-50 shadow-2xl shadow-black/20"
+              className="w-full py-4 bg-on-surface text-surface rounded-2xl font-black text-[11px] uppercase tracking-[0.2em] transition-all active:scale-95 disabled:opacity-50 shadow-2xl shadow-on-surface/20"
             >
               {loading ? 'Загрузка...' : mode === 'login' ? 'Войти в систему' : 'Создать аккаунт'}
             </button>

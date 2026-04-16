@@ -90,7 +90,7 @@ export default function MarathonDetailsModal({ isOpen, onClose, marathon, userId
   return (
     <div className="fixed inset-0 z-[110] flex items-center justify-center p-6 bg-white/20 backdrop-blur-3xl" onClick={onClose}>
       <div
-        className="bg-white rounded-[40px] p-10 w-full max-w-2xl shadow-[0_64px_128px_-16px_rgba(0,0,0,0.2)] max-h-[85vh] overflow-hidden flex flex-col border border-black/5 animate-in zoom-in-95 fade-in duration-500"
+        className="bg-white rounded-[40px] p-10 w-full max-w-2xl shadow-[0_64px_128px_-16px_rgba(0,0,0,0.2)] max-h-[85vh] overflow-hidden flex flex-col border border-on-surface/5 animate-in zoom-in-95 fade-in duration-500"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between mb-8 flex-shrink-0">
@@ -131,19 +131,19 @@ export default function MarathonDetailsModal({ isOpen, onClose, marathon, userId
              </div>
           ) : activeTab === 'tasks' ? (
              items.length === 0 ? (
-               <div className="text-center py-20 px-10 bg-surface-container/30 rounded-[32px] border border-dashed border-black/5">
+               <div className="text-center py-20 px-10 bg-surface-container/30 rounded-[32px] border border-dashed border-on-surface/5">
                  <p className="text-[10px] font-black uppercase tracking-widest text-on-surface-variant opacity-30">В этом марафоне нет заданий</p>
                </div>
              ) : (
                items.map(item => (
-                 <div key={item.id} className="bg-white rounded-[32px] p-8 border border-black/5 shadow-sm group hover:shadow-2xl transition-all duration-500">
+                 <div key={item.id} className="bg-white rounded-[32px] p-8 border border-on-surface/5 shadow-sm group hover:shadow-2xl transition-all duration-500">
                    <div className="flex items-start gap-6 mb-8">
                      <div className="relative mt-1">
                         <input
                           type="checkbox"
                           checked={myProgress[item.id]?.isCompleted || false}
                           onChange={(e) => handleToggle(item.id, e.target.checked)}
-                          className="peer w-6 h-6 rounded-lg border-2 border-black/10 bg-white checked:bg-on-surface checked:border-on-surface cursor-pointer appearance-none transition-all"
+                          className="peer w-6 h-6 rounded-lg border-2 border-on-surface/10 bg-white checked:bg-on-surface checked:border-on-surface cursor-pointer appearance-none transition-all"
                         />
                         <span className="material-symbols-outlined absolute inset-0 text-white text-[16px] pointer-events-none opacity-0 peer-checked:opacity-100 flex items-center justify-center">check</span>
                      </div>
@@ -157,12 +157,12 @@ export default function MarathonDetailsModal({ isOpen, onClose, marathon, userId
                        value={myProgress[item.id]?.review || ''}
                        onChange={(e) => setMyProgress(prev => ({...prev, [item.id]: {...prev[item.id], review: e.target.value}}))}
                        placeholder="Ваши мысли после ознакомления..."
-                       className="w-full text-xs font-black p-6 rounded-2xl bg-surface-container/30 border border-transparent focus:outline-none focus:bg-white focus:border-black/5 focus:shadow-sm min-h-[120px] transition-all placeholder:text-on-surface-variant/20 "
+                       className="w-full text-xs font-black p-6 rounded-2xl bg-surface-container/30 border border-transparent focus:outline-none focus:bg-white focus:border-on-surface/5 focus:shadow-sm min-h-[120px] transition-all placeholder:text-on-surface-variant/20 "
                      />
                      <div className="flex justify-end">
                        <button
                          onClick={() => handleReviewSave(item.id)}
-                         className="px-6 py-3 bg-on-surface text-surface text-[9px] font-black uppercase tracking-widest rounded-xl hover:scale-105 active:scale-95 transition-all shadow-xl shadow-black/10"
+                         className="px-6 py-3 bg-on-surface text-surface text-[9px] font-black uppercase tracking-widest rounded-xl hover:scale-105 active:scale-95 transition-all shadow-xl shadow-on-surface/10"
                        >
                          Сохранить мысли
                        </button>
@@ -173,7 +173,7 @@ export default function MarathonDetailsModal({ isOpen, onClose, marathon, userId
              )
           ) : (
              Object.keys(participantsProgress).length === 0 ? (
-               <div className="text-center py-20 px-10 bg-surface-container/30 rounded-[32px] border border-dashed border-black/5">
+               <div className="text-center py-20 px-10 bg-surface-container/30 rounded-[32px] border border-dashed border-on-surface/5">
                  <p className="text-[10px] font-black uppercase tracking-widest text-on-surface-variant opacity-30">Никто еще не начал путь</p>
                </div>
              ) : (
@@ -183,13 +183,13 @@ export default function MarathonDetailsModal({ isOpen, onClose, marathon, userId
                  const percent = total > 0 ? Math.round((completedCount / total) * 100) : 0;
                  
                  return (
-                   <div key={idx} className="bg-white rounded-[32px] p-8 border border-black/5 shadow-sm hover:shadow-xl transition-all duration-500">
-                     <div className="flex items-center gap-5 mb-8 border-b border-black/5 pb-8">
+                   <div key={idx} className="bg-white rounded-[32px] p-8 border border-on-surface/5 shadow-sm hover:shadow-xl transition-all duration-500">
+                     <div className="flex items-center gap-5 mb-8 border-b border-on-surface/5 pb-8">
                        <div className="relative">
                          {userProg.userAvatar ? (
-                           <img src={userProg.userAvatar} alt="Avatar" className="w-14 h-14 rounded-[20px] object-cover grayscale brightness-90 border border-black/5 shadow-sm" />
+                           <img src={userProg.userAvatar} alt="Avatar" className="w-14 h-14 rounded-[20px] object-cover grayscale brightness-90 border border-on-surface/5 shadow-sm" />
                          ) : (
-                           <div className="w-14 h-14 rounded-[20px] bg-surface-container flex items-center justify-center text-[14px] font-black  text-on-surface/20 border border-black/5">
+                           <div className="w-14 h-14 rounded-[20px] bg-surface-container flex items-center justify-center text-[14px] font-black  text-on-surface/20 border border-on-surface/5">
                              {(userProg.userName || '?').charAt(0).toUpperCase()}
                            </div>
                          )}

@@ -30,7 +30,7 @@ export default function Profile() {
       <>
         <TopNavBar />
         <main className="pt-24 pb-32 px-6 max-w-3xl mx-auto flex flex-col items-center justify-center min-h-[60vh] space-y-8">
-          <div className="w-24 h-24 rounded-full bg-surface-container flex items-center justify-center border border-black/5 shadow-2xl">
+          <div className="w-24 h-24 rounded-full bg-surface-container flex items-center justify-center border border-on-surface/5 shadow-2xl">
             <span className="material-symbols-outlined text-4xl text-on-surface-variant/30">person</span>
           </div>
           <div className="text-center space-y-4">
@@ -41,7 +41,7 @@ export default function Profile() {
           </div>
           <button
             onClick={() => router.push('/login')}
-            className="px-10 py-4 bg-on-surface text-surface rounded-2xl font-black text-[11px] uppercase tracking-[0.2em] transition-transform active:scale-95 shadow-2xl shadow-black/20"
+            className="px-10 py-4 bg-on-surface text-surface rounded-2xl font-black text-[11px] uppercase tracking-[0.2em] transition-transform active:scale-95 shadow-2xl shadow-on-surface/20"
           >
             Войти
           </button>
@@ -83,7 +83,7 @@ export default function Profile() {
                 )}
               </div>
               {user.role !== 'user' && (
-                <div className="absolute -bottom-4 -right-4 w-16 h-16 bg-white rounded-[24px] flex items-center justify-center shadow-2xl border border-black/5 ring-4 ring-surface">
+                <div className="absolute -bottom-4 -right-4 w-16 h-16 bg-white rounded-[24px] flex items-center justify-center shadow-2xl border border-on-surface/5 ring-4 ring-surface">
                   <span className="material-symbols-outlined text-on-surface text-3xl" style={{ fontVariationSettings: "'FILL' 1" }}>verified</span>
                 </div>
               )}
@@ -99,13 +99,13 @@ export default function Profile() {
               
               {user.role !== 'user' && (
                 <span className={`inline-block px-4 py-1.5 text-[9px] font-black uppercase tracking-widest rounded-full border ${
-                  user.role === 'superadmin' ? 'bg-purple-50 text-purple-700 border-purple-100' : 'bg-black text-white border-black'
+                  user.role === 'superadmin' ? 'bg-purple-50 text-purple-700 border-purple-100' : 'bg-black text-white border-on-surface'
                 }`}>
                   {user.role === 'superadmin' ? 'Суперадмин' : user.role === 'admin' ? 'Администратор' : 'Модератор'}
                 </span>
               )}
               
-              <div className="flex items-center justify-center md:justify-start gap-8 pt-4 border-t border-black/5 mt-4">
+              <div className="flex items-center justify-center md:justify-start gap-8 pt-4 border-t border-on-surface/5 mt-4">
                 <div className="text-center md:text-left">
                   <span className="block text-2xl font-black tracking-tighter">{user.stats?.reviews || 0}</span>
                   <span className="text-[9px] uppercase tracking-widest text-on-surface-variant font-black opacity-40">Рецензии</span>
@@ -121,7 +121,7 @@ export default function Profile() {
               </div>
             </div>
             
-            <button className="w-full py-5 bg-on-surface text-surface rounded-2xl font-black text-[11px] uppercase tracking-[0.2em] flex items-center justify-center gap-3 transition-all active:scale-95 shadow-2xl shadow-black/20">
+            <button className="w-full py-5 bg-on-surface text-surface rounded-2xl font-black text-[11px] uppercase tracking-[0.2em] flex items-center justify-center gap-3 transition-all active:scale-95 shadow-2xl shadow-on-surface/20">
               <span className="material-symbols-outlined text-[18px]">edit_note</span>
               Настройки аккаунта
             </button>
@@ -129,7 +129,7 @@ export default function Profile() {
 
           <div className="md:col-span-8 space-y-16">
             {/* Статистика активности */}
-            <div className="bg-surface p-10 rounded-[40px] border border-black/5 shadow-sm">
+            <div className="bg-surface p-10 rounded-[40px] border border-on-surface/5 shadow-sm">
               <h2 className="text-[10px] uppercase tracking-[0.3em] font-black text-on-surface-variant mb-8 opacity-40 ">Активность сообщества</h2>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
                 <div className="space-y-1">
@@ -158,14 +158,14 @@ export default function Profile() {
               </div>
 
               {userContent.length === 0 ? (
-                <div className="bg-surface rounded-[40px] p-16 text-center space-y-6 border border-black/5 shadow-sm border-dashed">
+                <div className="bg-surface rounded-[40px] p-16 text-center space-y-6 border border-on-surface/5 shadow-sm border-dashed">
                   <div className="w-20 h-20 bg-surface-container rounded-full flex items-center justify-center mx-auto mb-4">
                     <span className="material-symbols-outlined text-4xl text-on-surface-variant/20 ">auto_stories</span>
                   </div>
                   <p className="text-on-surface-variant font-medium text-sm  opacity-60">Ваша полка пока пуста. Пора добавить что-то интересное!</p>
                   <button
                     onClick={() => router.push('/create')}
-                    className="px-10 py-4 bg-on-surface text-surface rounded-2xl font-black text-[11px] uppercase tracking-[0.2em] transition-transform active:scale-95 shadow-2xl shadow-black/20"
+                    className="px-10 py-4 bg-on-surface text-surface rounded-2xl font-black text-[11px] uppercase tracking-[0.2em] transition-transform active:scale-95 shadow-2xl shadow-on-surface/20"
                   >
                     Создать
                   </button>
@@ -173,8 +173,8 @@ export default function Profile() {
               ) : (
                 <div className="grid gap-6">
                   {userContent.map(item => (
-                    <div key={item.id} className="bg-white rounded-[32px] overflow-hidden flex shadow-sm border border-black/5 hover:shadow-2xl hover:scale-[1.01] transition-all group">
-                      <div className="w-32 h-32 md:w-44 md:h-44 shrink-0 bg-surface-container flex items-center justify-center overflow-hidden border-r border-black/5">
+                    <div key={item.id} className="bg-white rounded-[32px] overflow-hidden flex shadow-sm border border-on-surface/5 hover:shadow-2xl hover:scale-[1.01] transition-all group">
+                      <div className="w-32 h-32 md:w-44 md:h-44 shrink-0 bg-surface-container flex items-center justify-center overflow-hidden border-r border-on-surface/5">
                         {item.imageUrl ? (
                           <img alt={item.title} className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" src={item.imageUrl} />
                         ) : (
@@ -188,7 +188,7 @@ export default function Profile() {
                             <span className={`text-[9px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full shrink-0 border ${
                               item.status === 'approved' ? 'bg-green-50 text-green-700 border-green-100' :
                               item.status === 'pending' ? 'bg-amber-50 text-amber-700 border-amber-100' :
-                              item.status === 'draft' ? 'bg-surface-container text-on-surface-variant border-black/5' :
+                              item.status === 'draft' ? 'bg-surface-container text-on-surface-variant border-on-surface/5' :
                               'bg-red-50 text-red-700 border-red-100'
                             }`}>
                               {item.status === 'approved' ? 'Опубликовано' :
@@ -198,7 +198,7 @@ export default function Profile() {
                           </div>
                           <p className="text-sm text-on-surface-variant font-medium line-clamp-2 leading-relaxed opacity-60 ">{item.description}</p>
                         </div>
-                        <div className="flex items-center gap-6 mt-6 pt-6 border-t border-black/5">
+                        <div className="flex items-center gap-6 mt-6 pt-6 border-t border-on-surface/5">
                           <div className="flex items-center gap-2">
                             <span className="material-symbols-outlined text-[16px] text-on-surface-variant opacity-40">calendar_today</span>
                             <span className="text-[10px] font-black text-on-surface-variant uppercase tracking-widest opacity-60">{new Date(item.createdAt).toLocaleDateString()}</span>

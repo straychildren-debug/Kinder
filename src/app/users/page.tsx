@@ -88,8 +88,8 @@ export default function UsersManagementPage() {
 
         {/* Поиск */}
         <div className="relative mb-12 group">
-          <div className="absolute inset-0 bg-black/5 rounded-[24px] blur-2xl opacity-0 group-focus-within:opacity-100 transition-opacity duration-700"></div>
-          <div className="relative bg-white rounded-[24px] border border-black/5 shadow-sm p-2 flex items-center gap-4 focus-within:shadow-2xl transition-all duration-500">
+          <div className="absolute inset-0 bg-on-surface/5 rounded-[24px] blur-2xl opacity-0 group-focus-within:opacity-100 transition-opacity duration-700"></div>
+          <div className="relative bg-white rounded-[24px] border border-on-surface/5 shadow-sm p-2 flex items-center gap-4 focus-within:shadow-2xl transition-all duration-500">
             <div className="w-12 h-12 flex items-center justify-center text-on-surface-variant/30">
               <span className="material-symbols-outlined">search</span>
             </div>
@@ -123,7 +123,7 @@ export default function UsersManagementPage() {
         )}
 
         {/* Таблица пользователей */}
-        <div className="bg-white rounded-[40px] overflow-hidden shadow-sm border border-black/5">
+        <div className="bg-white rounded-[40px] overflow-hidden shadow-sm border border-on-surface/5">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
@@ -155,7 +155,7 @@ export default function UsersManagementPage() {
                           <img 
                             src={u.avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${u.id}`} 
                             alt="" 
-                            className="w-10 h-10 rounded-[14px] bg-surface-container border border-black/5 grayscale brightness-90" 
+                            className="w-10 h-10 rounded-[14px] bg-surface-container border border-on-surface/5 grayscale brightness-90" 
                           />
                           <span className="font-black text-sm tracking-tighter">{u.name}</span>
                         </div>
@@ -166,7 +166,7 @@ export default function UsersManagementPage() {
                           u.role === 'superadmin' ? 'bg-purple-50 text-purple-600 border-purple-100' :
                           u.role === 'admin' ? 'bg-blue-50 text-blue-600 border-blue-100' :
                           u.role === 'moderator' ? 'bg-amber-50 text-amber-600 border-amber-100' :
-                          'bg-surface-container text-on-surface-variant/60 border-black/5'
+                          'bg-surface-container text-on-surface-variant/60 border-on-surface/5'
                         }`}>
                           {u.role}
                         </span>

@@ -12,7 +12,7 @@ export default function BookDetails() {
           {/* Asymmetrical Book Cover */}
           <div className="lg:col-span-5 relative group">
             <div className="absolute inset-4 bg-on-surface/5 rounded-[48px] rotate-3 blur-2xl group-hover:rotate-6 transition-transform duration-1000"></div>
-            <div className="relative z-10 w-full aspect-[3/4] overflow-hidden rounded-[40px] shadow-2xl transition-all duration-700 group-hover:scale-[1.02] border border-black/5 bg-surface-container">
+            <div className="relative z-10 w-full aspect-[3/4] overflow-hidden rounded-[40px] shadow-2xl transition-all duration-700 group-hover:scale-[1.02] border border-on-surface/5 bg-surface-container">
               <img
                 className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-1000 brightness-95"
                 alt="Premium book cover"
@@ -42,14 +42,14 @@ export default function BookDetails() {
 
             <div className="space-y-6 mb-12">
               <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-on-surface-variant opacity-40 ">Аннотация</h3>
-              <p className="text-on-surface text-lg font-medium leading-[1.6] opacity-80  max-w-2xl border-l-2 border-black/5 pl-8">
+              <p className="text-on-surface text-lg font-medium leading-[1.6] opacity-80  max-w-2xl border-l-2 border-on-surface/5 pl-8">
                 Культовая антиутопия Олдоса Хаксли о генетически программируемом обществе потребления. В этом мире нет места страданиям, но нет и места человечности. Каждому суждена своя роль — от Альф до Эпсилонов, и каждый обязан быть счастлив под воздействием сомы.
               </p>
             </div>
 
             <div className="flex flex-wrap gap-3">
               {['Антиутопия', 'Философия', 'Классика XX века'].map(tag => (
-                <span key={tag} className="px-5 py-2.5 bg-surface-container text-on-surface text-[10px] font-black uppercase tracking-widest rounded-full border border-black/5 hover:bg-on-surface hover:text-surface transition-all cursor-crosshair">
+                <span key={tag} className="px-5 py-2.5 bg-surface-container text-on-surface text-[10px] font-black uppercase tracking-widest rounded-full border border-on-surface/5 hover:bg-on-surface hover:text-surface transition-all cursor-crosshair">
                   {tag}
                 </span>
               ))}
@@ -58,9 +58,9 @@ export default function BookDetails() {
         </section>
 
         {/* Action Bar */}
-        <div className="sticky top-24 z-40 bg-surface/80 backdrop-blur-3xl py-6 flex justify-between items-center mb-16 border-b border-black/5">
+        <div className="sticky top-24 z-40 bg-surface/80 backdrop-blur-3xl py-6 flex justify-between items-center mb-16 border-b border-on-surface/5">
           <h3 className="text-2xl font-black tracking-tighter text-on-surface ">Мнение сообщества</h3>
-          <button className="bg-on-surface text-surface px-8 py-4 rounded-2xl flex items-center gap-3 hover:scale-105 active:scale-95 transition-all shadow-2xl shadow-black/20">
+          <button className="bg-on-surface text-surface px-8 py-4 rounded-2xl flex items-center gap-3 hover:scale-105 active:scale-95 transition-all shadow-2xl shadow-on-surface/20">
             <span className="material-symbols-outlined text-[18px]">edit_note</span>
             <span className="font-black text-[10px] uppercase tracking-widest">Оставить рецензию</span>
           </button>
@@ -70,7 +70,7 @@ export default function BookDetails() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
           {/* Main Review */}
           <div className="lg:col-span-8 space-y-12">
-             <article className="bg-white p-12 rounded-[48px] border border-black/5 shadow-sm space-y-10 group hover:shadow-2xl transition-all duration-700">
+             <article className="bg-white p-12 rounded-[48px] border border-on-surface/5 shadow-sm space-y-10 group hover:shadow-2xl transition-all duration-700">
                 <div className="flex justify-between items-start">
                   <div className="flex items-center gap-5">
                     <img
@@ -90,7 +90,7 @@ export default function BookDetails() {
                 <p className="text-on-surface leading-[1.5] text-2xl font-black tracking-tight  opacity-90">
                   &laquo;Пророческая работа, которая с каждым десятилетием становится все актуальнее. Хаксли пугает не насилием, а комфортом, который лишает нас души.&raquo;
                 </p>
-                <div className="pt-10 flex gap-8 border-t border-black/5">
+                <div className="pt-10 flex gap-8 border-t border-on-surface/5">
                   <button className="flex items-center gap-3 text-on-surface-variant/40 hover:text-on-surface transition-all group/btn">
                     <span className="material-symbols-outlined text-[20px] group-hover/btn:scale-125 transition-transform">favorite</span>
                     <span className="text-[10px] font-black uppercase tracking-widest">124</span>
@@ -109,7 +109,7 @@ export default function BookDetails() {
                   { name: 'Марк Г.', time: '2 часа назад', text: 'Интересно сравнение с Оруэллом. Хаксли предсказал будущее гораздо точнее.' }
                 ].map((comment, idx) => (
                   <div key={idx} className="space-y-3 relative">
-                    <div className="absolute -left-6 top-4 w-[2px] h-full bg-black/5"></div>
+                    <div className="absolute -left-6 top-4 w-[2px] h-full bg-on-surface/5"></div>
                     <div className="flex items-center gap-3">
                       <span className="text-sm font-black tracking-tighter">{comment.name}</span>
                       <span className="text-[9px] font-black uppercase tracking-widest text-on-surface-variant opacity-20 ">{comment.time}</span>
@@ -122,7 +122,7 @@ export default function BookDetails() {
 
           {/* Sidebar */}
           <div className="lg:col-span-4 space-y-10">
-            <div className="bg-surface-container rounded-[40px] p-10 border border-black/5 space-y-8">
+            <div className="bg-surface-container rounded-[40px] p-10 border border-on-surface/5 space-y-8">
               <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-on-surface-variant opacity-40 ">Распределение</h4>
               <div className="space-y-6">
                 {[
@@ -142,7 +142,7 @@ export default function BookDetails() {
               </div>
             </div>
 
-            <article className="bg-white p-8 rounded-[32px] border border-black/5 shadow-sm space-y-4 group hover:shadow-xl transition-all">
+            <article className="bg-white p-8 rounded-[32px] border border-on-surface/5 shadow-sm space-y-4 group hover:shadow-xl transition-all">
               <div className="flex items-center gap-4">
                 <div className="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center font-black  text-xs text-on-surface/20">М</div>
                 <div>

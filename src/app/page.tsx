@@ -32,7 +32,7 @@ export default function Home() {
             <button 
               key={tab} 
               className={`whitespace-nowrap px-5 py-2.5 rounded-2xl text-[13px] font-black tracking-tight transition-all active:scale-95 ${
-                i === 0 ? 'bg-on-surface text-surface shadow-lg shadow-black/10' : 'bg-surface-container text-on-surface-variant hover:text-on-surface'
+                i === 0 ? 'bg-on-surface text-surface shadow-lg shadow-on-surface/10' : 'bg-surface-container text-on-surface-variant hover:text-on-surface'
               }`}
             >
               {tab}
@@ -47,14 +47,14 @@ export default function Home() {
               <div className="w-10 h-10 border-4 border-on-surface border-t-transparent rounded-full animate-spin"></div>
             </div>
           ) : approvedContent.length === 0 ? (
-            <div className="text-center py-20 px-6 bg-surface rounded-[32px] border border-black/5">
+            <div className="text-center py-20 px-6 bg-surface rounded-[32px] border border-on-surface/5">
                <div className="text-6xl mb-4 grayscale opacity-40">🎬</div>
                <p className="text-on-surface-variant font-black uppercase text-[10px] tracking-widest">Лента сообщества пока пуста</p>
             </div>
           ) : (
             <div className="space-y-10">
               {approvedContent.map((item, index) => (
-                <article key={item.id} className="group overflow-hidden bg-surface rounded-[40px] border border-black/5 shadow-xl hover:shadow-2xl transition-all duration-500">
+                <article key={item.id} className="group overflow-hidden bg-surface rounded-[40px] border border-on-surface/5 shadow-xl hover:shadow-2xl transition-all duration-500">
                   {/* Content Image - Clean and Visible */}
                   <div className="relative aspect-[3/2] md:aspect-video w-full overflow-hidden">
                     <img
@@ -100,7 +100,7 @@ export default function Home() {
                       {item.description}
                     </p>
 
-                    <div className="flex items-center justify-between pt-6 border-t border-black/5">
+                    <div className="flex items-center justify-between pt-6 border-t border-on-surface/5">
                       <div className="flex items-center gap-6">
                         <button className="flex items-center gap-2 group/btn">
                           <span className="material-symbols-outlined text-[20px] text-on-surface group-hover/btn:scale-110 transition-transform" style={{ fontVariationSettings: "'FILL' 0" }}>favorite</span>
@@ -112,7 +112,7 @@ export default function Home() {
                         </button>
                       </div>
 
-                      <button className="bg-on-surface text-surface px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all hover:scale-105 active:scale-95 shadow-lg shadow-black/10">
+                      <button className="bg-on-surface text-surface px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all hover:scale-105 active:scale-95 shadow-lg shadow-on-surface/10">
                         {item.type === 'movie' ? 'Смотреть' : 'Читать'}
                       </button>
                     </div>
@@ -125,21 +125,21 @@ export default function Home() {
           {/* Social Proof & Sidebar Elements */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-12">
              {!user && (
-               <div className="bg-surface p-10 rounded-[32px] border border-black/5 space-y-6 shadow-sm">
+               <div className="bg-surface p-10 rounded-[32px] border border-on-surface/5 space-y-6 shadow-sm">
                  <h3 className="text-3xl font-black tracking-tighter leading-none text-on-surface">Присоединяйтесь!</h3>
                  <p className="text-sm text-on-surface-variant leading-relaxed font-medium">
                    Войдите, чтобы создавать контент, оставлять рецензии и участвовать в рейтинге сообщества.
                  </p>
                  <Link
                    href="/login"
-                   className="block w-full py-4 bg-on-surface text-surface rounded-2xl font-black text-center text-[10px] uppercase tracking-[0.2em] transition-all hover:scale-[1.02] shadow-xl"
+                   className="block w-full py-4 bg-on-surface text-surface rounded-2xl font-black text-center text-[10px] uppercase tracking-[0.2em] transition-all hover:scale-[1.02] shadow-xl shadow-on-surface/10"
                  >
                    Войти
                  </Link>
                </div>
              )}
 
-            <div className="bg-surface-container-low p-10 rounded-[32px] border border-black/5">
+            <div className="bg-surface-container-low p-10 rounded-[32px] border border-on-surface/5">
               <h3 className="text-xl font-black text-on-surface mb-8 tracking-tight">Лучшие авторы</h3>
               <div className="grid grid-cols-1 gap-8">
                 {[
@@ -147,7 +147,7 @@ export default function Home() {
                   { icon: 'movie_filter', name: 'Анастасия Волкова', detail: '142 рецензии • ★ 9.1' },
                 ].map((item, i) => (
                   <div key={i} className="flex items-center gap-6 group cursor-pointer">
-                    <div className="w-16 h-16 rounded-[24px] bg-surface border border-black/5 flex items-center justify-center shadow-md transition-all group-hover:scale-105">
+                    <div className="w-16 h-16 rounded-[24px] bg-surface border border-on-surface/5 flex items-center justify-center shadow-md transition-all group-hover:scale-105">
                       <span className="material-symbols-outlined text-on-surface text-3xl">{item.icon}</span>
                     </div>
                     <div>

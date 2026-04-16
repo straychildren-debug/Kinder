@@ -328,7 +328,7 @@ export default function ClubDetail() {
 
         {/* Marathon Status Bar */}
         {marathon && countdown && (
-          <div className="border-t border-black/5 bg-on-surface text-surface py-2.5">
+          <div className="border-t border-on-surface/5 bg-on-surface text-surface py-2.5">
             <div className="max-w-2xl mx-auto px-6 flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <span className="material-symbols-outlined text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>bolt</span>
@@ -353,10 +353,10 @@ export default function ClubDetail() {
         {!membership && (
           <div className="flex flex-col items-center justify-center min-h-[70vh] text-center space-y-10">
             <div className="relative">
-              <div className="w-32 h-32 rounded-[48px] bg-surface-container flex items-center justify-center border border-black/5 shadow-2xl rotate-3">
+              <div className="w-32 h-32 rounded-[48px] bg-surface-container flex items-center justify-center border border-on-surface/5 shadow-2xl rotate-3">
                 <span className="material-symbols-outlined text-6xl text-on-surface-variant/30 ">key_visualizer</span>
               </div>
-              <div className="absolute -bottom-4 -right-4 w-12 h-12 bg-white rounded-[20px] flex items-center justify-center shadow-2xl border border-black/5">
+              <div className="absolute -bottom-4 -right-4 w-12 h-12 bg-white rounded-[20px] flex items-center justify-center shadow-2xl border border-on-surface/5">
                 <span className="material-symbols-outlined text-on-surface text-2xl">lock</span>
               </div>
             </div>
@@ -368,7 +368,7 @@ export default function ClubDetail() {
             </div>
             <button
               onClick={handleJoin}
-              className="px-10 py-5 bg-on-surface text-surface rounded-2xl font-black text-[11px] uppercase tracking-[0.2em] transition-transform active:scale-95 shadow-2xl shadow-black/20"
+              className="px-10 py-5 bg-on-surface text-surface rounded-2xl font-black text-[11px] uppercase tracking-[0.2em] transition-transform active:scale-95 shadow-2xl shadow-on-surface/20"
             >
               Вступить в клуб
             </button>
@@ -382,7 +382,7 @@ export default function ClubDetail() {
             {marathon && countdown && (
               <section 
                 onClick={() => setShowMarathonDetails(true)}
-                className="mb-12 bg-white rounded-[40px] p-10 border border-black/5 shadow-sm cursor-pointer hover:shadow-2xl hover:scale-[1.01] transition-all group overflow-hidden relative"
+                className="mb-12 bg-white rounded-[40px] p-10 border border-on-surface/5 shadow-sm cursor-pointer hover:shadow-2xl hover:scale-[1.01] transition-all group overflow-hidden relative"
               >
                 <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-100 transition-opacity translate-x-4 -translate-y-4 group-hover:translate-x-0 group-hover:translate-y-0 duration-700">
                   <span className="material-symbols-outlined text-5xl ">arrow_outward</span>
@@ -402,7 +402,7 @@ export default function ClubDetail() {
                     { val: countdown.m, label: 'M' },
                     { val: countdown.s, label: 'S' },
                   ].map(({ val, label }) => (
-                    <div key={label} className="flex-1 text-center py-4 bg-surface-container rounded-[24px] border border-black/5">
+                    <div key={label} className="flex-1 text-center py-4 bg-surface-container rounded-[24px] border border-on-surface/5">
                       <div className="text-2xl font-black tracking-tighter leading-none">{String(val).padStart(2, '0')}</div>
                       <span className="text-[9px] font-black uppercase tracking-widest opacity-30 mt-1 block">{label}</span>
                     </div>
@@ -462,11 +462,11 @@ export default function ClubDetail() {
                           msg.senderAvatar ? (
                             <img
                               alt={msg.senderName || ''}
-                              className="w-10 h-10 rounded-[14px] object-cover shadow-sm border border-black/5"
+                              className="w-10 h-10 rounded-[14px] object-cover shadow-sm border border-on-surface/5"
                               src={msg.senderAvatar}
                             />
                           ) : (
-                            <div className="w-10 h-10 rounded-[14px] bg-surface-container flex items-center justify-center text-[11px] font-black  text-on-surface/20 border border-black/5">
+                            <div className="w-10 h-10 rounded-[14px] bg-surface-container flex items-center justify-center text-[11px] font-black  text-on-surface/20 border border-on-surface/5">
                               {(msg.senderName || '?').charAt(0).toUpperCase()}
                             </div>
                           )
@@ -484,13 +484,13 @@ export default function ClubDetail() {
                       <div
                         className={`group relative ${
                           isMine
-                            ? 'bg-on-surface text-surface rounded-[24px] rounded-br-[4px] p-5 shadow-2xl shadow-black/10'
-                            : 'bg-white text-on-surface rounded-[24px] rounded-bl-[4px] p-5 shadow-sm border border-black/5'
+                            ? 'bg-on-surface text-surface rounded-[24px] rounded-br-[4px] p-5 shadow-2xl shadow-on-surface/10'
+                            : 'bg-white text-on-surface rounded-[24px] rounded-bl-[4px] p-5 shadow-sm border border-on-surface/5'
                         }`}
                       >
                         {/* Image message */}
                         {msg.fileType === 'image' && msg.fileUrl && (
-                          <div className="rounded-[16px] overflow-hidden mb-3 border border-black/10">
+                          <div className="rounded-[16px] overflow-hidden mb-3 border border-on-surface/10">
                             <img
                               src={msg.fileUrl}
                               alt="Attached image"
@@ -508,7 +508,7 @@ export default function ClubDetail() {
                             className={`flex items-center gap-3 px-4 py-3 rounded-2xl mb-3 transition-all border ${
                               isMine 
                                 ? 'bg-surface/10 border-surface/10 hover:bg-surface/20 text-white' 
-                                : 'bg-surface-container border-black/5 hover:bg-surface-container-high'
+                                : 'bg-surface-container border-on-surface/5 hover:bg-surface-container-high'
                             }`}
                           >
                             <span className="material-symbols-outlined text-[20px]">cloud_download</span>
@@ -553,7 +553,7 @@ export default function ClubDetail() {
       {membership && (
         <div className="fixed bottom-0 left-0 w-full z-50 bg-gradient-to-t from-surface via-surface/80 to-transparent pt-10 pb-10">
           <div className="max-w-2xl mx-auto px-6">
-            <div className="bg-white p-3 rounded-[32px] flex items-center gap-4 border border-black/10 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.1)] focus-within:shadow-[0_48px_80px_-20px_rgba(0,0,0,0.15)] transition-all">
+            <div className="bg-white p-3 rounded-[32px] flex items-center gap-4 border border-on-surface/10 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.1)] focus-within:shadow-[0_48px_80px_-20px_rgba(0,0,0,0.15)] transition-all">
               {/* File upload */}
               <button
                 onClick={() => fileInputRef.current?.click()}

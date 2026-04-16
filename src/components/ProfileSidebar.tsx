@@ -18,7 +18,7 @@ export default function ProfileSidebar({ isOpen, onClose }: ProfileSidebarProps)
     <>
       {/* Затемнение фона */}
       <div
-        className="fixed inset-0 bg-black/30 backdrop-blur-sm z-[60] transition-opacity"
+        className="fixed inset-0 bg-on-surface/30 backdrop-blur-sm z-[60] transition-opacity"
         onClick={onClose}
       />
 

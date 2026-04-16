@@ -31,7 +31,7 @@ export default function ModerationPage() {
       <>
         <TopNavBar />
         <main className="pt-24 pb-32 px-6 max-w-3xl mx-auto flex flex-col items-center justify-center min-h-[60vh] space-y-8">
-          <div className="w-24 h-24 rounded-full bg-surface-container flex items-center justify-center border border-black/5 shadow-2xl">
+          <div className="w-24 h-24 rounded-full bg-surface-container flex items-center justify-center border border-on-surface/5 shadow-2xl">
             <span className="material-symbols-outlined text-4xl text-on-surface-variant/30">shield</span>
           </div>
           <div className="text-center space-y-4">
@@ -42,7 +42,7 @@ export default function ModerationPage() {
           </div>
           <button
             onClick={() => router.push('/')}
-            className="px-10 py-4 bg-on-surface text-surface rounded-2xl font-black text-[11px] uppercase tracking-[0.2em] transition-transform active:scale-95 shadow-2xl shadow-black/20"
+            className="px-10 py-4 bg-on-surface text-surface rounded-2xl font-black text-[11px] uppercase tracking-[0.2em] transition-transform active:scale-95 shadow-2xl shadow-on-surface/20"
           >
             На главную
           </button>
@@ -78,21 +78,21 @@ export default function ModerationPage() {
 
         {/* Статистика */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-          <div className="bg-white rounded-[32px] p-8 border border-black/5 shadow-sm flex flex-col justify-between group hover:shadow-2xl transition-all duration-500">
+          <div className="bg-white rounded-[32px] p-8 border border-on-surface/5 shadow-sm flex flex-col justify-between group hover:shadow-2xl transition-all duration-500">
             <span className="text-[9px] font-black uppercase tracking-widest text-amber-500 mb-4 ">Ожидают проверки</span>
             <div className="flex items-baseline gap-2">
               <span className="text-5xl font-black tracking-tighter text-on-surface">{pendingItems.length}</span>
               <span className="text-[10px] font-black uppercase tracking-widest opacity-20">постов</span>
             </div>
           </div>
-          <div className="bg-white rounded-[32px] p-8 border border-black/5 shadow-sm flex flex-col justify-between opacity-40">
+          <div className="bg-white rounded-[32px] p-8 border border-on-surface/5 shadow-sm flex flex-col justify-between opacity-40">
             <span className="text-[9px] font-black uppercase tracking-widest text-green-600 mb-4 ">Всего одобрено</span>
             <div className="flex items-baseline gap-2">
               <span className="text-5xl font-black tracking-tighter text-on-surface">1.2k</span>
               <span className="text-[10px] font-black uppercase tracking-widest opacity-20">актив</span>
             </div>
           </div>
-          <div className="bg-white rounded-[32px] p-8 border border-black/5 shadow-sm flex flex-col justify-between opacity-40">
+          <div className="bg-white rounded-[32px] p-8 border border-on-surface/5 shadow-sm flex flex-col justify-between opacity-40">
             <span className="text-[9px] font-black uppercase tracking-widest text-red-600 mb-4 ">Отклонено</span>
             <div className="flex items-baseline gap-2">
               <span className="text-5xl font-black tracking-tighter text-on-surface">84</span>
@@ -107,7 +107,7 @@ export default function ModerationPage() {
             <div className="w-12 h-12 border-[6px] border-on-surface/5 border-t-on-surface rounded-full animate-spin"></div>
           </div>
         ) : pendingItems.length === 0 ? (
-          <div className="bg-surface rounded-[40px] p-20 text-center space-y-6 border border-black/5 shadow-sm border-dashed">
+          <div className="bg-surface rounded-[40px] p-20 text-center space-y-6 border border-on-surface/5 shadow-sm border-dashed">
             <div className="w-20 h-20 bg-surface-container rounded-full flex items-center justify-center mx-auto mb-4">
               <span className="material-symbols-outlined text-4xl text-on-surface-variant/20 ">task_alt</span>
             </div>
@@ -119,11 +119,11 @@ export default function ModerationPage() {
               const isProcessing = processingId === item.id;
               
               return (
-                <article key={item.id} className={`bg-white rounded-[40px] overflow-hidden shadow-sm border border-black/5 transition-all duration-700 hover:shadow-2xl ${isProcessing ? 'opacity-40 pointer-events-none scale-95' : ''}`}>
+                <article key={item.id} className={`bg-white rounded-[40px] overflow-hidden shadow-sm border border-on-surface/5 transition-all duration-700 hover:shadow-2xl ${isProcessing ? 'opacity-40 pointer-events-none scale-95' : ''}`}>
                   <div className="flex flex-col md:row">
                     <div className="flex flex-col md:flex-row">
                       {/* Изображение */}
-                      <div className="md:w-[350px] aspect-[4/5] md:aspect-auto relative overflow-hidden bg-surface-container border-r border-black/5">
+                      <div className="md:w-[350px] aspect-[4/5] md:aspect-auto relative overflow-hidden bg-surface-container border-r border-on-surface/5">
                         {item.imageUrl ? (
                           <img
                             src={item.imageUrl}
@@ -156,19 +156,19 @@ export default function ModerationPage() {
 
                             <div className="flex flex-wrap gap-3">
                               {item.type === 'movie' && item.director && (
-                                <div className="bg-surface-container px-4 py-2 rounded-2xl flex items-center gap-2 border border-black/5">
+                                <div className="bg-surface-container px-4 py-2 rounded-2xl flex items-center gap-2 border border-on-surface/5">
                                   <span className="text-[9px] font-black uppercase tracking-widest opacity-30 ">Реж.</span>
                                   <span className="text-[10px] font-black uppercase tracking-tighter">{item.director}</span>
                                 </div>
                               )}
                               {item.type === 'book' && item.author && (
-                                <div className="bg-surface-container px-4 py-2 rounded-2xl flex items-center gap-2 border border-black/5">
+                                <div className="bg-surface-container px-4 py-2 rounded-2xl flex items-center gap-2 border border-on-surface/5">
                                   <span className="text-[9px] font-black uppercase tracking-widest opacity-30 ">Автор</span>
                                   <span className="text-[10px] font-black uppercase tracking-tighter">{item.author}</span>
                                 </div>
                               )}
                               {item.year && (
-                                <div className="bg-surface-container px-4 py-2 rounded-2xl flex items-center gap-2 border border-black/5">
+                                <div className="bg-surface-container px-4 py-2 rounded-2xl flex items-center gap-2 border border-on-surface/5">
                                   <span className="text-[9px] font-black uppercase tracking-widest opacity-30 ">Год</span>
                                   <span className="text-[10px] font-black uppercase tracking-tighter">{item.year}</span>
                                 </div>
@@ -176,7 +176,7 @@ export default function ModerationPage() {
                             </div>
                           </div>
                           
-                          <div className="pt-8 border-t border-black/5 flex items-center gap-4">
+                          <div className="pt-8 border-t border-on-surface/5 flex items-center gap-4">
                             <div className="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center text-xs font-black  text-on-surface/20">
                               ID
                             </div>
@@ -198,7 +198,7 @@ export default function ModerationPage() {
                           </button>
                           <button
                             onClick={() => handleDecision(item.id, 'approved')}
-                            className="flex-[2] py-5 rounded-[20px] font-black text-[11px] uppercase tracking-[0.2em] bg-on-surface text-surface shadow-2xl shadow-black/20 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2"
+                            className="flex-[2] py-5 rounded-[20px] font-black text-[11px] uppercase tracking-[0.2em] bg-on-surface text-surface shadow-2xl shadow-on-surface/20 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2"
                           >
                             <span className="material-symbols-outlined text-[18px]">check_circle</span>
                             Опубликовать

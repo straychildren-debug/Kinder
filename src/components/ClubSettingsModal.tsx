@@ -87,7 +87,7 @@ export default function ClubSettingsModal({
     <>
       <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-white/20 backdrop-blur-3xl" onClick={onClose}>
         <div
-          className="bg-white rounded-[40px] p-10 w-full max-w-xl shadow-[0_64px_128px_-16px_rgba(0,0,0,0.2)] max-h-[85vh] overflow-y-auto border border-black/5 animate-in zoom-in-95 fade-in duration-500"
+          className="bg-white rounded-[40px] p-10 w-full max-w-xl shadow-[0_64px_128px_-16px_rgba(0,0,0,0.2)] max-h-[85vh] overflow-y-auto border border-on-surface/5 animate-in zoom-in-95 fade-in duration-500"
           onClick={(e) => e.stopPropagation()}
         >
           {/* Header */}
@@ -105,7 +105,7 @@ export default function ClubSettingsModal({
           <section className="mb-12">
             <h3 className="text-[10px] font-black text-on-surface-variant uppercase tracking-[0.3em] mb-6 opacity-40 ">Контентные марафоны</h3>
             {activeMarathon ? (
-              <div className="p-8 rounded-[32px] bg-white border border-black/5 shadow-sm flex items-center justify-between group hover:shadow-2xl transition-all duration-500">
+              <div className="p-8 rounded-[32px] bg-white border border-on-surface/5 shadow-sm flex items-center justify-between group hover:shadow-2xl transition-all duration-500">
                 <div className="space-y-1">
                   <div className="flex items-center gap-2">
                     <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></div>
@@ -115,7 +115,7 @@ export default function ClubSettingsModal({
                 </div>
                 <button
                   onClick={() => setShowMarathonModal(true)}
-                  className="px-6 py-3 rounded-xl bg-on-surface text-surface text-[10px] font-black uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-xl shadow-black/10"
+                  className="px-6 py-3 rounded-xl bg-on-surface text-surface text-[10px] font-black uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-xl shadow-on-surface/10"
                 >
                   Управлять
                 </button>
@@ -123,7 +123,7 @@ export default function ClubSettingsModal({
             ) : (
               <button
                 onClick={() => setShowMarathonModal(true)}
-                className="w-full p-10 rounded-[32px] border-2 border-dashed border-black/5 text-on-surface-variant/40 hover:border-on-surface hover:text-on-surface hover:bg-surface-container/50 transition-all flex flex-col items-center justify-center gap-4 group"
+                className="w-full p-10 rounded-[32px] border-2 border-dashed border-on-surface/5 text-on-surface-variant/40 hover:border-on-surface hover:text-on-surface hover:bg-surface-container/50 transition-all flex flex-col items-center justify-center gap-4 group"
               >
                 <div className="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center group-hover:bg-on-surface group-hover:text-surface transition-all">
                    <span className="material-symbols-outlined text-2xl">add_circle</span>
@@ -150,7 +150,7 @@ export default function ClubSettingsModal({
                 {members.map((member) => (
                   <div
                     key={member.id}
-                    className="flex items-center gap-4 p-4 rounded-[24px] bg-surface-container/30 border border-transparent hover:bg-white hover:border-black/5 hover:shadow-sm transition-all duration-300 group"
+                    className="flex items-center gap-4 p-4 rounded-[24px] bg-surface-container/30 border border-transparent hover:bg-white hover:border-on-surface/5 hover:shadow-sm transition-all duration-300 group"
                   >
                     {/* Avatar */}
                     <div className="relative">
@@ -158,10 +158,10 @@ export default function ClubSettingsModal({
                         <img
                           src={member.userAvatar}
                           alt={member.userName || ''}
-                          className="w-11 h-11 rounded-[16px] object-cover grayscale brightness-90 group-hover:grayscale-0 transition-all border border-black/5 shadow-sm"
+                          className="w-11 h-11 rounded-[16px] object-cover grayscale brightness-90 group-hover:grayscale-0 transition-all border border-on-surface/5 shadow-sm"
                         />
                       ) : (
-                        <div className="w-11 h-11 rounded-[16px] bg-surface-container flex items-center justify-center text-[11px] font-black  text-on-surface/20 border border-black/5">
+                        <div className="w-11 h-11 rounded-[16px] bg-surface-container flex items-center justify-center text-[11px] font-black  text-on-surface/20 border border-on-surface/5">
                           {(member.userName || '?').charAt(0).toUpperCase()}
                         </div>
                       )}

@@ -30,11 +30,11 @@ export default function BottomNavBar({ activeTab = 'home' }: BottomNavBarProps) 
   const activeIndex = tabs.findIndex(t => t.id === activeTab);
 
   return (
-    <nav className="fixed bottom-0 left-0 w-full bg-surface/80 backdrop-blur-2xl border-t border-black/5 z-50 md:hidden pb-safe">
+    <nav className="fixed bottom-0 left-0 w-full bg-surface/80 backdrop-blur-2xl border-t border-on-surface/5 z-50 md:hidden pb-safe">
       <div className="relative flex justify-between items-center px-4 py-3">
         {/* Active Indicator (Centered Pill) */}
         <div 
-          className="absolute h-14 bg-on-surface rounded-[24px] transition-all duration-500 ease-out shadow-lg shadow-black/10"
+          className="absolute h-14 bg-on-surface rounded-[24px] transition-all duration-500 ease-out shadow-lg shadow-on-surface/10"
           style={{ 
             width: '80px',
             left: `calc(1rem + ${activeIndex} * ((100% - 2rem) / ${tabs.length}) + (((100% - 2rem) / ${tabs.length}) - 80px) / 2)` 
