@@ -22,7 +22,7 @@ export default function BottomNavBar({ activeTab = 'home' }: BottomNavBarProps) 
   ];
 
   return (
-    <nav className="fixed bottom-0 left-0 w-full bg-white/98 backdrop-blur-3xl border-t border-on-surface/10 z-50 md:hidden pb-safe shadow-[0_-8px_30px_rgb(0,0,0,0.04)]">
+    <nav className="fixed bottom-0 left-0 w-full bg-white/90 backdrop-blur-3xl border-t border-on-surface/10 z-50 md:hidden pb-safe shadow-[0_-8px_30px_rgb(0,0,0,0.08)]">
       <div className="flex justify-around items-center px-4 py-5 gap-2">
         {tabs.map(tab => {
           const isActive = tab.id === activeTab;
@@ -35,7 +35,7 @@ export default function BottomNavBar({ activeTab = 'home' }: BottomNavBarProps) 
               {isActive && (
                 <motion.div 
                   layoutId="bottomNavHighlight"
-                  className="absolute inset-x-0 inset-y-0.5 bg-accent-lilac/10 rounded-2xl z-0"
+                  className="absolute inset-x-0 inset-y-0.5 bg-accent-lilac/20 rounded-2xl z-0"
                   initial={false}
                   transition={{ type: 'spring', stiffness: 400, damping: 30 }}
                 />
@@ -43,7 +43,7 @@ export default function BottomNavBar({ activeTab = 'home' }: BottomNavBarProps) 
               
               <span 
                 className={`material-symbols-outlined text-[24px] z-10 transition-colors duration-300 ${
-                  isActive ? 'text-accent-lilac' : 'text-on-surface-variant/60'
+                  isActive ? 'text-[#6A5AE0] font-bold' : 'text-on-surface-variant/80'
                 }`} 
                 style={getIconStyle(tab.id)}
               >
@@ -51,7 +51,7 @@ export default function BottomNavBar({ activeTab = 'home' }: BottomNavBarProps) 
               </span>
               <span 
                 className={`text-[9px] font-black uppercase tracking-widest mt-1.5 z-10 transition-colors duration-300 ${
-                  isActive ? 'text-accent-lilac' : 'text-on-surface-variant/40'
+                  isActive ? 'text-[#6A5AE0]' : 'text-on-surface-variant/60'
                 }`}
               >
                 {tab.label}
