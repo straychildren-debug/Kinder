@@ -33,10 +33,6 @@ export default function TopNavBar({ title = 'Кинотека' }: TopNavBarProps
           </Link>
           
           <div className="flex items-center gap-3 md:gap-6">
-            <button className="text-on-surface-variant hover:text-on-surface transition-colors flex items-center justify-center w-8 h-8 md:w-10 md:h-10">
-              <span className="material-symbols-outlined text-[24px]">search</span>
-            </button>
-
             <NotificationsBell />
 
             {user && (

@@ -33,6 +33,20 @@ export default function Home() {
     <>
       <TopNavBar />
       <main className="pt-24 px-4 pb-32 max-w-lg mx-auto md:max-w-7xl">
+        {/* Search Bar */}
+        <section className="mb-8">
+          <div className="relative group max-w-2xl mx-auto">
+            <span className="material-symbols-outlined absolute left-6 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-on-surface transition-colors text-[22px]">
+              search
+            </span>
+            <input 
+              type="text"
+              placeholder="Поиск книг, фильмов или авторов..."
+              className="w-full bg-white/50 backdrop-blur-md border border-on-surface/10 rounded-[28px] pl-16 pr-8 py-5 text-sm md:text-base font-medium focus:outline-none focus:border-accent-lilac focus:bg-white focus:shadow-2xl focus:shadow-accent-lilac/10 transition-all duration-300 placeholder:text-on-surface-variant/50 shadow-sm"
+            />
+          </div>
+        </section>
+
         {/* Category Tabs */}
         <section className="flex gap-3 overflow-x-auto scrollbar-hide py-4 mb-2">
           {['Новое сегодня', 'Все книги', 'Все фильмы', 'Клубы'].map((tab, i) => (
