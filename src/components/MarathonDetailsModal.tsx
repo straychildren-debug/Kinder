@@ -244,5 +244,3 @@ export default function MarathonDetailsModal({ isOpen, onClose, marathon, userId
     </div>
   );
 }
-  );
-}

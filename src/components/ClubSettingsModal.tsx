@@ -218,20 +218,6 @@ export default function ClubSettingsModal({
         </div>
       </div>
 
-      {/* Marathon sub-modal */}
-      <MarathonModal
-        isOpen={showMarathonModal}
-        onClose={() => setShowMarathonModal(false)}
-        clubId={clubId}
-        userId={userId}
-        activeMarathon={activeMarathon}
-        onMarathonChange={onMarathonChange}
-      />
-    </>
-  );
-}
-
-      {/* Marathon sub-modal */}
       <MarathonModal
         isOpen={showMarathonModal}
         onClose={() => setShowMarathonModal(false)}

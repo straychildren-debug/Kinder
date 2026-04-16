@@ -5,6 +5,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { useAuth } from '@/components/AuthProvider';
 import ClubSettingsModal from '@/components/ClubSettingsModal';
 import MarathonDetailsModal from '@/components/MarathonDetailsModal';
+import MarathonModal from '@/components/MarathonModal';
 import { Club, ClubMessage, ClubMarathon, ClubMember } from '@/lib/types';
 import {
   getClubById,
@@ -54,246 +55,7 @@ function useCountdown(endsAt: string | null) {
   return timeLeft;
 }
 
-export default function MarathonModal({
-  isOpen,
-  onClose,
-  clubId,
-  userId,
-  activeMarathon,
-  onMarathonChange,
-}: any) {
-  const [title, setTitle] = useState('');
-  const [endsAt, setEndsAt] = useState('');
-  const [items, setItems] = useState<{contentId: string, title: string}[]>([]);
-  const [selectedContentId, setSelectedContentId] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [availableContent, setAvailableContent] = useState<any[]>([]);
-
-  React.useEffect(() => {
-    if (isOpen) {
-      // Mocking getApprovedContent for structure
-      setAvailableContent([]);
-    }
-  }, [isOpen]);
-
-  if (!isOpen) return null;
-
-  const handleCreate = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!title.trim() || !endsAt) {
-      setError('Заполните все поля');
-      return;
-    }
-
-    const endDate = new Date(endsAt);
-    if (endDate <= new Date()) {
-      setError('Дата окончания должна быть в будущем');
-      return;
-    }
-
-    setLoading(true);
-    setError('');
-    try {
-      // Mocking createMarathon
-      onMarathonChange({ id: 'new', title, endsAt: endDate.toISOString() });
-      setTitle('');
-      setEndsAt('');
-      setItems([]);
-      onClose();
-    } catch {
-      setError('Не удалось создать марафон');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleEnd = async () => {
-    if (!activeMarathon) return;
-    setLoading(true);
-    try {
-      onMarathonChange(null);
-      onClose();
-    } catch {
-      setError('Не удалось завершить марафон');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const getPreviewTime = () => {
-    if (!endsAt) return null;
-    const diff = new Date(endsAt).getTime() - Date.now();
-    if (diff <= 0) return null;
-    const d = Math.floor(diff / (1000 * 60 * 60 * 24));
-    const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
-    const m = Math.floor((diff / (1000 * 60)) % 60);
-    return { d, h, m };
-  };
-
-  const preview = getPreviewTime();
-
-  return (
-    <div className="fixed inset-0 z-[110] flex items-center justify-center p-6 bg-white/20 backdrop-blur-3xl" onClick={onClose}>
-      <div
-        className="bg-white rounded-[40px] p-10 w-full max-w-xl shadow-[0_64px_128px_-16px_rgba(0,0,0,0.2)] max-h-[85vh] overflow-y-auto border border-black/5 animate-in zoom-in-95 fade-in duration-500"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="flex items-center justify-between mb-12">
-          <div>
-            <span className="text-[10px] font-black text-on-surface-variant uppercase tracking-[0.4em] block mb-2 opacity-40 italic">Событие клуба</span>
-            <h2 className="text-4xl font-black tracking-tighter leading-none">Марафон</h2>
-          </div>
-          <button onClick={onClose} className="w-12 h-12 rounded-2xl bg-surface-container flex items-center justify-center hover:bg-on-surface hover:text-surface transition-all active:scale-90">
-            <span className="material-symbols-outlined text-[20px]">close</span>
-          </button>
-        </div>
-
-        {activeMarathon && (
-          <div className="mb-12 p-8 rounded-[32px] bg-white border border-black/5 shadow-sm space-y-6 group hover:shadow-2xl transition-all duration-500">
-            <div className="flex items-center gap-2">
-              <span className="material-symbols-outlined text-green-500 text-[20px]">timer</span>
-              <span className="text-[9px] font-black text-green-500 uppercase tracking-widest">Активный поток</span>
-            </div>
-            <h3 className="text-xl font-black mb-1">{activeMarathon.title}</h3>
-            <p className="text-xs text-on-surface-variant/40 font-black uppercase tracking-widest italic">
-              До {new Date(activeMarathon.endsAt).toLocaleDateString('ru-RU', {
-                day: 'numeric',
-                month: 'long',
-                year: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit',
-              })}
-            </p>
-            <button
-              onClick={handleEnd}
-              disabled={loading}
-              className="mt-2 w-full px-6 py-4 bg-red-50 text-red-600 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-red-600 hover:text-white transition-all disabled:opacity-50 active:scale-95"
-            >
-              {loading ? 'Завершаем...' : 'Завершить марафон'}
-            </button>
-          </div>
-        )}
-
-        <form onSubmit={handleCreate} className="space-y-10">
-          <div>
-            <h3 className="text-[10px] font-black text-on-surface-variant uppercase tracking-[0.3em] mb-8 opacity-40 italic">
-              {activeMarathon ? 'Настройка нового' : 'Новое соревнование'}
-            </h3>
-
-            <div className="space-y-8">
-              <div>
-                <label className="block text-[10px] font-black text-on-surface-variant uppercase tracking-widest mb-3 opacity-30">Заголовок марафона</label>
-                <input
-                  type="text"
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                  placeholder="Например: Осень с Оруэллом"
-                  className="w-full px-6 py-4 rounded-2xl bg-surface-container/30 border border-transparent text-sm font-black focus:outline-none focus:bg-white focus:border-black/5 focus:shadow-sm transition-all placeholder:text-on-surface-variant/20 italic"
-                />
-              </div>
-
-              <div>
-                <label className="block text-[10px] font-black text-on-surface-variant uppercase tracking-widest mb-3 opacity-30">Выбор контента</label>
-                <div className="flex gap-3 mb-3">
-                  <select
-                    value={selectedContentId}
-                    onChange={(e) => setSelectedContentId(e.target.value)}
-                    className="flex-1 px-6 py-4 rounded-2xl bg-surface-container/30 border border-transparent text-sm font-black focus:outline-none focus:bg-white focus:border-black/5 focus:shadow-sm transition-all text-on-surface appearance-none cursor-pointer italic"
-                  >
-                    <option value="" className="font-sans not-italic">Выбрать из библиотеки...</option>
-                    {availableContent.map((c: any) => (
-                      <option key={c.id} value={c.id} className="font-sans not-italic">
-                        {c.type === 'movie' ? '🎬' : '📚'} {c.title}
-                      </option>
-                    ))}
-                  </select>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      if (selectedContentId) {
-                        const selected = availableContent.find(c => c.id === selectedContentId);
-                        if (selected && !items.find(i => i.contentId === selected.id)) {
-                          setItems([...items, { contentId: selected.id, title: selected.title }]);
-                        }
-                        setSelectedContentId('');
-                      }
-                    }}
-                    disabled={!selectedContentId}
-                    className="w-14 h-14 bg-on-surface text-surface rounded-2xl flex items-center justify-center hover:scale-105 active:scale-90 transition-all disabled:opacity-50 shadow-xl shadow-black/10"
-                  >
-                    <span className="material-symbols-outlined">add</span>
-                  </button>
-                </div>
-                
-                {items.length > 0 && (
-                  <div className="flex flex-col gap-3 mt-6">
-                    {items.map((item, idx) => (
-                      <div key={idx} className="flex items-center justify-between p-5 rounded-2xl bg-white border border-black/5 shadow-sm group/item">
-                        <span className="text-sm font-black tracking-tighter truncate italic">{item.title}</span>
-                        <button
-                          type="button"
-                          onClick={() => setItems(items.filter((_, i) => i !== idx))}
-                          className="w-8 h-8 rounded-lg text-on-surface-variant/20 hover:text-red-500 hover:bg-red-50 transition-all flex items-center justify-center group-hover/item:opacity-100"
-                        >
-                          <span className="material-symbols-outlined text-[18px]">close</span>
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-
-              <div>
-                <label className="block text-[10px] font-black text-on-surface-variant uppercase tracking-widest mb-3 opacity-30">Финишная черта</label>
-                <input
-                  type="datetime-local"
-                  value={endsAt}
-                  onChange={(e) => setEndsAt(e.target.value)}
-                  className="w-full px-6 py-4 rounded-2xl bg-surface-container/30 border border-transparent text-sm font-black focus:outline-none focus:bg-white focus:border-black/5 focus:shadow-sm transition-all cursor-pointer italic appearance-none"
-                />
-              </div>
-
-              {preview && (
-                <div className="p-8 rounded-[32px] bg-surface-container/20 border border-black/5 space-y-6">
-                  <span className="text-[9px] font-black text-on-surface-variant uppercase tracking-[0.3em] block mb-2 opacity-40 italic text-center">Виджет времени</span>
-                  <div className="flex gap-6 justify-center">
-                    <div className="flex flex-col items-center">
-                      <div className="text-3xl font-black tracking-tighter">{preview.d}</div>
-                      <span className="text-[8px] font-black uppercase tracking-widest opacity-30">Дней</span>
-                    </div>
-                    <div className="flex flex-col items-center">
-                      <div className="text-3xl font-black tracking-tighter">{preview.h}</div>
-                      <span className="text-[8px] font-black uppercase tracking-widest opacity-30">Часов</span>
-                    </div>
-                    <div className="flex flex-col items-center">
-                      <div className="text-3xl font-black tracking-tighter">{preview.m}</div>
-                      <span className="text-[8px] font-black uppercase tracking-widest opacity-30">Минут</span>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {error && (
-            <div className="p-4 rounded-xl bg-red-50 text-red-600 text-[10px] font-black uppercase tracking-widest text-center">
-              {error}
-            </div>
-          )}
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-on-surface text-surface py-5 rounded-[24px] font-black text-[11px] uppercase tracking-[0.2em] shadow-2xl shadow-black/20 hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50"
-          >
-            {loading ? 'Синхронизация...' : 'Запустить марафон'}
-          </button>
-        </form>
-      </div>
-    </div>
-  );
-}
+// ===== Club Detail Component =====
 
 export default function ClubDetail() {
   const params = useParams();
@@ -857,12 +619,13 @@ export default function ClubDetail() {
         />
       )}
 
+
       {/* Marathon sub-modal */}
       <MarathonModal
         isOpen={showMarathonModal}
         onClose={() => setShowMarathonModal(false)}
         clubId={clubId}
-        userId={user?.id}
+        userId={user?.id || ''}
         activeMarathon={marathon}
         onMarathonChange={setMarathon}
       />
