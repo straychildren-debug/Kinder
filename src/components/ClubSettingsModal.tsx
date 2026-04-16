@@ -228,6 +228,10 @@ export default function ClubSettingsModal({
                 ))}
               </div>
             )}
+          </section>
+        </div>
+      </div>
+
       <MarathonModal
         isOpen={showMarathonModal}
         onClose={() => setShowMarathonModal(false)}
@@ -239,4 +243,5 @@ export default function ClubSettingsModal({
     </>
   );
 }
+
 
