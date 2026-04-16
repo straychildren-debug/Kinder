@@ -3,7 +3,6 @@
 import React, { useState } from 'react';
 import { useAuth } from './AuthProvider';
 import ProfileSidebar from './ProfileSidebar';
-import NotificationsBell from './NotificationsBell';
 import Link from 'next/link';
 
 interface TopNavBarProps {
@@ -13,6 +12,22 @@ interface TopNavBarProps {
 export default function TopNavBar({ title = 'Кинотека' }: TopNavBarProps) {
   const { user } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  React.useEffect(() => {
+    if (!user) return;
+    
+    // Initial fetch
+    import('@/lib/notifications').then(({ getUnreadNotificationsCount, subscribeToNotifications }) => {
+      getUnreadNotificationsCount(user.id).then(setUnreadCount);
+      
+      // Subscribe to new notifications
+      const unsub = subscribeToNotifications(user.id, () => {
+        setUnreadCount(prev => prev + 1);
+      });
+      return unsub;
+    });
+  }, [user]);
 
   return (
     <>
@@ -33,8 +48,6 @@ export default function TopNavBar({ title = 'Кинотека' }: TopNavBarProps
           </Link>
           
           <div className="flex items-center gap-3 md:gap-6">
-            <NotificationsBell />
-
             {user && (
               <Link 
                 href="/create" 
@@ -48,6 +61,11 @@ export default function TopNavBar({ title = 'Кинотека' }: TopNavBarProps
               onClick={() => setSidebarOpen(true)}
               className="group relative flex items-center justify-center"
             >
+              {unreadCount > 0 && (
+                <span className="absolute -top-1 -right-1 z-10 min-w-[18px] h-[18px] px-1 rounded-full bg-red-500 text-white text-[10px] font-black flex items-center justify-center shadow-sm border border-white">
+                  {unreadCount > 99 ? '99+' : unreadCount}
+                </span>
+              )}
               {user?.avatarUrl ? (
                 <img
                   alt="Профиль"

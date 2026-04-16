@@ -1,8 +1,15 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from './AuthProvider';
 import Link from 'next/link';
+import { 
+  getNotifications, 
+  markNotificationRead, 
+  markAllNotificationsRead, 
+  subscribeToNotifications 
+} from '@/lib/notifications';
+import { Notification } from '@/lib/types';
 
 interface ProfileSidebarProps {
   isOpen: boolean;
@@ -11,6 +18,52 @@ interface ProfileSidebarProps {
 
 export default function ProfileSidebar({ isOpen, onClose }: ProfileSidebarProps) {
   const { user, logout } = useAuth();
+  const [notifications, setNotifications] = useState<Notification[]>([]);
+
+  useEffect(() => {
+    if (!user || !isOpen) return;
+
+    let alive = true;
+    const load = async () => {
+      const data = await getNotifications(user.id, 10);
+      if (alive) setNotifications(data);
+    };
+
+    load();
+
+    const unsub = subscribeToNotifications(user.id, (n) => {
+      setNotifications(prev => [n, ...prev].slice(0, 10));
+    });
+
+    return () => {
+      alive = false;
+      unsub();
+    };
+  }, [user, isOpen]);
+
+  const handleNotificationClick = async (n: Notification) => {
+    if (!n.readAt) {
+      await markNotificationRead(n.id);
+      setNotifications(prev => prev.map(x => x.id === n.id ? { ...x, readAt: new Date().toISOString() } : x));
+    }
+  };
+
+  const handleMarkAllAsRead = async () => {
+    if (!user) return;
+    await markAllNotificationsRead(user.id);
+    setNotifications(prev => prev.map(x => ({ ...x, readAt: x.readAt || new Date().toISOString() })));
+  };
+
+  const getNotificationVerb = (n: Notification) => {
+    switch (n.type) {
+      case 'reply': return 'ответил(а) на ваш комментарий';
+      case 'reaction': return `отреагировал(а) ${n.payload.emoji || '❤️'}`;
+      case 'mention': return 'упомянул(а) вас';
+      case 'club_invite': return 'пригласил(а) вас в клуб';
+      case 'marathon': return 'обновил информацию о марафоне';
+      default: return 'взаимодействует с вами';
+    }
+  };
 
   if (!isOpen) return null;
 
@@ -125,12 +178,75 @@ export default function ProfileSidebar({ isOpen, onClose }: ProfileSidebarProps)
               <Link
                 href="/leaderboard"
                 onClick={onClose}
-                className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-surface-container-low transition-colors"
+                className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-surface-container-low transition-colors border-b border-on-surface/5 pb-6 mb-6"
               >
                 <span className="material-symbols-outlined text-[20px]">leaderboard</span>
                 <span className="text-sm font-medium">Рейтинг пользователей</span>
               </Link>
             </nav>
+
+            {/* Уведомления */}
+            <div className="pb-8">
+              <div className="flex items-center justify-between mb-4">
+                <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-on-surface-variant">Уведомления</h4>
+                {notifications.some(n => !n.readAt) && (
+                  <button 
+                    onClick={handleMarkAllAsRead}
+                    className="text-[9px] font-black uppercase tracking-widest text-accent-lilac hover:text-on-surface transition-colors"
+                  >
+                    Прочитать все
+                  </button>
+                )}
+              </div>
+              
+              <div className="space-y-2">
+                {notifications.length === 0 ? (
+                  <div className="py-8 text-center bg-surface-container-lowest rounded-2xl border border-dashed border-on-surface/5">
+                    <span className="material-symbols-outlined text-on-surface-variant/20">notifications_none</span>
+                    <p className="text-[9px] font-black uppercase tracking-widest text-on-surface-variant/40 mt-2">Пока нет уведомлений</p>
+                  </div>
+                ) : (
+                  notifications.slice(0, 10).map(n => {
+                    const isUnread = !n.readAt;
+                    return (
+                      <div 
+                        key={n.id} 
+                        onClick={() => handleNotificationClick(n)}
+                        className={`group relative p-3 rounded-2xl transition-all cursor-pointer border ${isUnread ? 'bg-accent-lilac/[0.03] border-accent-lilac/10' : 'bg-surface border-transparent hover:bg-surface-container-low'}`}
+                      >
+                        <div className="flex gap-3">
+                          <div className="w-8 h-8 rounded-full bg-surface-container-high overflow-hidden shrink-0 shadow-sm border border-white">
+                            {n.actorAvatar ? (
+                              <img src={n.actorAvatar} alt="" className="w-full h-full object-cover" />
+                            ) : (
+                              <div className="w-full h-full flex items-center justify-center text-[10px] font-black text-on-surface-variant">
+                                {n.actorName?.charAt(0) || 'U'}
+                              </div>
+                            )}
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <p className="text-[11px] font-medium leading-[1.3] text-on-surface line-clamp-2">
+                              <span className="font-black">{n.actorName || 'Пользователь'}</span> {getNotificationVerb(n)}
+                            </p>
+                            <span className="text-[8px] font-bold text-on-surface-variant/40 uppercase tracking-widest mt-1 block">
+                              {new Date(n.createdAt).toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' })}
+                            </span>
+                          </div>
+                          {isUnread && (
+                            <div className="w-1.5 h-1.5 rounded-full bg-accent-lilac shrink-0 mt-1.5" />
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })
+                )}
+              </div>
+              {notifications.length > 10 && (
+                <Link href="/notifications" className="block text-center mt-4 text-[9px] font-black uppercase tracking-widest text-on-surface-variant hover:text-on-surface transition-colors">
+                  Показать все уведомления
+                </Link>
+              )}
+            </div>
           </div>
         ) : (
           <div className="flex-1 flex flex-col items-center justify-center px-6 space-y-6">
