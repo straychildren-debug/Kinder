@@ -184,107 +184,114 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
             )}
           </div>
 
-          {/* Write Review Form */}
-          {showReviewForm && (
-            <div className="bg-surface-container-low p-6 rounded-3xl mb-8 border border-on-surface/5 shadow-inner">
-               <h4 className="font-black text-on-surface mb-4">Ваша рецензия и оценка</h4>
-               
-               {/* Star Rating Input */}
-               <div className="flex gap-2 mb-6">
-                 {[1, 2, 3, 4, 5].map(star => (
-                   <button 
-                     key={star} 
-                     onClick={() => setNewReviewRating(star)}
-                     className="transition-transform hover:scale-110"
-                   >
-                     <span 
-                       className={`material-symbols-outlined text-3xl ${newReviewRating >= star ? 'text-accent-lilac' : 'text-on-surface-variant/30'}`}
-                       style={{ fontVariationSettings: newReviewRating >= star ? "'FILL' 1" : "'FILL' 0" }}
-                     >
-                       star
-                     </span>
-                   </button>
-                 ))}
-               </div>
+           {/* Write Review Form */}
+           {showReviewForm && (
+             <div className="bg-surface-container-low p-6 rounded-3xl mb-8 border border-on-surface/5 shadow-inner">
+                <h4 className="font-black text-on-surface mb-2">
+                  Оцените {content.type === 'movie' ? 'фильм' : 'книгу'}
+                </h4>
+                <p className="text-xs text-on-surface-variant font-medium mb-4">
+                  Поделитесь своим мнением о произведении с другими участниками клуба.
+                </p>
+                
+                {/* Star Rating Input */}
+                <div className="flex gap-2 mb-6">
+                  {[1, 2, 3, 4, 5].map(star => (
+                    <button 
+                      key={star} 
+                      onClick={() => setNewReviewRating(star)}
+                      className="transition-transform hover:scale-110"
+                    >
+                      <span 
+                        className={`material-symbols-outlined text-3xl ${newReviewRating >= star ? 'text-accent-lilac' : 'text-on-surface-variant/30'}`}
+                        style={{ fontVariationSettings: newReviewRating >= star ? "'FILL' 1" : "'FILL' 0" }}
+                      >
+                        star
+                      </span>
+                    </button>
+                  ))}
+                </div>
 
-               <textarea
-                 value={newReviewText}
-                 onChange={e => setNewReviewText(e.target.value)}
-                 className="w-full bg-surface border border-on-surface/10 rounded-2xl p-4 text-sm font-medium text-on-surface focus:outline-none focus:border-accent-lilac min-h-[120px] resize-none mb-4"
-                 placeholder="Напишите развернутый отзыв..."
-               />
+                <textarea
+                  value={newReviewText}
+                  onChange={e => setNewReviewText(e.target.value)}
+                  className="w-full bg-surface border border-on-surface/10 rounded-2xl p-4 text-sm font-medium text-on-surface focus:outline-none focus:border-accent-lilac min-h-[120px] resize-none mb-4"
+                  placeholder={`Напишите развернутый отзыв на ${content.type === 'movie' ? 'фильм' : 'книгу'}...`}
+                />
 
-               <div className="flex justify-end gap-3">
-                 <button 
-                   onClick={() => setShowReviewForm(false)}
-                   className="px-5 py-2.5 rounded-full font-black text-on-surface-variant text-[11px] uppercase tracking-widest hover:bg-surface-container transition-colors"
-                 >
-                   Отмена
-                 </button>
-                 <button 
-                   onClick={handleSubmitReview}
-                   disabled={submittingReview || newReviewRating === 0 || !newReviewText.trim()}
-                   className="bg-on-surface text-surface px-6 py-2.5 rounded-full font-black text-[11px] uppercase tracking-widest disabled:opacity-50 hover:bg-on-surface/90 transition-colors shadow-lg shadow-on-surface/10"
-                 >
-                   {submittingReview ? 'Отправка...' : 'Опубликовать'}
-                 </button>
-               </div>
-            </div>
-          )}
-
-          {/* Reviews List */}
-          {loading ? (
-             <div className="flex justify-center p-8">
-               <div className="w-8 h-8 border-4 border-on-surface border-t-transparent rounded-full animate-spin"></div>
+                <div className="flex justify-end gap-3">
+                  <button 
+                    onClick={() => setShowReviewForm(false)}
+                    className="px-5 py-2.5 rounded-full font-black text-on-surface-variant text-[11px] uppercase tracking-widest hover:bg-surface-container transition-colors"
+                  >
+                    Отмена
+                  </button>
+                  <button 
+                    onClick={handleSubmitReview}
+                    disabled={submittingReview || newReviewRating === 0 || !newReviewText.trim()}
+                    className="bg-on-surface text-surface px-6 py-2.5 rounded-full font-black text-[11px] uppercase tracking-widest disabled:opacity-50 hover:bg-on-surface/90 transition-colors shadow-lg shadow-on-surface/10"
+                  >
+                    {submittingReview ? 'Отправка...' : 'Опубликовать'}
+                  </button>
+                </div>
              </div>
-          ) : reviews.length === 0 ? (
-             <div className="text-center py-12 bg-surface-container-lowest rounded-3xl border border-on-surface/5">
-                <p className="text-on-surface-variant font-black text-sm">Пока нет рецензий.</p>
-                <p className="text-[10px] uppercase tracking-widest text-on-surface-variant opacity-60 mt-2">Станьте первым!</p>
-             </div>
-          ) : (
-            <div className="space-y-6">
-              {reviews.map(review => (
-                <div key={review.id} className="bg-surface rounded-3xl p-6 border border-on-surface/5 shadow-sm">
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full bg-accent-lilac flex items-center justify-center text-on-accent-lilac font-black overflow-hidden border border-on-surface/5">
-                        {review.user?.avatarUrl ? <img src={review.user.avatarUrl} className="w-full h-full object-cover" /> : review.user?.name.charAt(0) || 'U'}
-                      </div>
-                      <div>
-                        <p className="font-black text-sm text-on-surface">{review.user?.name || 'Пользователь'}</p>
-                        <p className="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest opacity-60">
-                          {new Date(review.createdAt).toLocaleDateString('ru-RU')}
-                        </p>
-                      </div>
-                    </div>
-                    {/* User's rating for the content */}
-                    <div className="bg-accent-lilac/20 px-2 py-1 rounded-lg flex items-center gap-1 border border-accent-lilac/30">
-                      <span className="material-symbols-outlined text-[14px] text-on-surface" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
-                      <span className="text-sm font-black text-on-surface">{review.rating}</span>
-                    </div>
-                  </div>
+           )}
 
-                  <p className="text-sm text-on-surface leading-relaxed mb-6 whitespace-pre-wrap">
-                    {review.text}
-                  </p>
-
-                  <div className="flex items-center justify-between border-t border-on-surface/5 pt-4">
-                     {/* Rate the Review */}
-                     <div className="flex items-center gap-4">
-                       <div className="flex items-center bg-surface-container-lowest rounded-full p-1 border border-on-surface/5">
-                         <span className="pl-3 pr-2 text-[10px] font-black uppercase text-on-surface-variant tracking-widest">
-                           Оценка рецензии: {review.avgRating && review.avgRating > 0 ? review.avgRating : '—'}
-                         </span>
-                         <div className="flex gap-0.5 border-l border-on-surface/10 pl-2">
-                           {[1,2,3,4,5].map(star => (
-                             <button key={star} onClick={() => handleRateReview(review.id, star)} className="hover:scale-110 transition-transform p-0.5">
-                               <span className="material-symbols-outlined text-[16px] text-accent-lilac hover:text-on-surface transition-colors" style={{ fontVariationSettings: "'FILL' 0" }}>star</span>
-                             </button>
-                           ))}
-                         </div>
+           {/* Reviews List */}
+           {loading ? (
+              <div className="flex justify-center p-8">
+                <div className="w-8 h-8 border-4 border-on-surface border-t-transparent rounded-full animate-spin"></div>
+              </div>
+           ) : reviews.length === 0 ? (
+              <div className="text-center py-12 bg-surface-container-lowest rounded-3xl border border-on-surface/5">
+                 <p className="text-on-surface-variant font-black text-sm">Пока нет рецензий.</p>
+                 <p className="text-[10px] uppercase tracking-widest text-on-surface-variant opacity-60 mt-2">Станьте первым!</p>
+              </div>
+           ) : (
+             <div className="space-y-6">
+               {reviews.map(review => (
+                 <div key={review.id} className="bg-surface rounded-3xl p-6 border border-on-surface/5 shadow-sm">
+                   <div className="flex items-start justify-between mb-4">
+                     <div className="flex items-center gap-3">
+                       <div className="w-10 h-10 rounded-full bg-accent-lilac flex items-center justify-center text-on-accent-lilac font-black overflow-hidden border border-on-surface/5">
+                         {review.user?.avatarUrl ? <img src={review.user.avatarUrl} className="w-full h-full object-cover" /> : review.user?.name.charAt(0) || 'U'}
+                       </div>
+                       <div>
+                         <p className="font-black text-sm text-on-surface">{review.user?.name || 'Пользователь'}</p>
+                         <p className="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest opacity-60">
+                           {new Date(review.createdAt).toLocaleDateString('ru-RU')}
+                         </p>
                        </div>
                      </div>
+                     {/* User's rating for the content */}
+                     <div className="bg-accent-lilac/20 px-2 py-1 rounded-lg flex items-center gap-1 border border-accent-lilac/30">
+                       <span className="material-symbols-outlined text-[14px] text-on-surface" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+                       <span className="text-sm font-black text-on-surface">{review.rating}</span>
+                     </div>
+                   </div>
+
+                   <p className="text-sm text-on-surface leading-relaxed mb-6 whitespace-pre-wrap">
+                     {review.text}
+                   </p>
+
+                   <div className="flex items-center justify-between border-t border-on-surface/5 pt-4">
+                      {/* Rate the Review */}
+                      <div className="flex items-center gap-4">
+                        <div className="flex items-center bg-surface-container-lowest rounded-full p-1 border border-on-surface/5">
+                          <span className="pl-3 pr-2 text-[10px] font-black uppercase text-on-surface-variant tracking-widest">
+                            {review.userId === user?.id ? 'Рейтинг рецензии' : 'Оцените рецензию'}: {review.avgRating && review.avgRating > 0 ? review.avgRating : '—'}
+                          </span>
+                          {(!user || review.userId !== user.id) && (
+                            <div className="flex gap-0.5 border-l border-on-surface/10 pl-2 pr-1">
+                              {[1,2,3,4,5].map(star => (
+                                <button key={star} onClick={() => handleRateReview(review.id, star)} className="hover:scale-110 transition-transform p-0.5">
+                                  <span className="material-symbols-outlined text-[16px] text-accent-lilac hover:text-on-surface transition-colors" style={{ fontVariationSettings: "'FILL' 0" }}>star</span>
+                                </button>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      </div>
 
                      {/* Comments Toggle */}
                      <button 
