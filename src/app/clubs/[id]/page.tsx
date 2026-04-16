@@ -1,9 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import {
-  updateMessage,
-  toggleReaction, useParams, useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { useAuth } from '@/components/AuthProvider';
 import ClubSettingsModal from '@/components/ClubSettingsModal';
 import MarathonDetailsModal from '@/components/MarathonDetailsModal';
@@ -13,6 +11,8 @@ import {
   getClubById,
   getClubMessages,
   sendMessage,
+  updateMessage,
+  toggleReaction,
   getActiveMarathon,
   getUserMembership,
   joinClub,
@@ -521,13 +521,11 @@ export default function ClubDetail() {
                             <img
                               src={msg.fileUrl}
                               alt="Attached image"
+                              className="w-[100px] h-[100px] object-cover transition-transform duration-500 hover:scale-105"
                             />
                             <div className="absolute inset-0 bg-black/40 opacity-0 group-hover/img:opacity-100 transition-opacity flex items-center justify-center">
                                <span className="material-symbols-outlined text-white">zoom_in</span>
                             </div>
-
-                              className="w-[100px] h-[100px] object-cover transition-transform duration-500 hover:scale-105"
-                            />
                           </div>
                         )}
 

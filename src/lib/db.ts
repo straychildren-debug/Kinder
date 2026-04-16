@@ -594,7 +594,7 @@ export async function getClubMembers(clubId: string): Promise<ClubMember[]> {
 export async function getClubMessages(clubId: string, limit = 50): Promise<ClubMessage[]> {
   const { data, error } = await supabase
     .from('club_messages')
-    .select('*, profiles:user_id(name, avatar_url)')
+    .select('*, profiles:user_id(name, avatar_url), reactions:club_message_reactions(*)')
     .eq('club_id', clubId)
     .order('created_at', { ascending: true })
     .limit(limit);
@@ -611,9 +611,11 @@ export async function getClubMessages(clubId: string, limit = 50): Promise<ClubM
     text: row.text,
     fileUrl: row.file_url,
     fileType: row.file_type,
+    isEdited: row.is_edited,
     createdAt: row.created_at,
     senderName: row.profiles?.name,
     senderAvatar: row.profiles?.avatar_url,
+    reactions: row.reactions || [],
   }));
 }
 
