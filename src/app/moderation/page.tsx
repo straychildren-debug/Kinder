@@ -86,15 +86,19 @@ export default function ModerationPage() {
         {/* Статистика */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
           <button 
-            onClick={() => setShowPending(!showPending)}
-            className={`text-left rounded-[32px] p-8 border shadow-sm flex flex-col justify-between group hover:shadow-2xl transition-all duration-500 active:scale-[0.98] ${showPending ? 'bg-amber-50 border-amber-200' : 'bg-white border-on-surface/5'}`}
+            onClick={() => setShowPending(true)}
+            className="text-left bg-white rounded-[32px] p-8 border border-on-surface/5 shadow-sm flex flex-col justify-between group hover:shadow-2xl transition-all duration-500 active:scale-[0.98]"
           >
-            <span className="text-[9px] font-black uppercase tracking-widest text-amber-500 mb-4 ">Ожидают проверки</span>
+            <span className="text-[9px] font-black uppercase tracking-widest text-amber-500 mb-4 flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
+              Ожидают проверки
+            </span>
             <div className="flex items-baseline gap-2">
-              <span className="text-5xl font-black tracking-tighter text-on-surface">{pendingItems.length}</span>
+              <span className="text-5xl font-black tracking-tighter text-on-surface group-hover:text-amber-500 transition-colors">{pendingItems.length}</span>
               <span className="text-[10px] font-black uppercase tracking-widest opacity-20">постов</span>
             </div>
           </button>
+          
           <div className="bg-white rounded-[32px] p-8 border border-on-surface/5 shadow-sm flex flex-col justify-between opacity-40">
             <span className="text-[9px] font-black uppercase tracking-widest text-green-600 mb-4 ">Всего одобрено</span>
             <div className="flex items-baseline gap-2">
@@ -102,6 +106,7 @@ export default function ModerationPage() {
               <span className="text-[10px] font-black uppercase tracking-widest opacity-20">актив</span>
             </div>
           </div>
+
           <div className="bg-white rounded-[32px] p-8 border border-on-surface/5 shadow-sm flex flex-col justify-between opacity-40">
             <span className="text-[9px] font-black uppercase tracking-widest text-red-600 mb-4 ">Отклонено</span>
             <div className="flex items-baseline gap-2">
@@ -111,125 +116,155 @@ export default function ModerationPage() {
           </div>
         </div>
 
-        {/* Список на модерацию */}
-        {!showPending ? (
-          <div className="text-center py-20 bg-surface-container/30 rounded-[40px] border border-dashed border-on-surface/10">
-             <p className="text-on-surface-variant font-black uppercase text-[10px] tracking-widest opacity-30">Нажмите "Ожидают проверки", чтобы увидеть список</p>
-          </div>
-        ) : loading ? (
-          <div className="flex justify-center p-12">
-            <div className="w-12 h-12 border-[6px] border-on-surface/5 border-t-on-surface rounded-full animate-spin"></div>
-          </div>
-        ) : pendingItems.length === 0 ? (
-          <div className="bg-surface rounded-[40px] p-20 text-center space-y-6 border border-on-surface/5 shadow-sm border-dashed">
-            <div className="w-20 h-20 bg-surface-container rounded-full flex items-center justify-center mx-auto mb-4">
-              <span className="material-symbols-outlined text-4xl text-on-surface-variant/20 ">task_alt</span>
-            </div>
-            <p className="text-on-surface-variant font-medium text-sm  opacity-60">Очередь пуста. Вы отлично справляетесь!</p>
-          </div>
-        ) : (
-          <div className="space-y-4">
-            {pendingItems.map(item => {
-              const isProcessing = processingId === item.id;
-              const isRejecting = activeRejectionId === item.id;
-              
-              return (
-                <div key={item.id} className="group">
-                  <article 
-                    className={`bg-white rounded-[32px] overflow-hidden shadow-sm border border-on-surface/5 transition-all duration-300 hover:shadow-xl ${isProcessing ? 'opacity-40 pointer-events-none' : ''}`}
-                  >
-                    <div className="flex items-center">
-                      {/* Мини-превью (Клик сюда или на контент открывает детали) */}
-                      <div 
-                        onClick={() => setSelectedContent(item)}
-                        className="w-24 h-24 md:w-32 md:h-32 shrink-0 relative overflow-hidden bg-surface-container border-r border-on-surface/5 cursor-pointer group/img"
-                      >
-                        {item.imageUrl ? (
-                          <img
-                            src={item.imageUrl}
-                            alt={item.title}
-                            className="w-full h-full object-cover grayscale brightness-90 group-hover/img:scale-110 group-hover/img:grayscale-0 transition-all duration-700"
-                          />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center text-on-surface-variant/10 text-xl font-black">
-                            {item.type === 'movie' ? 'F' : 'B'}
-                          </div>
-                        )}
-                        <div className="absolute inset-0 bg-black/20 opacity-0 group-hover/img:opacity-100 transition-opacity flex items-center justify-center">
-                          <span className="material-symbols-outlined text-white text-2xl">visibility</span>
-                        </div>
-                      </div>
+        <div className="text-center py-20 bg-surface-container/30 rounded-[40px] border border-dashed border-on-surface/10">
+           <p className="text-on-surface-variant font-black uppercase text-[10px] tracking-widest opacity-30">Нажмите "Ожидают проверки", чтобы открыть список</p>
+        </div>
 
-                      {/* Основная инфа */}
-                      <div className="flex-1 px-6 md:px-8 py-4 flex flex-col md:flex-row md:items-center justify-between gap-6 min-w-0">
-                        <div 
-                          onClick={() => setSelectedContent(item)}
-                          className="flex-1 min-w-0 cursor-pointer"
-                        >
-                          <div className="flex items-center gap-2 mb-1">
-                             <span className="text-[8px] font-black uppercase tracking-widest px-2 py-0.5 bg-surface-container rounded-md opacity-60">
-                               {item.type === 'movie' ? 'Кино' : 'Книга'}
-                             </span>
-                             <span className="text-[8px] font-black uppercase tracking-widest opacity-20">{new Date(item.createdAt).toLocaleDateString()}</span>
-                          </div>
-                          <h3 className="text-xl font-black tracking-tighter text-on-surface truncate group-hover:text-amber-600 transition-colors uppercase">{item.title}</h3>
-                          <p className="text-[11px] text-on-surface-variant font-medium opacity-50 truncate max-w-md">
-                            {item.author || item.director || 'Автор не указан'} • {item.description}
-                          </p>
-                        </div>
-
-                        {/* Кнопки действий */}
-                        <div className="flex items-center gap-2 shrink-0">
-                          <button
-                            onClick={() => setActiveRejectionId(isRejecting ? null : item.id)}
-                            className={`w-12 h-12 rounded-2xl transition-all flex items-center justify-center ${isRejecting ? 'bg-red-600 text-white shadow-lg' : 'bg-red-50 text-red-600 hover:bg-red-100'}`}
-                            title="Отклонить"
-                          >
-                            <span className="material-symbols-outlined text-[20px]">{isRejecting ? 'close_fullscreen' : 'close'}</span>
-                          </button>
-                          <button
-                            onClick={() => handleDecision(item.id, 'approved')}
-                            className="h-12 px-6 rounded-2xl bg-on-surface text-surface font-black text-[10px] uppercase tracking-widest shadow-lg shadow-on-surface/10 hover:scale-[1.02] active:scale-95 transition-all flex items-center gap-2"
-                          >
-                            <span className="material-symbols-outlined text-[18px]">check_circle</span>
-                            Опубликовать
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Поле ввода причины (инлайн) */}
-                    {isRejecting && (
-                      <div className="px-6 pb-6 pt-2 border-t border-on-surface/5 bg-red-50/30 animate-in fade-in slide-in-from-top-2 duration-300">
-                        <div className="flex flex-col gap-3">
-                          <div className="flex justify-between items-center">
-                            <span className="text-[9px] font-black uppercase tracking-widest text-red-600 opacity-60">Причина отказа (увидит автор)</span>
-                            <span className="text-[9px] font-black uppercase tracking-widest opacity-20">Пожалуйста, будьте вежливы</span>
-                          </div>
-                          <div className="flex gap-3">
-                            <input
-                              type="text"
-                              value={rejectionReasons[item.id] || ''}
-                              onChange={(e) => setRejectionReasons(prev => ({ ...prev, [item.id]: e.target.value }))}
-                              placeholder="Например: Некорректное описание или низкое качество обложки..."
-                              className="flex-1 bg-white border border-red-100 rounded-xl px-4 py-3 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-red-200 transition-all"
-                              autoFocus
-                            />
-                            <button
-                              onClick={() => handleDecision(item.id, 'rejected')}
-                              disabled={!(rejectionReasons[item.id]?.trim())}
-                              className="px-6 bg-red-600 text-white rounded-xl font-black text-[10px] uppercase tracking-widest shadow-lg shadow-red-200 transition-all disabled:opacity-30 disabled:shadow-none hover:bg-red-700 active:scale-95"
-                            >
-                              Подтвердить
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-                  </article>
+        {/* --- MODAL WINDOW FOR LIST --- */}
+        {showPending && (
+          <div className="fixed inset-0 z-[100] flex flex-col bg-background animate-in slide-in-from-bottom-8 duration-500">
+            {/* Header */}
+            <header className="sticky top-0 bg-surface/90 backdrop-blur-xl border-b border-on-surface/5 z-20 px-6 py-6 flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <button 
+                  onClick={() => setShowPending(false)}
+                  className="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center hover:bg-surface-container-high transition-colors"
+                >
+                  <span className="material-symbols-outlined">arrow_back</span>
+                </button>
+                <div>
+                  <h2 className="text-2xl font-black tracking-tighter leading-none">Очередь проверки</h2>
+                  <span className="text-[10px] font-black uppercase tracking-widest opacity-40">{pendingItems.length} объектов в ожидании</span>
                 </div>
-              );
-            })}
+              </div>
+            </header>
+
+            <div className="flex-1 overflow-y-auto px-6 py-8 pb-32">
+              <div className="max-w-4xl mx-auto space-y-6">
+                {loading ? (
+                  <div className="flex justify-center p-20">
+                    <div className="w-12 h-12 border-[6px] border-on-surface/5 border-t-on-surface rounded-full animate-spin"></div>
+                  </div>
+                ) : pendingItems.length === 0 ? (
+                  <div className="bg-surface rounded-[40px] p-20 text-center space-y-6 border border-on-surface/5 shadow-sm border-dashed">
+                    <div className="w-20 h-20 bg-surface-container rounded-full flex items-center justify-center mx-auto mb-4">
+                      <span className="material-symbols-outlined text-4xl text-on-surface-variant/20 ">task_alt</span>
+                    </div>
+                    <p className="text-on-surface-variant font-medium text-sm  opacity-60">Очередь пуста. Вы отлично справляетесь!</p>
+                    <button 
+                       onClick={() => setShowPending(false)}
+                       className="px-8 py-3 bg-on-surface text-surface rounded-2xl font-black text-[10px] uppercase tracking-widest"
+                    >
+                      Вернуться
+                    </button>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {pendingItems.map(item => {
+                      const isProcessing = processingId === item.id;
+                      const isRejecting = activeRejectionId === item.id;
+                      
+                      return (
+                        <div key={item.id} className="group">
+                          <article 
+                            className={`bg-white rounded-[32px] overflow-hidden shadow-sm border border-on-surface/5 transition-all duration-300 hover:shadow-xl ${isProcessing ? 'opacity-40 pointer-events-none' : ''}`}
+                          >
+                            <div className="flex items-center">
+                              {/* Мини-превью */}
+                              <div 
+                                onClick={() => setSelectedContent(item)}
+                                className="w-24 h-24 md:w-32 md:h-32 shrink-0 relative overflow-hidden bg-surface-container border-r border-on-surface/5 cursor-pointer group/img"
+                              >
+                                {item.imageUrl ? (
+                                  <img
+                                    src={item.imageUrl}
+                                    alt={item.title}
+                                    className="w-full h-full object-cover grayscale brightness-90 group-hover/img:scale-110 group-hover/img:grayscale-0 transition-all duration-700"
+                                  />
+                                ) : (
+                                  <div className="w-full h-full flex items-center justify-center text-on-surface-variant/10 text-xl font-black">
+                                    {item.type === 'movie' ? 'F' : 'B'}
+                                  </div>
+                                )}
+                                <div className="absolute inset-0 bg-black/20 opacity-0 group-hover/img:opacity-100 transition-opacity flex items-center justify-center">
+                                  <span className="material-symbols-outlined text-white text-2xl">visibility</span>
+                                </div>
+                              </div>
+
+                              {/* Основная инфа */}
+                              <div className="flex-1 px-6 md:px-8 py-4 flex flex-col md:flex-row md:items-center justify-between gap-6 min-w-0">
+                                <div 
+                                  onClick={() => setSelectedContent(item)}
+                                  className="flex-1 min-w-0 cursor-pointer"
+                                >
+                                  <div className="flex items-center gap-2 mb-1">
+                                     <span className="text-[8px] font-black uppercase tracking-widest px-2 py-0.5 bg-surface-container rounded-md opacity-60">
+                                       {item.type === 'movie' ? 'Кино' : 'Книга'}
+                                     </span>
+                                     <span className="text-[8px] font-black uppercase tracking-widest opacity-20">{new Date(item.createdAt).toLocaleDateString()}</span>
+                                  </div>
+                                  <h3 className="text-xl font-black tracking-tighter text-on-surface truncate group-hover:text-amber-600 transition-colors uppercase">{item.title}</h3>
+                                  <p className="text-[11px] text-on-surface-variant font-medium opacity-50 truncate max-w-md">
+                                    {item.author || item.director || 'Автор не указан'} • {item.description}
+                                  </p>
+                                </div>
+
+                                {/* Кнопки действий */}
+                                <div className="flex items-center gap-2 shrink-0">
+                                  <button
+                                    onClick={() => setActiveRejectionId(isRejecting ? null : item.id)}
+                                    className={`w-12 h-12 rounded-2xl transition-all flex items-center justify-center ${isRejecting ? 'bg-red-600 text-white shadow-lg' : 'bg-red-50 text-red-600 hover:bg-red-100'}`}
+                                    title="Отклонить"
+                                  >
+                                    <span className="material-symbols-outlined text-[20px]">{isRejecting ? 'close_fullscreen' : 'close'}</span>
+                                  </button>
+                                  <button
+                                    onClick={() => handleDecision(item.id, 'approved')}
+                                    className="h-12 px-6 rounded-2xl bg-on-surface text-surface font-black text-[10px] uppercase tracking-widest shadow-lg shadow-on-surface/10 hover:scale-[1.02] active:scale-95 transition-all flex items-center gap-2"
+                                  >
+                                    <span className="material-symbols-outlined text-[18px]">check_circle</span>
+                                    Опубликовать
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Поле ввода причины */}
+                            {isRejecting && (
+                              <div className="px-6 pb-6 pt-2 border-t border-on-surface/5 bg-red-50/30 animate-in fade-in slide-in-from-top-2 duration-300">
+                                <div className="flex flex-col gap-3">
+                                  <div className="flex justify-between items-center">
+                                    <span className="text-[9px] font-black uppercase tracking-widest text-red-600 opacity-60">Причина отказа (увидит автор)</span>
+                                    <span className="text-[9px] font-black uppercase tracking-widest opacity-20">Пожалуйста, будьте вежливы</span>
+                                  </div>
+                                  <div className="flex gap-3">
+                                    <input
+                                      type="text"
+                                      value={rejectionReasons[item.id] || ''}
+                                      onChange={(e) => setRejectionReasons(prev => ({ ...prev, [item.id]: e.target.value }))}
+                                      placeholder="Например: Некорректное описание или низкое качество обложки..."
+                                      className="flex-1 bg-white border border-red-100 rounded-xl px-4 py-3 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-red-200 transition-all"
+                                      autoFocus
+                                    />
+                                    <button
+                                      onClick={() => handleDecision(item.id, 'rejected')}
+                                      disabled={!(rejectionReasons[item.id]?.trim())}
+                                      className="px-6 bg-red-600 text-white rounded-xl font-black text-[10px] uppercase tracking-widest shadow-lg shadow-red-200 transition-all disabled:opacity-30 disabled:shadow-none hover:bg-red-700 active:scale-95"
+                                    >
+                                      Подтвердить
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
+                            )}
+                          </article>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
         )}
 
