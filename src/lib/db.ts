@@ -205,6 +205,9 @@ export async function updateContent(id: string, content: Partial<ContentItem>) {
   if (imageUrl !== undefined) updateData.image_url = imageUrl;
   if (status !== undefined) updateData.status = status;
   if (Object.keys(metadata).length > 0) updateData.metadata = metadata;
+  
+  // Сбрасываем причину отклонения при любом обновлении (предполагаем это правка)
+  updateData.rejection_reason = null;
 
   const { data, error } = await supabase
     .from('content')

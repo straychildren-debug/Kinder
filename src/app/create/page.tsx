@@ -2,15 +2,16 @@
 
 import React, { useState } from 'react';
 import { useAuth } from '@/components/AuthProvider';
-import { useRouter } from 'next/navigation';
-import TopNavBar from '@/components/TopNavBar';
-import BottomNavBar from '@/components/BottomNavBar';
-import { createContent, updateContent, uploadCover } from '@/lib/db';
+import { useSearchParams } from 'next/navigation';
+import { createContent, updateContent, uploadCover, getContentById } from '@/lib/db';
 import type { ContentType } from '@/lib/types';
 
 export default function CreatePage() {
   const { user } = useAuth();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const editContentId = searchParams.get('editContentId');
+
   const [type, setType] = useState<ContentType>('movie');
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -36,10 +37,39 @@ export default function CreatePage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorText, setErrorText] = useState('');
 
-  // Черновики (из удаленной ветки)
+  // Черновики / Редактируемый контент
   const [draftId, setDraftId] = useState<string | null>(null);
   const [isSavingDraft, setIsSavingDraft] = useState(false);
   const [draftSavedAt, setDraftSavedAt] = useState<Date | null>(null);
+
+  React.useEffect(() => {
+    async function loadContent() {
+      if (editContentId) {
+        const item = await getContentById(editContentId);
+        if (item) {
+          setType(item.type);
+          setTitle(item.title);
+          setDescription(item.description);
+          setImageUrl(item.imageUrl || '');
+          setGenres((item.genre as string[])?.join(', ') || '');
+          setDraftId(item.id);
+
+          if (item.type === 'movie') {
+            setDirector(item.director || '');
+            setActors((item.actors as string[])?.join(', ') || '');
+            setYear(item.year?.toString() || '');
+            setDuration(item.duration || '');
+          } else {
+            setAuthor(item.author || '');
+            setPages(item.pages?.toString() || '');
+            setPublisher(item.publisher || '');
+            setIsbn(item.isbn || '');
+          }
+        }
+      }
+    }
+    loadContent();
+  }, [editContentId]);
 
   React.useEffect(() => {
     const handlePaste = (e: ClipboardEvent) => {

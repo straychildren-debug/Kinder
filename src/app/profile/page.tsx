@@ -198,9 +198,18 @@ export default function Profile() {
                           </div>
                           <p className="text-sm text-on-surface-variant font-medium line-clamp-2 leading-relaxed opacity-60 ">{item.description}</p>
                           {item.status === 'rejected' && item.rejectionReason && (
-                            <div className="mt-4 p-4 bg-red-50 border border-red-100 rounded-2xl animate-in fade-in slide-in-from-top-1 duration-500">
-                              <span className="block text-[9px] font-black uppercase tracking-widest text-red-600 mb-1 opacity-60">Причина отклонения:</span>
-                              <p className="text-xs font-bold text-red-700 leading-relaxed italic">"{item.rejectionReason}"</p>
+                            <div className="mt-4 p-5 bg-red-50 border border-red-100 rounded-[28px] animate-in fade-in slide-in-from-top-2 duration-500 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                              <div className="space-y-1">
+                                <span className="block text-[9px] font-black uppercase tracking-widest text-red-600 mb-1 opacity-60">Причина отклонения:</span>
+                                <p className="text-xs font-bold text-red-700 leading-relaxed italic">"{item.rejectionReason}"</p>
+                              </div>
+                              <button
+                                onClick={() => router.push(`/create?editContentId=${item.id}`)}
+                                className="px-5 py-2.5 bg-red-600 text-white rounded-xl font-black text-[9px] uppercase tracking-widest shadow-lg shadow-red-500/20 hover:bg-red-700 active:scale-95 transition-all flex items-center gap-2 shrink-0"
+                              >
+                                <span className="material-symbols-outlined text-[16px]">edit</span>
+                                Исправить
+                              </button>
                             </div>
                           )}
                         </div>
