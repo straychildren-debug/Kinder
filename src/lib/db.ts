@@ -1,5 +1,5 @@
 import { supabase } from './supabase';
-import { User, ContentItem, Review, Club, ClubMember, ClubMessage, ClubMarathon, ClubRole, ClubCategory, MarathonItem, MarathonParticipantProgress } from './types';
+import { User, ContentItem, Review, Club, ClubMember, ClubMessage, ClubMarathon, ClubRole, ClubCategory, MarathonItem, MarathonParticipantProgress, PinnedMessage, ClubPoll, ClubPollOption } from './types';
 
 // ===== Пользователи (Профили) =====
 
@@ -594,7 +594,7 @@ export async function getClubMembers(clubId: string): Promise<ClubMember[]> {
 export async function getClubMessages(clubId: string, limit = 50): Promise<ClubMessage[]> {
   const { data, error } = await supabase
     .from('club_messages')
-    .select('*, profiles:user_id(name, avatar_url), reactions:club_message_reactions(*)')
+    .select('*, profiles:user_id(name, avatar_url), reactions:club_message_reactions(*), parent:reply_to_id(text, parent_profiles:user_id(name))')
     .eq('club_id', clubId)
     .order('created_at', { ascending: true })
     .limit(limit);
@@ -612,6 +612,11 @@ export async function getClubMessages(clubId: string, limit = 50): Promise<ClubM
     fileUrl: row.file_url,
     fileType: row.file_type,
     isEdited: row.is_edited,
+    replyToId: row.reply_to_id,
+    repliedMessage: row.parent ? {
+      text: row.parent.text,
+      senderName: row.parent.parent_profiles?.name || 'User'
+    } : null,
     createdAt: row.created_at,
     senderName: row.profiles?.name,
     senderAvatar: row.profiles?.avatar_url,
@@ -624,7 +629,8 @@ export async function sendMessage(
   userId: string,
   text: string | null,
   fileUrl?: string | null,
-  fileType?: 'image' | 'file' | null
+  fileType?: 'image' | 'file' | null,
+  replyToId?: string | null
 ): Promise<ClubMessage> {
   const { data, error } = await supabase
     .from('club_messages')
@@ -634,8 +640,9 @@ export async function sendMessage(
       text,
       file_url: fileUrl || null,
       file_type: fileType || null,
+      reply_to_id: replyToId || null,
     }])
-    .select('*, profiles:user_id(name, avatar_url)')
+    .select('*, profiles:user_id(name, avatar_url), parent:reply_to_id(text, parent_profiles:user_id(name))')
     .single();
 
   if (error || !data) {
@@ -653,6 +660,12 @@ export async function sendMessage(
     text: data.text,
     fileUrl: data.file_url,
     fileType: data.file_type,
+    isEdited: data.is_edited,
+    replyToId: data.reply_to_id,
+    repliedMessage: (data as any).parent ? {
+      text: (data as any).parent.text,
+      senderName: (data as any).parent.parent_profiles?.name || 'User'
+    } : null,
     createdAt: data.created_at,
     senderName: (data as any).profiles?.name,
     senderAvatar: (data as any).profiles?.avatar_url,
@@ -932,4 +945,353 @@ export async function toggleReaction(messageId: string, userId: string, emoji: s
       });
     if (error) throw error;
   }
+}
+
+// ===== Закреплённые сообщения =====
+
+export async function pinMessage(clubId: string, messageId: string, pinnedBy: string): Promise<void> {
+  const { error } = await supabase
+    .from('club_pinned_messages')
+    .insert({ club_id: clubId, message_id: messageId, pinned_by: pinnedBy });
+
+  if (error) {
+    console.error('Error pinning message:', error);
+    throw error;
+  }
+}
+
+export async function unpinMessage(clubId: string, messageId: string): Promise<void> {
+  const { error } = await supabase
+    .from('club_pinned_messages')
+    .delete()
+    .eq('club_id', clubId)
+    .eq('message_id', messageId);
+
+  if (error) {
+    console.error('Error unpinning message:', error);
+    throw error;
+  }
+}
+
+export async function getPinnedMessages(clubId: string): Promise<PinnedMessage[]> {
+  const { data, error } = await supabase
+    .from('club_pinned_messages')
+    .select('*, club_messages:message_id(*, profiles:user_id(name, avatar_url))')
+    .eq('club_id', clubId)
+    .order('pinned_at', { ascending: false });
+
+  if (error || !data) {
+    console.error('Error fetching pinned messages:', error);
+    return [];
+  }
+
+  return data.map((row: any) => ({
+    id: row.id,
+    clubId: row.club_id,
+    messageId: row.message_id,
+    pinnedBy: row.pinned_by,
+    pinnedAt: row.pinned_at,
+    message: row.club_messages ? {
+      id: row.club_messages.id,
+      clubId: row.club_messages.club_id,
+      userId: row.club_messages.user_id,
+      text: row.club_messages.text,
+      fileUrl: row.club_messages.file_url,
+      fileType: row.club_messages.file_type,
+      createdAt: row.club_messages.created_at,
+      senderName: row.club_messages.profiles?.name,
+      senderAvatar: row.club_messages.profiles?.avatar_url,
+    } : undefined,
+  }));
+}
+
+export async function getPinnedMessageIds(clubId: string): Promise<Set<string>> {
+  const { data, error } = await supabase
+    .from('club_pinned_messages')
+    .select('message_id')
+    .eq('club_id', clubId);
+
+  if (error || !data) return new Set();
+  return new Set(data.map((r: any) => r.message_id));
+}
+
+// ===== Опросы и голосования =====
+
+export async function createPoll(
+  clubId: string,
+  createdBy: string,
+  question: string,
+  options: string[],
+  isAnonymous = false,
+  isMultiple = false
+): Promise<ClubPoll> {
+  const { data: pollData, error: pollError } = await supabase
+    .from('club_polls')
+    .insert({
+      club_id: clubId,
+      created_by: createdBy,
+      question,
+      is_anonymous: isAnonymous,
+      is_multiple: isMultiple,
+    })
+    .select()
+    .single();
+
+  if (pollError || !pollData) {
+    console.error('Error creating poll:', pollError);
+    throw pollError;
+  }
+
+  // Insert options
+  const optionsData = options.map((text, i) => ({
+    poll_id: pollData.id,
+    text,
+    sort_order: i,
+  }));
+
+  const { data: optRows, error: optError } = await supabase
+    .from('club_poll_options')
+    .insert(optionsData)
+    .select();
+
+  if (optError) {
+    console.error('Error creating poll options:', optError);
+  }
+
+  return {
+    id: pollData.id,
+    clubId: pollData.club_id,
+    createdBy: pollData.created_by,
+    question: pollData.question,
+    isAnonymous: pollData.is_anonymous,
+    isMultiple: pollData.is_multiple,
+    isActive: pollData.is_active,
+    createdAt: pollData.created_at,
+    options: (optRows || []).map((o: any) => ({
+      id: o.id,
+      pollId: o.poll_id,
+      text: o.text,
+      sortOrder: o.sort_order,
+      voteCount: 0,
+      votedByMe: false,
+    })),
+    totalVotes: 0,
+  };
+}
+
+export async function getClubPolls(clubId: string, userId: string): Promise<ClubPoll[]> {
+  const { data, error } = await supabase
+    .from('club_polls')
+    .select('*, profiles:created_by(name, avatar_url), club_poll_options(*, club_poll_votes(user_id))')
+    .eq('club_id', clubId)
+    .order('created_at', { ascending: false });
+
+  if (error || !data) {
+    console.error('Error fetching polls:', error);
+    return [];
+  }
+
+  return data.map((p: any) => {
+    const options: ClubPollOption[] = (p.club_poll_options || [])
+      .sort((a: any, b: any) => a.sort_order - b.sort_order)
+      .map((o: any) => ({
+        id: o.id,
+        pollId: o.poll_id,
+        text: o.text,
+        sortOrder: o.sort_order,
+        voteCount: (o.club_poll_votes || []).length,
+        votedByMe: (o.club_poll_votes || []).some((v: any) => v.user_id === userId),
+      }));
+
+    const totalVotes = options.reduce((sum, o) => sum + (o.voteCount || 0), 0);
+
+    return {
+      id: p.id,
+      clubId: p.club_id,
+      createdBy: p.created_by,
+      question: p.question,
+      isAnonymous: p.is_anonymous,
+      isMultiple: p.is_multiple,
+      isActive: p.is_active,
+      createdAt: p.created_at,
+      options,
+      creatorName: p.profiles?.name,
+      creatorAvatar: p.profiles?.avatar_url,
+      totalVotes,
+    };
+  });
+}
+
+export async function votePoll(pollId: string, optionId: string, userId: string): Promise<void> {
+  // For single-choice polls, remove existing vote first
+  const { data: pollData } = await supabase
+    .from('club_polls')
+    .select('is_multiple')
+    .eq('id', pollId)
+    .single();
+
+  if (!pollData?.is_multiple) {
+    // Remove existing votes for this user on this poll
+    await supabase
+      .from('club_poll_votes')
+      .delete()
+      .eq('poll_id', pollId)
+      .eq('user_id', userId);
+  }
+
+  const { error } = await supabase
+    .from('club_poll_votes')
+    .insert({ poll_id: pollId, option_id: optionId, user_id: userId });
+
+  if (error) {
+    console.error('Error voting:', error);
+    throw error;
+  }
+}
+
+export async function unvotePoll(pollId: string, optionId: string, userId: string): Promise<void> {
+  const { error } = await supabase
+    .from('club_poll_votes')
+    .delete()
+    .eq('poll_id', pollId)
+    .eq('option_id', optionId)
+    .eq('user_id', userId);
+
+  if (error) {
+    console.error('Error unvoting:', error);
+    throw error;
+  }
+}
+
+export async function closePoll(pollId: string): Promise<void> {
+  const { error } = await supabase
+    .from('club_polls')
+    .update({ is_active: false })
+    .eq('id', pollId);
+
+  if (error) {
+    console.error('Error closing poll:', error);
+    throw error;
+  }
+}
+
+// ===== Поиск по чату =====
+
+export async function searchMessages(clubId: string, query: string, limit = 30): Promise<ClubMessage[]> {
+  const { data, error } = await supabase
+    .from('club_messages')
+    .select('*, profiles:user_id(name, avatar_url)')
+    .eq('club_id', clubId)
+    .ilike('text', `%${query}%`)
+    .order('created_at', { ascending: false })
+    .limit(limit);
+
+  if (error || !data) {
+    console.error('Error searching messages:', error);
+    return [];
+  }
+
+  return data.map((row: any) => ({
+    id: row.id,
+    clubId: row.club_id,
+    userId: row.user_id,
+    text: row.text,
+    fileUrl: row.file_url,
+    fileType: row.file_type,
+    createdAt: row.created_at,
+    senderName: row.profiles?.name,
+    senderAvatar: row.profiles?.avatar_url,
+  }));
+}
+
+// ===== Голосовые сообщения =====
+
+export async function uploadVoiceMessage(blob: Blob, durationSeconds: number): Promise<{ url: string; duration: number }> {
+  const fileName = `voice-${Date.now()}-${Math.random().toString(36).substring(2)}.webm`;
+  const filePath = `voice/${fileName}`;
+
+  const { error: uploadError } = await supabase.storage
+    .from('club-files')
+    .upload(filePath, blob, { contentType: 'audio/webm' });
+
+  if (uploadError) {
+    console.error('Error uploading voice:', uploadError);
+    throw uploadError;
+  }
+
+  const { data } = supabase.storage
+    .from('club-files')
+    .getPublicUrl(filePath);
+
+  return { url: data.publicUrl, duration: durationSeconds };
+}
+
+export async function sendVoiceMessage(
+  clubId: string,
+  userId: string,
+  voiceUrl: string,
+  durationSeconds: number,
+  replyToId?: string | null
+): Promise<ClubMessage> {
+  const { data, error } = await supabase
+    .from('club_messages')
+    .insert([{
+      club_id: clubId,
+      user_id: userId,
+      text: null,
+      file_url: voiceUrl,
+      file_type: 'voice',
+      voice_duration_seconds: durationSeconds,
+      reply_to_id: replyToId || null,
+    }])
+    .select('*, profiles:user_id(name, avatar_url)')
+    .single();
+
+  if (error || !data) {
+    console.error('Error sending voice message:', error);
+    throw error;
+  }
+
+  await updateLastReadAt(clubId, userId);
+
+  return {
+    id: data.id,
+    clubId: data.club_id,
+    userId: data.user_id,
+    text: null,
+    fileUrl: data.file_url,
+    fileType: 'voice',
+    voiceDurationSeconds: data.voice_duration_seconds,
+    createdAt: data.created_at,
+    senderName: (data as any).profiles?.name,
+    senderAvatar: (data as any).profiles?.avatar_url,
+  };
+}
+
+// ===== Упоминания: поиск участников клуба =====
+
+export async function searchClubMembers(clubId: string, query: string): Promise<ClubMember[]> {
+  const { data, error } = await supabase
+    .from('club_members')
+    .select('*, profiles:user_id(name, avatar_url)')
+    .eq('club_id', clubId)
+    .limit(10);
+
+  if (error || !data) return [];
+
+  // Filter by name on client side (supabase can't ilike on joined column easily)
+  return data
+    .filter((row: any) => {
+      if (!query) return true;
+      return row.profiles?.name?.toLowerCase().includes(query.toLowerCase());
+    })
+    .map((row: any) => ({
+      id: row.id,
+      clubId: row.club_id,
+      userId: row.user_id,
+      role: row.role,
+      joinedAt: row.joined_at,
+      userName: row.profiles?.name,
+      userAvatar: row.profiles?.avatar_url,
+    }));
 }

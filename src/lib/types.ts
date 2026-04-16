@@ -122,14 +122,66 @@ export interface ClubMessage {
   userId: string;
   text: string | null;
   fileUrl: string | null;
-  fileType: 'image' | 'file' | null;
+  fileType: 'image' | 'file' | 'voice' | null;
+  voiceDurationSeconds?: number | null;
   createdAt: string;
   isEdited?: boolean;
   reactions?: ClubMessageReaction[];
+  isPinned?: boolean;
   // Joined sender data
   senderName?: string;
   senderAvatar?: string;
+  replyToId?: string | null;
+  repliedMessage?: {
+    text: string | null;
+    senderName: string;
+  } | null;
   user?: User; // Для профиля отправителя
+}
+
+// ===== Закреплённые сообщения =====
+
+export interface PinnedMessage {
+  id: string;
+  clubId: string;
+  messageId: string;
+  pinnedBy: string;
+  pinnedAt: string;
+  message?: ClubMessage;
+}
+
+// ===== Опросы =====
+
+export interface ClubPoll {
+  id: string;
+  clubId: string;
+  createdBy: string;
+  question: string;
+  isAnonymous: boolean;
+  isMultiple: boolean;
+  isActive: boolean;
+  createdAt: string;
+  options?: ClubPollOption[];
+  creatorName?: string;
+  creatorAvatar?: string;
+  totalVotes?: number;
+}
+
+export interface ClubPollOption {
+  id: string;
+  pollId: string;
+  text: string;
+  sortOrder: number;
+  voteCount?: number;
+  votedByMe?: boolean;
+}
+
+export interface ClubPollVote {
+  id: string;
+  pollId: string;
+  optionId: string;
+  userId: string;
+  createdAt: string;
 }
 
 export interface ClubMarathon {

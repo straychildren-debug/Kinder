@@ -72,3 +72,6 @@ ON public.club_message_reactions FOR DELETE USING (auth.uid() = user_id);
 
 -- 5. Add reactions table to realtime
 ALTER PUBLICATION supabase_realtime ADD TABLE public.club_message_reactions;
+
+-- 6. Add reply_to_id to club_messages for threading
+ALTER TABLE public.club_messages ADD COLUMN IF NOT EXISTS reply_to_id UUID REFERENCES public.club_messages(id) ON DELETE SET NULL;
