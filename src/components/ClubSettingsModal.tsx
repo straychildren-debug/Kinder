@@ -13,6 +13,8 @@ interface ClubSettingsModalProps {
   userRole: 'owner' | 'admin' | 'member';
   activeMarathon: ClubMarathon | null;
   onMarathonChange: (marathon: ClubMarathon | null) => void;
+  onLeave: () => void;
+  onCreatePoll: () => void;
 }
 
 const ROLE_LABELS: Record<string, string> = {
@@ -35,11 +37,15 @@ export default function ClubSettingsModal({
   userRole,
   activeMarathon,
   onMarathonChange,
+  onLeave,
+  onCreatePoll,
 }: ClubSettingsModalProps) {
   const [members, setMembers] = useState<ClubMember[]>([]);
   const [loading, setLoading] = useState(true);
   const [showMarathonModal, setShowMarathonModal] = useState(false);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
+
+  const isOwnerOrAdmin = userRole === 'owner' || userRole === 'admin';
 
   useEffect(() => {
     if (isOpen) {
@@ -94,43 +100,51 @@ export default function ClubSettingsModal({
           <div className="flex items-center justify-between mb-12">
             <div>
               <span className="text-[10px] font-black text-on-surface-variant uppercase tracking-[0.4em] block mb-2 opacity-40 ">Панель управления</span>
-              <h2 className="text-4xl font-black tracking-tighter leading-none">Настройки клуба</h2>
+              <h2 className="text-4xl font-black tracking-tighter leading-none">Настройки</h2>
             </div>
             <button onClick={onClose} className="w-12 h-12 rounded-2xl bg-surface-container flex items-center justify-center hover:bg-on-surface hover:text-surface transition-all active:scale-90">
               <span className="material-symbols-outlined text-[20px]">close</span>
             </button>
           </div>
 
-          {/* Marathon Section */}
+          {/* Quick Actions Group */}
           <section className="mb-12">
-            <h3 className="text-[10px] font-black text-on-surface-variant uppercase tracking-[0.3em] mb-6 opacity-40 ">Контентные марафоны</h3>
-            {activeMarathon ? (
-              <div className="p-8 rounded-[32px] bg-white border border-on-surface/5 shadow-sm flex items-center justify-between group hover:shadow-2xl transition-all duration-500">
-                <div className="space-y-1">
-                  <div className="flex items-center gap-2">
-                    <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></div>
-                    <span className="text-[9px] font-black text-green-500 uppercase tracking-widest">Активен сейчас</span>
-                  </div>
-                  <p className="font-black text-lg tracking-tighter ">{activeMarathon.title}</p>
+            <h3 className="text-[10px] font-black text-on-surface-variant uppercase tracking-[0.3em] mb-6 opacity-40 ">Действия</h3>
+            <div className="grid grid-cols-2 gap-3">
+              <button
+                onClick={() => { onClose(); onCreatePoll(); }}
+                className="p-6 rounded-[24px] bg-surface-container/30 hover:bg-white hover:shadow-xl hover:border-on-surface/5 border border-transparent transition-all flex flex-col items-center justify-center gap-3 group"
+              >
+                <div className="w-10 h-10 rounded-xl bg-white border border-on-surface/5 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all">
+                  <span className="material-symbols-outlined text-[20px]">ballot</span>
                 </div>
+                <span className="text-[9px] font-black uppercase tracking-widest">Новый опрос</span>
+              </button>
+
+              {isOwnerOrAdmin && (
                 <button
                   onClick={() => setShowMarathonModal(true)}
-                  className="px-6 py-3 rounded-xl bg-on-surface text-surface text-[10px] font-black uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-xl shadow-on-surface/10"
+                  className="p-6 rounded-[24px] bg-surface-container/30 hover:bg-white hover:shadow-xl hover:border-on-surface/5 border border-transparent transition-all flex flex-col items-center justify-center gap-3 group text-primary"
                 >
-                  Управлять
+                  <div className="w-10 h-10 rounded-xl bg-white border border-on-surface/5 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all">
+                    <span className="material-symbols-outlined text-[20px]" style={{ fontVariationSettings: "'FILL' 1" }}>bolt</span>
+                  </div>
+                  <span className="text-[9px] font-black uppercase tracking-widest">Марафон</span>
                 </button>
-              </div>
-            ) : (
-              <button
-                onClick={() => setShowMarathonModal(true)}
-                className="w-full p-10 rounded-[32px] border-2 border-dashed border-on-surface/5 text-on-surface-variant/40 hover:border-on-surface hover:text-on-surface hover:bg-surface-container/50 transition-all flex flex-col items-center justify-center gap-4 group"
-              >
-                <div className="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center group-hover:bg-on-surface group-hover:text-surface transition-all">
-                   <span className="material-symbols-outlined text-2xl">add_circle</span>
-                </div>
-                <span className="text-[11px] font-black uppercase tracking-[0.2em] ">Запустить соревнование</span>
-              </button>
-            )}
+              )}
+
+              {userRole !== 'owner' && (
+                <button
+                  onClick={() => { if (confirm('Выйти из клуба?')) { onClose(); onLeave(); } }}
+                  className="p-6 rounded-[24px] bg-red-50/50 hover:bg-red-50 hover:shadow-xl transition-all border border-transparent hover:border-red-100 flex flex-col items-center justify-center gap-3 group col-span-2 mt-2"
+                >
+                  <div className="w-10 h-10 rounded-xl bg-white border border-red-100 flex items-center justify-center text-red-500 group-hover:bg-red-500 group-hover:text-white transition-all">
+                    <span className="material-symbols-outlined text-[20px]">logout</span>
+                  </div>
+                  <span className="text-[9px] font-black uppercase tracking-widest text-red-600">Покинуть клуб</span>
+                </button>
+              )}
+            </div>
           </section>
 
           {/* Members Section */}
@@ -214,10 +228,6 @@ export default function ClubSettingsModal({
                 ))}
               </div>
             )}
-          </section>
-        </div>
-      </div>
-
       <MarathonModal
         isOpen={showMarathonModal}
         onClose={() => setShowMarathonModal(false)}
@@ -229,3 +239,4 @@ export default function ClubSettingsModal({
     </>
   );
 }
+

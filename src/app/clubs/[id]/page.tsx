@@ -1011,9 +1011,10 @@ export default function ClubDetail() {
     }
   };
 
-  const isOwnerOrAdmin = membership?.role === 'owner' || membership?.role === 'admin';
   const isGlobalManager = user?.role === 'admin' || user?.role === 'superadmin';
-  const canDeleteMessages = isOwnerOrAdmin || isGlobalManager;
+  const isOwnerOrAdmin = (membership?.role === 'owner' || membership?.role === 'admin') || isGlobalManager;
+  const canDeleteMessages = isOwnerOrAdmin;
+
 
   const formatRecordingTime = (s: number) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
 
@@ -1082,35 +1083,19 @@ export default function ClubDetail() {
                 </span>
               </button>
             )}
-            {/* Poll */}
+            {/* Settings / Menu */}
             {membership && (
-              <button
-                onClick={() => setShowCreatePoll(true)}
-                className="w-10 h-10 rounded-xl flex items-center justify-center hover:bg-surface-container text-on-surface-variant/50 hover:text-on-surface transition-all active:scale-95"
-                title="Создать опрос"
-              >
-                <span className="material-symbols-outlined text-[20px]">ballot</span>
-              </button>
-            )}
-            {membership && membership.role !== 'owner' && (
-              <button
-                onClick={handleLeave}
-                className="w-10 h-10 rounded-xl flex items-center justify-center hover:bg-red-50 text-on-surface-variant hover:text-red-500 transition-all active:scale-95"
-                title="Покинуть клуб"
-              >
-                <span className="material-symbols-outlined text-[20px]">logout</span>
-              </button>
-            )}
-            {isOwnerOrAdmin && (
               <button
                 onClick={() => setShowSettings(true)}
                 className="w-10 h-10 rounded-xl flex items-center justify-center hover:bg-surface-container transition-all active:scale-95"
+                title="Меню"
               >
                 <span className="material-symbols-outlined text-[20px]">settings_heart</span>
               </button>
             )}
           </div>
         </div>
+
 
         {/* Marathon Status Bar */}
         {marathon && countdown && (
@@ -1658,8 +1643,8 @@ export default function ClubDetail() {
         onSubmit={handleCreatePoll}
       />
 
-      {/* Settings Modal */}
-      {isOwnerOrAdmin && (
+      {/* Settings Modal (accessible to all members) */}
+      {membership && (
         <ClubSettingsModal
           isOpen={showSettings}
           onClose={() => setShowSettings(false)}
@@ -1668,8 +1653,11 @@ export default function ClubDetail() {
           userRole={membership!.role}
           activeMarathon={marathon}
           onMarathonChange={setMarathon}
+          onLeave={handleLeave}
+          onCreatePoll={() => setShowCreatePoll(true)}
         />
       )}
+
 
       {/* Marathon Details Modal */}
       {marathon && user && (
