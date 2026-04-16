@@ -15,40 +15,37 @@ export default function TopNavBar({ title = 'Кинотека' }: TopNavBarProps
 
   return (
     <>
-      <header className="fixed top-0 w-full z-50 bg-white/40 dark:bg-slate-900/40 backdrop-blur-xl shadow-sm shadow-black/5 flex justify-between items-center px-6 py-3">
+      <header className="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-xl border-b border-white/5 flex justify-between items-center px-6 py-4">
         <div className="flex items-center gap-4">
           <Link href="/" className="flex flex-col">
-            <h1 className="text-xl font-bold tracking-tighter text-[#2b3438] dark:text-slate-100">
+            <h1 className="text-2xl font-black tracking-tighter text-white uppercase italic">
               {title}
             </h1>
-            <span className="text-[9px] font-semibold text-on-surface-variant uppercase tracking-[0.2em]">
-              Сообщество
+            <span className="text-[10px] font-bold text-on-surface-variant uppercase tracking-[0.2em] -mt-1">
+              сообщество
             </span>
           </Link>
         </div>
-        <div className="flex items-center gap-2">
-          <Link
-            href="/create"
-            className="p-2 text-[#575e70] dark:text-slate-300 hover:bg-slate-100/50 dark:hover:bg-slate-800/50 transition-colors rounded-full"
-          >
-            <span className="material-symbols-outlined">add_circle</span>
-          </Link>
+        <div className="flex items-center gap-4">
+          <button className="text-on-surface-variant hover:text-white transition-colors">
+            <span className="material-symbols-outlined text-[24px]">search</span>
+          </button>
           <button
             onClick={() => setSidebarOpen(true)}
-            className="p-1 rounded-full hover:ring-2 hover:ring-primary/30 transition-all"
+            className="group relative"
           >
             {user?.avatarUrl ? (
               <img
                 alt="Профиль"
                 src={user.avatarUrl}
-                className="w-9 h-9 rounded-full border-2 border-surface-container-highest object-cover"
+                className="w-10 h-10 rounded-full border border-white/10 group-hover:border-primary/50 transition-all object-cover"
               />
             ) : user ? (
-              <div className="w-9 h-9 rounded-full bg-primary flex items-center justify-center text-white font-bold text-sm">
+              <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white font-bold text-sm group-hover:ring-2 group-hover:ring-primary/20 transition-all">
                 {user.name.charAt(0)}
               </div>
             ) : (
-              <span className="material-symbols-outlined text-[#575e70] dark:text-slate-300 text-[28px]">
+              <span className="material-symbols-outlined text-on-surface-variant group-hover:text-white text-[32px] transition-colors">
                 account_circle
               </span>
             )}

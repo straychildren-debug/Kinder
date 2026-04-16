@@ -22,56 +22,54 @@ export default function Library() {
   return (
     <>
       <TopNavBar />
-      <main className="pt-24 px-6 max-w-7xl mx-auto pb-24">
-        {/* Hero Section */}
-        <section className="mb-4">
-          <div className="flex flex-col justify-between gap-6 mb-8">
-            <div className="max-w-2xl">
-              <h2 className="text-5xl md:text-6xl font-bold text-on-surface tracking-tighter leading-none mb-4">Библиотека смыслов</h2>
-            </div>
-          </div>
+      <main className="pt-24 px-4 pb-32 max-w-lg mx-auto md:max-w-7xl">
+        {/* Page Header */}
+        <section className="py-8">
+           <h1 className="text-6xl font-black tracking-tighter leading-none text-white mb-2">Все книги</h1>
+           <span className="text-[10px] font-black text-on-surface-variant uppercase tracking-[0.3em]">
+             каталог библиотеки
+           </span>
         </section>
-
-        {/* Catalog Filter Header */}
-        <div className="flex items-center justify-between mb-8 flex-wrap gap-4">
-          <h3 className="text-2xl font-semibold tracking-tight">Все книги</h3>
-        </div>
 
         {/* Book Grid */}
         {loading ? (
-           <div className="flex justify-center p-12"><div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div></div>
+           <div className="flex justify-center p-12">
+             <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+           </div>
         ) : books.length === 0 ? (
-          <p className="text-on-surface-variant">Пока нет книг. Добавьте первую!</p>
+          <div className="text-center py-20 px-6 glass-card rounded-[32px]">
+             <div className="text-6xl mb-4">📚</div>
+             <p className="text-on-surface-variant font-medium">В библиотеке пока нет книг</p>
+          </div>
         ) : (
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-x-6 gap-y-10">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-8 gap-y-12">
             {books.map(book => (
-              <div key={book.id} className="group cursor-pointer">
-                <div className="aspect-[2/3] rounded-xl overflow-hidden bg-surface-container-low mb-4 relative shadow-sm">
+              <div key={book.id} className="group flex flex-col">
+                <div className="relative aspect-[2/3] rounded-[24px] overflow-hidden bg-surface-container shadow-2xl transition-all duration-500 group-hover:-translate-y-2 group-hover:shadow-primary/20">
                   {book.imageUrl ? (
                     <img
                       alt={book.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      className="w-full h-full object-cover"
                       src={book.imageUrl}
                     />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center bg-surface-container border-2 border-dashed border-outline-variant/30 rounded-xl">
-                      <span className="material-symbols-outlined text-outline-variant">auto_stories</span>
+                    <div className="w-full h-full flex items-center justify-center bg-surface-container-high border border-white/5">
+                      <span className="material-symbols-outlined text-on-surface-variant text-4xl opacity-20">auto_stories</span>
                     </div>
                   )}
-                  <div className="absolute top-3 right-3 glass-button p-1.5 rounded-full text-white opacity-0 group-hover:opacity-100 transition-opacity">
-                    <span className="material-symbols-outlined text-sm">bookmark</span>
-                  </div>
-                </div>
-                <h4 className="font-semibold text-sm mb-1 truncate">{book.title}</h4>
-                <p className="text-xs text-on-surface-variant mb-2">{book.author || 'Неизвестный автор'}</p>
-                {book.rating && (
-                  <div className="flex items-center gap-1.5">
-                    <div className="flex text-primary">
-                      <span className="material-symbols-outlined text-[14px]" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+                  {/* Rating Bubble */}
+                  {book.rating && (
+                    <div className="absolute top-4 right-4 bg-primary/90 backdrop-blur-md px-2.5 py-1 rounded-full flex items-center gap-1 border border-white/10 shadow-lg">
+                      <span className="material-symbols-outlined text-white text-[10px]" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+                      <span className="text-white text-[10px] font-black">{book.rating}</span>
                     </div>
-                    <span className="text-[11px] font-bold">{book.rating}</span>
-                  </div>
-                )}
+                  )}
+                </div>
+                
+                <div className="mt-5 px-1">
+                  <h4 className="font-black text-white text-base leading-tight mb-1 group-hover:text-primary transition-colors line-clamp-2">{book.title}</h4>
+                  <p className="text-[10px] font-black text-on-surface-variant uppercase tracking-widest">{book.author || 'Неизвестный автор'}</p>
+                </div>
               </div>
             ))}
           </div>

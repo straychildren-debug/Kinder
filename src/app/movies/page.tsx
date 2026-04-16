@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import TopNavBar from "@/components/TopNavBar";
 import BottomNavBar from "@/components/BottomNavBar";
+import Link from "next/link";
 import { getApprovedContent } from "@/lib/db";
 import { ContentItem } from "@/lib/types";
 
@@ -23,56 +24,67 @@ export default function Movies() {
   return (
     <>
       <TopNavBar />
-      <main className="pt-24 px-6 max-w-5xl mx-auto space-y-12 pb-24">
-        {/* Hero Section */}
-        <section className="mb-4">
-          <div className="flex flex-col justify-between gap-6 mb-8">
-            <div className="max-w-2xl">
-              <h2 className="text-5xl md:text-6xl font-bold text-on-surface tracking-tighter leading-none mb-4">Кинотека сообщества</h2>
-            </div>
-          </div>
+      <main className="pt-24 px-4 pb-32 max-w-lg mx-auto md:max-w-7xl">
+        {/* Page Header */}
+        <section className="py-8">
+           <h1 className="text-6xl font-black tracking-tighter leading-none text-white mb-2">Все фильмы</h1>
+           <span className="text-[10px] font-black text-on-surface-variant uppercase tracking-[0.3em]">
+             кинотека сообщества
+           </span>
         </section>
 
-        {/* Catalog Filter Header */}
-        <div className="flex items-center justify-between mb-8 flex-wrap gap-4">
-          <h3 className="text-2xl font-semibold tracking-tight">Все фильмы</h3>
-        </div>
-
-        {/* Movie Grid */}
+        {/* Movie Grid / Empty State */}
         {loading ? (
-            <div className="flex justify-center p-12"><div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div></div>
+             <div className="flex justify-center p-12">
+               <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+             </div>
         ) : movies.length === 0 ? (
-          <p className="text-on-surface-variant">Пока нет фильмов. Добавьте первый!</p>
+          <div className="flex flex-col items-center justify-center py-24 px-6 text-center">
+             {/* Illustration Mockup */}
+             <div className="relative mb-8">
+                <div className="flex items-center justify-center gap-4 text-8xl grayscale opacity-40">
+                   <span className="material-symbols-outlined text-9xl">movie_filter</span>
+                   <span className="material-symbols-outlined text-9xl">potted_plant</span>
+                </div>
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-9xl font-black text-white/5 drop-shadow-2xl">0</div>
+             </div>
+             <p className="text-xl font-black text-white mb-3">Пока нет фильмов. Добавьте первый!</p>
+             <Link 
+               href="/create" 
+               className="mt-6 px-8 py-4 glass-btn text-white rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-2xl hover:scale-105 transition-transform"
+             >
+               Добавить фильм
+             </Link>
+          </div>
         ) : (
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-x-6 gap-y-10">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-8 gap-y-12">
             {movies.map(movie => (
-              <div key={movie.id} className="group cursor-pointer">
-                <div className="aspect-[2/3] rounded-xl overflow-hidden bg-surface-container-low mb-4 relative shadow-sm">
+              <div key={movie.id} className="group flex flex-col">
+                <div className="relative aspect-[2/3] rounded-[24px] overflow-hidden bg-surface-container shadow-2xl transition-all duration-500 group-hover:-translate-y-2 group-hover:shadow-primary/20">
                   {movie.imageUrl ? (
                     <img
                       alt={movie.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      className="w-full h-full object-cover"
                       src={movie.imageUrl}
                     />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center bg-surface-container border-2 border-dashed border-outline-variant/30 rounded-xl">
-                      <span className="material-symbols-outlined text-outline-variant">movie</span>
+                    <div className="w-full h-full flex items-center justify-center bg-surface-container-high border border-white/5">
+                      <span className="material-symbols-outlined text-on-surface-variant text-4xl opacity-20">movie</span>
                     </div>
                   )}
-                  <div className="absolute top-3 right-3 glass-button p-1.5 rounded-full text-white opacity-0 group-hover:opacity-100 transition-opacity">
-                    <span className="material-symbols-outlined text-sm">bookmark</span>
-                  </div>
-                </div>
-                <h4 className="font-semibold text-sm mb-1 truncate">{movie.title}</h4>
-                <p className="text-xs text-on-surface-variant mb-2">{movie.director || movie.author || 'Неизвестный режиссер'}</p>
-                {movie.rating && (
-                  <div className="flex items-center gap-1.5">
-                    <div className="flex text-primary">
-                      <span className="material-symbols-outlined text-[14px]" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+                  {/* Rating Bubble */}
+                  {movie.rating && (
+                    <div className="absolute top-4 right-4 bg-primary/90 backdrop-blur-md px-2.5 py-1 rounded-full flex items-center gap-1 border border-white/10 shadow-lg">
+                      <span className="material-symbols-outlined text-white text-[10px]" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+                      <span className="text-white text-[10px] font-black">{movie.rating}</span>
                     </div>
-                    <span className="text-[11px] font-bold">{movie.rating}</span>
-                  </div>
-                )}
+                  )}
+                </div>
+                
+                <div className="mt-5 px-1">
+                  <h4 className="font-black text-white text-base leading-tight mb-1 group-hover:text-primary transition-colors line-clamp-2">{movie.title}</h4>
+                  <p className="text-[10px] font-black text-on-surface-variant uppercase tracking-widest">{movie.director || movie.author || 'Неизвестный режиссер'}</p>
+                </div>
               </div>
             ))}
           </div>

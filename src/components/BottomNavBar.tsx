@@ -10,37 +10,46 @@ interface BottomNavBarProps {
 export default function BottomNavBar({ activeTab = 'home' }: BottomNavBarProps) {
   const getTabClass = (tab: string) => {
     if (tab === activeTab) {
-      return 'flex flex-col items-center justify-center bg-[#575e70] text-white rounded-2xl px-4 py-2 scale-110 transition-all shadow-lg shadow-primary/30';
+      return 'relative flex flex-col items-center justify-center text-white px-5 py-2.5 transition-all duration-500 z-10';
     }
-    return 'flex flex-col items-center justify-center text-[#586065] dark:text-slate-400 px-4 py-2 opacity-60 hover:opacity-100 transition-opacity active:scale-90 duration-300';
+    return 'relative flex flex-col items-center justify-center text-on-surface-variant hover:text-white transition-all px-5 py-2.5';
   };
 
   const getIconStyle = (tab: string) => {
     return tab === activeTab ? { fontVariationSettings: "'FILL' 1" } : {};
   };
 
+  const tabs = [
+    { id: 'home', icon: 'home', label: 'Главная', href: '/' },
+    { id: 'books', icon: 'menu_book', label: 'Книги', href: '/library' },
+    { id: 'movies', icon: 'movie', label: 'Фильмы', href: '/movies' },
+    { id: 'clubs', icon: 'groups', label: 'Клубы', href: '/clubs' },
+    { id: 'users', icon: 'leaderboard', label: 'Рейтинг', href: '/leaderboard' },
+  ];
+
+  const activeIndex = tabs.findIndex(t => t.id === activeTab);
+
   return (
-    <nav className="fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-6 pt-3 bg-white/60 dark:bg-slate-900/60 backdrop-blur-2xl shadow-[0_-4px_24px_rgba(0,0,0,0.04)] z-50 rounded-t-3xl md:hidden">
-      <Link className={getTabClass('home')} href="/">
-        <span className="material-symbols-outlined" style={getIconStyle('home')}>home</span>
-        <span className="font-['Inter'] text-[10px] font-semibold uppercase tracking-widest mt-1">Главная</span>
-      </Link>
-      <Link className={getTabClass('books')} href="/library">
-        <span className="material-symbols-outlined" style={getIconStyle('books')}>menu_book</span>
-        <span className="font-['Inter'] text-[10px] font-semibold uppercase tracking-widest mt-1">Книги</span>
-      </Link>
-      <Link className={getTabClass('movies')} href="/movies">
-        <span className="material-symbols-outlined" style={getIconStyle('movies')}>movie</span>
-        <span className="font-['Inter'] text-[10px] font-semibold uppercase tracking-widest mt-1">Фильмы</span>
-      </Link>
-      <Link className={getTabClass('clubs')} href="/clubs">
-        <span className="material-symbols-outlined" style={getIconStyle('clubs')}>groups</span>
-        <span className="font-['Inter'] text-[10px] font-semibold uppercase tracking-widest mt-1">Клубы</span>
-      </Link>
-      <Link className={getTabClass('users')} href="/leaderboard">
-        <span className="material-symbols-outlined" style={getIconStyle('users')}>leaderboard</span>
-        <span className="font-['Inter'] text-[10px] font-semibold uppercase tracking-widest mt-1">Рейтинг</span>
-      </Link>
+    <nav className="fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-8 pt-4 bg-background/90 backdrop-blur-2xl border-t border-white/5 z-50 rounded-t-[32px] md:hidden">
+      {/* Active Indicator Shadow/Pill */}
+      <div 
+        className="absolute h-14 bg-surface-container-high rounded-2xl transition-all duration-500 ease-out shadow-xl shadow-black/20"
+        style={{ 
+          width: '72px',
+          left: `calc(4px + ${activeIndex * (100 / tabs.length)}% + (100% / ${tabs.length} - 72px) / 2)` 
+        }}
+      />
+      
+      {tabs.map(tab => (
+        <Link key={tab.id} className={getTabClass(tab.id)} href={tab.href}>
+          <span className="material-symbols-outlined text-[26px]" style={getIconStyle(tab.id)}>
+            {tab.icon}
+          </span>
+          <span className="text-[9px] font-bold uppercase tracking-[0.15em] mt-1.5 opacity-80">
+            {tab.label}
+          </span>
+        </Link>
+      ))}
     </nav>
   );
 }

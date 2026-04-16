@@ -25,163 +25,151 @@ export default function Home() {
   return (
     <>
       <TopNavBar />
-      <main className="pt-20 px-6 max-w-7xl mx-auto pb-24">
-        {/* Приветствие */}
-        <section className="mt-8 mb-12">
-          <span className="text-[10px] font-semibold uppercase tracking-widest text-on-surface-variant">
-            {user ? `Привет, ${user.name.split(' ')[0]}` : 'Обзор'}
-          </span>
-          <h2 className="text-[3.5rem] font-bold leading-none tracking-tight text-on-surface mt-2">Лента сообщества</h2>
+      <main className="pt-24 px-4 pb-32 max-w-lg mx-auto md:max-w-7xl">
+        {/* Category Tabs */}
+        <section className="flex gap-3 overflow-x-auto scrollbar-hide py-4 mb-2">
+          {['Новое сегодня', 'Все книги', 'Все фильмы', 'Клубы'].map((tab, i) => (
+            <button 
+              key={tab} 
+              className={`whitespace-nowrap px-5 py-2.5 rounded-2xl text-[13px] font-bold tracking-tight transition-all active:scale-95 ${
+                i === 0 ? 'bg-primary text-white shadow-lg shadow-primary/20' : 'bg-surface-container text-on-surface-variant hover:text-white'
+              }`}
+            >
+              {tab}
+            </button>
+          ))}
         </section>
 
-        {/* Bento Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
-          {/* Основной контент */}
-          <div className="md:col-span-8">
-            <div className="flex items-center justify-between mb-8">
-              <h3 className="text-xl font-semibold tracking-tight">Новое сегодня</h3>
-              <div className="flex gap-2">
-                <Link href="/library" className="px-4 py-2 text-sm font-medium text-on-surface-variant hover:text-on-surface transition-colors">Все книги</Link>
-                <Link href="/movies" className="px-4 py-2 text-sm font-medium text-on-surface-variant hover:text-on-surface transition-colors">Все фильмы</Link>
-              </div>
+        {/* Community Feed Content */}
+        <div className="flex flex-col gap-10">
+          {loading ? (
+            <div className="flex justify-center p-12">
+              <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
             </div>
+          ) : approvedContent.length === 0 ? (
+            <div className="text-center py-20 px-6">
+               <div className="text-6xl mb-4">🎬</div>
+               <p className="text-on-surface-variant font-medium">Лента сообщества пока пуста</p>
+            </div>
+          ) : (
+            <div className="space-y-10">
+              {approvedContent.map((item, index) => (
+                <article key={item.id} className="group relative">
+                  {/* Content Image with Premium Overlay */}
+                  <div className="relative aspect-[4/5] md:aspect-video w-full rounded-[32px] overflow-hidden shadow-2xl transition-all group-hover:shadow-primary/10">
+                    <img
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-[1500ms] ease-out"
+                      alt={item.title}
+                      src={item.imageUrl}
+                    />
+                    {/* Editorial Gradient Overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#0a0e14] via-transparent to-black/20"></div>
+                    
+                    {/* Floating Info */}
+                    <div className="absolute bottom-10 left-8 right-8">
+                       <div className="flex items-center gap-2 mb-4">
+                         <span className="bg-white/10 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-black text-white uppercase tracking-[0.2em] border border-white/10">
+                           {item.type === 'movie' ? 'Кино' : 'Книга'}
+                         </span>
+                         {item.rating && (
+                            <div className="bg-primary/90 backdrop-blur-md px-3 py-1 rounded-full flex items-center gap-1 border border-white/5">
+                              <span className="material-symbols-outlined text-white text-[10px]" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+                              <span className="text-white text-[11px] font-black">{item.rating}</span>
+                            </div>
+                         )}
+                       </div>
+                       
+                       <h2 className="text-4xl md:text-5xl font-black text-white leading-[0.9] tracking-tighter mb-4 group-hover:translate-x-2 transition-transform duration-500">
+                         {item.title}
+                       </h2>
+                       
+                       <div className="flex items-center justify-between">
+                         <div className="flex items-center gap-3">
+                           <div className="w-8 h-8 rounded-full bg-primary/20 backdrop-blur-md border border-white/10 flex items-center justify-center text-[10px] font-black text-white">
+                             {item.author?.charAt(0) || 'U'}
+                           </div>
+                           <div className="flex flex-col">
+                             <span className="text-xs font-bold text-white">{item.author || 'Автор'}</span>
+                             <span className="text-[9px] font-black text-white/50 uppercase tracking-widest">{item.type === 'movie' ? 'Режиссер' : 'Писатель'}</span>
+                           </div>
+                         </div>
+                         
+                         <button className="bg-white/10 hover:bg-white/20 backdrop-blur-md px-5 py-2 rounded-full text-[10px] font-black text-white uppercase tracking-widest border border-white/10 transition-colors">
+                            {item.type === 'movie' ? 'Трейлер' : 'Анонс'}
+                         </button>
+                       </div>
+                    </div>
+                  </div>
 
-            {/* Карточки контента */}
-            {loading ? (
-              <div className="flex justify-center p-12"><div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div></div>
-            ) : approvedContent.length === 0 ? (
-              <p className="text-on-surface-variant">Пока нет публикаций. Будьте первыми!</p>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                {approvedContent.map(item => {
-                  return (
-                    <article key={item.id} className="group bg-surface-container-lowest rounded-xl overflow-hidden transition-all shadow-sm hover:shadow-md">
-                    <div className="relative aspect-[2/3] w-full overflow-hidden">
-                      <img
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                        alt={item.title}
-                        src={item.imageUrl}
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                      <div className="absolute bottom-6 left-6 right-6">
-                        <span className="bg-secondary-container/40 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-bold text-white uppercase tracking-widest">
-                          {item.type === 'movie' ? 'Фильм' : 'Книга'}
-                        </span>
-                        <h4 className="text-2xl font-bold text-white mt-2">{item.title}</h4>
-                        {item.type === 'movie' && item.director && (
-                          <p className="text-white/70 text-xs mt-1">{item.director}, {item.year}</p>
-                        )}
-                        {item.type === 'book' && item.author && (
-                          <p className="text-white/70 text-xs mt-1">{item.author}</p>
-                        )}
-                      </div>
-                      {/* Рейтинг */}
-                      {item.rating && (
-                        <div className="absolute top-4 right-4 bg-black/40 backdrop-blur-md px-3 py-1 rounded-lg flex items-center gap-1">
-                          <span className="material-symbols-outlined text-amber-400 text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
-                          <span className="text-white text-sm font-bold">{item.rating}</span>
-                        </div>
-                      )}
+                  {/* Metadata & Description (Optional depending on design, in Stitch its simpler) */}
+                  <div className="mt-8 px-4 flex justify-between items-start">
+                    <div className="flex-1">
+                       <div className="flex items-center gap-3 mb-2">
+                          <div className="w-5 h-5 rounded-full bg-surface-container-high flex items-center justify-center text-[9px] font-bold text-primary">U</div>
+                          <span className="text-xs font-bold text-on-surface-variant">Пользователь</span>
+                       </div>
+                       <p className="text-on-surface-variant text-sm leading-relaxed line-clamp-2 max-w-xl">
+                         {item.description}
+                       </p>
                     </div>
-                    <div className="p-8">
-                      {item.createdBy && (
-                        <div className="flex items-center gap-3 mb-4">
-                          <div className="w-8 h-8 rounded-full bg-surface-container-high overflow-hidden">
-                              <div className="w-full h-full flex items-center justify-center text-xs font-bold text-primary">
-                                U
-                              </div>
-                          </div>
-                          <span className="text-sm font-medium text-on-surface-variant">Пользователь</span>
-                        </div>
-                      )}
-                      <p className="text-on-surface-variant leading-relaxed mb-6 text-sm line-clamp-3">{item.description}</p>
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-4">
-                          {item.likeCount !== undefined && (
-                            <span className="flex items-center gap-1 text-on-surface-variant text-xs">
-                              <span className="material-symbols-outlined text-[16px]" style={{ fontVariationSettings: "'FILL' 1" }}>favorite</span>
-                              {item.likeCount}
-                            </span>
-                          )}
-                          {item.reviewCount !== undefined && (
-                            <span className="flex items-center gap-1 text-on-surface-variant text-xs">
-                              <span className="material-symbols-outlined text-[16px]">chat_bubble</span>
-                              {item.reviewCount} рецензий
-                            </span>
-                          )}
-                        </div>
-                        {item.genre && (
-                          <span className="text-[10px] text-on-surface-variant font-semibold uppercase tracking-widest">
-                            {item.genre[0]}
+                    
+                    <div className="flex flex-col items-end gap-2">
+                       <div className="flex items-center gap-4">
+                          <span className="flex items-center gap-1.5 text-on-surface-variant text-[11px] font-bold">
+                            <span className="material-symbols-outlined text-[18px] text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>favorite</span>
+                            {item.likeCount || 0}
                           </span>
-                        )}
-                      </div>
+                          <span className="flex items-center gap-1.5 text-on-surface-variant text-[11px] font-bold">
+                            <span className="material-symbols-outlined text-[18px]">chat_bubble</span>
+                            {item.reviewCount || 0}
+                          </span>
+                       </div>
                     </div>
-                  </article>
-                );
-              })}
+                  </div>
+                </article>
+              ))}
             </div>
           )}
-        </div>
 
-        {/* Боковая панель */}
-          <aside className="md:col-span-4 space-y-12">
-            {/* Если не авторизован */}
-            {!user && (
-              <div className="bg-surface-container-low rounded-2xl p-6 space-y-4 shadow-sm border border-outline-variant/5">
-                <h3 className="text-lg font-bold">Присоединяйтесь!</h3>
-                <p className="text-sm text-on-surface-variant leading-relaxed">
-                  Войдите, чтобы создавать контент, оставлять рецензии и участвовать в рейтинге
-                </p>
-                <Link
-                  href="/login"
-                  className="block w-full py-3.5 glass-btn text-white rounded-xl font-bold text-center text-sm transition-transform active:scale-95 shadow-lg shadow-primary/10"
-                >
-                  Войти
-                </Link>
-              </div>
-            )}
+          {/* Social Proof & Sidebar Elements (Integrated into grid for desktop) */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-12">
+             {!user && (
+               <div className="glass-card p-10 rounded-[32px] space-y-6">
+                 <h3 className="text-3xl font-black tracking-tighter leading-none">Присоединяйтесь!</h3>
+                 <p className="text-sm text-on-surface-variant leading-relaxed">
+                   Войдите, чтобы создавать контент, оставлять рецензии и участвовать в рейтинге сообщества.
+                 </p>
+                 <Link
+                   href="/login"
+                   className="block w-full py-4 glass-btn text-white rounded-2xl font-black text-center text-[10px] uppercase tracking-[0.2em] transition-all hover:scale-[1.02] shadow-xl"
+                 >
+                   Войти
+                 </Link>
+               </div>
+             )}
 
-            {/* Топ участники */}
-            <div className="bg-surface-container-low p-8 rounded-2xl">
-              <h3 className="text-lg font-semibold mb-6">Лучшие авторы</h3>
-              <div className="space-y-6">
+            <div className="bg-surface-container-low p-10 rounded-[32px]">
+              <h3 className="text-xl font-bold mb-8">Лучшие авторы</h3>
+              <div className="grid grid-cols-1 gap-8">
                 {[
                   { icon: 'auto_stories', name: 'Елена Радуга', detail: '203 рецензии • ★ 9.5' },
                   { icon: 'movie_filter', name: 'Анастасия Волкова', detail: '142 рецензии • ★ 9.1' },
-                  { icon: 'history_edu', name: 'Мария Книга', detail: '128 рецензий • ★ 9.3' },
                 ].map((item, i) => (
-                  <div key={i} className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-xl bg-surface-variant flex items-center justify-center">
-                      <span className="material-symbols-outlined text-primary">{item.icon}</span>
+                  <div key={i} className="flex items-center gap-6">
+                    <div className="w-16 h-16 rounded-[24px] bg-background border border-white/5 flex items-center justify-center shadow-lg">
+                      <span className="material-symbols-outlined text-primary text-3xl">{item.icon}</span>
                     </div>
                     <div>
-                      <p className="text-sm font-bold">{item.name}</p>
-                      <p className="text-[10px] font-semibold text-on-surface-variant uppercase tracking-widest">{item.detail}</p>
+                      <p className="text-base font-black tracking-tight">{item.name}</p>
+                      <p className="text-[10px] font-black text-on-surface-variant uppercase tracking-widest mt-1 opacity-60">
+                         {item.detail}
+                      </p>
                     </div>
                   </div>
                 ))}
               </div>
-              <Link
-                href="/users"
-                className="block w-full mt-8 py-3 text-sm font-bold text-primary bg-surface-container-highest rounded-lg hover:opacity-80 transition-opacity text-center"
-              >
-                Полный рейтинг
-              </Link>
             </div>
-
-            {/* Жанры */}
-            <div className="px-4">
-              <h3 className="text-lg font-semibold mb-6">Популярные жанры</h3>
-              <div className="flex flex-wrap gap-2">
-                {['Фантастика', 'Драма', 'Классика', 'Триллер', 'Роман', 'Боевик', 'Психология', 'Приключения'].map(genre => (
-                  <span key={genre} className="px-3 py-1.5 bg-surface-container-low rounded-full text-xs font-semibold text-on-surface-variant hover:bg-surface-container-high transition-colors cursor-pointer">
-                    {genre}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </aside>
+          </div>
         </div>
       </main>
 
