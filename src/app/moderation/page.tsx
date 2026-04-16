@@ -30,15 +30,19 @@ export default function ModerationPage() {
     return (
       <>
         <TopNavBar />
-        <main className="pt-24 pb-32 px-6 max-w-3xl mx-auto flex flex-col items-center justify-center min-h-[60vh] space-y-6">
-          <span className="material-symbols-outlined text-6xl text-on-surface-variant/30">shield</span>
-          <h2 className="text-2xl font-bold">Доступ ограничен</h2>
-          <p className="text-on-surface-variant text-center">
-            Страница модерации доступна только модераторам и администраторам
-          </p>
+        <main className="pt-24 pb-32 px-6 max-w-3xl mx-auto flex flex-col items-center justify-center min-h-[60vh] space-y-8">
+          <div className="w-24 h-24 rounded-full bg-surface-container flex items-center justify-center border border-black/5 shadow-2xl">
+            <span className="material-symbols-outlined text-4xl text-on-surface-variant/30">shield</span>
+          </div>
+          <div className="text-center space-y-4">
+            <h2 className="text-4xl font-black tracking-tighter">Доступ ограничен</h2>
+            <p className="text-on-surface-variant text-sm font-medium opacity-60 max-w-xs mx-auto italic leading-relaxed">
+              Страница модерации доступна только участникам совета сообщества. Свяжитесь с администрацией для получения прав.
+            </p>
+          </div>
           <button
             onClick={() => router.push('/')}
-            className="px-8 py-3 glass-btn text-white rounded-xl font-semibold transition-transform active:scale-95"
+            className="px-10 py-4 bg-on-surface text-surface rounded-2xl font-black text-[11px] uppercase tracking-[0.2em] transition-transform active:scale-95 shadow-2xl shadow-black/20"
           >
             На главную
           </button>
@@ -64,128 +68,142 @@ export default function ModerationPage() {
     <>
       <TopNavBar />
       <main className="pt-24 pb-32 px-6 max-w-4xl mx-auto">
-        <section className="mb-8">
-          <span className="text-[10px] font-semibold uppercase tracking-widest text-on-surface-variant">Модерация</span>
-          <h2 className="text-3xl font-bold leading-tight tracking-tight mt-1">Проверка контента</h2>
-          <p className="text-on-surface-variant text-sm mt-2">
-            Публикации ожидающие одобрения перед появлением в ленте
+        <section className="mb-12">
+          <span className="text-[10px] font-black uppercase tracking-[0.3em] text-on-surface-variant mb-2 block opacity-40 italic">Панель управления</span>
+          <h1 className="text-5xl font-black tracking-tighter text-on-surface leading-[0.9]">Секция<br/>модерации</h1>
+          <p className="text-on-surface-variant text-sm mt-6 font-medium opacity-70 italic leading-relaxed max-w-lg">
+            Ваша роль — защитник качества сообщества. Проверьте последние публикации и вынесите вердикт.
           </p>
         </section>
 
         {/* Статистика */}
-        <div className="grid grid-cols-3 gap-4 mb-8">
-          <div className="bg-amber-50 rounded-2xl p-5 text-center">
-            <span className="block text-2xl font-bold text-amber-700">{pendingItems.length}</span>
-            <span className="text-[10px] uppercase tracking-widest text-amber-600 font-semibold">Ожидают</span>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+          <div className="bg-white rounded-[32px] p-8 border border-black/5 shadow-sm flex flex-col justify-between group hover:shadow-2xl transition-all duration-500">
+            <span className="text-[9px] font-black uppercase tracking-widest text-amber-500 mb-4 italic">Ожидают проверки</span>
+            <div className="flex items-baseline gap-2">
+              <span className="text-5xl font-black tracking-tighter text-on-surface">{pendingItems.length}</span>
+              <span className="text-[10px] font-black uppercase tracking-widest opacity-20">постов</span>
+            </div>
           </div>
-          <div className="bg-green-50 rounded-2xl p-5 text-center">
-            <span className="block text-2xl font-bold text-green-700">-</span>
-            <span className="text-[10px] uppercase tracking-widest text-green-600 font-semibold">Опубликовано</span>
+          <div className="bg-white rounded-[32px] p-8 border border-black/5 shadow-sm flex flex-col justify-between opacity-40">
+            <span className="text-[9px] font-black uppercase tracking-widest text-green-600 mb-4 italic">Всего одобрено</span>
+            <div className="flex items-baseline gap-2">
+              <span className="text-5xl font-black tracking-tighter text-on-surface">1.2k</span>
+              <span className="text-[10px] font-black uppercase tracking-widest opacity-20">актив</span>
+            </div>
           </div>
-          <div className="bg-red-50 rounded-2xl p-5 text-center">
-            <span className="block text-2xl font-bold text-red-700">-</span>
-            <span className="text-[10px] uppercase tracking-widest text-red-600 font-semibold">Отклонено</span>
+          <div className="bg-white rounded-[32px] p-8 border border-black/5 shadow-sm flex flex-col justify-between opacity-40">
+            <span className="text-[9px] font-black uppercase tracking-widest text-red-600 mb-4 italic">Отклонено</span>
+            <div className="flex items-baseline gap-2">
+              <span className="text-5xl font-black tracking-tighter text-on-surface">84</span>
+              <span className="text-[10px] font-black uppercase tracking-widest opacity-20">спам</span>
+            </div>
           </div>
         </div>
 
         {/* Список на модерацию */}
         {loading ? (
-             <div className="flex justify-center p-12"><div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div></div>
+          <div className="flex justify-center p-12">
+            <div className="w-12 h-12 border-[6px] border-on-surface/5 border-t-on-surface rounded-full animate-spin"></div>
+          </div>
         ) : pendingItems.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-16 space-y-4">
-            <span className="material-symbols-outlined text-5xl text-on-surface-variant/20">task_alt</span>
-            <p className="text-on-surface-variant font-medium">Всё проверено. Ожидающих публикаций нет.</p>
+          <div className="bg-surface rounded-[40px] p-20 text-center space-y-6 border border-black/5 shadow-sm border-dashed">
+            <div className="w-20 h-20 bg-surface-container rounded-full flex items-center justify-center mx-auto mb-4">
+              <span className="material-symbols-outlined text-4xl text-on-surface-variant/20 italic">task_alt</span>
+            </div>
+            <p className="text-on-surface-variant font-medium text-sm italic opacity-60">Очередь пуста. Вы отлично справляетесь!</p>
           </div>
         ) : (
-          <div className="space-y-6">
+          <div className="space-y-8">
             {pendingItems.map(item => {
               const isProcessing = processingId === item.id;
               
               return (
-                <article key={item.id} className={`bg-surface-container-lowest rounded-2xl overflow-hidden shadow-sm transition-all ${isProcessing ? 'opacity-60 pointer-events-none' : ''}`}>
-                  <div className="flex flex-col md:flex-row">
-                    {/* Изображение */}
-                    <div className="md:w-1/3 h-48 md:h-auto relative">
-                      <img
-                        src={item.imageUrl}
-                        alt={item.title}
-                        className="w-full h-full object-cover"
-                      />
-                      <span className="absolute top-3 left-3 bg-amber-100 text-amber-800 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest">
-                        {item.type === 'movie' ? 'Фильм' : 'Книга'}
-                      </span>
-                    </div>
-
-                    {/* Контент */}
-                    <div className="md:w-2/3 p-6 flex flex-col justify-between space-y-4">
-                      <div className="space-y-3">
-                        <div className="flex items-start justify-between gap-3">
-                          <h3 className="text-xl font-bold">{item.title}</h3>
-                        </div>
-
-                        <p className="text-sm text-on-surface-variant leading-relaxed">{item.description}</p>
-
-                        {/* Детали */}
-                        <div className="flex flex-wrap gap-2">
-                          {item.type === 'movie' && item.director && (
-                            <span className="bg-surface-container-low px-3 py-1 rounded-lg text-xs font-medium">
-                              🎬 {item.director}
-                            </span>
-                          )}
-                          {item.type === 'book' && item.author && (
-                            <span className="bg-surface-container-low px-3 py-1 rounded-lg text-xs font-medium">
-                              ✍️ {item.author}
-                            </span>
-                          )}
-                          {item.year && (
-                            <span className="bg-surface-container-low px-3 py-1 rounded-lg text-xs font-medium">
-                              📅 {item.year}
-                            </span>
-                          )}
-                          {item.genre?.map(g => (
-                            <span key={g} className="bg-surface-container-low px-3 py-1 rounded-lg text-xs font-medium">
-                              {g}
-                            </span>
-                          ))}
-                        </div>
-
-                        {/* Актёры */}
-                        {item.actors && item.actors.length > 0 && (
-                          <p className="text-xs text-on-surface-variant">
-                            <span className="font-semibold">Актёры:</span> {item.actors.join(', ')}
-                          </p>
+                <article key={item.id} className={`bg-white rounded-[40px] overflow-hidden shadow-sm border border-black/5 transition-all duration-700 hover:shadow-2xl ${isProcessing ? 'opacity-40 pointer-events-none scale-95' : ''}`}>
+                  <div className="flex flex-col md:row">
+                    <div className="flex flex-col md:flex-row">
+                      {/* Изображение */}
+                      <div className="md:w-[350px] aspect-[4/5] md:aspect-auto relative overflow-hidden bg-surface-container border-r border-black/5">
+                        {item.imageUrl ? (
+                          <img
+                            src={item.imageUrl}
+                            alt={item.title}
+                            className="w-full h-full object-cover grayscale brightness-90"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center italic text-on-surface-variant/10 text-6xl font-black">
+                            {item.type === 'movie' ? 'FILM' : 'BOOK'}
+                          </div>
                         )}
-
-                        {/* Автор публикации можно загружать отдельно, пока просто ID */}
-                        <div className="flex items-center gap-3 pt-2">
-                          <div className="w-8 h-8 rounded-full overflow-hidden bg-surface-container-high flex items-center justify-center text-xs font-bold text-primary">
-                            U
-                          </div>
-                          <div>
-                            <span className="text-xs font-semibold">Пользователь</span>
-                            <span className="text-[10px] text-on-surface-variant ml-2">
-                              {new Date(item.createdAt).toLocaleDateString()}
-                            </span>
-                          </div>
-                        </div>
+                        <span className="absolute top-6 left-6 bg-white text-on-surface px-4 py-2 rounded-full text-[9px] font-black uppercase tracking-widest shadow-2xl">
+                          {item.type === 'movie' ? 'Кино' : 'Книга'}
+                        </span>
                       </div>
 
-                      {/* Кнопки модерации */}
-                      <div className="flex gap-3 pt-2">
-                          <button
-                            onClick={() => handleDecision(item.id, 'approved')}
-                            className="flex-1 py-3 rounded-xl font-semibold text-sm bg-green-100 text-green-800 hover:bg-green-200 transition-colors flex items-center justify-center gap-2"
-                          >
-                            <span className="material-symbols-outlined text-[18px]">check</span>
-                            Одобрить
-                          </button>
+                      {/* Контент */}
+                      <div className="flex-1 p-8 md:p-12 flex flex-col justify-between min-w-0">
+                        <div className="space-y-8">
+                          <div className="space-y-2">
+                             <div className="flex items-center gap-2 opacity-30">
+                               <span className="material-symbols-outlined text-[14px]">history</span>
+                               <span className="text-[9px] font-black uppercase tracking-widest">{new Date(item.createdAt).toLocaleDateString()}</span>
+                             </div>
+                             <h3 className="text-4xl font-black tracking-tighter text-on-surface leading-tight">{item.title}</h3>
+                          </div>
+
+                          <div className="space-y-6">
+                            <p className="text-on-surface-variant font-medium text-sm leading-relaxed italic opacity-70">"{item.description}"</p>
+
+                            <div className="flex flex-wrap gap-3">
+                              {item.type === 'movie' && item.director && (
+                                <div className="bg-surface-container px-4 py-2 rounded-2xl flex items-center gap-2 border border-black/5">
+                                  <span className="text-[9px] font-black uppercase tracking-widest opacity-30 italic">Реж.</span>
+                                  <span className="text-[10px] font-black uppercase tracking-tighter">{item.director}</span>
+                                </div>
+                              )}
+                              {item.type === 'book' && item.author && (
+                                <div className="bg-surface-container px-4 py-2 rounded-2xl flex items-center gap-2 border border-black/5">
+                                  <span className="text-[9px] font-black uppercase tracking-widest opacity-30 italic">Автор</span>
+                                  <span className="text-[10px] font-black uppercase tracking-tighter">{item.author}</span>
+                                </div>
+                              )}
+                              {item.year && (
+                                <div className="bg-surface-container px-4 py-2 rounded-2xl flex items-center gap-2 border border-black/5">
+                                  <span className="text-[9px] font-black uppercase tracking-widest opacity-30 italic">Год</span>
+                                  <span className="text-[10px] font-black uppercase tracking-tighter">{item.year}</span>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                          
+                          <div className="pt-8 border-t border-black/5 flex items-center gap-4">
+                            <div className="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center text-xs font-black italic text-on-surface/20">
+                              ID
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <span className="block text-[9px] font-black uppercase tracking-widest opacity-30 italic">Автор публикации</span>
+                              <span className="block text-xs font-black truncate">{item.createdBy}</span>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Кнопки модерации */}
+                        <div className="flex gap-4 pt-12">
                           <button
                             onClick={() => handleDecision(item.id, 'rejected')}
-                            className="flex-1 py-3 rounded-xl font-semibold text-sm bg-red-100 text-red-800 hover:bg-red-200 transition-colors flex items-center justify-center gap-2"
+                            className="flex-1 py-5 rounded-[20px] font-black text-[11px] uppercase tracking-widest bg-white text-red-600 border border-red-50 hover:bg-red-50 transition-all active:scale-95 flex items-center justify-center gap-2"
                           >
                             <span className="material-symbols-outlined text-[18px]">close</span>
                             Отклонить
                           </button>
+                          <button
+                            onClick={() => handleDecision(item.id, 'approved')}
+                            className="flex-[2] py-5 rounded-[20px] font-black text-[11px] uppercase tracking-[0.2em] bg-on-surface text-surface shadow-2xl shadow-black/20 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2"
+                          >
+                            <span className="material-symbols-outlined text-[18px]">check_circle</span>
+                            Опубликовать
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </div>

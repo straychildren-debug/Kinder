@@ -88,78 +88,83 @@ export default function MarathonDetailsModal({ isOpen, onClose, marathon, userId
   }, {} as Record<string, { userName?: string; userAvatar?: string; progress: MarathonParticipantProgress[] }>);
 
   return (
-    <div className="fixed inset-0 z-[110] flex items-center justify-center glass-modal-overlay" onClick={onClose}>
+    <div className="fixed inset-0 z-[110] flex items-center justify-center p-6 bg-white/20 backdrop-blur-3xl" onClick={onClose}>
       <div
-        className="glass-modal rounded-3xl p-8 w-full max-w-2xl mx-4 max-h-[90vh] overflow-hidden flex flex-col"
+        className="bg-white rounded-[40px] p-10 w-full max-w-2xl shadow-[0_64px_128px_-16px_rgba(0,0,0,0.2)] max-h-[85vh] overflow-hidden flex flex-col border border-black/5 animate-in zoom-in-95 fade-in duration-500"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center justify-between mb-6 flex-shrink-0">
+        <div className="flex items-center justify-between mb-8 flex-shrink-0">
           <div>
-            <span className="text-[10px] font-bold text-primary uppercase tracking-[0.15em] block mb-1">Детали марафона</span>
-            <h2 className="text-2xl font-bold tracking-tight">{marathon.title}</h2>
+            <span className="text-[10px] font-black text-on-surface-variant uppercase tracking-[0.4em] block mb-2 opacity-40 italic">Детали марафона</span>
+            <h2 className="text-4xl font-black tracking-tighter leading-none">{marathon.title}</h2>
           </div>
-          <button onClick={onClose} className="p-2 rounded-full hover:bg-surface-container-high transition-colors">
-            <span className="material-symbols-outlined">close</span>
+          <button onClick={onClose} className="w-12 h-12 rounded-2xl bg-surface-container flex items-center justify-center hover:bg-on-surface hover:text-surface transition-all active:scale-90">
+            <span className="material-symbols-outlined text-[20px]">close</span>
           </button>
         </div>
 
-        <div className="flex gap-4 mb-6 border-b border-outline-variant/20 flex-shrink-0">
+        <div className="flex gap-10 mb-10 flex-shrink-0">
           <button
             onClick={() => setActiveTab('tasks')}
-            className={`pb-3 border-b-2 font-medium text-sm transition-colors ${
-              activeTab === 'tasks' ? 'border-primary text-primary' : 'border-transparent text-on-surface-variant hover:text-on-surface'
+            className={`pb-4 text-[11px] font-black uppercase tracking-[0.3em] transition-all relative ${
+              activeTab === 'tasks' ? 'text-on-surface' : 'text-on-surface-variant opacity-30 hover:opacity-100'
             }`}
           >
             Мои задания
+            {activeTab === 'tasks' && <div className="absolute bottom-0 left-0 w-full h-1 bg-on-surface rounded-full"></div>}
           </button>
           <button
             onClick={() => setActiveTab('participants')}
-            className={`pb-3 border-b-2 font-medium text-sm transition-colors ${
-              activeTab === 'participants' ? 'border-primary text-primary' : 'border-transparent text-on-surface-variant hover:text-on-surface'
+            className={`pb-4 text-[11px] font-black uppercase tracking-[0.3em] transition-all relative ${
+              activeTab === 'participants' ? 'text-on-surface' : 'text-on-surface-variant opacity-30 hover:opacity-100'
             }`}
           >
-            Прогресс участников
+            Участники
+            {activeTab === 'participants' && <div className="absolute bottom-0 left-0 w-full h-1 bg-on-surface rounded-full"></div>}
           </button>
         </div>
 
-        <div className="overflow-y-auto flex-grow flex flex-col gap-4">
+        <div className="overflow-y-auto pr-2 flex-grow flex flex-col gap-6 custom-scrollbar">
           {loading ? (
-             <div className="flex justify-center py-10"><div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div></div>
+             <div className="flex justify-center py-20">
+               <div className="w-12 h-12 border-[6px] border-on-surface/5 border-t-on-surface rounded-full animate-spin"></div>
+             </div>
           ) : activeTab === 'tasks' ? (
              items.length === 0 ? (
-               <div className="text-center py-10 text-on-surface-variant text-sm">В этом марафоне нет заданий.</div>
+               <div className="text-center py-20 px-10 bg-surface-container/30 rounded-[32px] border border-dashed border-black/5">
+                 <p className="text-[10px] font-black uppercase tracking-widest text-on-surface-variant opacity-30">В этом марафоне нет заданий</p>
+               </div>
              ) : (
                items.map(item => (
-                 <div key={item.id} className="bg-surface-container-low rounded-xl p-5 border border-outline-variant/10 shadow-sm flex flex-col gap-4">
-                   <div className="flex items-start gap-4">
-                     <label className="flex items-center gap-3 cursor-pointer mt-1">
-                       <input
-                         type="checkbox"
-                         checked={myProgress[item.id]?.isCompleted || false}
-                         onChange={(e) => handleToggle(item.id, e.target.checked)}
-                         className="w-5 h-5 rounded border-outline-variant text-primary focus:ring-primary focus:ring-offset-0 transition-all cursor-pointer accent-primary"
-                       />
-                     </label>
-                     <div className="flex-grow">
-                       <h4 className={`text-base font-bold transition-all ${myProgress[item.id]?.isCompleted ? 'text-on-surface-variant line-through' : 'text-on-surface'}`}>
-                         {item.title}
-                       </h4>
+                 <div key={item.id} className="bg-white rounded-[32px] p-8 border border-black/5 shadow-sm group hover:shadow-2xl transition-all duration-500">
+                   <div className="flex items-start gap-6 mb-8">
+                     <div className="relative mt-1">
+                        <input
+                          type="checkbox"
+                          checked={myProgress[item.id]?.isCompleted || false}
+                          onChange={(e) => handleToggle(item.id, e.target.checked)}
+                          className="peer w-6 h-6 rounded-lg border-2 border-black/10 bg-white checked:bg-on-surface checked:border-on-surface cursor-pointer appearance-none transition-all"
+                        />
+                        <span className="material-symbols-outlined absolute inset-0 text-white text-[16px] pointer-events-none opacity-0 peer-checked:opacity-100 flex items-center justify-center">check</span>
                      </div>
+                     <h4 className={`text-xl font-black tracking-tighter transition-all italic ${myProgress[item.id]?.isCompleted ? 'text-on-surface-variant/20 line-through' : 'text-on-surface'}`}>
+                       {item.title}
+                     </h4>
                    </div>
                    
-                   <div className="pl-9 mt-2">
+                   <div className="pl-12 space-y-4">
                      <textarea
                        value={myProgress[item.id]?.review || ''}
                        onChange={(e) => setMyProgress(prev => ({...prev, [item.id]: {...prev[item.id], review: e.target.value}}))}
-                       placeholder="Оставьте рецензию или комментарий..."
-                       className="w-full text-sm p-3 rounded-lg bg-surface-container-highest border border-outline-variant/10 focus:outline-none focus:ring-1 focus:ring-primary/40 min-h-[80px]"
+                       placeholder="Ваши мысли после ознакомления..."
+                       className="w-full text-xs font-black p-6 rounded-2xl bg-surface-container/30 border border-transparent focus:outline-none focus:bg-white focus:border-black/5 focus:shadow-sm min-h-[120px] transition-all placeholder:text-on-surface-variant/20 italic"
                      />
-                     <div className="flex justify-end mt-2">
+                     <div className="flex justify-end">
                        <button
                          onClick={() => handleReviewSave(item.id)}
-                         className="px-4 py-2 bg-primary/10 text-primary text-xs font-bold rounded-lg hover:bg-primary/20 transition-colors"
+                         className="px-6 py-3 bg-on-surface text-surface text-[9px] font-black uppercase tracking-widest rounded-xl hover:scale-105 active:scale-95 transition-all shadow-xl shadow-black/10"
                        >
-                         Сохранить отзыв
+                         Сохранить мысли
                        </button>
                      </div>
                    </div>
@@ -168,7 +173,9 @@ export default function MarathonDetailsModal({ isOpen, onClose, marathon, userId
              )
           ) : (
              Object.keys(participantsProgress).length === 0 ? (
-               <div className="text-center py-10 text-on-surface-variant text-sm">Никто еще не начал марафон.</div>
+               <div className="text-center py-20 px-10 bg-surface-container/30 rounded-[32px] border border-dashed border-black/5">
+                 <p className="text-[10px] font-black uppercase tracking-widest text-on-surface-variant opacity-30">Никто еще не начал путь</p>
+               </div>
              ) : (
                Object.values(participantsProgress).map((userProg, idx) => {
                  const completedCount = userProg.progress.filter(p => p.isCompleted).length;
@@ -176,43 +183,55 @@ export default function MarathonDetailsModal({ isOpen, onClose, marathon, userId
                  const percent = total > 0 ? Math.round((completedCount / total) * 100) : 0;
                  
                  return (
-                   <div key={idx} className="bg-surface-container-lowest rounded-xl p-5 border border-outline-variant/10 shadow-sm mb-4">
-                     <div className="flex items-center gap-3 mb-4 border-b border-outline-variant/10 pb-4">
-                       {userProg.userAvatar ? (
-                         <img src={userProg.userAvatar} alt="Аватар" className="w-10 h-10 rounded-full object-cover" />
-                       ) : (
-                         <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white font-bold">
-                           {(userProg.userName || '?').charAt(0)}
+                   <div key={idx} className="bg-white rounded-[32px] p-8 border border-black/5 shadow-sm hover:shadow-xl transition-all duration-500">
+                     <div className="flex items-center gap-5 mb-8 border-b border-black/5 pb-8">
+                       <div className="relative">
+                         {userProg.userAvatar ? (
+                           <img src={userProg.userAvatar} alt="Avatar" className="w-14 h-14 rounded-[20px] object-cover grayscale brightness-90 border border-black/5 shadow-sm" />
+                         ) : (
+                           <div className="w-14 h-14 rounded-[20px] bg-surface-container flex items-center justify-center text-[14px] font-black italic text-on-surface/20 border border-black/5">
+                             {(userProg.userName || '?').charAt(0).toUpperCase()}
+                           </div>
+                         )}
+                         <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-green-500 rounded-lg flex items-center justify-center text-white border-2 border-white shadow-lg">
+                           <span className="material-symbols-outlined text-[12px] font-black">bolt</span>
                          </div>
-                       )}
+                       </div>
                        <div className="flex-grow">
-                         <h4 className="font-bold text-sm tracking-tight">{userProg.userName || 'Пользователь'}</h4>
-                         <p className="text-[10px] text-on-surface-variant uppercase tracking-widest font-semibold mt-0.5">
-                           Прогресс: {percent}% ({completedCount} из {total})
-                         </p>
+                         <h4 className="font-black text-lg tracking-tighter italic">{userProg.userName || 'Strand Person'}</h4>
+                         <div className="flex items-center gap-4 mt-1">
+                           <div className="flex-1 h-1.5 bg-surface-container rounded-full overflow-hidden">
+                             <div className="bg-on-surface h-full" style={{ width: `${percent}%` }}></div>
+                           </div>
+                           <span className="text-[9px] font-black uppercase tracking-widest text-on-surface-variant/40">
+                             {percent}% ({completedCount} / {total})
+                           </span>
+                         </div>
                        </div>
                      </div>
-                     <div className="space-y-4">
+                     <div className="space-y-6">
                        {userProg.progress.filter(p => p.isCompleted || p.reviewText).map(p => {
                          const matchingItem = items.find(i => i.id === p.itemId);
                          return (
-                           <div key={p.id} className="bg-surface-container-low rounded-lg p-3 text-sm">
-                             <div className="flex items-center gap-2 mb-1.5">
+                           <div key={p.id} className="relative pl-8">
+                             <div className="absolute left-0 top-1">
                                {p.isCompleted ? (
-                                 <span className="material-symbols-outlined text-primary text-[16px]">check_circle</span>
+                                 <span className="material-symbols-outlined text-green-500 text-[20px]">check_circle</span>
                                ) : (
-                                 <span className="material-symbols-outlined text-outline text-[16px]">radio_button_unchecked</span>
+                                 <span className="material-symbols-outlined text-on-surface-variant/10 text-[20px]">circle</span>
                                )}
-                               <span className="font-semibold text-on-surface">{matchingItem?.title || 'Задание удалено'}</span>
                              </div>
+                             <span className="text-sm font-black tracking-tighter opacity-80 italic">{matchingItem?.title || 'Archive Item'}</span>
                              {p.reviewText && (
-                               <p className="text-on-surface-variant pl-6 text-xs italic">&laquo;{p.reviewText}&raquo;</p>
+                               <div className="mt-3 p-5 rounded-2xl bg-surface-container/30 border-l-4 border-on-surface">
+                                 <p className="text-xs text-on-surface-variant font-medium italic leading-relaxed opacity-70">&laquo;{p.reviewText}&raquo;</p>
+                               </div>
                              )}
                            </div>
                          );
                        })}
                        {userProg.progress.filter(p => p.isCompleted || p.reviewText).length === 0 && (
-                         <p className="text-xs text-on-surface-variant/50 italic pl-1">Только начал(а) участвовать</p>
+                         <p className="text-[10px] font-black uppercase tracking-widest text-on-surface-variant/20 italic">Только начал путь в этом марафоне...</p>
                        )}
                      </div>
                    </div>
@@ -223,5 +242,7 @@ export default function MarathonDetailsModal({ isOpen, onClose, marathon, userId
         </div>
       </div>
     </div>
+  );
+}
   );
 }

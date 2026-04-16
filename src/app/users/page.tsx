@@ -78,94 +78,115 @@ export default function UsersManagementPage() {
     <>
       <TopNavBar />
       <main className="pt-24 pb-32 px-6 max-w-5xl mx-auto">
-        <section className="mb-8">
-          <div className="flex items-center gap-3 mb-2">
-             <span className="material-symbols-outlined text-primary text-3xl">manage_accounts</span>
-             <h2 className="text-3xl font-bold leading-tight tracking-tight">Управление ролями</h2>
-          </div>
-          <p className="text-on-surface-variant text-sm">
-            Поиск пользователей и изменение их уровня доступа в системе.
+        <section className="mb-12">
+          <span className="text-[10px] font-black uppercase tracking-[0.3em] text-on-surface-variant mb-2 block opacity-40 italic">Система доступа</span>
+          <h1 className="text-5xl font-black tracking-tighter text-on-surface leading-[0.9]">Права и<br/>пользователи</h1>
+          <p className="text-on-surface-variant text-sm mt-6 font-medium opacity-70 italic leading-relaxed max-w-lg">
+            Управляйте экосистемой Kinder. Назначайте роли, контролируйте доступы и поддерживайте порядок в сообществе.
           </p>
         </section>
 
         {/* Поиск */}
-        <div className="relative mb-8">
-          <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant/50">search</span>
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Поиск по имени или email..."
-            className="w-full pl-12 pr-4 py-4 rounded-2xl bg-surface-container-low border border-outline-variant/10 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all shadow-sm"
-          />
+        <div className="relative mb-12 group">
+          <div className="absolute inset-0 bg-black/5 rounded-[24px] blur-2xl opacity-0 group-focus-within:opacity-100 transition-opacity duration-700"></div>
+          <div className="relative bg-white rounded-[24px] border border-black/5 shadow-sm p-2 flex items-center gap-4 focus-within:shadow-2xl transition-all duration-500">
+            <div className="w-12 h-12 flex items-center justify-center text-on-surface-variant/30">
+              <span className="material-symbols-outlined">search</span>
+            </div>
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Поиск по имени или email в базе данных..."
+              className="flex-1 bg-transparent border-none focus:outline-none focus:ring-0 text-sm font-medium placeholder:text-on-surface-variant/20 tracking-tight"
+            />
+            {searchQuery && (
+              <button 
+                onClick={() => setSearchQuery('')}
+                className="w-10 h-10 rounded-xl hover:bg-surface-container flex items-center justify-center text-on-surface-variant/30 transition-all"
+              >
+                <span className="material-symbols-outlined text-sm">close</span>
+              </button>
+            )}
+          </div>
         </div>
 
         {message && (
-          <div className={`mb-6 p-4 rounded-xl text-sm font-semibold animate-in fade-in slide-in-from-top-2 ${
-            message.type === 'success' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+          <div className={`mb-10 p-6 rounded-[24px] text-[11px] font-black uppercase tracking-widest border animate-in fade-in slide-in-from-top-4 duration-700 ${
+            message.type === 'success' ? 'bg-white border-green-100 text-green-600 shadow-2xl shadow-green-100' : 'bg-white border-red-100 text-red-600 shadow-2xl shadow-red-100'
           }`}>
-            {message.text}
+            <div className="flex items-center gap-3">
+              <span className="material-symbols-outlined text-[20px]">{message.type === 'success' ? 'check_circle' : 'error'}</span>
+              {message.text}
+            </div>
           </div>
         )}
 
         {/* Таблица пользователей */}
-        <div className="bg-surface-container-lowest rounded-3xl overflow-hidden shadow-sm border border-outline-variant/10">
+        <div className="bg-white rounded-[40px] overflow-hidden shadow-sm border border-black/5">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="bg-surface-container-low/50 border-b border-outline-variant/10">
-                  <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-on-surface-variant">Пользователь</th>
-                  <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-on-surface-variant">Email</th>
-                  <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-on-surface-variant">Текущая роль</th>
-                  <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-on-surface-variant text-right">Действие</th>
+                <tr className="bg-surface-container/30">
+                  <th className="px-8 py-6 text-[9px] font-black uppercase tracking-[0.3em] text-on-surface-variant opacity-40 italic">Пользователь</th>
+                  <th className="px-8 py-6 text-[9px] font-black uppercase tracking-[0.3em] text-on-surface-variant opacity-40 italic">Email-адрес</th>
+                  <th className="px-8 py-6 text-[9px] font-black uppercase tracking-[0.3em] text-on-surface-variant opacity-40 italic">Уровень доступа</th>
+                  <th className="px-8 py-6 text-[9px] font-black uppercase tracking-[0.3em] text-on-surface-variant opacity-40 italic text-right">Настройка</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody className="divide-y divide-black/5">
                 {loading ? (
                   <tr>
-                    <td colSpan={4} className="px-6 py-20 text-center">
-                      <div className="w-8 h-8 border-3 border-primary border-t-transparent rounded-full animate-spin mx-auto"></div>
+                    <td colSpan={4} className="px-8 py-32 text-center">
+                      <div className="w-12 h-12 border-[6px] border-on-surface/5 border-t-on-surface rounded-full animate-spin mx-auto"></div>
                     </td>
                   </tr>
                 ) : users.length === 0 ? (
                   <tr>
-                    <td colSpan={4} className="px-6 py-20 text-center text-on-surface-variant italic">
-                      Пользователи не найдены
+                    <td colSpan={4} className="px-8 py-32 text-center text-on-surface-variant/40 italic font-black text-[11px] uppercase tracking-widest">
+                      База данных пуста
                     </td>
                   </tr>
                 ) : (
                   users.map(u => (
-                    <tr key={u.id} className="border-b border-outline-variant/5 hover:bg-surface-container-low/30 transition-colors">
-                      <td className="px-6 py-4">
-                        <div className="flex items-center gap-3">
-                          <img src={u.avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${u.id}`} alt="" className="w-8 h-8 rounded-full bg-surface-container-high" />
-                          <span className="font-semibold text-sm">{u.name}</span>
+                    <tr key={u.id} className="hover:bg-surface-container/20 transition-all duration-300">
+                      <td className="px-8 py-6">
+                        <div className="flex items-center gap-4">
+                          <img 
+                            src={u.avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${u.id}`} 
+                            alt="" 
+                            className="w-10 h-10 rounded-[14px] bg-surface-container border border-black/5 grayscale brightness-90" 
+                          />
+                          <span className="font-black text-sm tracking-tighter">{u.name}</span>
                         </div>
                       </td>
-                      <td className="px-6 py-4 text-sm text-on-surface-variant">{u.email}</td>
-                      <td className="px-6 py-4">
-                        <span className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest ${
-                          u.role === 'superadmin' ? 'bg-purple-100 text-purple-700' :
-                          u.role === 'admin' ? 'bg-blue-100 text-blue-700' :
-                          u.role === 'moderator' ? 'bg-amber-100 text-amber-700' :
-                          'bg-surface-container-high text-on-surface-variant'
+                      <td className="px-8 py-6 text-[11px] font-black lowercase tracking-widest opacity-40 truncate">{u.email}</td>
+                      <td className="px-8 py-6">
+                        <span className={`px-4 py-2 rounded-full text-[9px] font-black uppercase tracking-widest border ${
+                          u.role === 'superadmin' ? 'bg-purple-50 text-purple-600 border-purple-100' :
+                          u.role === 'admin' ? 'bg-blue-50 text-blue-600 border-blue-100' :
+                          u.role === 'moderator' ? 'bg-amber-50 text-amber-600 border-amber-100' :
+                          'bg-surface-container text-on-surface-variant/60 border-black/5'
                         }`}>
                           {u.role}
                         </span>
                       </td>
-                      <td className="px-6 py-4 text-right">
-                        <div className="flex justify-end gap-2">
-                          <select
-                            value={u.role}
-                            disabled={updatingId === u.id || (u.id === currentUser.id && u.role === 'superadmin')}
-                            onChange={(e) => handleRoleChange(u.id, e.target.value as User['role'])}
-                            className="bg-surface-container-high text-xs font-bold py-2 px-3 rounded-lg border-none focus:ring-2 focus:ring-primary/20 cursor-pointer disabled:opacity-50"
-                          >
-                            <option value="user">USER</option>
-                            <option value="moderator">MODERATOR</option>
-                            <option value="admin">ADMIN</option>
-                            {currentUser.role === 'superadmin' && <option value="superadmin">SUPERADMIN</option>}
-                          </select>
+                      <td className="px-8 py-6 text-right">
+                        <div className="flex justify-end">
+                          <div className="relative group/select inline-block text-left">
+                            <select
+                              value={u.role}
+                              disabled={updatingId === u.id || (u.id === currentUser.id && u.role === 'superadmin')}
+                              onChange={(e) => handleRoleChange(u.id, e.target.value as User['role'])}
+                              className="appearance-none bg-surface-container hover:bg-on-surface hover:text-surface text-[10px] font-black px-6 py-3 rounded-2xl border-none ring-0 focus:ring-0 cursor-pointer disabled:opacity-30 transition-all duration-300 pr-10 uppercase tracking-widest"
+                            >
+                              <option value="user">USER</option>
+                              <option value="moderator">MODERATOR</option>
+                              <option value="admin">ADMIN</option>
+                              {currentUser.role === 'superadmin' && <option value="superadmin">SUPERADMIN</option>}
+                            </select>
+                            <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-[16px] italic">expand_more</span>
+                          </div>
                         </div>
                       </td>
                     </tr>

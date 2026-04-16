@@ -66,27 +66,31 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-6 bg-background">
-      <div className="w-full max-w-md space-y-8">
-        {/* Логотип */}
-        <div className="text-center space-y-2">
-          <h1 className="text-4xl font-bold tracking-tighter">Кинотека</h1>
-          <p className="text-on-surface-variant text-sm">
-            Сообщество ценителей кино и литературы
+    <div className="min-h-screen flex items-center justify-center px-6 bg-surface overflow-hidden relative">
+      <div className="absolute top-0 left-0 w-full h-1 bg-on-surface opacity-5"></div>
+      <div className="w-full max-w-md space-y-12">
+        {/* Logo Section */}
+        <div className="text-center space-y-4">
+          <div className="inline-flex items-center justify-center w-20 h-20 bg-on-surface rounded-[24px] shadow-2xl mb-2">
+            <span className="material-symbols-outlined text-surface text-4xl">movie_filter</span>
+          </div>
+          <h1 className="text-5xl font-black tracking-tighter text-on-surface leading-tight uppercase">Кинотека</h1>
+          <p className="text-on-surface-variant text-[10px] font-black uppercase tracking-[0.3em] opacity-40">
+            Сообщество ценителей <br/> кино и литературы
           </p>
         </div>
 
-        {/* Форма */}
-        <div className="bg-surface-container-lowest rounded-2xl p-8 shadow-sm space-y-6">
-          <h2 className="text-xl font-bold text-center">
-            {mode === 'login' ? 'Войти в аккаунт' : 'Создать аккаунт'}
+        {/* Form Container */}
+        <div className="bg-surface rounded-[40px] p-10 shadow-2xl border border-black/5 space-y-8">
+          <h2 className="text-2xl font-black text-center text-on-surface tracking-tight">
+            {mode === 'login' ? 'С возвращением' : 'Новый аккаунт'}
           </h2>
 
-          {/* Google */}
+          {/* Google Login */}
           <button
             onClick={handleGoogle}
             disabled={loading}
-            className="w-full py-3 px-4 rounded-xl bg-surface-container-low hover:bg-surface-container-high transition-colors flex items-center justify-center gap-3 font-medium text-sm disabled:opacity-50"
+            className="w-full py-4 px-4 rounded-2xl bg-surface-container hover:bg-surface-container-high transition-all flex items-center justify-center gap-3 font-black text-[11px] uppercase tracking-widest disabled:opacity-50 border border-black/5"
           >
             <svg width="20" height="20" viewBox="0 0 24 24">
               <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/>
@@ -97,16 +101,16 @@ export default function LoginPage() {
             Войти через Google
           </button>
 
-          <div className="flex items-center gap-4">
-            <div className="flex-1 h-px bg-outline-variant/30"></div>
-            <span className="text-xs text-on-surface-variant font-medium uppercase tracking-widest">или</span>
-            <div className="flex-1 h-px bg-outline-variant/30"></div>
+          <div className="flex items-center gap-6">
+            <div className="flex-1 h-px bg-black/5"></div>
+            <span className="text-[9px] text-on-surface-variant font-black uppercase tracking-[0.3em] opacity-40">или</span>
+            <div className="flex-1 h-px bg-black/5"></div>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-6">
             {mode === 'register' && (
               <div>
-                <label className="block text-xs font-semibold text-on-surface-variant uppercase tracking-widest mb-2">
+                <label className="block text-[10px] font-black text-on-surface-variant uppercase tracking-widest mb-3 opacity-60 px-1">
                   Имя
                 </label>
                 <input
@@ -114,13 +118,13 @@ export default function LoginPage() {
                   value={name}
                   onChange={e => setName(e.target.value)}
                   placeholder="Ваше имя"
-                  className="w-full px-4 py-3 rounded-xl bg-surface-container-low text-on-surface placeholder:text-on-surface-variant/50 focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all text-sm"
+                  className="w-full px-5 py-4 rounded-2xl bg-surface-container text-on-surface placeholder:text-on-surface-variant/30 focus:outline-none focus:ring-2 focus:ring-black/5 transition-all text-sm font-medium border border-black/5 shadow-inner"
                 />
               </div>
             )}
 
             <div>
-              <label className="block text-xs font-semibold text-on-surface-variant uppercase tracking-widest mb-2">
+              <label className="block text-[10px] font-black text-on-surface-variant uppercase tracking-widest mb-3 opacity-60 px-1">
                 Электронная почта
               </label>
               <input
@@ -129,12 +133,12 @@ export default function LoginPage() {
                 onChange={e => setEmail(e.target.value)}
                 placeholder="email@example.com"
                 required
-                className="w-full px-4 py-3 rounded-xl bg-surface-container-low text-on-surface placeholder:text-on-surface-variant/50 focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all text-sm"
+                className="w-full px-5 py-4 rounded-2xl bg-surface-container text-on-surface placeholder:text-on-surface-variant/30 focus:outline-none focus:ring-2 focus:ring-black/5 transition-all text-sm font-medium border border-black/5 shadow-inner"
               />
             </div>
 
-            <div>
-              <label className="block text-xs font-semibold text-on-surface-variant uppercase tracking-widest mb-2">
+            <div className="relative">
+              <label className="block text-[10px] font-black text-on-surface-variant uppercase tracking-widest mb-3 opacity-60 px-1">
                 Пароль
               </label>
               <input
@@ -144,18 +148,18 @@ export default function LoginPage() {
                 placeholder="••••••••"
                 required
                 minLength={6}
-                className="w-full px-4 py-3 rounded-xl bg-surface-container-low text-on-surface placeholder:text-on-surface-variant/50 focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all text-sm"
+                className="w-full px-5 py-4 rounded-2xl bg-surface-container text-on-surface placeholder:text-on-surface-variant/30 focus:outline-none focus:ring-2 focus:ring-black/5 transition-all text-sm font-medium border border-black/5 shadow-inner"
               />
             </div>
 
             {error && (
-              <p className="text-sm text-error font-medium bg-error-container/20 px-4 py-2 rounded-lg">
+              <p className="text-xs text-red-500 font-black uppercase tracking-widest bg-red-50 px-4 py-3 rounded-2xl border border-red-100">
                 {error}
               </p>
             )}
 
             {info && (
-              <p className="text-sm text-green-600 font-medium bg-green-50 px-4 py-2 rounded-lg">
+              <p className="text-xs text-green-600 font-black uppercase tracking-widest bg-green-50 px-4 py-3 rounded-2xl border border-green-100">
                 {info}
               </p>
             )}
@@ -163,17 +167,17 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 glass-btn text-white rounded-xl font-semibold transition-transform active:scale-95 disabled:opacity-50"
+              className="w-full py-4 bg-on-surface text-surface rounded-2xl font-black text-[11px] uppercase tracking-[0.2em] transition-all active:scale-95 disabled:opacity-50 shadow-2xl shadow-black/20"
             >
-              {loading ? 'Загрузка...' : mode === 'login' ? 'Войти' : 'Зарегистрироваться'}
+              {loading ? 'Загрузка...' : mode === 'login' ? 'Войти в систему' : 'Создать аккаунт'}
             </button>
           </form>
 
-          <p className="text-center text-sm text-on-surface-variant">
+          <p className="text-center text-[10px] font-black uppercase tracking-widest text-on-surface-variant opacity-60">
             {mode === 'login' ? 'Нет аккаунта? ' : 'Уже есть аккаунт? '}
             <button
               onClick={() => { setMode(mode === 'login' ? 'register' : 'login'); setError(''); setInfo(''); }}
-              className="text-primary font-semibold hover:underline"
+              className="text-on-surface font-black hover:underline ml-1"
             >
               {mode === 'login' ? 'Зарегистрироваться' : 'Войти'}
             </button>

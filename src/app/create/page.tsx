@@ -213,136 +213,78 @@ export default function CreatePage() {
       <main className="pt-24 pb-32 px-6 max-w-3xl mx-auto">
         <button 
           onClick={() => router.back()}
-          className="flex items-center gap-1 text-on-surface-variant hover:text-primary transition-colors mb-6 group"
+          className="flex items-center gap-1 text-on-surface-variant hover:text-on-surface transition-colors mb-8 group"
         >
-          <span className="material-symbols-outlined text-[20px] transition-transform group-hover:-translate-x-0.5">arrow_back</span>
-          <span className="text-sm font-semibold">Назад</span>
+          <span className="material-symbols-outlined text-[20px] transition-transform group-hover:-translate-x-1">arrow_back</span>
+          <span className="text-[10px] font-black uppercase tracking-widest">Назад</span>
         </button>
 
-        <section className="mb-8">
-          <span className="text-[10px] font-semibold uppercase tracking-widest text-on-surface-variant">Создание</span>
-          <h2 className="text-3xl font-bold leading-tight tracking-tight mt-1">Добавить публикацию</h2>
-          <p className="text-on-surface-variant text-sm mt-2">
-            Заполните информацию. После отправки публикация будет проверена модератором.
+        <section className="mb-12">
+          <span className="text-[10px] font-black uppercase tracking-[0.3em] text-on-surface-variant mb-2 block opacity-40">Публикация</span>
+          <h1 className="text-5xl font-black tracking-tighter text-on-surface leading-[0.9]">Добавить<br/>контент</h1>
+          <p className="text-on-surface-variant text-sm mt-6 font-medium opacity-70 italic leading-relaxed">
+            Поделитесь своими открытиями. После отправки публикация будет проверена сообществом модераторов.
           </p>
         </section>
 
         {/* Выбор типа */}
-        <div className="flex gap-3 mb-8">
-          <button
-            type="button"
-            onClick={() => setType('movie')}
-            className={`flex-1 py-3 rounded-xl font-semibold text-sm flex items-center justify-center gap-2 transition-all ${
-              type === 'movie'
-                ? 'glass-btn text-white shadow-lg'
-                : 'bg-surface-container-low text-on-surface hover:bg-surface-container-high'
-            }`}
-          >
-            <span className="material-symbols-outlined text-[20px]">movie</span>
-            Фильм
-          </button>
-          <button
-            type="button"
-            onClick={() => setType('book')}
-            className={`flex-1 py-3 rounded-xl font-semibold text-sm flex items-center justify-center gap-2 transition-all ${
-              type === 'book'
-                ? 'glass-btn text-white shadow-lg'
-                : 'bg-surface-container-low text-on-surface hover:bg-surface-container-high'
-            }`}
-          >
-            <span className="material-symbols-outlined text-[20px]">menu_book</span>
-            Книга
-          </button>
+        <div className="flex gap-4 mb-10">
+          {(['movie', 'book'] as ContentType[]).map((t) => (
+            <button
+              key={t}
+              type="button"
+              onClick={() => setType(t)}
+              className={`flex-1 py-4 rounded-2xl font-black text-[11px] uppercase tracking-widest flex items-center justify-center gap-3 transition-all border ${
+                type === t
+                  ? 'bg-on-surface text-surface border-on-surface shadow-2xl shadow-black/20'
+                  : 'bg-surface text-on-surface-variant border-black/5 hover:bg-surface-container'
+              }`}
+            >
+              <span className="material-symbols-outlined text-[20px]">{t === 'movie' ? 'movie' : 'menu_book'}</span>
+              {t === 'movie' ? 'Фильм' : 'Книга'}
+            </button>
+          ))}
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="bg-surface-container-lowest rounded-2xl p-6 space-y-5">
-            <h3 className="text-sm font-bold text-on-surface-variant uppercase tracking-widest flex items-center gap-2">
-              <span className="material-symbols-outlined text-[18px]">info</span>
-              Основная информация
-            </h3>
-
-            <div>
-              <label className={labelClass}>Название *</label>
-              <input
-                type="text"
-                value={title}
-                onChange={e => setTitle(e.target.value)}
-                placeholder={type === 'movie' ? 'Например: Начало' : 'Например: Мастер и Маргарита'}
-                required
-                className={inputClass}
-              />
+        <form onSubmit={handleSubmit} className="space-y-8">
+          <div className="bg-surface rounded-[32px] p-8 space-y-8 shadow-sm border border-black/5">
+            <div className="flex items-center gap-3 border-b border-black/5 pb-6">
+              <div className="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center">
+                <span className="material-symbols-outlined text-[20px] text-on-surface">info</span>
+              </div>
+              <h3 className="text-sm font-black text-on-surface uppercase tracking-widest">Основная информация</h3>
             </div>
 
-            <div>
-              <label className={labelClass}>Описание *</label>
-              <textarea
-                value={description}
-                onChange={e => setDescription(e.target.value)}
-                placeholder="Краткое описание сюжета и ваши впечатления..."
-                required
-                rows={4}
-                className={inputClass + ' resize-none'}
-              />
-            </div>
+            <div className="space-y-6">
+              <div>
+                <label className="block text-[10px] font-black text-on-surface-variant uppercase tracking-widest mb-3 opacity-60">Название *</label>
+                <input
+                  type="text"
+                  value={title}
+                  onChange={e => setTitle(e.target.value)}
+                  placeholder={type === 'movie' ? 'Например: Начало' : 'Например: Мастер и Маргарита'}
+                  required
+                  className="w-full px-5 py-4 rounded-2xl bg-surface-container text-on-surface placeholder:text-on-surface-variant/30 focus:outline-none focus:ring-2 focus:ring-black/5 transition-all text-sm font-medium border border-black/5 shadow-inner"
+                />
+              </div>
 
-            <div>
-              <label className={labelClass}>Обложка</label>
-              
-              {!coverPreview && !imageUrl ? (
-                <div className="relative">
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleFileChange}
-                    className="hidden"
-                    id="cover-upload"
-                  />
-                  <label
-                    htmlFor="cover-upload"
-                    className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-on-surface-variant/20 rounded-xl bg-surface-container-low hover:bg-surface-container-high cursor-pointer transition-colors group"
-                  >
-                    <span className="material-symbols-outlined text-3xl text-on-surface-variant/50 group-hover:text-primary transition-colors">add_photo_alternate</span>
-                    <span className="text-xs text-on-surface-variant/70 mt-2 font-medium">Кликните для выбора фото (до 1МБ)</span>
-                  </label>
-                  
-                  <div className="mt-3 flex items-center gap-3">
-                    <div className="h-px flex-1 bg-on-surface-variant/10"></div>
-                    <span className="text-[10px] uppercase tracking-widest text-on-surface-variant/40 font-bold">ИЛИ ССЫЛКА</span>
-                    <div className="h-px flex-1 bg-on-surface-variant/10"></div>
-                  </div>
-                  
-                  <input
-                    type="url"
-                    value={imageUrl}
-                    onChange={e => setImageUrl(e.target.value)}
-                    placeholder="https://example.com/image.jpg"
-                    className={inputClass + " mt-3"}
-                  />
-                </div>
-              ) : (
-                <div className="relative aspect-[16/9] w-full rounded-xl overflow-hidden bg-surface-container-high group">
-                  <img 
-                    src={coverPreview || imageUrl} 
-                    alt="Preview" 
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-4">
-                    <button
-                      type="button"
-                      onClick={removeFile}
-                      className="w-12 h-12 rounded-full bg-error text-white flex items-center justify-center shadow-lg hover:scale-110 active:scale-95 transition-transform"
-                      title="Удалить"
-                    >
-                      <span className="material-symbols-outlined">delete</span>
-                    </button>
-                    <label
-                      htmlFor="cover-upload"
-                      className="w-12 h-12 rounded-full bg-white text-on-surface flex items-center justify-center shadow-lg cursor-pointer hover:scale-110 active:scale-95 transition-transform"
-                      title="Заменить"
-                    >
-                      <span className="material-symbols-outlined">sync</span>
-                    </label>
+              <div>
+                <label className="block text-[10px] font-black text-on-surface-variant uppercase tracking-widest mb-3 opacity-60">Описание *</label>
+                <textarea
+                  value={description}
+                  onChange={e => setDescription(e.target.value)}
+                  placeholder="Расскажите о своих впечатлениях..."
+                  required
+                  rows={4}
+                  className="w-full px-5 py-4 rounded-2xl bg-surface-container text-on-surface placeholder:text-on-surface-variant/30 focus:outline-none focus:ring-2 focus:ring-black/5 transition-all text-sm font-medium border border-black/5 shadow-inner resize-none"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[10px] font-black text-on-surface-variant uppercase tracking-widest mb-3 opacity-60">Обложка</label>
+                
+                {!coverPreview && !imageUrl ? (
+                  <div className="space-y-4">
                     <input
                       type="file"
                       accept="image/*"
@@ -350,203 +292,197 @@ export default function CreatePage() {
                       className="hidden"
                       id="cover-upload"
                     />
-                  </div>
-                  
-                  {coverFile && (
-                    <div className="absolute top-3 left-3 px-3 py-1.5 rounded-lg bg-primary text-white text-[10px] font-bold uppercase tracking-wider shadow-md">
-                      Выбрано: {(coverFile.size / 1024).toFixed(0)} КБ
+                    <label
+                      htmlFor="cover-upload"
+                      className="flex flex-col items-center justify-center w-full h-40 border-2 border-dashed border-black/5 rounded-[24px] bg-surface-container-low hover:bg-surface-container-high cursor-pointer transition-all group"
+                    >
+                      <span className="material-symbols-outlined text-4xl text-on-surface-variant/20 group-hover:text-on-surface transition-colors">add_photo_alternate</span>
+                      <span className="text-[10px] font-black uppercase tracking-widest text-on-surface-variant opacity-40 mt-4">Выбрать файл</span>
+                    </label>
+                    
+                    <div className="flex items-center gap-4">
+                      <div className="flex-1 h-px bg-black/5 text-transparent">.</div>
+                      <span className="text-[9px] font-black uppercase tracking-widest opacity-20">или</span>
+                      <div className="flex-1 h-px bg-black/5 text-transparent">.</div>
                     </div>
-                  )}
-                </div>
-              )}
-            </div>
+                    
+                    <input
+                      type="url"
+                      value={imageUrl}
+                      onChange={e => setImageUrl(e.target.value)}
+                      placeholder="Вставьте ссылку на изображение"
+                      className="w-full px-5 py-4 rounded-2xl bg-surface-container text-on-surface placeholder:text-on-surface-variant/30 focus:outline-none focus:ring-2 focus:ring-black/5 transition-all text-sm font-medium border border-black/5 shadow-inner"
+                    />
+                  </div>
+                ) : (
+                  <div className="relative aspect-[16/9] w-full rounded-[24px] overflow-hidden bg-surface-container border border-black/5 group">
+                    <img 
+                      src={coverPreview || imageUrl} 
+                      alt="Preview" 
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-4 backdrop-blur-sm">
+                      <button
+                        type="button"
+                        onClick={removeFile}
+                        className="w-14 h-14 rounded-full bg-red-500 text-white flex items-center justify-center shadow-2xl hover:scale-110 active:scale-95 transition-transform"
+                      >
+                        <span className="material-symbols-outlined">delete</span>
+                      </button>
+                      <label
+                        htmlFor="cover-upload"
+                        className="w-14 h-14 rounded-full bg-white text-on-surface flex items-center justify-center shadow-2xl cursor-pointer hover:scale-110 active:scale-95 transition-transform"
+                      >
+                        <span className="material-symbols-outlined">sync</span>
+                      </label>
+                      <input type="file" accept="image/*" onChange={handleFileChange} className="hidden" id="cover-upload" />
+                    </div>
+                  </div>
+                )}
+              </div>
 
-            <div>
-              <label className={labelClass}>Жанры (через запятую)</label>
-              <input
-                type="text"
-                value={genres}
-                onChange={e => setGenres(e.target.value)}
-                placeholder="Драма, Фантастика, Триллер"
-                className={inputClass}
-              />
+              <div>
+                <label className="block text-[10px] font-black text-on-surface-variant uppercase tracking-widest mb-3 opacity-60">Жанры</label>
+                <input
+                  type="text"
+                  value={genres}
+                  onChange={e => setGenres(e.target.value)}
+                  placeholder="Драма, Фантастика (через запятую)"
+                  className="w-full px-5 py-4 rounded-2xl bg-surface-container text-on-surface placeholder:text-on-surface-variant/30 focus:outline-none focus:ring-2 focus:ring-black/5 transition-all text-sm font-medium border border-black/5 shadow-inner"
+                />
+              </div>
             </div>
           </div>
 
-          {/* Детали фильма */}
-          {type === 'movie' && (
-            <div className="bg-surface-container-lowest rounded-2xl p-6 space-y-5">
-              <h3 className="text-sm font-bold text-on-surface-variant uppercase tracking-widest flex items-center gap-2">
-                <span className="material-symbols-outlined text-[18px]">movie</span>
-                Детали фильма
+          {/* Детали специфичные для контента */}
+          <div className="bg-surface rounded-[32px] p-8 space-y-8 shadow-sm border border-black/5">
+            <div className="flex items-center gap-3 border-b border-black/5 pb-6">
+              <div className="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center">
+                <span className="material-symbols-outlined text-[20px] text-on-surface">
+                  {type === 'movie' ? 'movie' : 'menu_book'}
+                </span>
+              </div>
+              <h3 className="text-sm font-black text-on-surface uppercase tracking-widest">
+                Детали {type === 'movie' ? 'фильма' : 'книги'}
               </h3>
+            </div>
 
-              <div>
-                <label className={labelClass}>Режиссёр *</label>
-                <input
-                  type="text"
-                  value={director}
-                  onChange={e => setDirector(e.target.value)}
-                  placeholder="Кристофер Нолан"
-                  required
-                  className={inputClass}
-                />
-              </div>
-
-              <div>
-                <label className={labelClass}>Актёры (через запятую)</label>
-                <input
-                  type="text"
-                  value={actors}
-                  onChange={e => setActors(e.target.value)}
-                  placeholder="Леонардо ДиКаприо, Том Харди"
-                  className={inputClass}
-                />
-              </div>
+            <div className="space-y-6">
+              {type === 'movie' ? (
+                <>
+                  <div>
+                    <label className="block text-[10px] font-black text-on-surface-variant uppercase tracking-widest mb-3 opacity-60">Режиссёр *</label>
+                    <input
+                      type="text"
+                      value={director}
+                      onChange={e => setDirector(e.target.value)}
+                      placeholder="Имя режиссёра"
+                      required
+                      className="w-full px-5 py-4 rounded-2xl bg-surface-container text-on-surface placeholder:text-on-surface-variant/30 focus:outline-none focus:ring-2 focus:ring-black/5 transition-all text-sm font-medium border border-black/5 shadow-inner"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[10px] font-black text-on-surface-variant uppercase tracking-widest mb-3 opacity-60">Актёры</label>
+                    <input
+                      type="text"
+                      value={actors}
+                      onChange={e => setActors(e.target.value)}
+                      placeholder="Главные роли (через запятую)"
+                      className="w-full px-5 py-4 rounded-2xl bg-surface-container text-on-surface placeholder:text-on-surface-variant/30 focus:outline-none focus:ring-2 focus:ring-black/5 transition-all text-sm font-medium border border-black/5 shadow-inner"
+                    />
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div>
+                    <label className="block text-[10px] font-black text-on-surface-variant uppercase tracking-widest mb-3 opacity-60">Автор *</label>
+                    <input
+                      type="text"
+                      value={author}
+                      onChange={e => setAuthor(e.target.value)}
+                      placeholder="Имя автора"
+                      required
+                      className="w-full px-5 py-4 rounded-2xl bg-surface-container text-on-surface placeholder:text-on-surface-variant/30 focus:outline-none focus:ring-2 focus:ring-black/5 transition-all text-sm font-medium border border-black/5 shadow-inner"
+                    />
+                  </div>
+                </>
+              )}
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className={labelClass}>Год выпуска</label>
+                  <label className="block text-[10px] font-black text-on-surface-variant uppercase tracking-widest mb-3 opacity-60">Год</label>
                   <input
                     type="number"
                     value={year}
                     onChange={e => setYear(e.target.value)}
                     placeholder="2024"
-                    min="1900"
-                    max="2030"
-                    className={inputClass}
+                    className="w-full px-5 py-4 rounded-2xl bg-surface-container text-on-surface focus:outline-none focus:ring-2 focus:ring-black/5 transition-all text-sm font-medium border border-black/5 shadow-inner"
                   />
                 </div>
                 <div>
-                  <label className={labelClass}>Длительность</label>
+                  <label className="block text-[10px] font-black text-on-surface-variant uppercase tracking-widest mb-3 opacity-60">
+                    {type === 'movie' ? 'Хронометраж' : 'Страниц'}
+                  </label>
                   <input
-                    type="text"
-                    value={duration}
-                    onChange={e => setDuration(e.target.value)}
-                    placeholder="2ч 30мин"
-                    className={inputClass}
+                    type={type === 'movie' ? 'text' : 'number'}
+                    value={type === 'movie' ? duration : pages}
+                    onChange={e => type === 'movie' ? setDuration(e.target.value) : setPages(e.target.value)}
+                    placeholder={type === 'movie' ? '2ч 15мин' : '450'}
+                    className="w-full px-5 py-4 rounded-2xl bg-surface-container text-on-surface focus:outline-none focus:ring-2 focus:ring-black/5 transition-all text-sm font-medium border border-black/5 shadow-inner"
                   />
                 </div>
               </div>
             </div>
-          )}
+          </div>
 
-          {/* Детали книги */}
-          {type === 'book' && (
-            <div className="bg-surface-container-lowest rounded-2xl p-6 space-y-5">
-              <h3 className="text-sm font-bold text-on-surface-variant uppercase tracking-widest flex items-center gap-2">
-                <span className="material-symbols-outlined text-[18px]">menu_book</span>
-                Детали книги
-              </h3>
-
-              <div>
-                <label className={labelClass}>Автор *</label>
-                <input
-                  type="text"
-                  value={author}
-                  onChange={e => setAuthor(e.target.value)}
-                  placeholder="Михаил Булгаков"
-                  required
-                  className={inputClass}
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className={labelClass}>Количество страниц</label>
-                  <input
-                    type="number"
-                    value={pages}
-                    onChange={e => setPages(e.target.value)}
-                    placeholder="480"
-                    className={inputClass}
-                  />
-                </div>
-                <div>
-                  <label className={labelClass}>ISBN</label>
-                  <input
-                    type="text"
-                    value={isbn}
-                    onChange={e => setIsbn(e.target.value)}
-                    placeholder="978-5-17-..."
-                    className={inputClass}
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className={labelClass}>Издательство</label>
-                <input
-                  type="text"
-                  value={publisher}
-                  onChange={e => setPublisher(e.target.value)}
-                  placeholder="АСТ"
-                  className={inputClass}
-                />
-              </div>
-            </div>
-          )}
-
-          {/* Информация о модерации */}
-          <div className="bg-primary/5 rounded-2xl p-5 flex items-start gap-4">
-            <span className="material-symbols-outlined text-primary text-[24px] mt-0.5">verified_user</span>
+          <div className="p-8 bg-surface border border-black/5 rounded-[32px] flex items-start gap-4">
+            <span className="material-symbols-outlined text-on-surface opacity-20 text-4xl">verified_user</span>
             <div>
-              <p className="text-sm font-semibold">Модерация контента</p>
-              <p className="text-xs text-on-surface-variant mt-1 leading-relaxed">
-                После отправки публикация будет проверена модератором. Обычно проверка занимает до 24 часов.
-                Вы получите уведомление о результате.
+              <p className="text-[10px] font-black uppercase tracking-widest mb-1">Проверка модератором</p>
+              <p className="text-xs text-on-surface-variant font-medium opacity-60 leading-relaxed italic">
+                Все новые материалы проходят ручную проверку. Обычно это занимает от пары часов до суток. Спасибо за терпение!
               </p>
             </div>
           </div>
 
           {errorText && (
-            <div className="bg-error/10 text-error rounded-2xl p-4 text-sm font-medium">
+            <div className="bg-red-50 text-red-500 rounded-[24px] p-6 text-xs font-black uppercase tracking-widest border border-red-100 flex items-center gap-3">
+              <span className="material-symbols-outlined">error</span>
               {errorText}
             </div>
           )}
 
-          <div className="flex flex-col sm:flex-row gap-3">
+          <div className="flex flex-col sm:flex-row gap-4">
             <button
               type="button"
               onClick={handleSaveDraft}
               disabled={isSubmitting || isSavingDraft}
-              className="flex-1 py-4 bg-surface-container-high text-on-surface rounded-xl font-semibold text-base flex items-center justify-center gap-2 transition-all active:scale-95 disabled:opacity-50 hover:bg-surface-container-highest"
+              className="flex-1 py-5 bg-surface text-on-surface-variant border border-black/5 rounded-2xl font-black text-[11px] uppercase tracking-widest flex items-center justify-center gap-3 transition-all hover:bg-surface-container disabled:opacity-50"
             >
-              {isSavingDraft ? (
-                <div className="w-5 h-5 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
-              ) : (
-                <>
-                  <span className="material-symbols-outlined">save</span>
-                  Сохранить черновик
-                </>
-              )}
+              <span className="material-symbols-outlined text-[18px]">save</span>
+              {isSavingDraft ? 'Сохранение...' : 'В черновики'}
             </button>
 
             <button
               type="submit"
               disabled={isSubmitting || isSavingDraft}
-              className="flex-[2] py-4 glass-btn text-white rounded-xl font-semibold text-base flex items-center justify-center gap-2 transition-transform active:scale-95 shadow-lg shadow-primary/20 disabled:opacity-50"
+              className="flex-[2] py-5 bg-on-surface text-surface rounded-2xl font-black text-[11px] uppercase tracking-[0.2em] flex items-center justify-center gap-3 transition-all active:scale-95 shadow-2xl shadow-black/20 disabled:opacity-50"
             >
-              {isSubmitting ? (
-                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-              ) : (
-                <>
-                  <span className="material-symbols-outlined">send</span>
-                  Отправить на модерацию
-                </>
-              )}
+              <span className="material-symbols-outlined text-[18px]">{isSubmitting ? 'sync' : 'publish'}</span>
+              {isSubmitting ? 'Отправка...' : 'Опубликовать'}
             </button>
           </div>
-
-          {/* Плавающее уведомление о сохранении черновика */}
-          {draftSavedAt && (
-            <div className="fixed bottom-28 left-1/2 -translate-x-1/2 bg-surface-container-high text-on-surface px-4 py-2 rounded-full shadow-lg border border-primary/20 flex items-center gap-2 animate-in fade-in slide-in-from-bottom-4 duration-300 z-50">
-              <span className="material-symbols-outlined text-primary text-sm">check_circle</span>
-              <span className="text-xs font-medium">Черновик сохранён в {draftSavedAt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
-            </div>
-          )}
         </form>
       </main>
+
+      {/* Draft Notification */}
+      {draftSavedAt && (
+        <div className="fixed bottom-32 left-1/2 -translate-x-1/2 bg-on-surface text-surface px-6 py-3 rounded-full shadow-2xl flex items-center gap-3 z-50 animate-in fade-in slide-in-from-bottom-5 duration-500">
+          <span className="material-symbols-outlined text-green-400">check_circle</span>
+          <span className="text-[10px] font-black uppercase tracking-widest">Черновик сохранён в {draftSavedAt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+        </div>
+      )}
+
       <BottomNavBar />
     </>
   );

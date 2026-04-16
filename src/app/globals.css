@@ -1,31 +1,24 @@
 @import "tailwindcss";
 
 @theme {
-  --color-background: #0a0e14;
-  --color-surface: #12161f;
-  --color-surface-container: #1b212e;
-  --color-surface-container-low: #141a26;
-  --color-surface-container-lowest: #0a0c12;
-  --color-surface-container-high: #232a3b;
-  --color-surface-container-highest: #2b3447;
+  --color-background: #f8f9fb;
+  --color-on-background: #1a1c1e;
   
-  --color-primary: #4242f0;
+  --color-surface: #ffffff;
+  --color-on-surface: #1a1c1e;
+  --color-on-surface-variant: #5f6368;
+  
+  --color-surface-container: #f1f3f5;
+  --color-surface-container-high: #e9ecef;
+  --color-surface-container-highest: #dee2e6;
+  
+  --color-primary: #1a1c1e;
   --color-on-primary: #ffffff;
-  --color-primary-container: #2b3447;
-  --color-on-primary-container: #d9dff5;
+  --color-primary-container: #e8def8;
+  --color-on-primary-container: #21005d;
 
-  --color-secondary: #7c8599;
-  --color-secondary-container: #232a3b;
-  --color-on-secondary-container: #dce2f3;
-
-  --color-on-surface: #ffffff;
-  --color-on-surface-variant: #94a3b8;
-  --color-outline: #475569;
-  --color-outline-variant: #334155;
-
-  --color-error: #ef4444;
-  --color-on-error: #ffffff;
-  --color-error-container: #450a0a;
+  --color-outline: #79747e;
+  --color-outline-variant: #c4c7c5;
 
   --radius-lg: 0.5rem;
   --radius-xl: 0.75rem;

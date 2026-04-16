@@ -30,26 +30,34 @@ export default function BottomNavBar({ activeTab = 'home' }: BottomNavBarProps) 
   const activeIndex = tabs.findIndex(t => t.id === activeTab);
 
   return (
-    <nav className="fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-8 pt-4 bg-background/90 backdrop-blur-2xl border-t border-white/5 z-50 rounded-t-[32px] md:hidden">
-      {/* Active Indicator Shadow/Pill */}
-      <div 
-        className="absolute h-14 bg-surface-container-high rounded-2xl transition-all duration-500 ease-out shadow-xl shadow-black/20"
-        style={{ 
-          width: '72px',
-          left: `calc(4px + ${activeIndex * (100 / tabs.length)}% + (100% / ${tabs.length} - 72px) / 2)` 
-        }}
-      />
-      
-      {tabs.map(tab => (
-        <Link key={tab.id} className={getTabClass(tab.id)} href={tab.href}>
-          <span className="material-symbols-outlined text-[26px]" style={getIconStyle(tab.id)}>
-            {tab.icon}
-          </span>
-          <span className="text-[9px] font-bold uppercase tracking-[0.15em] mt-1.5 opacity-80">
-            {tab.label}
-          </span>
-        </Link>
-      ))}
+    <nav className="fixed bottom-0 left-0 w-full bg-surface/80 backdrop-blur-2xl border-t border-black/5 z-50 md:hidden pb-safe">
+      <div className="relative flex justify-between items-center px-4 py-3">
+        {/* Active Indicator (Centered Pill) */}
+        <div 
+          className="absolute h-14 bg-on-surface rounded-[24px] transition-all duration-500 ease-out shadow-lg shadow-black/10"
+          style={{ 
+            width: '80px',
+            left: `calc(1rem + ${activeIndex} * ((100% - 2rem) / ${tabs.length}) + (((100% - 2rem) / ${tabs.length}) - 80px) / 2)` 
+          }}
+        />
+        
+        {tabs.map(tab => (
+          <Link 
+            key={tab.id} 
+            href={tab.href}
+            className={`relative flex-1 flex flex-col items-center justify-center py-2 transition-all duration-300 z-10 ${
+              tab.id === activeTab ? 'text-surface' : 'text-on-surface-variant hover:text-on-surface'
+            }`}
+          >
+            <span className="material-symbols-outlined text-[26px]" style={getIconStyle(tab.id)}>
+              {tab.icon}
+            </span>
+            <span className="text-[9px] font-black uppercase tracking-widest mt-1 opacity-90">
+              {tab.label}
+            </span>
+          </Link>
+        ))}
+      </div>
     </nav>
   );
 }

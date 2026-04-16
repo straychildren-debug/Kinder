@@ -96,8 +96,8 @@ export default function Clubs() {
         {/* Header Section */}
         <header className="mb-12 flex flex-col md:flex-row md:justify-between md:items-end gap-6">
           <div>
-            <span className="text-[0.6875rem] font-semibold uppercase tracking-widest text-on-surface-variant mb-2 block">Сообщество</span>
-            <h1 className="text-5xl font-bold tracking-tight text-on-surface">Клубы</h1>
+            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-on-surface-variant mb-2 block opacity-60">Сообщество</span>
+            <h1 className="text-6xl font-black tracking-tighter text-on-surface leading-[0.9]">Клубы по<br/>интересам</h1>
           </div>
           {/* Action Row: Search and Create */}
           <div className="flex flex-col sm:flex-row items-center gap-4">
@@ -108,23 +108,23 @@ export default function Clubs() {
                 placeholder="Поиск клубов..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 rounded-xl bg-surface-container-low border border-outline-variant/10 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
+                className="w-full pl-10 pr-4 py-3.5 rounded-2xl bg-surface border border-black/5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-black/5 transition-all shadow-sm"
               />
             </div>
             <div className="relative w-full sm:w-auto">
               <button
                 id="create-club-btn"
                 onClick={handleCreateClick}
-                className="glass-action text-white px-6 py-3 rounded-xl flex items-center justify-center gap-2 shadow-xl shadow-primary/10 hover:scale-105 active:scale-95 transition-all w-full sm:w-auto"
+                className="bg-on-surface text-surface px-6 py-3.5 rounded-2xl flex items-center justify-center gap-2 shadow-xl shadow-black/10 hover:scale-105 active:scale-95 transition-all w-full sm:w-auto"
               >
                 <span className="material-symbols-outlined">add_circle</span>
-                <span className="font-semibold text-sm">Создать клуб</span>
+                <span className="font-black text-[11px] uppercase tracking-widest">Создать клуб</span>
               </button>
               {showTooltip && (
-                <div className="absolute right-0 top-full mt-2 z-50 glass-tooltip whitespace-nowrap">
+                <div className="absolute right-0 top-full mt-2 z-50 bg-on-surface text-surface p-4 rounded-2xl shadow-2xl whitespace-nowrap">
                   <div className="flex items-center gap-2">
                     <span className="material-symbols-outlined text-amber-400 text-base">info</span>
-                    <span>Нужно ≥ 20 одобренных публикаций (сейчас: {approvedCount})</span>
+                    <span className="text-[10px] font-black uppercase tracking-widest">Нужно ≥ 20 публикаций ({approvedCount})</span>
                   </div>
                 </div>
               )}
@@ -139,30 +139,30 @@ export default function Clubs() {
             {heroMain && (
               <div
                 onClick={() => handleJoin(heroMain.id)}
-                className="md:col-span-8 bg-surface-container-lowest rounded-2xl overflow-hidden relative group shadow-sm cursor-pointer"
+                className="md:col-span-8 bg-surface rounded-[40px] overflow-hidden relative group shadow-2xl border border-black/5 cursor-pointer"
               >
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-10"></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-10 opacity-80"></div>
                 {heroMain.imageUrl ? (
                   <img
                     alt={heroMain.name}
-                    className="w-full h-[400px] object-cover group-hover:scale-105 transition-transform duration-700"
+                    className="w-full h-[450px] object-cover group-hover:scale-110 transition-transform duration-[1500ms] ease-out"
                     src={heroMain.imageUrl}
                   />
                 ) : (
-                  <div className="w-full h-[400px] bg-gradient-to-br from-primary/20 to-secondary-container flex items-center justify-center">
-                    <span className="material-symbols-outlined text-8xl text-on-surface-variant/30">{CATEGORY_ICONS[heroMain.category] || 'groups'}</span>
+                  <div className="w-full h-[450px] bg-surface-container flex items-center justify-center">
+                    <span className="material-symbols-outlined text-huge text-on-surface-variant/10">{CATEGORY_ICONS[heroMain.category] || 'groups'}</span>
                   </div>
                 )}
-                <div className="absolute bottom-0 left-0 p-8 z-20 w-full">
-                  <div className="flex justify-between items-end">
-                    <div>
-                      <span className="inline-block px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-[10px] text-white font-bold uppercase tracking-widest mb-4">Популярное</span>
-                      <h2 className="text-3xl font-bold text-white mb-2">{heroMain.name}</h2>
-                      <p className="text-white/80 text-sm max-w-md">{heroMain.description}</p>
+                <div className="absolute bottom-0 left-0 p-10 z-20 w-full">
+                  <div className="flex justify-between items-end gap-6 flex-wrap">
+                    <div className="flex-1 min-w-[300px]">
+                      <span className="inline-block px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-[10px] text-white font-black uppercase tracking-[0.2em] mb-4 border border-white/10">Популярное</span>
+                      <h2 className="text-4xl md:text-5xl font-black text-white mb-2 tracking-tighter leading-none">{heroMain.name}</h2>
+                      <p className="text-white/70 text-sm max-w-md font-medium">{heroMain.description}</p>
                     </div>
-                    <div className="text-right">
-                      <span className="text-white/60 text-xs block mb-2">{heroMain.memberCount} Участники</span>
-                      <button className="bg-white text-on-surface px-6 py-2 rounded-lg font-bold text-sm hover:bg-surface-variant transition-colors">
+                    <div className="text-right flex-shrink-0">
+                      <span className="text-white/40 text-[10px] font-black uppercase tracking-widest block mb-4">{heroMain.memberCount} участников</span>
+                      <button className="bg-white text-on-surface px-8 py-3 rounded-2xl font-black text-[11px] uppercase tracking-widest hover:scale-105 transition-transform shadow-xl">
                         Вступить
                       </button>
                     </div>
@@ -175,18 +175,20 @@ export default function Clubs() {
             {heroSide && (
               <div
                 onClick={() => handleJoin(heroSide.id)}
-                className="md:col-span-4 bg-surface-container-lowest p-8 rounded-2xl flex flex-col justify-between shadow-sm cursor-pointer hover:-translate-y-1 transition-transform duration-300"
+                className="md:col-span-4 bg-surface p-10 rounded-[40px] flex flex-col justify-between shadow-sm border border-black/5 cursor-pointer hover:shadow-xl transition-all duration-500 hover:scale-[1.02]"
               >
                 <div>
-                  <span className="material-symbols-outlined text-primary text-4xl mb-6">
-                    {CATEGORY_ICONS[heroSide.category] || 'groups'}
-                  </span>
-                  <h3 className="text-xl font-bold mb-3">{heroSide.name}</h3>
-                  <p className="text-on-surface-variant text-sm leading-relaxed">{heroSide.description}</p>
+                  <div className="w-16 h-16 rounded-[24px] bg-surface-container flex items-center justify-center mb-10 shadow-inner">
+                    <span className="material-symbols-outlined text-on-surface text-4xl">
+                      {CATEGORY_ICONS[heroSide.category] || 'groups'}
+                    </span>
+                  </div>
+                  <h3 className="text-2xl font-black mb-3 tracking-tight text-on-surface">{heroSide.name}</h3>
+                  <p className="text-on-surface-variant text-sm font-medium leading-relaxed opacity-70">{heroSide.description}</p>
                 </div>
-                <div className="pt-8 flex justify-between items-center">
-                  <span className="text-[10px] font-bold uppercase tracking-tighter text-on-surface-variant">{heroSide.memberCount} участники</span>
-                  <button className="text-primary font-bold text-sm hover:underline">Вступить</button>
+                <div className="pt-10 flex justify-between items-center">
+                  <span className="text-[10px] font-black uppercase tracking-widest text-on-surface-variant opacity-40">{heroSide.memberCount} участников</span>
+                  <button className="text-on-surface font-black text-[11px] uppercase tracking-widest hover:translate-x-1 transition-transform">Вступить →</button>
                 </div>
               </div>
             )}
@@ -194,15 +196,15 @@ export default function Clubs() {
         )}
 
         {/* Filter Tabs */}
-        <div className="flex gap-8 mb-8 border-b border-outline-variant/20 overflow-x-auto whitespace-nowrap scrollbar-hide">
+        <div className="flex gap-10 mb-10 border-b border-black/5 overflow-x-auto whitespace-nowrap scrollbar-hide px-2">
           {([['all', 'Все сообщества'], ['кино', 'Кино'], ['книги', 'Книги']] as [FilterTab, string][]).map(([key, label]) => (
             <button
               key={key}
               onClick={() => setActiveFilter(key)}
-              className={`pb-4 border-b-2 font-medium text-sm transition-colors ${
+              className={`pb-4 border-b-[3px] text-[11px] font-black uppercase tracking-[0.2em] transition-all ${
                 activeFilter === key
-                  ? 'border-primary text-primary font-bold'
-                  : 'border-transparent text-on-surface-variant hover:text-on-surface'
+                  ? 'border-on-surface text-on-surface'
+                  : 'border-transparent text-on-surface-variant hover:text-on-surface opacity-40 hover:opacity-100'
               }`}
             >
               {label}
@@ -213,16 +215,16 @@ export default function Clubs() {
         {/* Loading */}
         {loading && (
           <div className="flex justify-center py-20">
-            <div className="w-8 h-8 border-2 border-primary/30 border-t-primary rounded-full animate-spin"></div>
+            <div className="w-10 h-10 border-4 border-on-surface border-t-transparent rounded-full animate-spin"></div>
           </div>
         )}
 
         {/* Empty State */}
         {!loading && filteredClubs.length === 0 && (
-          <div className="text-center py-20">
-            <span className="material-symbols-outlined text-6xl text-on-surface-variant/30 mb-4 block">groups</span>
-            <h3 className="text-xl font-bold mb-2">Пока нет клубов</h3>
-            <p className="text-on-surface-variant text-sm">Станьте первым — создайте клуб!</p>
+          <div className="text-center py-24 bg-surface rounded-[40px] border border-black/5">
+            <span className="material-symbols-outlined text-8xl text-on-surface/5 mb-6 block">groups</span>
+            <h3 className="text-2xl font-black mb-2 text-on-surface tracking-tight">Пока нет клубов</h3>
+            <p className="text-on-surface-variant text-[10px] font-black uppercase tracking-widest opacity-40">Станьте первым — создайте клуб!</p>
           </div>
         )}
 
@@ -233,40 +235,40 @@ export default function Clubs() {
               <div
                 key={club.id}
                 onClick={() => handleJoin(club.id)}
-                className="bg-surface-container-lowest rounded-xl overflow-hidden hover:-translate-y-1 transition-transform duration-300 shadow-sm cursor-pointer"
+                className="bg-surface rounded-3xl overflow-hidden hover:shadow-2xl transition-all duration-500 hover:scale-[1.02] shadow-sm border border-black/5 cursor-pointer group"
               >
-                <div className="h-40 bg-surface-container-high relative">
+                <div className="h-44 bg-surface-container relative overflow-hidden">
                   {club.imageUrl ? (
                     <img
                       alt={club.name}
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                       src={club.imageUrl}
                     />
                   ) : (
-                    <div className="w-full h-full bg-gradient-to-br from-primary/10 to-secondary-container flex items-center justify-center">
-                      <span className="material-symbols-outlined text-5xl text-on-surface-variant/20">
+                    <div className="w-full h-full bg-surface-container flex items-center justify-center">
+                      <span className="material-symbols-outlined text-5xl text-on-surface/5">
                         {CATEGORY_ICONS[club.category] || 'groups'}
                       </span>
                     </div>
                   )}
-                  <div className="absolute top-3 left-3 flex gap-2">
-                    <div className="px-2 py-1 bg-black/50 backdrop-blur-md rounded-md text-[10px] text-white font-bold">
+                  <div className="absolute top-4 left-4 flex gap-2">
+                    <div className="px-2.5 py-1 bg-on-surface/90 backdrop-blur-md rounded-lg text-[9px] text-surface font-black uppercase tracking-widest">
                       {CATEGORY_LABELS[club.category] || club.category}
                     </div>
                     {typeof club.unreadCount === 'number' && club.unreadCount > 0 && (
-                      <div className="px-2 py-1 bg-error text-on-error rounded-md text-[10px] font-black animate-pulse shadow-lg shadow-error/20">
+                      <div className="px-2.5 py-1 bg-red-500 text-white rounded-lg text-[9px] font-black uppercase tracking-widest animate-pulse shadow-lg">
                         +{club.unreadCount}
                       </div>
                     )}
                   </div>
                 </div>
-                <div className="p-5">
-                  <h4 className="font-bold text-on-surface mb-2">{club.name}</h4>
-                  <p className="text-xs text-on-surface-variant line-clamp-2 mb-6">{club.description}</p>
+                <div className="p-6">
+                  <h4 className="font-black text-on-surface text-lg mb-2 tracking-tight line-clamp-1">{club.name}</h4>
+                  <p className="text-xs text-on-surface-variant font-medium line-clamp-2 mb-8 opacity-70 leading-relaxed italic">{club.description}</p>
                   <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-bold uppercase tracking-tighter text-on-surface-variant">{club.memberCount} Участники</span>
-                    <button className="p-2 rounded-full hover:bg-surface-container-low transition-colors">
-                      <span className="material-symbols-outlined text-primary">login</span>
+                    <span className="text-[10px] font-black uppercase tracking-widest text-on-surface-variant opacity-40">{club.memberCount} участников</span>
+                    <button className="w-10 h-10 rounded-2xl bg-surface-container flex items-center justify-center group-hover:bg-on-surface transition-colors">
+                      <span className="material-symbols-outlined text-on-surface-variant text-xl group-hover:text-surface">login</span>
                     </button>
                   </div>
                 </div>
@@ -276,12 +278,12 @@ export default function Clubs() {
         )}
 
         {/* Suggestion Section */}
-        <section className="mt-20 p-12 bg-surface-container-low rounded-3xl text-center">
-          <h3 className="text-2xl font-bold mb-4">Не нашли то, что искали?</h3>
-          <p className="text-on-surface-variant max-w-xl mx-auto mb-8 text-sm">Создайте собственное сообщество и пригласите единомышленников для обсуждения любимых произведений.</p>
+        <section className="mt-24 p-16 bg-surface rounded-[40px] border border-black/5 text-center shadow-sm">
+          <h3 className="text-3xl font-black mb-4 text-on-surface tracking-tight">Не нашли то, что искали?</h3>
+          <p className="text-on-surface-variant max-w-xl mx-auto mb-10 text-sm font-medium opacity-70 italic leading-relaxed">Создайте собственное сообщество и пригласите единомышленников для обсуждения любимых произведений в свободном формате.</p>
           <button
             onClick={handleCreateClick}
-            className="bg-primary text-white px-10 py-4 rounded-xl font-bold hover:bg-primary-dim transition-all shadow-lg shadow-primary/20"
+            className="bg-on-surface text-surface px-10 py-4 rounded-2xl font-black text-[11px] uppercase tracking-[0.2em] hover:scale-105 transition-transform shadow-2xl shadow-black/20"
           >
             Начать новое обсуждение
           </button>
