@@ -275,13 +275,13 @@ export default function Clubs() {
                       <div className="absolute -top-10 -right-10 w-32 h-32 bg-on-surface/[0.02] rounded-full blur-3xl group-hover:bg-on-surface/[0.05] transition-colors" />
 
                       {/* Thumbnail with deep shadow */}
-                      <div className="w-[104px] aspect-square bg-surface-container relative rounded-2xl overflow-hidden flex-shrink-0 shadow-lg shadow-black/5">
+                      <div className="w-[50px] h-[50px] bg-surface-container relative rounded-xl overflow-hidden flex-shrink-0 shadow-lg shadow-black/5">
                         {club.imageUrl ? (
                           <Image
                             src={club.imageUrl}
                             alt={club.name}
                             fill
-                            sizes="120px"
+                            sizes="50px"
                             placeholder="blur"
                             blurDataURL={defaultBlurDataURL}
                             className="object-cover group-hover:scale-110 transition-transform duration-1000 ease-out"
