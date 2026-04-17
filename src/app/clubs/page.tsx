@@ -342,115 +342,68 @@ export default function Clubs() {
           </div>
         )}
 
-        {/* Popular Bento Grid (Poster Glass Style) */}
+        {/* Popular Spotlight Section */}
         {!loading && activeMainTab === 'all' && heroClubs.length > 0 && (
-          <section className="mt-16">
-            <div className="flex items-center justify-between mb-8 px-2">
+          <section className="mt-16 mb-24">
+            <div className="flex items-center justify-between mb-10 px-2">
                <div>
-                 <h2 className="text-3xl font-black tracking-tight text-on-surface leading-none mb-1">Популярные сообщества</h2>
-                 <p className="text-[10px] font-black uppercase tracking-widest text-on-surface-muted opacity-40">Лучшее из жизни нашего сообщества</p>
+                 <span className="text-[10px] font-bold tracking-[0.3em] text-on-surface-variant/40 uppercase mb-2 block">Рекомендации</span>
+                 <h2 className="text-4xl font-bold tracking-tight text-on-surface leading-none">Популярные сообщества</h2>
                </div>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-6 mb-12 uppercase tracking-[0.1em]">
-              {/* Large Featured Card - Poster Style */}
+            <div className="space-y-8">
+              {/* Main spotlight - Split Design */}
               {heroClubs[0] && (
                 <div
                   onClick={() => handleJoin(heroClubs[0].id)}
-                  className="md:col-span-8 bg-surface rounded-[32px] overflow-hidden relative group shadow-2xl border border-on-surface/5 cursor-pointer h-[480px]"
+                  className="bg-surface rounded-[32px] p-8 md:p-12 flex flex-col md:flex-row items-center gap-12 group transition-all duration-700 hover:shadow-2xl hover:shadow-on-surface/5 border border-on-surface/5 cursor-pointer relative overflow-hidden"
                 >
-                  <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/90 via-black/20 to-transparent"></div>
+                  {/* Subtle background accent */}
+                  <div className="absolute top-0 right-0 w-96 h-96 bg-on-surface/[0.01] rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
                   
-                  {heroClubs[0].imageUrl ? (
-                    <Image
-                      src={heroClubs[0].imageUrl}
-                      alt={heroClubs[0].name}
-                      fill
-                      sizes="(min-width: 768px) 66vw, 100vw"
-                      placeholder="blur"
-                      blurDataURL={defaultBlurDataURL}
-                      className="object-cover group-hover:scale-105 transition-transform duration-[2000ms] ease-out"
-                    />
-                  ) : (
-                    <div className="w-full h-full bg-surface-container flex items-center justify-center text-on-surface-variant/10">
-                      <span className="material-symbols-outlined text-huge font-thin opacity-5">
-                        {CATEGORY_ICONS[heroClubs[0].category] || 'groups'}
-                      </span>
-                    </div>
-                  )}
-
-                  {/* Glass Interface Over Image */}
-                  <div className="absolute inset-0 p-8 flex flex-col justify-end z-20">
-                    <div className="bg-white/10 backdrop-blur-xl border border-white/20 p-8 rounded-[24px] shadow-2xl overflow-hidden relative">
-                       {/* Subtle inner glow */}
-                       <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-white/30 to-transparent"></div>
-                       
-                       <div className="flex flex-col md:flex-row justify-between items-end gap-6">
-                         <div className="flex-1">
-                           <div className="flex items-center gap-3 mb-4">
-                             <span className="px-3 py-1 bg-white/20 rounded-full text-[9px] text-white font-black uppercase tracking-widest border border-white/10">Популярное</span>
-                             <div className="flex items-center gap-1.5 text-white/80">
-                               <span className="material-symbols-outlined text-base">groups</span>
-                               <span className="text-[10px] font-bold">{heroClubs[0].memberCount}</span>
-                             </div>
-                           </div>
-                           <h2 className="text-4xl md:text-5xl font-black text-white mb-3 tracking-tighter leading-none">{heroClubs[0].name}</h2>
-                           <p className="text-white/60 text-sm max-w-md font-medium leading-relaxed line-clamp-2">{heroClubs[0].description}</p>
-                         </div>
-                         <button className="bg-white text-on-surface px-8 py-3 rounded-2xl font-black text-[11px] uppercase tracking-widest hover:bg-on-surface hover:text-surface transition-all shadow-xl active:scale-95">
-                           Вступить в клуб
-                         </button>
-                       </div>
-                    </div>
+                  {/* Featured Image Section */}
+                  <div className="w-full md:w-[280px] aspect-[2/3] relative rounded-2xl overflow-hidden shadow-2xl flex-shrink-0 z-10">
+                    {heroClubs[0].imageUrl ? (
+                      <Image
+                        src={heroClubs[0].imageUrl}
+                        alt={heroClubs[0].name}
+                        fill
+                        sizes="(min-width: 768px) 280px, 100vw"
+                        placeholder="blur"
+                        blurDataURL={defaultBlurDataURL}
+                        className="object-cover group-hover:scale-105 transition-transform duration-[2000ms] ease-out"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-surface-container flex items-center justify-center">
+                        <span className="material-symbols-outlined text-6xl text-on-surface/5">
+                          {CATEGORY_ICONS[heroClubs[0].category] || 'groups'}
+                        </span>
+                      </div>
+                    )}
                   </div>
-                </div>
-              )}
 
-              {/* Side Card - Modern Glass Hybrid */}
-              {heroClubs[1] && (
-                <div
-                  onClick={() => handleJoin(heroClubs[1].id)}
-                  className="md:col-span-4 bg-surface rounded-[32px] overflow-hidden relative group shadow-sm border border-on-surface/5 cursor-pointer h-[480px]"
-                >
-                   {heroClubs[1].imageUrl ? (
-                    <Image
-                      src={heroClubs[1].imageUrl}
-                      alt={heroClubs[1].name}
-                      fill
-                      sizes="33vw"
-                      placeholder="blur"
-                      blurDataURL={defaultBlurDataURL}
-                      className="object-cover group-hover:scale-110 transition-transform duration-[3000ms] ease-out brightness-[0.7] group-hover:brightness-[0.9]"
-                    />
-                  ) : (
-                    <div className="w-full h-full bg-surface-container flex items-center justify-center">
-                      <span className="material-symbols-outlined text-6xl text-on-surface/10">
-                        {CATEGORY_ICONS[heroClubs[1].category] || 'groups'}
-                      </span>
-                    </div>
-                  )}
-                  
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent z-10"></div>
-
-                  <div className="absolute inset-0 p-8 flex flex-col justify-between z-20">
-                    <div className="flex justify-between items-start">
-                       <div className="w-12 h-12 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center shadow-lg">
-                         <span className="material-symbols-outlined text-white text-2xl">
-                           {CATEGORY_ICONS[heroClubs[1].category] || 'groups'}
-                         </span>
-                       </div>
-                       <div className="bg-white/10 backdrop-blur-md px-3 py-1.5 rounded-xl border border-white/20 text-white text-[10px] font-black uppercase tracking-widest">
-                         {heroClubs[1].memberCount} участников
-                       </div>
-                    </div>
-                    
-                    <div className="bg-black/20 backdrop-blur-md border border-white/10 p-6 rounded-[24px]">
-                      <h3 className="text-2xl font-black text-white mb-2 tracking-tight leading-none">{heroClubs[1].name}</h3>
-                      <p className="text-white/70 text-xs font-medium leading-relaxed line-clamp-2">{heroClubs[1].description}</p>
-                      <div className="mt-4 pt-4 border-t border-white/5 flex justify-end">
-                         <span className="material-symbols-outlined text-white group-hover:translate-x-2 transition-transform">arrow_right_alt</span>
+                  {/* Editorial Content Section */}
+                  <div className="flex-1 z-10">
+                    <div className="flex items-center gap-3 mb-6">
+                      <span className="px-3 py-1 bg-on-surface text-surface rounded-full text-[9px] font-bold uppercase tracking-widest leading-none">Популярное</span>
+                      <div className="flex items-center gap-1.5 text-on-surface-muted/60 leading-none">
+                        <span className="material-symbols-outlined text-base">groups</span>
+                        <span className="text-[11px] font-bold">{heroClubs[0].memberCount} участников</span>
                       </div>
                     </div>
+                    
+                    <h2 className="text-4xl md:text-6xl font-black text-on-surface mb-6 tracking-tighter leading-[0.9] group-hover:text-on-surface-variant transition-colors">
+                      {heroClubs[0].name}
+                    </h2>
+                    
+                    <p className="text-on-surface-muted/60 text-base md:text-lg max-w-xl font-medium leading-relaxed mb-10 line-clamp-3">
+                      {heroClubs[0].description}
+                    </p>
+                    
+                    <button className="bg-on-surface text-surface px-10 py-4 rounded-2xl font-bold text-[12px] uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-xl shadow-on-surface/10 leading-none">
+                      Вступить в клуб
+                    </button>
                   </div>
                 </div>
               )}
