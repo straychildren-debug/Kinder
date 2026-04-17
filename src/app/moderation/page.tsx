@@ -116,6 +116,9 @@ export default function ModerationPage() {
           </div>
         </div>
 
+        <div className="text-center py-20 bg-surface-container/30 rounded-[40px] border border-dashed border-on-surface/10">
+           <p className="text-on-surface-variant font-black uppercase text-[10px] tracking-widest opacity-30">Нажмите "Ожидают проверки", чтобы открыть список</p>
+        </div>
 
         {/* --- MODAL WINDOW FOR LIST --- */}
         {showPending && (
