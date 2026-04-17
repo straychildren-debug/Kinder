@@ -27,7 +27,7 @@ export default function CatalogTabs({
         className={`relative pb-4 border-b-[3px] text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-300 ${
           activeTab === 'catalog' 
             ? 'border-on-surface text-on-surface' 
-            : 'border-transparent text-on-surface-muted hover:text-on-surface hover:opacity-100'
+            : 'border-transparent text-on-surface/50 hover:text-on-surface transition-colors'
         }`}
       >
         <span>{catalogLabel}</span>
@@ -45,13 +45,13 @@ export default function CatalogTabs({
         className={`relative pb-4 border-b-[3px] text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-300 flex items-center gap-2 ${
           activeTab === 'mylist' 
             ? 'border-on-surface text-on-surface' 
-            : 'border-transparent text-on-surface-muted hover:text-on-surface hover:opacity-100'
+            : 'border-transparent text-on-surface/50 hover:text-on-surface transition-colors'
         }`}
       >
         <span>{myListLabel}</span>
         {myListCount !== undefined && myListCount > 0 && (
           <span className={`px-1.5 py-0.5 rounded-full text-[8px] font-black ${
-            activeTab === 'mylist' ? 'bg-on-surface text-surface' : 'bg-on-surface/10 text-on-surface-muted'
+            activeTab === 'mylist' ? 'bg-on-surface text-surface' : 'bg-on-surface/20 text-on-surface'
           }`}>
             {myListCount}
           </span>

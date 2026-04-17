@@ -54,7 +54,7 @@ export default function Movies() {
         {/* Page Header */}
         <section className="py-8">
            <h1 className="text-6xl font-black tracking-tighter leading-none text-on-surface mb-2">Все фильмы</h1>
-           <span className="text-[10px] font-black text-on-surface-muted uppercase tracking-[0.3em]">
+           <span className="text-[10px] font-black text-on-surface/80 uppercase tracking-[0.3em]">
              кинотека сообщества
            </span>
         </section>
@@ -138,23 +138,23 @@ export default function Movies() {
                       {movie.rating && (
                         <div className="flex items-center gap-0.5 mt-0.5 shrink-0">
                           <span className="material-symbols-outlined text-accent-lilac leading-none" style={{ fontVariationSettings: "'FILL' 1", fontSize: '15px' }}>star</span>
-                          <span className="text-on-surface-muted/90 text-[10px] font-bold leading-none">{movie.rating}</span>
+                          <span className="text-on-surface text-[10px] font-bold leading-none">{movie.rating}</span>
                         </div>
                       )}
                     </div>
-                    <div className="flex items-center gap-1.5 mb-1 leading-none text-on-surface-muted/90">
-                      <p className="text-[10px] font-medium">
+                    <div className="flex items-center gap-1.5 mb-1.5 leading-none text-on-surface">
+                      <p className="text-[11px] font-bold">
                         {movie.director || 'Неизвестный режиссер'}
                       </p>
                       {movie.year && (
-                        <span className="text-[10px] opacity-70">
+                        <span className="text-[11px] text-on-surface/80 font-bold">
                           {movie.year}
                         </span>
                       )}
                     </div>
                     {movie.description && (
-                      <div className="bg-on-surface/[0.03] -ml-2 px-2 py-1 rounded-lg mt-2">
-                        <p className="text-[10px] text-on-surface-muted/80 font-medium line-clamp-3 leading-[1.3] text-pretty">
+                      <div className="bg-on-surface/[0.04] -ml-2 px-2 py-1.5 rounded-lg mt-2">
+                        <p className="text-[11px] text-on-surface font-semibold line-clamp-3 leading-[1.3] text-pretty">
                           {movie.description}
                         </p>
                       </div>

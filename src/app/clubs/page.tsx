@@ -112,15 +112,15 @@ export default function Clubs() {
   // Logic for filtering
   const filteredClubs = React.useMemo(() => {
     let result = clubs.filter((c) => {
-      const matchesSearch = c.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                           c.description.toLowerCase().includes(searchQuery.toLowerCase());
-      
+      const matchesSearch = c.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        c.description.toLowerCase().includes(searchQuery.toLowerCase());
+
       if (!matchesSearch) return false;
 
       // Stage 1: Main Tab Filter
       if (activeMainTab === 'my') {
         if (!c.userRole) return false;
-        
+
         // Stage 2: Role Sub-filter
         if (subFilter === 'owner') return c.userRole === 'owner';
         if (subFilter === 'member') return c.userRole === 'member';
@@ -159,17 +159,17 @@ export default function Clubs() {
     { id: 'my', label: 'Мои клубы', disabled: !user }
   ];
 
-  const SUB_FILTERS = activeMainTab === 'all' 
+  const SUB_FILTERS = activeMainTab === 'all'
     ? [
-        { id: 'all', label: 'Все' },
-        { id: 'movie', label: 'Кино' },
-        { id: 'book', label: 'Книги' }
-      ]
+      { id: 'all', label: 'Все' },
+      { id: 'movie', label: 'Кино' },
+      { id: 'book', label: 'Книги' }
+    ]
     : [
-        { id: 'all', label: 'Все мои' },
-        { id: 'owner', label: 'Я владелец' },
-        { id: 'member', label: 'Я участник' }
-      ];
+      { id: 'all', label: 'Все мои' },
+      { id: 'owner', label: 'Я владелец' },
+      { id: 'member', label: 'Я участник' }
+    ];
 
   return (
     <>
@@ -179,7 +179,7 @@ export default function Clubs() {
         <header className="mb-12 flex flex-col md:flex-row md:justify-between md:items-end gap-6">
           <div>
             <span className="text-[10px] font-black uppercase tracking-[0.3em] text-on-surface-muted mb-2 block">Сообщество</span>
-            <h1 className="text-6xl font-black tracking-tighter text-on-surface leading-[0.9]">Клубы по<br/>интересам</h1>
+            <h1 className="text-6xl font-black tracking-tighter text-on-surface leading-[0.9]">Клубы по<br />интересам</h1>
           </div>
           <div className="flex flex-col sm:flex-row items-center gap-4">
             <div className="relative w-full sm:w-80">
@@ -203,7 +203,7 @@ export default function Clubs() {
               </button>
               {showTooltip && (
                 <div className="absolute right-0 top-full mt-2 z-50 bg-on-surface text-surface p-4 rounded-xl shadow-2xl whitespace-nowrap">
-                   <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2">
                     <span className="material-symbols-outlined text-amber-400 text-base">info</span>
                     <span className="text-[10px] font-black uppercase tracking-widest">Нужно ≥ 20 публикаций ({approvedCount})</span>
                   </div>
@@ -219,13 +219,11 @@ export default function Clubs() {
             <button
               key={tab.id}
               onClick={() => !tab.disabled && setActiveMainTab(tab.id as FilterTab)}
-              className={`pb-4 border-b-[3px] text-[10px] font-black uppercase tracking-[0.2em] transition-all ${
-                tab.disabled ? 'opacity-20 cursor-not-allowed' : ''
-              } ${
-                activeMainTab === tab.id
+              className={`pb-4 border-b-[3px] text-[10px] font-black uppercase tracking-[0.2em] transition-all ${tab.disabled ? 'opacity-20 cursor-not-allowed' : ''
+                } ${activeMainTab === tab.id
                   ? 'border-on-surface text-on-surface'
                   : 'border-transparent text-on-surface-muted hover:text-on-surface hover:opacity-100'
-              }`}
+                }`}
             >
               {tab.label}
             </button>
@@ -234,19 +232,18 @@ export default function Clubs() {
 
         {/* Sub-Filters Chips */}
         <div className="flex gap-2 mb-10 overlow-x-auto scrollbar-hide py-2">
-           {SUB_FILTERS.map(filter => (
-             <button
-               key={filter.id}
-               onClick={() => setSubFilter(filter.id as SubFilter)}
-               className={`px-4 py-2 rounded-xl text-[8px] font-black uppercase tracking-widest transition-all whitespace-nowrap ${
-                 subFilter === filter.id 
-                  ? 'bg-on-surface text-surface shadow-md' 
+          {SUB_FILTERS.map(filter => (
+            <button
+              key={filter.id}
+              onClick={() => setSubFilter(filter.id as SubFilter)}
+              className={`px-4 py-2 rounded-xl text-[8px] font-black uppercase tracking-widest transition-all whitespace-nowrap ${subFilter === filter.id
+                  ? 'bg-on-surface text-surface shadow-md'
                   : 'bg-surface-container-low text-on-surface-muted hover:bg-surface-container'
-               }`}
-             >
-               {filter.label}
-             </button>
-           ))}
+                }`}
+            >
+              {filter.label}
+            </button>
+          ))}
         </div>
 
         {/* Loading */}
@@ -290,7 +287,7 @@ export default function Clubs() {
                             </span>
                           </div>
                         )}
-                        
+
                         {/* Status Tags Overlay on Image */}
                         {typeof club.unreadCount === 'number' && club.unreadCount > 0 && (
                           <div className="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-surface shadow-sm animate-pulse" />
@@ -310,21 +307,21 @@ export default function Clubs() {
 
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-2">
-                             <div className="flex items-center gap-1.5 bg-on-surface/[0.03] px-2 py-0.5 rounded-md">
-                               <span className="material-symbols-outlined text-sm text-on-surface-muted/60">groups</span>
-                               <span className="text-[10px] font-bold text-on-surface-muted/80 leading-none">
+                            <div className="flex items-center gap-1.5 bg-on-surface/[0.03] px-2 py-0.5 rounded-md">
+                              <span className="material-symbols-outlined text-sm text-on-surface-muted/60">groups</span>
+                              <span className="text-[10px] font-bold text-on-surface-muted/80 leading-none">
                                 {club.memberCount}
                               </span>
-                             </div>
+                            </div>
                             {club.userRole === 'owner' && (
                               <span className="text-[8px] font-bold uppercase tracking-widest bg-on-surface text-surface px-1.5 py-0.5 rounded-md leading-none">
                                 Владелец
                               </span>
                             )}
                             {typeof club.unreadCount === 'number' && club.unreadCount > 0 && (
-                               <span className="text-[8px] font-bold uppercase tracking-widest bg-red-500 text-white px-1.5 py-0.5 rounded-md leading-none">
+                              <span className="text-[8px] font-bold uppercase tracking-widest bg-red-500 text-white px-1.5 py-0.5 rounded-md leading-none">
                                 +{club.unreadCount}
-                               </span>
+                              </span>
                             )}
                           </div>
                           <div className="text-on-surface-muted/30 group-hover:text-on-surface transition-colors duration-300">
@@ -346,12 +343,12 @@ export default function Clubs() {
         {!loading && activeMainTab === 'all' && heroClubs.length > 0 && (
           <section className="mt-16 mb-24">
             <div className="flex items-center justify-between mb-10 px-2">
-               <div>
-                 <span className="text-[10px] font-bold tracking-[0.3em] text-on-surface-variant/40 uppercase mb-2 block">Рекомендации</span>
-                 <h2 className="text-4xl font-bold tracking-tight text-on-surface leading-none">Популярные сообщества</h2>
-               </div>
+              <div>
+                <span className="text-[10px] font-bold tracking-[0.3em] text-on-surface-variant/40 uppercase mb-2 block">Рекомендации</span>
+                <h2 className="text-4xl font-bold tracking-tight text-on-surface leading-none">Популярные сообщества</h2>
+              </div>
             </div>
-            
+
             <div className="space-y-8">
               {/* Main spotlight - Split Design */}
               {heroClubs[0] && (
@@ -361,9 +358,9 @@ export default function Clubs() {
                 >
                   {/* Subtle background accent */}
                   <div className="absolute top-0 right-0 w-96 h-96 bg-on-surface/[0.01] rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
-                  
+
                   {/* Featured Image Section */}
-                  <div className="w-full md:w-[280px] h-[200px] relative rounded-2xl overflow-hidden shadow-2xl flex-shrink-0 z-10">
+                  <div className="w-full md:w-[280px] aspect-[2/3] relative rounded-2xl overflow-hidden shadow-2xl flex-shrink-0 z-10">
                     {heroClubs[0].imageUrl ? (
                       <Image
                         src={heroClubs[0].imageUrl}
@@ -392,15 +389,15 @@ export default function Clubs() {
                         <span className="text-[11px] font-bold">{heroClubs[0].memberCount} участников</span>
                       </div>
                     </div>
-                    
+
                     <h2 className="text-4xl md:text-6xl font-black text-on-surface mb-6 tracking-tighter leading-[0.9] group-hover:text-on-surface-variant transition-colors">
                       {heroClubs[0].name}
                     </h2>
-                    
+
                     <p className="text-on-surface-muted/60 text-base md:text-lg max-w-xl font-medium leading-relaxed mb-10 line-clamp-3">
                       {heroClubs[0].description}
                     </p>
-                    
+
                     <button className="bg-on-surface text-surface px-10 py-4 rounded-2xl font-bold text-[12px] uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-xl shadow-on-surface/10 leading-none">
                       Вступить в клуб
                     </button>
@@ -540,11 +537,10 @@ function CreateClubModal({
                   key={cat}
                   type="button"
                   onClick={() => setCategory(cat)}
-                  className={`flex-1 py-3 rounded-xl text-sm font-semibold transition-all ${
-                    category === cat
+                  className={`flex-1 py-3 rounded-xl text-sm font-semibold transition-all ${category === cat
                       ? 'glass-action text-white shadow-lg shadow-primary/10'
                       : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container-high'
-                  }`}
+                    }`}
                 >
                   <span className="material-symbols-outlined text-base mr-1 align-text-bottom">{CATEGORY_ICONS[cat]}</span>
                   {CATEGORY_LABELS[cat]}
