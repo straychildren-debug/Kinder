@@ -201,21 +201,20 @@ export default function Home() {
                         className="object-cover group-hover:scale-[1.03] transition-transform duration-500 ease-out"
                       />
                     )}
+                    {/* Floating Rating Badge */}
+                    <div className="absolute top-2 right-2 px-1.5 py-0.5 rounded-lg bg-black/60 backdrop-blur-md border border-white/10 flex items-center gap-1 z-10">
+                      <span className="material-symbols-outlined text-white" style={{ fontVariationSettings: "'FILL' 1", fontSize: '12px' }}>star</span>
+                      <span className="text-[10px] font-black text-white leading-none pt-[1px]">{item.rating ? item.rating.toFixed(1) : '—'}</span>
+                    </div>
                   </div>
 
-                  <div className="mt-3 px-0.5">
-                    <h3 className="text-sm font-semibold text-on-surface leading-snug tracking-tight mb-1 line-clamp-2">
+                  <div className="mt-2.5 px-0.5">
+                    <h3 className="text-[12px] font-bold text-on-surface leading-tight tracking-tight mb-1 line-clamp-2">
                       {item.title}
                     </h3>
-                    <div className="flex items-center justify-between gap-2 mt-1">
-                      <p className="text-[13px] font-medium text-on-surface/80 truncate flex-1 min-w-0">
-                        {item.author || item.director || 'Автор'}
-                      </p>
-                      <div className="flex items-center gap-1 shrink-0">
-                        <span className="material-symbols-outlined text-on-surface-muted flex items-center justify-center" style={{ fontVariationSettings: "'FILL' 1", fontSize: '15px', width: '15px', height: '15px' }}>star</span>
-                        <span className="text-[13px] font-semibold text-on-surface leading-none">{item.rating ? item.rating.toFixed(1) : '—'}</span>
-                      </div>
-                    </div>
+                    <p className="text-[11px] font-medium text-on-surface-variant opacity-80 truncate uppercase tracking-wide">
+                      {item.author || item.director || 'Автор'}
+                    </p>
                   </div>
                 </article>
                 </MotionListItem>
