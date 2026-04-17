@@ -15,7 +15,8 @@ import ContentDetailsModal from "@/components/ContentDetailsModal";
 import QuickCreateForm from "@/components/QuickCreateForm";
 import { motion, AnimatePresence } from "framer-motion";
 
-type ProfileTab = 'all' | 'movies' | 'books' | 'pending';
+type ProfileTab = 'publications' | 'moderation' | 'drafts';
+type PublicationType = 'all' | 'movie' | 'book';
 
 export default function Profile() {
   const { user } = useAuth();
@@ -23,7 +24,8 @@ export default function Profile() {
   const [userContent, setUserContent] = useState<ContentItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [openedContent, setOpenedContent] = useState<ContentItem | null>(null);
-  const [activeTab, setActiveTab] = useState<ProfileTab>('all');
+  const [activeTab, setActiveTab] = useState<ProfileTab>('publications');
+  const [pubFilter, setPubFilter] = useState<PublicationType>('all');
 
   const loadData = async () => {
     if (user) {
@@ -65,21 +67,25 @@ export default function Profile() {
   }
 
   const approvedCount = userContent.filter(c => c.status === 'approved').length;
-  const pendingCount = userContent.filter(c => c.status === 'pending').length;
+  const moderationCount = userContent.filter(c => c.status === 'pending').length;
+  const draftsCount = userContent.filter(c => c.status === 'draft' || c.status === 'rejected').length;
 
   const filteredContent = userContent.filter(item => {
-    if (activeTab === 'all') return item.status === 'approved';
-    if (activeTab === 'movies') return item.type === 'movie' && item.status === 'approved';
-    if (activeTab === 'books') return item.type === 'book' && item.status === 'approved';
-    if (activeTab === 'pending') return item.status === 'pending' || item.status === 'rejected';
+    if (activeTab === 'publications') {
+      const isApproved = item.status === 'approved';
+      if (!isApproved) return false;
+      if (pubFilter === 'all') return true;
+      return item.type === pubFilter;
+    }
+    if (activeTab === 'moderation') return item.status === 'pending';
+    if (activeTab === 'drafts') return item.status === 'draft' || item.status === 'rejected';
     return true;
   });
 
   const TABS = [
-    { id: 'all', label: 'Все', icon: 'grid_view' },
-    { id: 'movies', label: 'Кино', icon: 'movie' },
-    { id: 'books', label: 'Книги', icon: 'menu_book' },
-    { id: 'pending', label: 'Мои черновики', icon: 'pending_actions', count: pendingCount },
+    { id: 'publications', label: 'Мои публикации', icon: 'auto_awesome', count: approvedCount },
+    { id: 'moderation', label: 'На модерации', icon: 'pending_actions', count: moderationCount },
+    { id: 'drafts', label: 'Черновики', icon: 'edit_note', count: draftsCount },
   ];
 
   if (loading) {
@@ -141,7 +147,7 @@ export default function Profile() {
         {/* Dynamic Content System */}
         <section className="mt-4 px-4">
           {/* Sticky Tabs */}
-          <div className="sticky top-[72px] z-20 bg-surface/80 backdrop-blur-md py-4 mb-6 -mx-4 px-4 flex items-center gap-2 overflow-x-auto scrollbar-hide border-b border-on-surface/5">
+          <div className="sticky top-[72px] z-20 bg-surface/80 backdrop-blur-md pt-4 pb-2 mb-2 -mx-4 px-4 flex items-center gap-1.5 overflow-x-auto scrollbar-hide border-b border-on-surface/5">
             {TABS.map((tab) => (
               <button
                 key={tab.id}
@@ -152,7 +158,7 @@ export default function Profile() {
                     : 'bg-surface-container-low text-on-surface-muted hover:bg-surface-container'
                 }`}
               >
-                <span className={`material-symbols-outlined text-[16px] ${activeTab !== tab.id && (tab as any).color ? (tab as any).color : ''}`}>
+                <span className={`material-symbols-outlined text-[16px]`}>
                   {tab.icon}
                 </span>
                 {tab.label}
@@ -167,6 +173,36 @@ export default function Profile() {
               </button>
             ))}
           </div>
+
+          {/* Sub-filters for My Publications */}
+          <AnimatePresence>
+            {activeTab === 'publications' && (
+              <motion.div 
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                className="flex gap-2 mb-6"
+              >
+                {[
+                  { id: 'all', label: 'Все' },
+                  { id: 'movie', label: 'Кино' },
+                  { id: 'book', label: 'Книги' }
+                ].map(filter => (
+                  <button
+                    key={filter.id}
+                    onClick={() => setPubFilter(filter.id as PublicationType)}
+                    className={`px-3 py-1 rounded-full text-[8px] font-black uppercase tracking-widest transition-all ${
+                      pubFilter === filter.id 
+                        ? 'bg-accent-lilac text-white' 
+                        : 'bg-surface-container text-on-surface-muted'
+                    }`}
+                  >
+                    {filter.label}
+                  </button>
+                ))}
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           {/* History Grid */}
           <div className="min-h-[400px]">
@@ -203,12 +239,17 @@ export default function Profile() {
                         </div>
                       )}
                       
-                      {/* Status Badge for Moderation view */}
-                      {activeTab === 'pending' && (
-                        <div className={`absolute top-2 left-2 px-2 py-0.5 rounded-lg text-[7px] font-black uppercase tracking-widest shadow-xl z-10 ${
-                          item.status === 'pending' ? 'bg-amber-500 text-white' : 'bg-red-500 text-white'
-                        }`}>
-                          {item.status === 'pending' ? 'Модерация' : 'Отклонено'}
+                      {/* Status Badges */}
+                      {item.status === 'pending' && (
+                        <div className="absolute top-2 left-2 px-2 py-0.5 rounded-lg bg-amber-500 text-white text-[7px] font-black uppercase tracking-widest shadow-xl z-10">
+                          Модерация
+                        </div>
+                      )}
+                      
+                      {item.status === 'rejected' && (
+                        <div className="absolute top-2 left-2 px-1.5 py-0.5 rounded-lg bg-red-500 text-white text-[7px] font-black uppercase tracking-widest shadow-xl z-10 flex items-center gap-1">
+                          <span className="material-symbols-outlined text-[10px] font-bold">close</span>
+                          <span>Отказ</span>
                         </div>
                       )}
 
@@ -229,7 +270,7 @@ export default function Profile() {
                          <span className="text-[9px] font-black text-on-surface-muted uppercase tracking-widest truncate">
                             {item.type === 'movie' ? 'Кино' : 'Книга'}
                          </span>
-                         {item.rating && (
+                         {item.status === 'approved' && item.rating && (
                            <>
                              <span className="w-1 h-1 rounded-full bg-on-surface/10" />
                              <div className="flex items-center gap-1">

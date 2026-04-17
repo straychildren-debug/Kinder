@@ -206,6 +206,15 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
           <div className="bg-surface rounded-3xl p-6 shadow-xl shadow-on-surface/5 border border-on-surface/5">
             <div className="flex justify-between items-start mb-4">
                <div>
+                 {content.status === 'rejected' && content.rejectionReason && (
+                   <div className="mb-6 p-4 bg-red-50 border border-red-100 rounded-2xl flex gap-3 items-start animate-in fade-in slide-in-from-top-2 duration-500">
+                     <span className="material-symbols-outlined text-red-500 shrink-0">report_problem</span>
+                     <div>
+                       <p className="text-[10px] font-black uppercase tracking-widest text-red-600 mb-1">Причина отклонения</p>
+                       <p className="text-[13px] font-bold text-red-900 leading-relaxed">{content.rejectionReason}</p>
+                     </div>
+                   </div>
+                 )}
                  <span className="inline-block px-3 py-1 bg-accent-lilac/30 text-on-accent-lilac text-[10px] font-black uppercase tracking-widest rounded-full mb-2">
                    {content.type === 'movie' ? 'Кино' : 'Книга'}
                  </span>
