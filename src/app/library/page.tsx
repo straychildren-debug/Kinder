@@ -114,9 +114,17 @@ export default function Library() {
                 {/* Book Metadata */}
                 <div className="ml-6 flex-1 flex flex-col h-[90px] min-w-0">
                   <div className="min-w-0 flex-1">
-                    <h4 className="font-bold text-on-surface text-[15px] leading-tight mb-0.5 line-clamp-1">
-                      {book.title}
-                    </h4>
+                    <div className="flex items-start justify-between gap-2">
+                      <h4 className="font-bold text-on-surface text-[15px] leading-tight mb-0.5 line-clamp-1 flex-1">
+                        {book.title}
+                      </h4>
+                      {book.rating && (
+                        <div className="flex items-center gap-0.5 mt-0.5 shrink-0">
+                          <span className="material-symbols-outlined text-accent-lilac text-[10px]" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+                          <span className="text-on-surface-muted/60 text-[10px] font-bold">{book.rating}</span>
+                        </div>
+                      )}
+                    </div>
                     <div className="flex items-center gap-1.5 mb-1 leading-none text-on-surface-muted/60">
                       <p className="text-[10px] font-medium italic">
                         {book.author || 'Неизвестный автор'}
@@ -136,14 +144,8 @@ export default function Library() {
                     )}
                   </div>
 
-                  {/* Footer: Rating & Arrow */}
-                  <div className="flex items-center justify-end gap-3 mt-1 text-on-surface-muted/30 group-hover:text-on-surface transition-colors duration-300">
-                    {book.rating && (
-                      <div className="flex items-center gap-0.5">
-                        <span className="material-symbols-outlined text-accent-lilac text-[12px]" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
-                        <span className="text-on-surface-muted/60 text-[10px] font-bold">{book.rating}</span>
-                      </div>
-                    )}
+                  {/* Footer: Arrow Only */}
+                  <div className="flex items-center justify-end mt-1 text-on-surface-muted/30 group-hover:text-on-surface transition-colors duration-300">
                     <span className="material-symbols-outlined text-xl group-hover:translate-x-1 transition-transform">
                       chevron_right
                     </span>
