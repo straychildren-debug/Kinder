@@ -956,19 +956,16 @@ export default function ClubDetail() {
               <span className="material-symbols-outlined text-[20px]">arrow_back</span>
             </button>
             <div className="space-y-0.5">
-              <h1 className="text-xl font-black tracking-tighter leading-none">{club.name}</h1>
-              <div className="flex items-center gap-2">
+              <h1 className="text-base font-semibold tracking-tight leading-none">{club.name}</h1>
+              <div className="flex items-center gap-1.5">
                 {typingUsers.length > 0 ? (
-                  <span className="text-[9px] font-black uppercase tracking-widest text-primary animate-pulse">
-                    {typingUsers.join(', ')} печатает...
+                  <span className="text-[11px] font-medium text-primary animate-pulse">
+                    {typingUsers.join(', ')} печатает…
                   </span>
                 ) : (
-                  <>
-                    <div className="w-1 h-1 rounded-full bg-green-500 animate-pulse"></div>
-                    <span className="text-[9px] font-black uppercase tracking-widest text-on-surface-variant opacity-40 ">
-                      {club.memberCount} участников
-                    </span>
-                  </>
+                  <span className="text-[11px] font-medium text-on-surface-muted">
+                    {club.memberCount} участников
+                  </span>
                 )}
               </div>
             </div>
@@ -1009,37 +1006,16 @@ export default function ClubDetail() {
             )}
           </div>
         </div>
-        {/* Marathon Status Bar */}
-        {marathon && countdown && (
-          <div className="border-t border-on-surface/5 bg-on-surface text-surface py-2.5">
-            <div className="max-w-2xl mx-auto px-6 flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <span className="material-symbols-outlined text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>bolt</span>
-                <span className="text-[10px] font-black uppercase tracking-[0.2em] truncate max-w-[150px]">{marathon.title}</span>
-              </div>
-              <div className="flex items-center gap-3 text-[10px] font-black font-[tabular-nums] tracking-widest">
-                <span>{countdown.d}D</span>
-                <span className="opacity-30">:</span>
-                <span>{countdown.h}H</span>
-                <span className="opacity-30">:</span>
-                <span>{countdown.m}M</span>
-                <span className="opacity-30">:</span>
-                <span>{String(countdown.s).padStart(2, '0')}S</span>
-              </div>
-            </div>
-          </div>
-        )}
-
         {/* Pinned message preview bar */}
         {membership && pinnedMessageIds.size > 0 && (
           <div
             onClick={openPinnedPanel}
             className="border-t border-on-surface/5 bg-amber-50/60 cursor-pointer hover:bg-amber-50 transition-colors"
           >
-            <div className="max-w-2xl mx-auto px-6 py-2 flex items-center gap-3">
-              <span className="material-symbols-outlined text-amber-600 text-[16px]" style={{ fontVariationSettings: "'FILL' 1" }}>push_pin</span>
-              <span className="text-[10px] font-black uppercase tracking-widest text-amber-700/60">
-                {pinnedMessageIds.size} закреплённых сообщений
+            <div className="max-w-2xl mx-auto px-6 py-1.5 flex items-center gap-2">
+              <span className="material-symbols-outlined text-amber-600 text-[14px]" style={{ fontVariationSettings: "'FILL' 1" }}>push_pin</span>
+              <span className="text-xs font-medium text-amber-800/70">
+                {pinnedMessageIds.size} {pinnedMessageIds.size === 1 ? 'закреплённое сообщение' : 'закреплённых сообщений'}
               </span>
               <span className="material-symbols-outlined text-amber-600/40 text-[14px] ml-auto">chevron_right</span>
             </div>
@@ -1047,7 +1023,7 @@ export default function ClubDetail() {
         )}
       </header>
 
-      <main className={`${marathon && countdown ? (pinnedMessageIds.size > 0 ? 'pt-[10.5rem]' : 'pt-[8rem]') : (pinnedMessageIds.size > 0 ? 'pt-[7.5rem]' : 'pt-[5rem]')} pb-40 px-6 max-w-2xl mx-auto min-h-screen`}>
+      <main className={`${pinnedMessageIds.size > 0 ? 'pt-[6.5rem]' : 'pt-[5rem]'} pb-40 px-6 max-w-2xl mx-auto min-h-screen`}>
         {/* Not a member — join prompt */}
         {!membership && (
           <div className="flex flex-col items-center justify-center min-h-[70vh] text-center space-y-10">
@@ -1077,38 +1053,22 @@ export default function ClubDetail() {
         {/* Member — Chat */}
         {membership && (
           <>
-            {/* Marathon Widget (Expanded) */}
+            {/* Marathon Widget (Compact) */}
             {marathon && countdown && (
-              <section 
+              <section
                 onClick={() => setShowMarathonDetails(true)}
-                className="mb-12 glass-panel rounded-[40px] p-10 cursor-pointer hover:shadow-2xl hover:scale-[1.01] transition-all group overflow-hidden relative"
+                className="mb-6 bg-white/60 backdrop-blur-xl rounded-2xl p-4 cursor-pointer hover:bg-white/80 transition-all border border-on-surface/5 group"
               >
-                <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-100 transition-opacity translate-x-4 -translate-y-4 group-hover:translate-x-0 group-hover:translate-y-0 duration-700">
-                  <span className="material-symbols-outlined text-5xl ">arrow_outward</span>
+                <div className="flex items-center gap-3 mb-2">
+                  <span className="material-symbols-outlined text-[16px] text-on-surface-muted" style={{ fontVariationSettings: "'FILL' 1" }}>bolt</span>
+                  <h3 className="text-sm font-semibold tracking-tight truncate flex-1">{marathon.title}</h3>
+                  <span className="text-xs font-medium font-[tabular-nums] text-on-surface-muted">
+                    {countdown.d > 0 && `${countdown.d}д `}
+                    {countdown.h}ч {countdown.m}м
+                  </span>
+                  <span className="material-symbols-outlined text-[16px] text-on-surface-muted/60 group-hover:translate-x-0.5 transition-transform">chevron_right</span>
                 </div>
-                
-                <div className="flex items-start justify-between mb-8 relative z-10">
-                  <div className="space-y-1">
-                    <span className="text-[10px] font-black text-on-surface uppercase tracking-[0.4em] mb-2 block opacity-40 ">Текущий марафон</span>
-                    <h2 className="text-3xl font-black tracking-tighter leading-none">{marathon.title}</h2>
-                  </div>
-                </div>
-
-                <div className="flex gap-4 justify-between relative z-10">
-                  {[
-                    { val: countdown.d, label: 'D' },
-                    { val: countdown.h, label: 'H' },
-                    { val: countdown.m, label: 'M' },
-                    { val: countdown.s, label: 'S' },
-                  ].map(({ val, label }) => (
-                    <div key={label} className="flex-1 text-center py-4 bg-surface-container rounded-[24px] border border-on-surface/5">
-                      <div className="text-2xl font-black tracking-tighter leading-none">{String(val).padStart(2, '0')}</div>
-                      <span className="text-[9px] font-black uppercase tracking-widest opacity-30 mt-1 block">{label}</span>
-                    </div>
-                  ))}
-                </div>
-                
-                <div className="mt-8 h-1 bg-surface-container rounded-full overflow-hidden relative z-10">
+                <div className="h-1 bg-surface-container rounded-full overflow-hidden">
                   <div
                     className="h-full bg-on-surface transition-all duration-1000"
                     style={{
@@ -1125,8 +1085,6 @@ export default function ClubDetail() {
               </section>
             )}
 
-
-
             {/* Active Polls */}
             {polls.filter(p => p.isActive).map(poll => (
               <PollCard
@@ -1139,22 +1097,14 @@ export default function ClubDetail() {
               />
             ))}
 
-            {/* Date Divider */}
-            <div className="flex items-center gap-6 mb-12 opacity-20">
-              <div className="h-[1px] flex-grow bg-on-surface"></div>
-              <span className="text-[9px] font-black uppercase tracking-[0.5em] ">Архив сообщений</span>
-              <div className="h-[1px] flex-grow bg-on-surface"></div>
-            </div>
-
             {/* Chat messages */}
             {messages.length === 0 && (
-              <div className="text-center py-20 bg-surface">
-                <div className="w-20 h-20 rounded-full bg-surface-container flex items-center justify-center mx-auto mb-6 opacity-30  font-black text-2xl">?</div>
-                <p className="text-[11px] font-black uppercase tracking-widest text-on-surface-variant opacity-40">Чат пуст. Напишите первым.</p>
+              <div className="text-center py-16">
+                <p className="text-sm text-on-surface-muted">Чат пуст. Напишите первым.</p>
               </div>
             )}
 
-            <div className="space-y-8 mb-20">
+            <div className="space-y-1 mb-20">
               {messages.map((msg, index) => {
                 const isMine = msg.userId === user?.id;
                 const prevMsg = index > 0 ? messages[index - 1] : null;
@@ -1165,25 +1115,25 @@ export default function ClubDetail() {
                   <div
                     key={msg.id}
                     ref={(el) => { if (el) messageRefs.current.set(msg.id, el); }}
-                    className={`flex items-end gap-3 max-w-[90%] md:max-w-[75%] chat-bubble-enter transition-all duration-300 ${
+                    className={`flex items-end gap-2 max-w-[85%] md:max-w-[70%] chat-bubble-enter transition-all duration-300 ${
                       isMine ? 'flex-row-reverse ml-auto' : ''
-                    } ${isContinuous ? 'mt-1' : 'mt-8'}`}
+                    } ${isContinuous ? 'mt-0.5' : 'mt-4'}`}
                   >
                     {/* Avatar */}
                     {!isMine && (
-                      <div className="w-10 overflow-hidden shrink-0">
+                      <div className="w-7 shrink-0">
                         {!isContinuous && (
                           msg.senderAvatar ? (
                             <Image
                               alt={msg.senderName || ''}
-                              width={40}
-                              height={40}
+                              width={28}
+                              height={28}
                               unoptimized
-                              className="w-10 h-10 rounded-[14px] object-cover shadow-sm border border-on-surface/5"
+                              className="w-7 h-7 rounded-full object-cover"
                               src={msg.senderAvatar}
                             />
                           ) : (
-                            <div className="w-10 h-10 rounded-[14px] bg-surface-container flex items-center justify-center text-[11px] font-black  text-on-surface/20 border border-on-surface/5">
+                            <div className="w-7 h-7 rounded-full bg-surface-container flex items-center justify-center text-[10px] font-semibold text-on-surface-muted">
                               {(msg.senderName || '?').charAt(0).toUpperCase()}
                             </div>
                           )
@@ -1193,31 +1143,31 @@ export default function ClubDetail() {
 
                     <div className={`flex flex-col ${isMine ? 'items-end' : 'items-start'}`}>
                       {!isMine && !isContinuous && (
-                        <span className="text-[10px] font-black uppercase tracking-widest text-on-surface-variant mb-2 opacity-40  ml-1">
+                        <span className="text-[11px] font-medium text-on-surface-muted mb-1 ml-3">
                           {msg.senderName || 'Anonymous'}
                         </span>
                       )}
-                      
+
                       <div
                         className={`group relative ${
-                          !msg.text && !msg.replyToId && msg.fileType === 'image' 
-                            ? '' 
-                            : isMine 
-                              ? 'glass-bubble-sent rounded-[24px] rounded-br-[4px] p-5' 
-                              : 'glass-bubble-received rounded-[24px] rounded-bl-[4px] p-5'
-                        } ${isPinned ? 'ring-2 ring-amber-400/30 ring-offset-1' : ''}`}
+                          !msg.text && !msg.replyToId && msg.fileType === 'image'
+                            ? ''
+                            : isMine
+                              ? 'bg-on-surface text-surface rounded-2xl rounded-br-sm px-3.5 py-2'
+                              : 'bg-surface-container text-on-surface rounded-2xl rounded-bl-sm px-3.5 py-2'
+                        } ${isPinned ? 'ring-1 ring-amber-400/40' : ''}`}
                       >
                         {/* Pin indicator */}
                         {isPinned && (
-                          <div className={`absolute -top-2 ${isMine ? '-left-1' : '-right-1'}`}>
-                            <span className="material-symbols-outlined text-amber-500 text-[14px]" style={{ fontVariationSettings: "'FILL' 1" }}>push_pin</span>
+                          <div className={`absolute -top-1.5 ${isMine ? '-left-1' : '-right-1'}`}>
+                            <span className="material-symbols-outlined text-amber-500 text-[12px]" style={{ fontVariationSettings: "'FILL' 1" }}>push_pin</span>
                           </div>
                         )}
 
                         {/* Reply preview */}
                         {msg.repliedMessage && (
-                          <div className={`mb-3 pl-3 border-l-2 ${isMine ? 'border-surface/40' : 'border-primary/30'} rounded-r-lg`}>
-                            <span className={`text-[10px] font-black uppercase tracking-widest ${isMine ? 'text-surface/50' : 'text-primary/50'} block mb-0.5`}>
+                          <div className={`mb-1.5 pl-2 border-l-2 ${isMine ? 'border-surface/40' : 'border-on-surface/20'}`}>
+                            <span className={`text-[11px] font-medium ${isMine ? 'text-surface/60' : 'text-on-surface-muted'} block`}>
                               {msg.repliedMessage.senderName}
                             </span>
                             <p className={`text-xs ${isMine ? 'text-surface/60' : 'text-on-surface/50'} truncate max-w-[200px]`}>
@@ -1261,23 +1211,23 @@ export default function ClubDetail() {
                             href={msg.fileUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className={`flex items-center gap-3 px-4 py-3 rounded-2xl mb-3 transition-all border ${
-                              isMine 
-                                ? 'bg-surface/10 border-surface/10 hover:bg-surface/20 text-white' 
-                                : 'bg-surface-container border-on-surface/5 hover:bg-surface-container-high'
+                            className={`flex items-center gap-2.5 px-3 py-2 rounded-lg mb-2 transition-all ${
+                              isMine
+                                ? 'bg-surface/10 hover:bg-surface/20 text-white'
+                                : 'bg-on-surface/5 hover:bg-on-surface/10'
                             }`}
                           >
-                            <span className="material-symbols-outlined text-[20px]">cloud_download</span>
-                            <span className="text-[10px] font-black uppercase tracking-widest">Документ загружен</span>
+                            <span className="material-symbols-outlined text-[18px]">cloud_download</span>
+                            <span className="text-xs font-medium">Документ</span>
                           </a>
                         )}
 
                         {/* Text with @mention highlighting */}
                         {msg.text && (
-                          <p className="text-sm font-medium leading-relaxed">
+                          <p className="text-sm leading-snug">
                             {renderTextWithMentions(msg.text, isMine)}
                             {msg.isEdited && (
-                              <span className={`text-[9px] ml-1 ${isMine ? 'text-surface/30' : 'text-on-surface/30'}`}>(ред.)</span>
+                              <span className={`text-[10px] ml-1 ${isMine ? 'text-surface/40' : 'text-on-surface/30'}`}>(ред.)</span>
                             )}
                           </p>
                         )}
@@ -1326,8 +1276,8 @@ export default function ClubDetail() {
                       </div>
                       
                       {!isContinuous && (
-                        <div className={`flex items-center gap-2 mt-2 ${isMine ? 'flex-row-reverse' : ''}`}>
-                          <span className="text-[9px] font-black text-on-surface-variant uppercase tracking-widest opacity-20 ">
+                        <div className={`flex items-center gap-2 mt-1 ${isMine ? 'flex-row-reverse' : ''}`}>
+                          <span className="text-[10px] font-medium text-on-surface-muted/60">
                             {formatTime(msg.createdAt)}
                           </span>
                         </div>
@@ -1339,11 +1289,11 @@ export default function ClubDetail() {
 
               {/* Closed polls at the bottom */}
               {polls.filter(p => !p.isActive).length > 0 && (
-                <div className="mt-8">
-                  <div className="flex items-center gap-6 mb-6 opacity-20">
-                    <div className="h-[1px] flex-grow bg-on-surface"></div>
-                    <span className="text-[9px] font-black uppercase tracking-[0.5em]">Завершённые опросы</span>
-                    <div className="h-[1px] flex-grow bg-on-surface"></div>
+                <div className="mt-6">
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className="h-px flex-grow bg-on-surface/10"></div>
+                    <span className="text-xs font-medium text-on-surface-muted">Завершённые опросы</span>
+                    <div className="h-px flex-grow bg-on-surface/10"></div>
                   </div>
                   {polls.filter(p => !p.isActive).map(poll => (
                     <PollCard
@@ -1384,32 +1334,32 @@ export default function ClubDetail() {
 
       {/* Chat Input Bar */}
       {membership && (
-        <div className="fixed bottom-0 left-0 right-0 z-50 p-6">
-          <div className="max-w-2xl mx-auto glass-input-container rounded-[32px] p-2 flex flex-col gap-2">
+        <div className="fixed bottom-0 left-0 right-0 z-50 p-4">
+          <div className="max-w-2xl mx-auto flex flex-col gap-1.5">
             {/* Reply preview */}
             {replyingTo && (
-              <div className="mb-2 glass-panel rounded-t-2xl border border-b-0 border-on-surface/10 px-5 py-3 flex items-center gap-3 animate-in fade-in slide-in-from-bottom-2 duration-200">
-                <div className="w-1 h-8 bg-primary rounded-full shrink-0" />
+              <div className="bg-white rounded-t-xl border border-b-0 border-on-surface/10 px-4 py-2 flex items-center gap-3 animate-in fade-in slide-in-from-bottom-2 duration-200">
+                <div className="w-0.5 h-7 bg-primary rounded-full shrink-0" />
                 <div className="flex-1 min-w-0">
-                  <span className="text-[10px] font-black uppercase tracking-widest text-primary/60 block">
+                  <span className="text-[11px] font-medium text-primary block">
                     Ответ для {replyingTo.senderName || 'User'}
                   </span>
                   <p className="text-xs text-on-surface/50 truncate">{replyingTo.text || '📎 Файл'}</p>
                 </div>
-                <button onClick={() => setReplyingTo(null)} className="p-1 text-on-surface-variant/30 hover:text-on-surface transition-colors">
-                  <span className="material-symbols-outlined text-[18px]">close</span>
+                <button onClick={() => setReplyingTo(null)} className="p-1 text-on-surface-variant/40 hover:text-on-surface transition-colors">
+                  <span className="material-symbols-outlined text-[16px]">close</span>
                 </button>
               </div>
             )}
 
             {/* Edit mode */}
             {editingMessageId && (
-              <div className="mb-2 glass-panel rounded-t-2xl border border-b-0 border-on-surface/10 px-5 py-3 animate-in fade-in slide-in-from-bottom-2 duration-200">
-                <div className="flex items-center gap-3 mb-2">
-                  <span className="material-symbols-outlined text-primary text-[16px]">edit</span>
-                  <span className="text-[10px] font-black uppercase tracking-widest text-primary/60">Редактирование</span>
-                  <button onClick={() => setEditingMessageId(null)} className="ml-auto p-1 text-on-surface-variant/30 hover:text-on-surface">
-                    <span className="material-symbols-outlined text-[16px]">close</span>
+              <div className="bg-white rounded-t-xl border border-b-0 border-on-surface/10 px-4 py-2 animate-in fade-in slide-in-from-bottom-2 duration-200">
+                <div className="flex items-center gap-2 mb-1.5">
+                  <span className="material-symbols-outlined text-primary text-[14px]">edit</span>
+                  <span className="text-[11px] font-medium text-primary">Редактирование</span>
+                  <button onClick={() => setEditingMessageId(null)} className="ml-auto p-1 text-on-surface-variant/40 hover:text-on-surface">
+                    <span className="material-symbols-outlined text-[14px]">close</span>
                   </button>
                 </div>
                 <div className="flex items-center gap-2">
@@ -1418,9 +1368,9 @@ export default function ClubDetail() {
                     value={editValue}
                     onChange={e => setEditValue(e.target.value)}
                     onKeyDown={e => { if (e.key === 'Enter') handleSaveEdit(); if (e.key === 'Escape') setEditingMessageId(null); }}
-                    className="flex-1 bg-surface-container rounded-xl px-4 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary/20"
+                    className="flex-1 bg-surface-container rounded-lg px-3 py-2 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary/20"
                   />
-                  <button onClick={handleSaveEdit} className="px-4 py-2.5 bg-primary text-white rounded-xl text-xs font-bold">
+                  <button onClick={handleSaveEdit} className="px-3 py-2 bg-primary text-white rounded-lg text-xs font-semibold">
                     Сохранить
                   </button>
                 </div>
@@ -1429,23 +1379,23 @@ export default function ClubDetail() {
 
             {/* Recording state */}
             {isRecording ? (
-              <div className="glass-panel p-3 rounded-[32px] flex items-center gap-4 border border-red-200 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.1)]">
+              <div className={`bg-white p-2 ${replyingTo || editingMessageId ? 'rounded-b-2xl rounded-t-none border-t-0' : 'rounded-2xl'} flex items-center gap-2 border border-red-200 shadow-md`}>
                 <button
                   onClick={cancelRecording}
-                  className="w-12 h-12 flex items-center justify-center text-red-400 hover:text-red-600 hover:bg-red-50 rounded-2xl transition-all"
+                  className="w-10 h-10 flex items-center justify-center text-red-400 hover:text-red-600 hover:bg-red-50 rounded-full transition-all"
                 >
-                  <span className="material-symbols-outlined text-[24px]">delete</span>
+                  <span className="material-symbols-outlined text-[20px]">delete</span>
                 </button>
                 <div className="flex-grow flex items-center gap-3">
-                  <div className="w-3 h-3 rounded-full bg-red-500 animate-pulse" />
-                  <span className="text-sm font-black text-red-500 tabular-nums">{formatRecordingTime(recordingTime)}</span>
+                  <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+                  <span className="text-xs font-semibold text-red-500 tabular-nums">{formatRecordingTime(recordingTime)}</span>
                   <div className="flex-1 flex items-center gap-[2px]">
                     {Array.from({ length: 30 }, (_, i) => (
                       <div
                         key={i}
-                        className="w-[3px] bg-red-300 rounded-full animate-pulse"
+                        className="w-[2px] bg-red-300 rounded-full animate-pulse"
                         style={{
-                          height: `${6 + Math.random() * 18}px`,
+                          height: `${4 + Math.random() * 14}px`,
                           animationDelay: `${i * 50}ms`,
                         }}
                       />
@@ -1454,13 +1404,13 @@ export default function ClubDetail() {
                 </div>
                 <button
                   onClick={stopRecording}
-                  className="w-12 h-12 flex items-center justify-center bg-red-500 text-white rounded-2xl shadow-2xl hover:scale-105 active:scale-95 transition-all"
+                  className="w-10 h-10 flex items-center justify-center bg-red-500 text-white rounded-full hover:scale-105 active:scale-95 transition-all"
                 >
-                  <span className="material-symbols-outlined text-[20px]">send</span>
+                  <span className="material-symbols-outlined text-[18px]">send</span>
                 </button>
               </div>
             ) : !editingMessageId && (
-              <div className={`bg-white/40 p-3 ${replyingTo ? 'rounded-b-[32px] rounded-t-none border-t-0' : 'rounded-[32px]'} flex items-center gap-4 border border-on-surface/10 transition-all relative`}>
+              <div className={`bg-white p-1.5 ${replyingTo ? 'rounded-b-2xl rounded-t-none border-t-0' : 'rounded-2xl'} flex items-center gap-1 border border-on-surface/10 transition-all relative shadow-sm`}>
                 {/* Mentions popup */}
                 {mentionQuery !== null && mentionResults.length > 0 && (
                   <MentionsPopup
@@ -1474,10 +1424,10 @@ export default function ClubDetail() {
                 <button
                   onClick={() => fileInputRef.current?.click()}
                   disabled={uploading}
-                  className="w-12 h-12 flex items-center justify-center text-on-surface-variant/40 hover:text-on-surface hover:bg-surface-container rounded-2xl transition-all disabled:opacity-50"
+                  className="w-10 h-10 flex items-center justify-center text-on-surface-variant/50 hover:text-on-surface hover:bg-surface-container rounded-full transition-all disabled:opacity-50 shrink-0"
                 >
-                  <span className="material-symbols-outlined text-[24px]">
-                    {uploading ? 'sync' : 'attach_file_add'}
+                  <span className="material-symbols-outlined text-[20px]">
+                    {uploading ? 'sync' : 'attach_file'}
                   </span>
                 </button>
                 <input
@@ -1491,8 +1441,8 @@ export default function ClubDetail() {
                 {/* Text input */}
                 <input
                   ref={inputRef}
-                  className="flex-grow bg-transparent border-none focus:outline-none focus:ring-0 text-sm font-medium placeholder:text-on-surface-variant/20 tracking-tight"
-                  placeholder="Ваше сообщение в бесконечность..."
+                  className="flex-grow bg-transparent border-none focus:outline-none focus:ring-0 text-sm placeholder:text-on-surface-variant/30 px-2"
+                  placeholder="Сообщение"
                   type="text"
                   value={messageText}
                   onChange={handleInputChange}
@@ -1504,10 +1454,10 @@ export default function ClubDetail() {
                 {!messageText.trim() && (
                   <button
                     onClick={startRecording}
-                    className="w-12 h-12 flex items-center justify-center text-on-surface-variant/40 hover:text-red-500 hover:bg-red-50 rounded-2xl transition-all"
+                    className="w-10 h-10 flex items-center justify-center text-on-surface-variant/50 hover:text-red-500 hover:bg-red-50 rounded-full transition-all shrink-0"
                     title="Голосовое сообщение"
                   >
-                    <span className="material-symbols-outlined text-[24px]">mic</span>
+                    <span className="material-symbols-outlined text-[20px]">mic</span>
                   </button>
                 )}
 
@@ -1516,9 +1466,9 @@ export default function ClubDetail() {
                   <button
                     onClick={handleSend}
                     disabled={sending}
-                    className="w-12 h-12 flex items-center justify-center bg-on-surface text-surface rounded-2xl shadow-2xl hover:scale-105 active:scale-95 transition-all duration-300 disabled:opacity-5 disabled:scale-100"
+                    className="w-10 h-10 flex items-center justify-center bg-on-surface text-surface rounded-full hover:scale-105 active:scale-95 transition-all duration-200 disabled:opacity-20 disabled:scale-100 shrink-0"
                   >
-                    <span className="material-symbols-outlined text-[20px]">rocket_launch</span>
+                    <span className="material-symbols-outlined text-[20px]">send</span>
                   </button>
                 )}
               </div>

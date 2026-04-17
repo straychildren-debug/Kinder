@@ -56,7 +56,7 @@ export default function Profile() {
           </div>
           <button
             onClick={() => router.push('/login')}
-            className="w-full py-4 bg-on-surface text-surface rounded-2xl font-black text-[10px] uppercase tracking-[0.2em] transition-transform active:scale-95 shadow-xl shadow-on-surface/10"
+            className="w-full py-3 bg-on-surface text-surface rounded-xl font-semibold text-sm transition-transform active:scale-95"
           >
             Войти в систему
           </button>
@@ -120,24 +120,24 @@ export default function Profile() {
           </div>
 
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-black tracking-tighter text-on-surface leading-none mb-2">{user.name}</h1>
-            <p className="text-[11px] font-black uppercase tracking-[0.2em] text-on-surface-muted opacity-60">
+            <h1 className="text-2xl font-bold tracking-tight text-on-surface leading-tight mb-1">{user.name}</h1>
+            <p className="text-sm font-medium text-on-surface-muted">
               {user.role === 'superadmin' ? 'Создатель контента' : 'Участник сообщества'}
             </p>
           </div>
 
-          <div className="grid grid-cols-3 gap-8 mb-8 w-full border-t border-b border-on-surface/5 py-6">
+          <div className="grid grid-cols-3 gap-8 mb-8 w-full border-t border-b border-on-surface/5 py-5">
             <div className="text-center">
-              <span className="block text-xl font-black text-on-surface leading-none mb-1">{approvedCount}</span>
-              <span className="text-[8px] font-black uppercase tracking-widest text-on-surface-muted">Опубликовано</span>
+              <span className="block text-xl font-bold text-on-surface leading-none mb-1">{approvedCount}</span>
+              <span className="text-[11px] font-medium text-on-surface-muted">Опубликовано</span>
             </div>
             <div className="text-center border-l border-r border-on-surface/5">
-              <span className="block text-xl font-black text-on-surface leading-none mb-1">{user.stats?.awards || 0}</span>
-              <span className="text-[8px] font-black uppercase tracking-widest text-on-surface-muted">Награды</span>
+              <span className="block text-xl font-bold text-on-surface leading-none mb-1">{user.stats?.awards || 0}</span>
+              <span className="text-[11px] font-medium text-on-surface-muted">Награды</span>
             </div>
             <div className="text-center">
-               <span className="block text-xl font-black text-on-surface leading-none mb-1">{(user.stats?.avgRating || 0).toFixed(1)}</span>
-               <span className="text-[8px] font-black uppercase tracking-widest text-on-surface-muted">Рейтинг</span>
+              <span className="block text-xl font-bold text-on-surface leading-none mb-1">{(user.stats?.avgRating || 0).toFixed(1)}</span>
+              <span className="text-[11px] font-medium text-on-surface-muted">Рейтинг</span>
             </div>
           </div>
 
@@ -152,18 +152,18 @@ export default function Profile() {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id as ProfileTab)}
-                className={`relative pb-4 border-b-[3px] text-[10px] font-black uppercase tracking-[0.2em] transition-all whitespace-nowrap flex items-center gap-2 ${
-                  activeTab === tab.id 
-                    ? 'border-on-surface text-on-surface' 
-                    : 'border-transparent text-on-surface-muted hover:text-on-surface hover:opacity-100'
+                className={`relative pb-3 border-b-2 text-sm font-semibold transition-all whitespace-nowrap flex items-center gap-2 ${
+                  activeTab === tab.id
+                    ? 'border-on-surface text-on-surface'
+                    : 'border-transparent text-on-surface-muted hover:text-on-surface'
                 }`}
               >
-                <span className="material-symbols-outlined text-[16px] leading-none mb-0.5">
+                <span className="material-symbols-outlined text-[16px] leading-none">
                   {tab.icon}
                 </span>
                 {tab.label}
                 {tab.count !== undefined && tab.count > 0 && (
-                  <span className={`px-1.5 py-0.5 rounded-md text-[8px] font-black ${
+                  <span className={`px-1.5 py-0.5 rounded-md text-[10px] font-semibold ${
                     activeTab === tab.id ? 'bg-on-surface text-surface' : 'bg-on-surface/10 text-on-surface-muted'
                   }`}>
                     {tab.count}
@@ -197,9 +197,9 @@ export default function Profile() {
                   <button
                     key={filter.id}
                     onClick={() => setPubFilter(filter.id as PublicationType)}
-                    className={`px-4 py-2 rounded-xl text-[8px] font-black uppercase tracking-widest transition-all whitespace-nowrap ${
-                      pubFilter === filter.id 
-                        ? 'bg-on-surface text-surface shadow-md' 
+                    className={`px-4 py-2 rounded-lg text-[12px] font-semibold transition-all whitespace-nowrap ${
+                      pubFilter === filter.id
+                        ? 'bg-on-surface text-surface'
                         : 'bg-surface-container-low text-on-surface-muted hover:bg-surface-container'
                     }`}
                   >
@@ -213,9 +213,9 @@ export default function Profile() {
           {/* History Grid */}
           <div className="min-h-[400px]">
             {filteredContent.length === 0 ? (
-              <div className="py-20 flex flex-col items-center text-center space-y-4 px-6 opacity-40">
-                <span className="material-symbols-outlined text-6xl">inventory_2</span>
-                <p className="text-xs font-black uppercase tracking-widest">Здесь пока ничего нет</p>
+              <div className="py-16 flex flex-col items-center text-center space-y-3 px-6 text-on-surface-muted">
+                <span className="material-symbols-outlined text-5xl opacity-30">inventory_2</span>
+                <p className="text-sm font-medium">Здесь пока ничего нет</p>
               </div>
             ) : (
               <div className="grid grid-cols-3 md:grid-cols-6 gap-x-3 gap-y-8">
@@ -228,7 +228,7 @@ export default function Profile() {
                     className="group cursor-pointer flex flex-col"
                     onClick={() => setOpenedContent(item)}
                   >
-                    <div className="relative aspect-[3/4] rounded-2xl overflow-hidden bg-surface-container border border-on-surface/5 shadow-sm group-hover:shadow-xl transition-all duration-500">
+                    <div className="relative aspect-[3/4] rounded-xl overflow-hidden bg-surface-container">
                       {item.imageUrl ? (
                         <Image
                           alt={item.title}
@@ -237,54 +237,46 @@ export default function Profile() {
                           sizes="200px"
                           placeholder="blur"
                           blurDataURL={defaultBlurDataURL}
-                          className="object-cover group-hover:scale-110 transition-transform duration-[1.5s]"
+                          className="object-cover group-hover:scale-[1.03] transition-transform duration-500"
                         />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center opacity-20 text-on-surface">
                           <span className="material-symbols-outlined text-4xl">{item.type === 'movie' ? 'movie' : 'menu_book'}</span>
                         </div>
                       )}
-                      
+
                       {/* Status Badges */}
                       {item.status === 'pending' && (
-                        <div className="absolute top-2 left-2 px-2 py-0.5 rounded-lg bg-amber-500 text-white text-[7px] font-black uppercase tracking-widest shadow-xl z-10">
+                        <div className="absolute top-2 left-2 px-2 py-0.5 rounded-md bg-amber-500 text-white text-[10px] font-semibold z-10">
                           Модерация
                         </div>
                       )}
-                      
+
                       {item.status === 'rejected' && (
-                        <div className="absolute top-2 left-2 px-1.5 py-0.5 rounded-lg bg-red-500 text-white text-[7px] font-black uppercase tracking-widest shadow-xl z-10 flex items-center gap-1">
-                          <span className="material-symbols-outlined text-[10px] font-bold">close</span>
+                        <div className="absolute top-2 left-2 px-2 py-0.5 rounded-md bg-red-500 text-white text-[10px] font-semibold z-10 flex items-center gap-1">
+                          <span className="material-symbols-outlined text-[11px]">close</span>
                           <span>Отказ</span>
                         </div>
                       )}
-
-                      <div className="absolute top-2 right-2 z-10">
-                        <div className="bg-white/80 backdrop-blur-md w-6 h-6 rounded-lg flex items-center justify-center border border-white shrink-0 shadow-sm">
-                          <span className="material-symbols-outlined text-[12px] text-on-surface">
-                            {item.type === 'movie' ? 'movie' : 'menu_book'}
-                          </span>
-                        </div>
-                      </div>
                     </div>
 
-                    <div className="mt-3 px-1">
-                      <h4 className="text-xs font-black leading-tight tracking-tight line-clamp-2 min-h-[2rem] text-on-surface group-hover:text-accent-lilac transition-colors">
+                    <div className="mt-2.5 px-0.5">
+                      <h4 className="text-xs font-semibold leading-snug tracking-tight line-clamp-2 text-on-surface">
                         {item.title}
                       </h4>
                       <div className="flex items-center gap-1.5 mt-1">
-                         <span className="text-[9px] font-black text-on-surface-muted uppercase tracking-widest truncate">
-                            {item.type === 'movie' ? 'Кино' : 'Книга'}
-                         </span>
-                         {item.status === 'approved' && item.rating && (
-                           <>
-                             <span className="w-1 h-1 rounded-full bg-on-surface/10" />
-                             <div className="flex items-center gap-1">
-                                <span className="material-symbols-outlined text-[10px] text-accent-lilac" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
-                                <span className="text-[10px] font-black">{item.rating.toFixed(1)}</span>
-                             </div>
-                           </>
-                         )}
+                        <span className="text-[11px] font-medium text-on-surface-muted truncate">
+                          {item.type === 'movie' ? 'Кино' : 'Книга'}
+                        </span>
+                        {item.status === 'approved' && item.rating && (
+                          <>
+                            <span className="w-1 h-1 rounded-full bg-on-surface/10" />
+                            <div className="flex items-center gap-0.5">
+                              <span className="material-symbols-outlined text-[11px] text-on-surface-muted" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+                              <span className="text-[11px] font-semibold">{item.rating.toFixed(1)}</span>
+                            </div>
+                          </>
+                        )}
                       </div>
                     </div>
                   </motion.div>
@@ -295,15 +287,15 @@ export default function Profile() {
         </section>
 
         {/* Existing Sections for non-empty state or bottom support */}
-        <section className="px-6 mt-16 space-y-12">
+        <section className="px-6 mt-12 space-y-10">
             <div>
-               <h2 className="text-[10px] uppercase tracking-[0.3em] font-black text-on-surface-variant opacity-40 mb-6">Избранное</h2>
-               <WishlistShelf userId={user.id} onOpenContent={(c) => setOpenedContent(c)} />
+              <h2 className="text-sm font-semibold text-on-surface-variant mb-4">Избранное</h2>
+              <WishlistShelf userId={user.id} onOpenContent={(c) => setOpenedContent(c)} />
             </div>
 
             <div>
-               <h2 className="text-[10px] uppercase tracking-[0.3em] font-black text-on-surface-variant opacity-40 mb-6">Ваши достижения</h2>
-               <AwardsShelf userId={user.id} />
+              <h2 className="text-sm font-semibold text-on-surface-variant mb-4">Ваши достижения</h2>
+              <AwardsShelf userId={user.id} />
             </div>
         </section>
       </main>

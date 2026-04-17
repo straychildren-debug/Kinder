@@ -176,7 +176,7 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
         <button onClick={onClose} className="p-2 -ml-2 rounded-full hover:bg-surface-container-high transition-colors text-on-surface flex-shrink-0 flex items-center justify-center">
           <span className="material-symbols-outlined">arrow_back</span>
         </button>
-        <h2 className="text-xl font-black text-on-surface tracking-tight truncate flex-1 leading-none pt-1">
+        <h2 className="text-base font-semibold text-on-surface tracking-tight truncate flex-1 leading-none pt-1">
           {content.title}
         </h2>
       </div>
@@ -203,36 +203,36 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
 
         {/* Content Info */}
         <div className="px-6 -mt-12 relative z-10">
-          <div className="bg-surface rounded-3xl p-6 shadow-xl shadow-on-surface/5 border border-on-surface/5">
-            <div className="flex justify-between items-start mb-4">
-               <div>
+          <div className="bg-surface rounded-2xl p-6 border border-on-surface/5">
+            <div className="flex justify-between items-start mb-4 gap-4">
+               <div className="min-w-0">
                  {content.status === 'rejected' && content.rejectionReason && (
                    <div className="mb-6 p-4 bg-red-50 border border-red-100 rounded-2xl flex gap-3 items-start animate-in fade-in slide-in-from-top-2 duration-500">
                      <span className="material-symbols-outlined text-red-500 shrink-0">report_problem</span>
                      <div>
-                       <p className="text-[10px] font-black uppercase tracking-widest text-red-600 mb-1">Причина отклонения</p>
-                       <p className="text-[13px] font-bold text-red-900 leading-relaxed">{content.rejectionReason}</p>
+                       <p className="text-xs font-semibold text-red-600 mb-1">Причина отклонения</p>
+                       <p className="text-sm font-medium text-red-900 leading-relaxed">{content.rejectionReason}</p>
                      </div>
                    </div>
                  )}
-                 <span className="inline-block px-3 py-1 bg-accent-lilac/30 text-on-accent-lilac text-[10px] font-black uppercase tracking-widest rounded-full mb-2">
+                 <span className="inline-block px-2.5 py-1 bg-surface-container text-on-surface-muted text-xs font-medium rounded-md mb-2">
                    {content.type === 'movie' ? 'Кино' : 'Книга'}
                  </span>
-                 <h1 className="text-3xl font-black text-on-surface leading-tight tracking-tighter">
+                 <h1 className="text-2xl font-bold text-on-surface leading-tight tracking-tight">
                    {content.title}
                  </h1>
-                 <p className="text-on-surface-variant font-bold mt-1">
+                 <p className="text-on-surface-muted font-medium text-sm mt-1">
                    {content.author || content.director || 'Неизвестен'}
                  </p>
                </div>
-               
+
                {/* Global Rating Badge */}
-               <div className="flex flex-col items-center justify-center bg-on-surface text-surface rounded-xl py-1.5 px-4 shadow-md">
+               <div className="flex flex-col items-center justify-center bg-on-surface text-surface rounded-xl py-2 px-3.5 shrink-0">
                  <div className="flex items-center gap-1">
-                   <span className="material-symbols-outlined text-[16px] text-accent-lilac" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
-                   <span className="text-lg font-black">{content.rating?.toFixed(1) || '—'}</span>
+                   <span className="material-symbols-outlined text-[15px] opacity-80" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+                   <span className="text-base font-bold">{content.rating?.toFixed(1) || '—'}</span>
                  </div>
-                 <span className="text-[8px] uppercase tracking-widest font-black opacity-60 leading-none mt-0.5">{content.reviewCount || 0} оценок</span>
+                 <span className="text-[10px] font-medium opacity-60 leading-none mt-0.5">{content.reviewCount || 0} оценок</span>
                </div>
             </div>
 
@@ -246,9 +246,9 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
                   onClick={handleToggleWishlist}
                   disabled={wishlistBusy}
                   whileTap={{ scale: 0.95 }}
-                  className={`flex items-center justify-center gap-3 py-4 rounded-xl font-black text-[11px] uppercase tracking-[0.2em] border transition-colors ${
+                  className={`flex items-center justify-center gap-2 py-3 rounded-xl font-semibold text-sm border transition-colors ${
                     wishlisted
-                      ? 'bg-accent-lilac/30 text-on-accent-lilac border-accent-lilac/40'
+                      ? 'bg-on-surface/5 text-on-surface border-on-surface/10'
                       : 'bg-surface-container text-on-surface border-on-surface/5 hover:bg-surface-container-high'
                   }`}
                 >
@@ -273,7 +273,7 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
                   onClick={handleTogglePin}
                   disabled={pinBusy}
                   whileTap={{ scale: 0.95 }}
-                  className={`flex items-center justify-center gap-3 py-4 rounded-xl font-black text-[11px] uppercase tracking-[0.2em] border transition-colors ${
+                  className={`flex items-center justify-center gap-2 py-3 rounded-xl font-semibold text-sm border transition-colors ${
                     pinned
                       ? 'bg-on-surface text-surface border-on-surface'
                       : 'bg-surface-container text-on-surface border-on-surface/5 hover:bg-surface-container-high'
@@ -296,22 +296,22 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
 
             {/* Metadata Grid */}
             <div className="grid grid-cols-2 gap-4 text-sm bg-surface-container-lowest p-4 rounded-xl border border-on-surface/5">
-              {content.year && <div><span className="text-on-surface-variant text-[10px] uppercase font-black tracking-widest block">Год</span> <span className="font-bold text-on-surface">{content.year}</span></div>}
-              {content.genre && <div><span className="text-on-surface-variant text-[10px] uppercase font-black tracking-widest block">Жанр</span> <span className="font-bold text-on-surface">{Array.isArray(content.genre) ? content.genre.join(', ') : content.genre}</span></div>}
-              {content.duration && <div><span className="text-on-surface-variant text-[10px] uppercase font-black tracking-widest block">Продолжительность</span> <span className="font-bold text-on-surface">{content.duration}</span></div>}
-              {content.pages && <div><span className="text-on-surface-variant text-[10px] uppercase font-black tracking-widest block">Страниц</span> <span className="font-bold text-on-surface">{content.pages}</span></div>}
+              {content.year && <div><span className="text-on-surface-muted text-xs font-medium block mb-0.5">Год</span> <span className="font-semibold text-on-surface">{content.year}</span></div>}
+              {content.genre && <div><span className="text-on-surface-muted text-xs font-medium block mb-0.5">Жанр</span> <span className="font-semibold text-on-surface">{Array.isArray(content.genre) ? content.genre.join(', ') : content.genre}</span></div>}
+              {content.duration && <div><span className="text-on-surface-muted text-xs font-medium block mb-0.5">Продолжительность</span> <span className="font-semibold text-on-surface">{content.duration}</span></div>}
+              {content.pages && <div><span className="text-on-surface-muted text-xs font-medium block mb-0.5">Страниц</span> <span className="font-semibold text-on-surface">{content.pages}</span></div>}
             </div>
           </div>
         </div>
 
         {/* Reviews Section */}
         <div className="px-6 py-10 max-w-4xl mx-auto">
-          <div className="flex items-center justify-between mb-8">
-            <h3 className="text-2xl font-black text-on-surface tracking-tighter">Отзывы</h3>
+          <div className="flex items-center justify-between mb-6">
+            <h3 className="text-xl font-bold text-on-surface tracking-tight">Отзывы</h3>
             {!showReviewForm && user && !reviews.find(r => r.userId === user.id) && (
-              <button 
+              <button
                 onClick={() => setShowReviewForm(true)}
-                className="bg-accent-lilac/90 text-on-accent-lilac px-4 py-2 rounded-xl font-black text-[11px] uppercase tracking-widest shadow-sm hover:scale-105 transition-transform"
+                className="bg-on-surface text-surface px-4 py-2 rounded-xl font-semibold text-sm active:scale-95 transition-transform"
               >
                 Написать
               </button>
@@ -320,11 +320,11 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
 
            {/* Write Review Form */}
            {showReviewForm && (
-             <div className="bg-surface-container-low p-6 rounded-3xl mb-8 border border-on-surface/5 shadow-inner">
-                <h4 className="font-black text-on-surface mb-2">
+             <div className="bg-surface-container-low p-6 rounded-2xl mb-6 border border-on-surface/5">
+                <h4 className="font-semibold text-on-surface mb-1 text-base">
                   Оцените {content.type === 'movie' ? 'фильм' : 'книгу'}
                 </h4>
-                <p className="text-xs text-on-surface-variant font-medium mb-4">
+                <p className="text-xs text-on-surface-muted font-medium mb-4">
                   Поделитесь своим мнением о произведении с другими участниками клуба.
                 </p>
                 
@@ -336,8 +336,8 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
                       onClick={() => setNewReviewRating(star)}
                       className="transition-transform hover:scale-110"
                     >
-                      <span 
-                        className={`material-symbols-outlined text-3xl ${newReviewRating >= star ? 'text-accent-lilac' : 'text-on-surface-variant/30'}`}
+                      <span
+                        className={`material-symbols-outlined text-3xl ${newReviewRating >= star ? 'text-on-surface' : 'text-on-surface-variant/30'}`}
                         style={{ fontVariationSettings: newReviewRating >= star ? "'FILL' 1" : "'FILL' 0" }}
                       >
                         star
@@ -349,21 +349,21 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
                 <textarea
                   value={newReviewText}
                   onChange={e => setNewReviewText(e.target.value)}
-                  className="w-full bg-surface border border-on-surface/10 rounded-xl p-4 text-sm font-medium text-on-surface focus:outline-none focus:border-accent-lilac min-h-[120px] resize-none mb-4"
+                  className="w-full bg-surface border border-on-surface/10 rounded-xl p-4 text-sm font-medium text-on-surface focus:outline-none focus:border-on-surface/40 min-h-[120px] resize-none mb-4"
                   placeholder={`Напишите развернутый отзыв на ${content.type === 'movie' ? 'фильм' : 'книгу'}...`}
                 />
 
                 <div className="flex justify-end gap-3">
-                  <button 
+                  <button
                     onClick={() => setShowReviewForm(false)}
-                    className="px-4 py-2 rounded-xl font-black text-on-surface-variant text-[10px] uppercase tracking-widest hover:bg-surface-container transition-colors"
+                    className="px-4 py-2 rounded-xl font-semibold text-on-surface-variant text-sm hover:bg-surface-container transition-colors"
                   >
                     Отмена
                   </button>
-                  <button 
+                  <button
                     onClick={handleSubmitReview}
                     disabled={submittingReview || newReviewRating === 0 || !newReviewText.trim()}
-                    className="bg-on-surface text-surface px-5 py-2 rounded-xl font-black text-[10px] uppercase tracking-widest disabled:opacity-50 hover:bg-on-surface/90 transition-colors shadow-md shadow-on-surface/5"
+                    className="bg-on-surface text-surface px-5 py-2 rounded-xl font-semibold text-sm disabled:opacity-50 hover:bg-on-surface/90 transition-colors"
                   >
                     {submittingReview ? 'Отправка...' : 'Опубликовать'}
                   </button>
@@ -377,32 +377,32 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
                 <div className="w-8 h-8 border-4 border-on-surface border-t-transparent rounded-full animate-spin"></div>
               </div>
            ) : reviews.length === 0 ? (
-              <div className="text-center py-12 bg-surface-container-lowest rounded-3xl border border-on-surface/5">
-                 <p className="text-on-surface-variant font-black text-sm">Пока нет отзывов.</p>
-                 <p className="text-[10px] uppercase tracking-widest text-on-surface-variant opacity-60 mt-2">Станьте первым!</p>
+              <div className="text-center py-12 bg-surface-container-lowest rounded-2xl border border-on-surface/5">
+                 <p className="text-on-surface-variant font-semibold text-sm">Пока нет отзывов</p>
+                 <p className="text-xs font-medium text-on-surface-muted mt-1">Станьте первым</p>
               </div>
            ) : (
              <div className="space-y-6">
                {reviews.map(review => (
-                 <div key={review.id} className="bg-surface rounded-3xl p-6 border border-on-surface/5 shadow-sm">
+                 <div key={review.id} className="bg-surface rounded-2xl p-5 border border-on-surface/5">
                    <div className="flex items-start justify-between mb-4">
                      <div className="flex items-center gap-3">
-                       <div className="relative w-10 h-10 rounded-full bg-accent-lilac flex items-center justify-center text-on-accent-lilac font-black overflow-hidden border border-on-surface/5">
+                       <div className="relative w-9 h-9 rounded-full bg-surface-container flex items-center justify-center text-on-surface-muted font-semibold overflow-hidden border border-on-surface/5">
                          {review.user?.avatarUrl ? (
-                           <Image src={review.user.avatarUrl} alt={review.user.name || ''} fill sizes="40px" className="object-cover" />
+                           <Image src={review.user.avatarUrl} alt={review.user.name || ''} fill sizes="36px" className="object-cover" />
                          ) : review.user?.name.charAt(0) || 'U'}
                        </div>
                        <div>
-                         <p className="font-black text-sm text-on-surface">{review.user?.name || 'Пользователь'}</p>
-                         <p className="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest opacity-60">
+                         <p className="font-semibold text-sm text-on-surface">{review.user?.name || 'Пользователь'}</p>
+                         <p className="text-xs font-medium text-on-surface-muted">
                            {new Date(review.createdAt).toLocaleDateString('ru-RU')}
                          </p>
                        </div>
                      </div>
                      {/* User's rating for the content */}
-                     <div className="bg-accent-lilac/20 px-2 py-1 rounded-lg flex items-center gap-1 border border-accent-lilac/30">
+                     <div className="bg-surface-container px-2 py-1 rounded-md flex items-center gap-1">
                        <span className="material-symbols-outlined text-[14px] text-on-surface" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
-                       <span className="text-sm font-black text-on-surface">{review.rating}</span>
+                       <span className="text-sm font-semibold text-on-surface">{review.rating}</span>
                      </div>
                    </div>
 
@@ -412,16 +412,16 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
 
                    <div className="flex items-center justify-between border-t border-on-surface/5 pt-4 gap-2">
                       <div className="flex items-center">
-                        <div className="flex items-center bg-surface-container-lowest rounded-xl p-1 border border-on-surface/5">
-                          <span className="pl-3 pr-2 text-[9px] font-black uppercase text-on-surface-variant tracking-widest leading-none">
+                        <div className="flex items-center bg-surface-container-lowest rounded-lg p-1 border border-on-surface/5">
+                          <span className="pl-3 pr-2 text-xs font-medium text-on-surface-muted leading-none">
                             {review.userId === user?.id ? 'Рейтинг' : 'Оценить'}: {review.avgRating && review.avgRating > 0 ? (review.avgRating >= 4 ? '👍' : review.avgRating <= 2 ? '👎' : '😐') : '—'}
                           </span>
                           {(!user || review.userId !== user.id) && (
                             <div className="flex gap-1 border-l border-on-surface/10 ml-1 pl-2 pr-1">
-                              <button onClick={() => handleRateReview(review.id, 5)} className="hover:scale-125 transition-transform p-1 text-accent-lilac hover:text-green-500">
+                              <button onClick={() => handleRateReview(review.id, 5)} className="hover:scale-110 transition-transform p-1 text-on-surface-muted hover:text-green-500">
                                 <span className="material-symbols-outlined text-[18px]">thumb_up</span>
                               </button>
-                              <button onClick={() => handleRateReview(review.id, 1)} className="hover:scale-125 transition-transform p-1 text-accent-lilac hover:text-red-500">
+                              <button onClick={() => handleRateReview(review.id, 1)} className="hover:scale-110 transition-transform p-1 text-on-surface-muted hover:text-red-500">
                                 <span className="material-symbols-outlined text-[18px]">thumb_down</span>
                               </button>
                             </div>
@@ -430,16 +430,16 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
                       </div>
 
                      {/* Comments Toggle */}
-                     <button 
+                     <button
                        type="button"
                        onClick={(e) => {
                          e.stopPropagation();
                          toggleComments(review.id);
                        }}
-                       className="flex items-center gap-2 text-on-surface-variant hover:text-on-surface transition-colors bg-surface-container px-3 py-1.5 rounded-xl shrink-0 cursor-pointer relative z-10"
+                       className="flex items-center gap-1.5 text-on-surface-variant hover:text-on-surface transition-colors bg-surface-container px-3 py-1.5 rounded-lg shrink-0 cursor-pointer relative z-10"
                      >
-                       <span className="material-symbols-outlined text-[18px]">chat_bubble</span>
-                       <span className="text-[12px] font-black tracking-widest">{review.commentCount || 0}</span>
+                       <span className="material-symbols-outlined text-[16px]">chat_bubble</span>
+                       <span className="text-xs font-semibold">{review.commentCount || 0}</span>
                      </button>
                   </div>
 
@@ -450,12 +450,12 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
                       <div className="mb-6">
                         {user ? (
                           <div className="flex gap-2 bg-surface-container-low p-3 rounded-xl border border-on-surface/5">
-                            <input 
+                            <input
                               type="text"
                               value={newCommentText}
                               onChange={e => setNewCommentText(e.target.value)}
                               placeholder="Написать комментарий..."
-                              className="flex-1 bg-surface border border-on-surface/10 rounded-xl px-5 py-2.5 text-sm font-medium focus:outline-none focus:border-accent-lilac"
+                              className="flex-1 bg-surface border border-on-surface/10 rounded-xl px-4 py-2.5 text-sm font-medium focus:outline-none focus:border-on-surface/40"
                               onKeyDown={e => e.key === 'Enter' && handleSubmitComment(review.id)}
                             />
                             <button 
@@ -465,15 +465,15 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
                                 handleSubmitComment(review.id);
                               }}
                               disabled={!newCommentText.trim()}
-                              className="w-10 h-10 bg-on-surface text-surface rounded-xl flex items-center justify-center disabled:opacity-50 transition-all hover:scale-105 active:scale-95 shadow-md shrink-0 cursor-pointer"
+                              className="w-10 h-10 bg-on-surface text-surface rounded-xl flex items-center justify-center disabled:opacity-50 transition-all active:scale-95 shrink-0 cursor-pointer"
                             >
-                              <span className="material-symbols-outlined text-[20px] font-bold">arrow_upward</span>
+                              <span className="material-symbols-outlined text-[18px]">arrow_upward</span>
                             </button>
                           </div>
                         ) : (
                           <div className="text-center py-4 bg-surface-container-lowest rounded-xl border border-dashed border-on-surface/10">
-                             <p className="text-[10px] font-black uppercase tracking-widest text-on-surface-variant mb-2">Обсуждение доступно участникам</p>
-                             <Link href="/login" className="text-accent-lilac font-black text-xs uppercase tracking-widest hover:underline decoration-2">Войти в аккаунт</Link>
+                             <p className="text-sm font-medium text-on-surface-muted mb-2">Обсуждение доступно участникам</p>
+                             <Link href="/login" className="text-on-surface font-semibold text-sm hover:underline">Войти в аккаунт</Link>
                           </div>
                         )}
                       </div>
@@ -487,19 +487,19 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
                           ) : (
                             reviewComments.map(comment => (
                               <div key={comment.id} className="flex gap-3 bg-surface-container-lowest p-4 rounded-xl border border-on-surface/5">
-                                <div className="relative w-8 h-8 rounded-full bg-surface overflow-hidden flex-shrink-0 border border-on-surface/5 flex items-center justify-center font-bold text-on-surface text-xs">
+                                <div className="relative w-8 h-8 rounded-full bg-surface overflow-hidden flex-shrink-0 border border-on-surface/5 flex items-center justify-center font-semibold text-on-surface text-xs">
                                   {comment.user?.avatarUrl ? (
                                     <Image src={comment.user.avatarUrl} alt={comment.user.name || ''} fill sizes="32px" className="object-cover" />
                                   ) : comment.user?.name.charAt(0) || 'U'}
                                 </div>
                                 <div>
                                   <div className="flex items-baseline gap-2 mb-1">
-                                    <span className="font-black text-xs text-on-surface">{comment.user?.name}</span>
-                                    <span className="text-[9px] text-on-surface-variant uppercase font-bold opacity-60">
+                                    <span className="font-semibold text-xs text-on-surface">{comment.user?.name}</span>
+                                    <span className="text-[11px] text-on-surface-muted font-medium">
                                       {new Date(comment.createdAt).toLocaleDateString('ru-RU')}
                                     </span>
                                   </div>
-                                  <p className="text-xs text-on-surface-variant leading-relaxed">{comment.text}</p>
+                                  <p className="text-sm text-on-surface-variant leading-relaxed">{comment.text}</p>
                                 </div>
                               </div>
                             ))
@@ -518,7 +518,7 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
         {/* Похожее */}
         {similar.length > 0 && (
           <div className="px-6 pb-16 max-w-6xl mx-auto">
-            <h3 className="text-2xl font-black text-on-surface tracking-tighter mb-6">
+            <h3 className="text-xl font-bold text-on-surface tracking-tight mb-6">
               Похожее
             </h3>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
@@ -528,7 +528,7 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
                   onClick={() => setContent(s)}
                   className="group text-left"
                 >
-                  <div className="relative aspect-[2/3] w-full rounded-2xl overflow-hidden bg-surface-container border border-on-surface/5 shadow-sm group-hover:shadow-lg transition-all">
+                  <div className="relative aspect-[2/3] w-full rounded-xl overflow-hidden bg-surface-container border border-on-surface/5 transition-all">
                     {s.imageUrl && (
                       <Image
                         src={s.imageUrl}
@@ -537,14 +537,14 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
                         sizes="(min-width: 1024px) 180px, 45vw"
                         placeholder="blur"
                         blurDataURL={defaultBlurDataURL}
-                        className="object-cover group-hover:scale-105 transition-transform duration-500"
+                        className="object-cover group-hover:scale-[1.03] transition-transform duration-500"
                       />
                     )}
                   </div>
-                  <p className="mt-3 text-sm font-black text-on-surface line-clamp-2 leading-snug">
+                  <p className="mt-3 text-sm font-semibold text-on-surface line-clamp-2 leading-snug">
                     {s.title}
                   </p>
-                  <p className="mt-1 text-[9px] font-black uppercase tracking-widest text-on-surface-variant/60">
+                  <p className="mt-1 text-xs font-medium text-on-surface-muted">
                     {s.type === 'movie' ? 'Кино' : 'Книга'}
                     {s.year ? ` · ${s.year}` : ''}
                   </p>
