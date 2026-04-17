@@ -363,7 +363,7 @@ export default function Clubs() {
                   <div className="absolute top-0 right-0 w-96 h-96 bg-on-surface/[0.01] rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
                   
                   {/* Featured Image Section */}
-                  <div className="w-full md:w-[280px] aspect-[2/3] relative rounded-2xl overflow-hidden shadow-2xl flex-shrink-0 z-10">
+                  <div className="w-full md:w-[280px] h-[200px] relative rounded-2xl overflow-hidden shadow-2xl flex-shrink-0 z-10">
                     {heroClubs[0].imageUrl ? (
                       <Image
                         src={heroClubs[0].imageUrl}
