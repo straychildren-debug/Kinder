@@ -49,7 +49,7 @@ export default function Library() {
   return (
     <>
       <TopNavBar />
-      <main className="pt-24 px-4 pb-32 max-w-lg mx-auto md:max-w-4xl">
+      <main className="pt-24 px-6 pb-32 max-w-lg mx-auto md:max-w-4xl">
         {/* Page Header */}
         <section className="py-8">
            <h1 className="text-6xl font-black tracking-tighter leading-none text-on-surface mb-2">Все книги</h1>
@@ -123,7 +123,7 @@ export default function Library() {
                     {book.title}
                   </h4>
                   <div className="flex items-center gap-2 flex-wrap leading-none">
-                    <p className="text-[11px] font-black text-on-surface-muted uppercase tracking-widest">
+                    <p className="text-[10px] font-black text-on-surface-muted tracking-widest">
                       {book.author || 'Неизвестный автор'}
                     </p>
                     {book.year && (

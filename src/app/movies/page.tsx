@@ -50,7 +50,7 @@ export default function Movies() {
   return (
     <>
       <TopNavBar />
-      <main className="pt-24 px-4 pb-32 max-w-lg mx-auto md:max-w-4xl">
+      <main className="pt-24 px-6 pb-32 max-w-lg mx-auto md:max-w-4xl">
         {/* Page Header */}
         <section className="py-8">
            <h1 className="text-6xl font-black tracking-tighter leading-none text-on-surface mb-2">Все фильмы</h1>
@@ -146,7 +146,7 @@ export default function Movies() {
                       </span>
                     )}
                     <span className="text-[11px] font-black text-on-surface-muted uppercase leading-none opacity-40">•</span>
-                    <p className="text-[11px] font-black text-on-surface-muted uppercase tracking-widest leading-none">
+                    <p className="text-[10px] font-black text-on-surface-muted tracking-widest leading-none">
                       {movie.director || 'Неизвестный режиссер'}
                     </p>
                   </div>
