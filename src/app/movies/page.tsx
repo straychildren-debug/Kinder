@@ -5,27 +5,47 @@ import TopNavBar from "@/components/TopNavBar";
 import BottomNavBar from "@/components/BottomNavBar";
 import Link from "next/link";
 import { getApprovedContent } from "@/lib/db";
+import { getWishlist } from "@/lib/wishlist";
+import { useAuth } from "@/components/AuthProvider";
 import { ContentItem } from "@/lib/types";
 import ContentDetailsModal from "@/components/ContentDetailsModal";
 import { ListSkeletonList } from "@/components/Skeleton";
 import { MotionListItem } from "@/components/Motion";
+import CatalogTabs, { CatalogTab } from "@/components/CatalogTabs";
 import Image from "next/image";
 import { defaultBlurDataURL } from "@/lib/image-blur";
 
 export default function Movies() {
+  const { user } = useAuth();
   const [movies, setMovies] = useState<ContentItem[]>([]);
+  const [wishlistMovies, setWishlistMovies] = useState<ContentItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState<CatalogTab>('catalog');
   const [selectedContent, setSelectedContent] = useState<ContentItem | null>(null);
 
   useEffect(() => {
     async function load() {
-      const allContent = await getApprovedContent();
-      // To show "popular", could sort by rating if available, but for now just filter by movie type
-      setMovies(allContent.filter(c => c.type === 'movie'));
-      setLoading(false);
+      try {
+        const allContent = await getApprovedContent();
+        setMovies(allContent.filter(c => c.type === 'movie'));
+
+        if (user) {
+          const wish = await getWishlist(user.id);
+          const userMovies = wish
+            .map(w => w.content)
+            .filter((c): c is ContentItem => !!c && c.type === 'movie');
+          setWishlistMovies(userMovies);
+        }
+      } catch (err) {
+        console.error('Movies load error:', err);
+      } finally {
+        setLoading(false);
+      }
     }
     load();
-  }, []);
+  }, [user]);
+
+  const displayMovies = activeTab === 'catalog' ? movies : wishlistMovies;
 
   return (
     <>
@@ -39,30 +59,51 @@ export default function Movies() {
            </span>
         </section>
 
+        {/* Tab Switcher */}
+        {user && (
+          <CatalogTabs 
+            activeTab={activeTab} 
+            onTabChange={setActiveTab}
+            catalogLabel="Каталог"
+            myListLabel="Мой список"
+            myListCount={wishlistMovies.length}
+          />
+        )}
+
         {/* Movie Grid / Empty State */}
         {loading ? (
           <ListSkeletonList count={6} />
-        ) : movies.length === 0 ? (
+        ) : displayMovies.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-24 px-6 text-center">
-             {/* Illustration Mockup */}
              <div className="relative mb-8">
                 <div className="flex items-center justify-center gap-4 text-8xl grayscale opacity-20">
-                   <span className="material-symbols-outlined text-9xl">movie_filter</span>
-                   <span className="material-symbols-outlined text-9xl">potted_plant</span>
+                   <span className="material-symbols-outlined text-9xl">
+                     {activeTab === 'catalog' ? 'movie_filter' : 'bookmark_heart'}
+                   </span>
                 </div>
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-9xl font-black text-on-surface/5 drop-shadow-2xl">0</div>
+                {activeTab === 'catalog' && (
+                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-9xl font-black text-on-surface/5 drop-shadow-2xl">0</div>
+                )}
              </div>
-             <p className="text-xl font-black text-on-surface mb-3 tracking-tight">Пока нет фильмов. Добавьте первый!</p>
-             <Link 
-               href="/create" 
-               className="mt-6 px-6 py-3 bg-on-surface text-surface rounded-xl font-black text-[9px] uppercase tracking-widest shadow-md shadow-on-surface/5 hover:scale-105 transition-transform"
-             >
-               Добавить фильм
-             </Link>
+             <p className="text-xl font-black text-on-surface mb-3 tracking-tight">
+               {activeTab === 'catalog' 
+                 ? 'Пока нет фильмов. Добавьте первый!' 
+                 : 'Ваш список фильмов пуст'}
+             </p>
+             {activeTab === 'catalog' ? (
+               <Link 
+                 href="/create" 
+                 className="mt-6 px-6 py-3 bg-on-surface text-surface rounded-xl font-black text-[9px] uppercase tracking-widest shadow-md shadow-on-surface/5 hover:scale-105 transition-transform"
+               >
+                 Добавить фильм
+               </Link>
+             ) : (
+               <p className="text-xs text-on-surface-muted font-medium opacity-60">Сохраняйте интересное кино, чтобы посмотреть его позже</p>
+             )}
           </div>
         ) : (
           <div className="space-y-4">
-            {movies.map((movie, index) => (
+            {displayMovies.map((movie, index) => (
               <MotionListItem key={movie.id} index={index}>
               <div
                 className="group flex bg-surface p-3.5 rounded-3xl border border-on-surface/5 shadow-sm hover:shadow-md transition-all hover:scale-[1.01] cursor-pointer"

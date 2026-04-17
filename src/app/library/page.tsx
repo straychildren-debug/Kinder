@@ -4,26 +4,47 @@ import React, { useEffect, useState } from "react";
 import TopNavBar from "@/components/TopNavBar";
 import BottomNavBar from "@/components/BottomNavBar";
 import { getApprovedContent } from "@/lib/db";
+import { getWishlist } from "@/lib/wishlist";
+import { useAuth } from "@/components/AuthProvider";
 import { ContentItem } from "@/lib/types";
 import ContentDetailsModal from "@/components/ContentDetailsModal";
 import { ListSkeletonList } from "@/components/Skeleton";
 import { MotionListItem } from "@/components/Motion";
+import CatalogTabs, { CatalogTab } from "@/components/CatalogTabs";
 import Image from "next/image";
 import { defaultBlurDataURL } from "@/lib/image-blur";
 
 export default function Library() {
+  const { user } = useAuth();
   const [books, setBooks] = useState<ContentItem[]>([]);
+  const [wishlistBooks, setWishlistBooks] = useState<ContentItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState<CatalogTab>('catalog');
   const [selectedContent, setSelectedContent] = useState<ContentItem | null>(null);
 
   useEffect(() => {
     async function load() {
-      const allContent = await getApprovedContent();
-      setBooks(allContent.filter(c => c.type === 'book'));
-      setLoading(false);
+      try {
+        const allContent = await getApprovedContent();
+        setBooks(allContent.filter(c => c.type === 'book'));
+        
+        if (user) {
+          const wish = await getWishlist(user.id);
+          const userBooks = wish
+            .map(w => w.content)
+            .filter((c): c is ContentItem => !!c && c.type === 'book');
+          setWishlistBooks(userBooks);
+        }
+      } catch (err) {
+        console.error('Library load error:', err);
+      } finally {
+        setLoading(false);
+      }
     }
     load();
-  }, []);
+  }, [user]);
+
+  const displayBooks = activeTab === 'catalog' ? books : wishlistBooks;
 
   return (
     <>
@@ -37,17 +58,35 @@ export default function Library() {
            </span>
         </section>
 
+        {/* Tab Switcher */}
+        {user && (
+          <CatalogTabs 
+            activeTab={activeTab} 
+            onTabChange={setActiveTab}
+            catalogLabel="Каталог"
+            myListLabel="Мой список"
+            myListCount={wishlistBooks.length}
+          />
+        )}
+
         {/* Books List (Horizontal Cards) */}
         {loading ? (
           <ListSkeletonList count={6} />
-        ) : books.length === 0 ? (
+        ) : displayBooks.length === 0 ? (
           <div className="text-center py-20 px-6 bg-surface rounded-3xl border border-on-surface/5 shadow-sm">
-             <div className="text-6xl mb-4 grayscale opacity-40">📚</div>
-             <p className="text-on-surface-muted font-black uppercase text-[10px] tracking-widest">В библиотеке пока нет книг</p>
+             <div className="text-6xl mb-4 grayscale opacity-40">
+               {activeTab === 'catalog' ? '📚' : '🔖'}
+             </div>
+             <p className="text-on-surface-muted font-black uppercase text-[10px] tracking-widest leading-relaxed">
+               {activeTab === 'catalog' 
+                 ? 'В библиотеке пока нет книг' 
+                 : 'Ваш список пуст — добавляйте интересное на будущее'
+               }
+             </p>
           </div>
         ) : (
           <div className="space-y-4">
-            {books.map((book, index) => (
+            {displayBooks.map((book, index) => (
               <MotionListItem key={book.id} index={index}>
               <div
                 className="group flex bg-surface p-3.5 rounded-3xl border border-on-surface/5 shadow-sm hover:shadow-md transition-all hover:scale-[1.01] cursor-pointer"

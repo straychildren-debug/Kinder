@@ -92,12 +92,23 @@ export default function ActivityFeed() {
 
   useEffect(() => {
     let alive = true;
-    getGlobalActivity(20).then((list) => {
-      if (alive) setItems(list);
-    });
-    const unsub = subscribeToActivity((e) => {
-      setItems((prev) => [e, ...(prev ?? [])].slice(0, 20));
-    });
+    getGlobalActivity(20)
+      .then((list) => {
+        if (alive) setItems(list || []);
+      })
+      .catch((err) => {
+        console.error('ActivityFeed fetch error:', err);
+        if (alive) setItems([]);
+      });
+
+    let unsub = () => {};
+    try {
+      unsub = subscribeToActivity((e) => {
+        setItems((prev) => [e, ...(prev ?? [])].slice(0, 20));
+      });
+    } catch (err) {
+      console.error('ActivityFeed subscription error:', err);
+    }
     return () => {
       alive = false;
       unsub();

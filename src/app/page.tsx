@@ -43,9 +43,14 @@ export default function Home() {
 
   useEffect(() => {
     async function load() {
-      const data = await getApprovedContent();
-      setApprovedContent(data);
-      setLoading(false);
+      try {
+        const data = await getApprovedContent();
+        setApprovedContent(data);
+      } catch (err) {
+        console.error('Initial load failed:', err);
+      } finally {
+        setLoading(false);
+      }
     }
     load();
   }, []);
