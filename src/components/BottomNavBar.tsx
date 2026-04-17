@@ -5,7 +5,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 
 interface BottomNavBarProps {
-  activeTab?: 'home' | 'books' | 'movies' | 'clubs' | 'users';
+  activeTab?: 'home' | 'books' | 'movies' | 'clubs' | 'users' | 'profile';
 }
 
 export default function BottomNavBar({ activeTab = 'home' }: BottomNavBarProps) {
@@ -18,7 +18,7 @@ export default function BottomNavBar({ activeTab = 'home' }: BottomNavBarProps) 
     { id: 'books', icon: 'menu_book', label: 'Книги', href: '/library' },
     { id: 'movies', icon: 'movie', label: 'Фильмы', href: '/movies' },
     { id: 'clubs', icon: 'groups', label: 'Клубы', href: '/clubs' },
-    { id: 'users', icon: 'leaderboard', label: 'Рейтинг', href: '/leaderboard' },
+    { id: 'profile', icon: 'person', label: 'Профиль', href: '/profile' },
   ];
 
   return (
@@ -43,7 +43,7 @@ export default function BottomNavBar({ activeTab = 'home' }: BottomNavBarProps) 
               
               <span 
                 className={`material-symbols-outlined text-[24px] z-10 transition-all duration-300 ${
-                  isActive ? 'text-on-surface scale-110' : 'text-on-surface-muted opacity-40'
+                  isActive ? 'text-on-surface scale-110' : 'text-on-surface-muted opacity-30'
                 }`} 
                 style={getIconStyle(tab.id)}
               >

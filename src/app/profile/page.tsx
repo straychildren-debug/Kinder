@@ -1,6 +1,6 @@
 'use client';
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import TopNavBar from "@/components/TopNavBar";
 import BottomNavBar from "@/components/BottomNavBar";
 import { useAuth } from "@/components/AuthProvider";
@@ -12,51 +12,51 @@ import { defaultBlurDataURL } from "@/lib/image-blur";
 import AwardsShelf from "@/components/AwardsShelf";
 import WishlistShelf from "@/components/WishlistShelf";
 import ContentDetailsModal from "@/components/ContentDetailsModal";
+import QuickCreateForm from "@/components/QuickCreateForm";
+import { motion, AnimatePresence } from "framer-motion";
+
+type ProfileTab = 'all' | 'movies' | 'books' | 'pending';
 
 export default function Profile() {
   const { user } = useAuth();
   const router = useRouter();
-  const [userContent, setUserContent] = React.useState<ContentItem[]>([]);
-  const [loading, setLoading] = React.useState(true);
-  const [openedContent, setOpenedContent] = React.useState<ContentItem | null>(null);
-  const [pinnedContent, setPinnedContent] = React.useState<ContentItem | null>(null);
+  const [userContent, setUserContent] = useState<ContentItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [openedContent, setOpenedContent] = useState<ContentItem | null>(null);
+  const [activeTab, setActiveTab] = useState<ProfileTab>('all');
 
-  React.useEffect(() => {
-    async function load() {
-      if (user) {
-        const content = await getContentByUser(user.id);
-        setUserContent(content);
-        if (user.pinnedContentId) {
-          const pinned = await getContentById(user.pinnedContentId);
-          setPinnedContent(pinned);
-        } else {
-          setPinnedContent(null);
-        }
-      }
-      setLoading(false);
+  const loadData = async () => {
+    if (user) {
+      const content = await getContentByUser(user.id);
+      setUserContent(content);
     }
-    load();
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    loadData();
   }, [user]);
 
   if (!user) {
     return (
       <>
         <TopNavBar />
-        <main className="pt-24 pb-32 px-6 max-w-3xl mx-auto flex flex-col items-center justify-center min-h-[60vh] space-y-8">
-          <div className="w-24 h-24 rounded-full bg-surface-container flex items-center justify-center border border-on-surface/5 shadow-2xl">
-            <span className="material-symbols-outlined text-4xl text-on-surface-variant/30">person</span>
+        <main className="pt-24 pb-32 px-6 max-w-lg mx-auto flex flex-col items-center justify-center min-h-[60vh] space-y-10">
+          <div className="w-24 h-24 rounded-[32px] bg-surface-container flex items-center justify-center border border-on-surface/5 shadow-2xl relative">
+             <div className="absolute inset-0 bg-accent-lilac/5 animate-pulse rounded-[32px]" />
+             <span className="material-symbols-outlined text-4xl text-on-surface-variant/30 relative">person</span>
           </div>
-          <div className="text-center space-y-4">
-            <h2 className="text-4xl font-black tracking-tighter text-on-surface">Войдите в аккаунт</h2>
-            <p className="text-on-surface-muted text-sm font-medium max-w-xs mx-auto leading-relaxed">
-              Чтобы просматривать профиль, делиться контентом и участвовать в жизни сообщества, необходимо авторизоваться
+          <div className="text-center space-y-3">
+            <h2 className="text-3xl font-black tracking-tighter text-on-surface">Ваш профиль</h2>
+            <p className="text-on-surface-muted text-[13px] font-medium max-w-[240px] mx-auto leading-relaxed">
+              Авторизуйтесь, чтобы видеть свои достижения и историю публикаций
             </p>
           </div>
           <button
             onClick={() => router.push('/login')}
-            className="px-6 py-3 bg-on-surface text-surface rounded-xl font-black text-[10px] uppercase tracking-[0.2em] transition-transform active:scale-95 shadow-lg shadow-on-surface/10"
+            className="w-full py-4 bg-on-surface text-surface rounded-2xl font-black text-[10px] uppercase tracking-[0.2em] transition-transform active:scale-95 shadow-xl shadow-on-surface/10"
           >
-            Войти
+            Войти в систему
           </button>
         </main>
         <BottomNavBar />
@@ -67,255 +67,195 @@ export default function Profile() {
   const approvedCount = userContent.filter(c => c.status === 'approved').length;
   const pendingCount = userContent.filter(c => c.status === 'pending').length;
 
+  const filteredContent = userContent.filter(item => {
+    if (activeTab === 'all') return item.status === 'approved';
+    if (activeTab === 'movies') return item.type === 'movie' && item.status === 'approved';
+    if (activeTab === 'books') return item.type === 'book' && item.status === 'approved';
+    if (activeTab === 'pending') return item.status === 'pending' || item.status === 'rejected';
+    return true;
+  });
+
+  const TABS = [
+    { id: 'all', label: 'Все', icon: 'grid_view' },
+    { id: 'movies', label: 'Кино', icon: 'movie' },
+    { id: 'books', label: 'Книги', icon: 'menu_book' },
+    { id: 'pending', label: 'Мои черновики', icon: 'pending_actions', color: 'text-amber-500', count: pendingCount },
+  ];
+
   if (loading) {
     return (
-      <>
-        <TopNavBar />
-        <main className="pt-24 pb-32 px-6 max-w-7xl mx-auto flex items-center justify-center min-h-[60vh]">
-          <div className="w-12 h-12 border-[6px] border-on-surface/5 border-t-on-surface rounded-full animate-spin"></div>
-        </main>
-        <BottomNavBar />
-      </>
+      <div className="min-h-screen bg-surface flex items-center justify-center">
+        <div className="w-10 h-10 border-4 border-on-surface/5 border-t-accent-lilac rounded-full animate-spin" />
+      </div>
     );
   }
 
   return (
     <>
       <TopNavBar />
-      <main className="pt-24 pb-32 px-6 max-w-7xl mx-auto">
-        <section className="grid grid-cols-1 md:grid-cols-12 gap-12 mb-20 items-start">
-          <div className="md:col-span-4 flex flex-col items-center md:items-start space-y-8">
-            <div className="relative group">
-              <div className="relative w-56 h-56 rounded-3xl overflow-hidden shadow-[0_32px_64px_-16px_rgba(0,0,0,0.15)] transition-all duration-700 group-hover:scale-[1.05] group-hover:-rotate-2 border-4 border-white">
-                {user.avatarUrl ? (
-                  <Image alt={user.name} fill sizes="224px" className="object-cover" src={user.avatarUrl} />
-                ) : (
-                  <div className="w-full h-full bg-surface-container flex items-center justify-center text-6xl font-black text-on-surface/10 ">
-                    {user.name.charAt(0)}
-                  </div>
-                )}
-              </div>
-              {user.role !== 'user' && (
-                <div className="absolute -bottom-4 -right-4 w-16 h-16 bg-white rounded-[24px] flex items-center justify-center shadow-2xl border border-on-surface/5 ring-4 ring-surface">
-                  <span className="material-symbols-outlined text-on-surface text-3xl" style={{ fontVariationSettings: "'FILL' 1" }}>verified</span>
+      <main className="pt-20 pb-32 max-w-lg mx-auto">
+        {/* Compact Private Header */}
+        <section className="px-6 pb-6 pt-4 flex flex-col items-center">
+          <div className="relative mb-6">
+             <div className="w-32 h-32 rounded-[40px] overflow-hidden border-4 border-white shadow-2xl relative">
+              {user.avatarUrl ? (
+                <Image alt={user.name} fill sizes="128px" className="object-cover" src={user.avatarUrl} />
+              ) : (
+                <div className="w-full h-full bg-accent-lilac/10 flex items-center justify-center text-4xl font-black text-accent-lilac uppercase">
+                  {user.name.charAt(0)}
                 </div>
               )}
             </div>
-            
-            <div className="text-center md:text-left space-y-2">
-              <div className="space-y-1">
-                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-on-surface-muted">Пользователь</span>
-                <h1 className="text-5xl font-black tracking-tighter text-on-surface leading-none">{user.name}</h1>
-              </div>
-              
-              <p className="text-on-surface-muted font-medium text-sm max-w-xs">{user.bio || user.email}</p>
-              
-              {user.role !== 'user' && (
-                <span className={`inline-block px-4 py-1.5 text-[9px] font-black uppercase tracking-widest rounded-full border ${
-                  user.role === 'superadmin' ? 'bg-purple-50 text-purple-700 border-purple-100' : 'bg-black text-white border-on-surface'
-                }`}>
-                  {user.role === 'superadmin' ? 'Суперадмин' : user.role === 'admin' ? 'Администратор' : 'Модератор'}
-                </span>
-              )}
-              
-              <div className="flex items-center justify-center md:justify-start gap-8 pt-6 border-t border-on-surface/5 mt-4">
-                <div className="text-center md:text-left">
-                  <span className="block text-2xl font-black tracking-tighter text-on-surface leading-none mb-1">{user.stats?.reviews || 0}</span>
-                   <span className="text-[9px] uppercase tracking-widest text-on-surface-muted font-black">Отзывы</span>
-                </div>
-                <div className="text-center md:text-left">
-                  <span className="block text-2xl font-black tracking-tighter text-on-surface leading-none mb-1">{user.stats?.followers || 0}</span>
-                  <span className="text-[9px] uppercase tracking-widest text-on-surface-muted font-black">Подписчики</span>
-                </div>
-                <div className="text-center md:text-left">
-                  <span className="block text-2xl font-black tracking-tighter text-on-surface leading-none mb-1">{user.stats?.awards || 0}</span>
-                  <span className="text-[9px] uppercase tracking-widest text-on-surface-muted font-black">Награды</span>
-                </div>
-              </div>
-            </div>
-            
-            <button className="w-full py-3.5 bg-on-surface text-surface rounded-xl font-black text-[10px] uppercase tracking-[0.2em] flex items-center justify-center gap-3 transition-all active:scale-95 shadow-lg shadow-on-surface/10">
-              <span className="material-symbols-outlined text-[18px]">edit_note</span>
-              Настройки аккаунта
-            </button>
-          </div>
-
-          <div className="md:col-span-8 space-y-16">
-            {/* Статистика активности */}
-            <div className="bg-surface p-7 rounded-3xl border border-on-surface/5 shadow-sm">
-              <h2 className="text-[10px] uppercase tracking-[0.3em] font-black text-on-surface-muted mb-8">Активность сообщества</h2>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-                <div className="space-y-1">
-                  <span className="block text-4xl font-black tracking-tighter text-on-surface leading-none mb-1">{userContent.length}</span>
-                  <span className="text-[9px] uppercase tracking-widest text-on-surface-muted font-black">Публикаций</span>
-                </div>
-                <div className="space-y-1">
-                  <span className="block text-4xl font-black tracking-tighter text-green-600 leading-none mb-1">{approvedCount}</span>
-                  <span className="text-[9px] uppercase tracking-widest text-on-surface-muted font-black">Одобрено</span>
-                </div>
-                <div className="space-y-1">
-                  <span className="block text-4xl font-black tracking-tighter text-amber-500 leading-none mb-1">{pendingCount}</span>
-                  <span className="text-[9px] uppercase tracking-widest text-on-surface-muted font-black">На проверке</span>
-                </div>
-                <div className="space-y-1">
-                  <span className="block text-4xl font-black tracking-tighter text-on-surface leading-none mb-1">{(user.stats?.avgRating || 0).toFixed(1)}</span>
-                  <span className="text-[9px] uppercase tracking-widest text-on-surface-muted font-black">Ср. рейтинг</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Закреплённое любимое */}
-            {pinnedContent && (
-              <div className="space-y-6">
-                <h2 className="text-[10px] uppercase tracking-[0.3em] font-black text-on-surface-muted">
-                  Любимое {pinnedContent.type === 'movie' ? 'кино' : 'книга'}
-                </h2>
-                <button
-                  onClick={() => setOpenedContent(pinnedContent)}
-                  className="w-full text-left group relative overflow-hidden rounded-[32px] border border-on-surface/5 shadow-xl hover:shadow-2xl transition-all duration-500 bg-surface"
-                >
-                  <div className="relative aspect-[16/7] w-full overflow-hidden">
-                    {pinnedContent.imageUrl ? (
-                      <Image
-                        alt={pinnedContent.title}
-                        src={pinnedContent.imageUrl}
-                        fill
-                        sizes="(min-width: 768px) 800px, 100vw"
-                        placeholder="blur"
-                        blurDataURL={defaultBlurDataURL}
-                        className="object-cover group-hover:scale-105 transition-transform duration-[1500ms] ease-out"
-                      />
-                    ) : (
-                      <div className="w-full h-full bg-surface-container" />
-                    )}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-                    <div className="absolute top-5 left-5">
-                      <span className="bg-white/90 backdrop-blur-md px-4 py-1.5 rounded-full text-[10px] font-black text-on-surface uppercase tracking-[0.2em] shadow-sm border border-white flex items-center gap-2">
-                        <span className="material-symbols-outlined text-[14px]" style={{ fontVariationSettings: "'FILL' 1" }}>favorite</span>
-                        Закреплено
-                      </span>
-                    </div>
-                    <div className="absolute bottom-5 left-5 right-5 text-white">
-                      <p className="text-[10px] font-black uppercase tracking-[0.2em] opacity-80 mb-2">
-                        {pinnedContent.type === 'movie' ? 'Кино' : 'Книга'}
-                        {pinnedContent.author ? ` · ${pinnedContent.author}` : ''}
-                        {pinnedContent.director ? ` · ${pinnedContent.director}` : ''}
-                      </p>
-                      <h3 className="text-3xl md:text-4xl font-black tracking-tighter leading-[0.9]">
-                        {pinnedContent.title}
-                      </h3>
-                    </div>
-                  </div>
-                </button>
+            {user.role !== 'user' && (
+              <div className="absolute -bottom-2 -right-2 w-10 h-10 bg-white rounded-2xl flex items-center justify-center shadow-lg border border-on-surface/5">
+                <span className="material-symbols-outlined text-accent-lilac text-xl" style={{ fontVariationSettings: "'FILL' 1" }}>verified</span>
               </div>
             )}
+          </div>
 
-            {/* Достижения */}
-            <div className="space-y-6">
-              <h2 className="text-[10px] uppercase tracking-[0.3em] font-black text-on-surface-variant opacity-40">Достижения</h2>
-              <AwardsShelf userId={user.id} />
+          <div className="text-center mb-8">
+            <h1 className="text-3xl font-black tracking-tighter text-on-surface leading-none mb-2">{user.name}</h1>
+            <p className="text-[11px] font-black uppercase tracking-[0.2em] text-on-surface-muted opacity-60">
+              {user.role === 'superadmin' ? 'Создатель контента' : 'Участник сообщества'}
+            </p>
+          </div>
+
+          <div className="grid grid-cols-3 gap-8 mb-8 w-full border-t border-b border-on-surface/5 py-6">
+            <div className="text-center">
+              <span className="block text-xl font-black text-on-surface leading-none mb-1">{approvedCount}</span>
+              <span className="text-[8px] font-black uppercase tracking-widest text-on-surface-muted">Опубликовано</span>
             </div>
-
-            {/* Хочу посмотреть/прочитать */}
-            <div className="space-y-6">
-              <h2 className="text-[10px] uppercase tracking-[0.3em] font-black text-on-surface-muted">Хочу посмотреть и прочитать</h2>
-              <WishlistShelf userId={user.id} onOpenContent={(c) => setOpenedContent(c)} />
+            <div className="text-center border-l border-r border-on-surface/5">
+              <span className="block text-xl font-black text-on-surface leading-none mb-1">{user.stats?.awards || 0}</span>
+              <span className="text-[8px] font-black uppercase tracking-widest text-on-surface-muted">Награды</span>
             </div>
-
-            {/* Мои публикации */}
-            <div className="space-y-10">
-              <div className="flex justify-between items-end">
-                <h2 className="text-[10px] uppercase tracking-[0.3em] font-black text-on-surface-variant opacity-40 ">Моя история</h2>
-              </div>
-
-              {userContent.length === 0 ? (
-                <div className="bg-surface rounded-3xl p-10 text-center space-y-6 border border-on-surface/5 shadow-sm border-dashed">
-                  <div className="w-20 h-20 bg-surface-container rounded-full flex items-center justify-center mx-auto mb-4">
-                    <span className="material-symbols-outlined text-4xl text-on-surface-variant/20 ">auto_stories</span>
-                  </div>
-                  <p className="text-on-surface-variant font-medium text-sm  opacity-60">Ваша полка пока пуста. Пора добавить что-то интересное!</p>
-                  <button
-                    onClick={() => router.push('/create')}
-                    className="px-6 py-3 bg-on-surface text-surface rounded-xl font-black text-[10px] uppercase tracking-[0.2em] transition-transform active:scale-95 shadow-lg shadow-on-surface/10"
-                  >
-                    Создать
-                  </button>
-                </div>
-              ) : (
-                <div className="grid gap-6">
-                  {userContent.map(item => (
-                    <div key={item.id} className="bg-white rounded-3xl overflow-hidden flex shadow-sm border border-on-surface/5 hover:shadow-2xl hover:scale-[1.01] transition-all group">
-                      <div className="relative w-32 h-32 md:w-44 md:h-44 shrink-0 bg-surface-container flex items-center justify-center overflow-hidden border-r border-on-surface/5">
-                        {item.imageUrl ? (
-                          <Image alt={item.title} fill sizes="(min-width: 768px) 176px, 128px" placeholder="blur" blurDataURL={defaultBlurDataURL} className="object-cover grayscale group-hover:grayscale-0 transition-all duration-700" src={item.imageUrl} />
-                        ) : (
-                          <span className="material-symbols-outlined text-on-surface-variant/20 text-4xl ">image</span>
-                        )}
-                      </div>
-                      <div className="flex-1 p-6 md:p-10 flex flex-col justify-between min-w-0">
-                        <div className="space-y-3">
-                          <div className="flex flex-wrap items-start justify-between gap-4">
-                            <h3 className="font-black text-xl md:text-2xl text-on-surface tracking-tighter truncate pr-2 flex-1 leading-none">{item.title}</h3>
-                            <span className={`text-[9px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full shrink-0 border ${
-                              item.status === 'approved' ? 'bg-green-50 text-green-700 border-green-100' :
-                              item.status === 'pending' ? 'bg-amber-50 text-amber-700 border-amber-100' :
-                              item.status === 'draft' ? 'bg-surface-container text-on-surface-variant border-on-surface/5' :
-                              'bg-red-50 text-red-700 border-red-100'
-                            }`}>
-                              {item.status === 'approved' ? 'Опубликовано' :
-                               item.status === 'pending' ? 'На модерации' : 
-                               item.status === 'draft' ? 'Черновик' : 'Отклонено'}
-                            </span>
-                          </div>
-                          <p className="text-sm text-on-surface-muted font-medium line-clamp-2 leading-relaxed">{item.description}</p>
-                          {item.status === 'rejected' && item.rejectionReason && (
-                            <div className="mt-4 p-4 bg-red-50 border border-red-100 rounded-2xl animate-in fade-in slide-in-from-top-2 duration-500 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-                              <div className="space-y-1">
-                                <span className="block text-[9px] font-black uppercase tracking-widest text-red-600 mb-1 opacity-60">Причина отклонения:</span>
-                                <p className="text-xs font-bold text-red-700 leading-relaxed italic">"{item.rejectionReason}"</p>
-                              </div>
-                              <button
-                                onClick={() => router.push(`/create?editContentId=${item.id}`)}
-                                className="px-4 py-2 bg-red-600 text-white rounded-xl font-black text-[9px] uppercase tracking-widest shadow-lg shadow-red-500/20 hover:bg-red-700 active:scale-95 transition-all flex items-center gap-2 shrink-0"
-                              >
-                                <span className="material-symbols-outlined text-[16px]">edit</span>
-                                Исправить
-                              </button>
-                            </div>
-                          )}
-                        </div>
-                        <div className="flex items-center gap-6 mt-6 pt-6 border-t border-on-surface/5">
-                          <div className="flex items-center gap-2 leading-none">
-                            <span className="material-symbols-outlined text-[16px] text-on-surface-muted opacity-40">calendar_today</span>
-                            <span className="text-[10px] font-black text-on-surface-muted uppercase tracking-widest">{new Date(item.createdAt).toLocaleDateString()}</span>
-                          </div>
-                          {item.type && (
-                            <div className="flex items-center gap-2 leading-none">
-                              <span className="material-symbols-outlined text-[16px] text-on-surface-muted opacity-40">
-                                {item.type === 'movie' ? 'movie' : 'menu_book'}
-                              </span>
-                              <span className="text-[10px] font-black text-on-surface-muted uppercase tracking-widest">
-                                {item.type === 'movie' ? 'Кино' : 'Книга'}
-                              </span>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
+            <div className="text-center">
+               <span className="block text-xl font-black text-on-surface leading-none mb-1">{(user.stats?.avgRating || 0).toFixed(1)}</span>
+               <span className="text-[8px] font-black uppercase tracking-widest text-on-surface-muted">Рейтинг</span>
             </div>
           </div>
+
+          <QuickCreateForm userId={user.id} onSuccess={loadData} />
+        </section>
+
+        {/* Dynamic Content System */}
+        <section className="mt-4 px-4">
+          {/* Sticky Tabs */}
+          <div className="sticky top-[72px] z-20 bg-surface/80 backdrop-blur-md py-4 mb-6 -mx-4 px-4 flex items-center gap-2 overflow-x-auto scrollbar-hide border-b border-on-surface/5">
+            {TABS.map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id as ProfileTab)}
+                className={`relative px-5 py-2.5 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all whitespace-nowrap flex items-center gap-2 ${
+                  activeTab === tab.id 
+                    ? 'bg-on-surface text-surface shadow-lg' 
+                    : 'bg-surface-container-low text-on-surface-muted hover:bg-surface-container'
+                }`}
+              >
+                <span className={`material-symbols-outlined text-[16px] ${activeTab !== tab.id && (tab as any).color ? (tab as any).color : ''}`}>
+                  {tab.icon}
+                </span>
+                {tab.label}
+                {tab.count !== undefined && tab.count > 0 && (
+                  <span className={`ml-1 px-1.5 py-0.5 rounded-md text-[8px] ${activeTab === tab.id ? 'bg-white/20 text-white' : 'bg-accent-lilac text-white'}`}>
+                    {tab.count}
+                  </span>
+                )}
+                {activeTab === tab.id && (
+                  <motion.div layoutId="active-tab" className="absolute inset-0 rounded-2xl border-2 border-on-surface/10 pointer-events-none" />
+                )}
+              </button>
+            ))}
+          </div>
+
+          {/* History Grid */}
+          <div className="min-h-[400px]">
+            {filteredContent.length === 0 ? (
+              <div className="py-20 flex flex-col items-center text-center space-y-4 px-6 opacity-40">
+                <span className="material-symbols-outlined text-6xl">inventory_2</span>
+                <p className="text-xs font-black uppercase tracking-widest">Здесь пока ничего нет</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 gap-4">
+                {filteredContent.map((item) => (
+                  <motion.div
+                    key={item.id}
+                    layout
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="group flex flex-col"
+                    onClick={() => setOpenedContent(item)}
+                  >
+                    <div className="relative aspect-[3/4] rounded-[28px] overflow-hidden bg-surface-container border border-on-surface/5 shadow-sm group-active:scale-95 transition-all cursor-pointer">
+                      {item.imageUrl ? (
+                        <Image
+                          alt={item.title}
+                          src={item.imageUrl}
+                          fill
+                          sizes="200px"
+                          placeholder="blur"
+                          blurDataURL={defaultBlurDataURL}
+                          className="object-cover group-hover:scale-110 transition-transform duration-[1.5s]"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center opacity-20">
+                          <span className="material-symbols-outlined text-4xl">{item.type === 'movie' ? 'movie' : 'menu_book'}</span>
+                        </div>
+                      )}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                      
+                      {/* Interaction Layer */}
+                      <div className="absolute inset-0 p-4 flex flex-col justify-between opacity-0 group-hover:opacity-100 transition-opacity backdrop-blur-[2px] bg-black/20">
+                         <div className="flex justify-end">
+                            <span className="bg-white/90 px-2 py-1 rounded-lg text-[8px] font-black uppercase tracking-widest text-on-surface">Детали</span>
+                         </div>
+                      </div>
+
+                      <div className="absolute bottom-4 left-4 right-4 text-white">
+                        <div className="flex items-center gap-1 mb-1 opacity-60">
+                           <span className="material-symbols-outlined text-[12px]">{item.type === 'movie' ? 'movie' : 'menu_book'}</span>
+                           <span className="text-[8px] font-black uppercase tracking-widest">{item.type === 'movie' ? 'Кино' : 'Книга'}</span>
+                        </div>
+                        <h4 className="text-sm font-black leading-tight tracking-tight line-clamp-2">{item.title}</h4>
+                      </div>
+
+                      {/* Status Badge for Moderation view */}
+                      {activeTab === 'pending' && (
+                        <div className={`absolute top-3 left-3 px-2 py-1 rounded-lg text-[7px] font-black uppercase tracking-widest shadow-xl ${
+                          item.status === 'pending' ? 'bg-amber-500 text-white' : 'bg-red-500 text-white'
+                        }`}>
+                          {item.status === 'pending' ? 'Модерация' : 'Отклонено'}
+                        </div>
+                      )}
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            )}
+          </div>
+        </section>
+
+        {/* Existing Sections for non-empty state or bottom support */}
+        <section className="px-6 mt-16 space-y-12">
+            <div>
+               <h2 className="text-[10px] uppercase tracking-[0.3em] font-black text-on-surface-variant opacity-40 mb-6">Ваши достижения</h2>
+               <AwardsShelf userId={user.id} />
+            </div>
+
+            <div>
+               <h2 className="text-[10px] uppercase tracking-[0.3em] font-black text-on-surface-variant opacity-40 mb-6">Список желаний</h2>
+               <WishlistShelf userId={user.id} onOpenContent={(c) => setOpenedContent(c)} />
+            </div>
         </section>
       </main>
+
       {openedContent && (
         <ContentDetailsModal
           content={openedContent}
           onClose={() => setOpenedContent(null)}
         />
       )}
-      <BottomNavBar />
+      <BottomNavBar activeTab="profile" />
     </>
   );
 }
