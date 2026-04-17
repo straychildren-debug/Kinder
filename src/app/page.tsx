@@ -6,7 +6,6 @@ import BottomNavBar from "@/components/BottomNavBar";
 import { getApprovedContent } from "@/lib/db";
 import { useAuth } from "@/components/AuthProvider";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { ContentItem } from "@/lib/types";
 import { defaultBlurDataURL } from "@/lib/image-blur";
@@ -18,24 +17,17 @@ import { omnisearch, type OmnisearchResult } from "@/lib/search";
 
 const EMPTY_RESULTS: OmnisearchResult = { content: [], clubs: [], users: [] };
 
-type HomeTab = 'all' | 'movie' | 'book';
-
 export default function Home() {
   const { user } = useAuth();
-  const router = useRouter();
   const [approvedContent, setApprovedContent] = useState<ContentItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedContent, setSelectedContent] = useState<ContentItem | null>(null);
-  const [activeTab, setActiveTab] = useState<HomeTab>('all');
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<OmnisearchResult>(EMPTY_RESULTS);
   const [searching, setSearching] = useState(false);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const visibleContent = React.useMemo(() => {
-    if (activeTab === 'all') return approvedContent;
-    return approvedContent.filter((item) => item.type === activeTab);
-  }, [approvedContent, activeTab]);
+  const visibleContent = approvedContent;
 
   const handleQuery = (val: string) => {
     setQuery(val);
@@ -166,40 +158,27 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Category Tabs */}
-        <section className="flex gap-2 overflow-x-auto scrollbar-hide py-3 mb-4">
-          {([
-            { id: 'all', label: 'Все' },
-            { id: 'movie', label: 'Кино' },
-            { id: 'book', label: 'Книги' },
-          ] as { id: HomeTab; label: string }[]).map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`px-4 py-2 rounded-lg text-[12px] font-semibold transition-all whitespace-nowrap active:scale-95 ${
-                activeTab === tab.id ? 'bg-on-surface text-surface' : 'bg-surface-container-low text-on-surface-muted hover:bg-surface-container'
-              }`}
-            >
-              {tab.label}
-            </button>
-          ))}
-          <button
-            onClick={() => router.push('/clubs')}
-            className="px-4 py-2 rounded-lg text-[12px] font-semibold transition-all whitespace-nowrap active:scale-95 bg-surface-container-low text-on-surface-muted hover:bg-surface-container"
-          >
-            Клубы
-          </button>
+        {/* Лента активности сообщества */}
+        <section className="mb-12">
+          <ActivityFeed />
         </section>
 
-        {/* Community Feed Content */}
-        <div className="flex flex-col gap-10">
+        {/* New Publications Grid */}
+        <section className="mb-16">
+          <div className="flex items-center justify-between mb-8 px-2">
+            <div>
+              <span className="text-xs font-medium text-on-surface-muted mb-1.5 block">Рекомендации</span>
+              <h2 className="text-2xl font-bold tracking-tight text-on-surface leading-tight">Новые публикации</h2>
+            </div>
+          </div>
+
           {loading ? (
             <FeedSkeletonList count={3} />
           ) : visibleContent.length === 0 ? (
             <div className="text-center py-16 px-6 bg-surface rounded-2xl border border-on-surface/5">
               <div className="text-5xl mb-4 grayscale opacity-40">🎬</div>
               <p className="text-on-surface-variant font-medium text-sm">
-                {activeTab === 'all' ? 'Лента сообщества пока пуста' : activeTab === 'movie' ? 'Пока нет фильмов' : 'Пока нет книг'}
+                Лента сообщества пока пуста
               </p>
             </div>
           ) : (
@@ -243,55 +222,52 @@ export default function Home() {
               ))}
             </div>
           )}
+        </section>
 
-          {/* Details Modal */}
-          {selectedContent && (
-            <ContentDetailsModal 
-              content={selectedContent} 
-              onClose={() => setSelectedContent(null)} 
-            />
-          )}
+        {/* Details Modal */}
+        {selectedContent && (
+          <ContentDetailsModal 
+            content={selectedContent} 
+            onClose={() => setSelectedContent(null)} 
+          />
+        )}
 
-          {/* Лента активности сообщества */}
-          <ActivityFeed />
+        {/* Social Proof & Sidebar Elements */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-12">
+           {!user && (
+             <div className="bg-surface p-8 rounded-2xl border border-on-surface/5 space-y-5">
+               <h3 className="text-2xl font-bold tracking-tight leading-tight text-on-surface">Присоединяйтесь</h3>
+               <p className="text-sm text-on-surface-variant leading-relaxed">
+                 Войдите, чтобы создавать контент, оставлять отзывы и участвовать в рейтинге сообщества.
+               </p>
+               <Link
+                 href="/login"
+                 className="block w-full py-3 bg-on-surface text-surface rounded-xl font-semibold text-center text-sm transition-all hover:opacity-90 active:scale-[0.98]"
+               >
+                 Войти
+               </Link>
+             </div>
+           )}
 
-          {/* Social Proof & Sidebar Elements */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-12">
-             {!user && (
-               <div className="bg-surface p-8 rounded-2xl border border-on-surface/5 space-y-5">
-                 <h3 className="text-2xl font-bold tracking-tight leading-tight text-on-surface">Присоединяйтесь</h3>
-                 <p className="text-sm text-on-surface-variant leading-relaxed">
-                   Войдите, чтобы создавать контент, оставлять отзывы и участвовать в рейтинге сообщества.
-                 </p>
-                 <Link
-                   href="/login"
-                   className="block w-full py-3 bg-on-surface text-surface rounded-xl font-semibold text-center text-sm transition-all hover:opacity-90 active:scale-[0.98]"
-                 >
-                   Войти
-                 </Link>
-               </div>
-             )}
-
-            <div className="bg-surface-container-low p-8 rounded-2xl border border-on-surface/5">
-              <h3 className="text-lg font-bold text-on-surface mb-6 tracking-tight">Лучшие авторы</h3>
-              <div className="flex flex-col gap-5">
-                {[
-                  { icon: 'auto_stories', name: 'Елена Радуга', detail: '203 отзыва · ★ 9.5' },
-                  { icon: 'movie_filter', name: 'Анастасия Волкова', detail: '142 отзыва · ★ 9.1' },
-                ].map((item, i) => (
-                  <div key={i} className="flex items-center gap-4 group cursor-pointer">
-                    <div className="w-12 h-12 rounded-xl bg-surface border border-on-surface/5 flex items-center justify-center transition-all group-hover:bg-surface-container">
-                      <span className="material-symbols-outlined text-on-surface text-xl">{item.icon}</span>
-                    </div>
-                    <div>
-                      <p className="text-sm font-semibold tracking-tight text-on-surface leading-tight">{item.name}</p>
-                      <p className="text-xs font-medium text-on-surface-muted mt-0.5">
-                        {item.detail}
-                      </p>
-                    </div>
+          <div className="bg-surface-container-low p-8 rounded-2xl border border-on-surface/5">
+            <h3 className="text-lg font-bold text-on-surface mb-6 tracking-tight">Лучшие авторы</h3>
+            <div className="flex flex-col gap-5">
+              {[
+                { icon: 'auto_stories', name: 'Елена Радуга', detail: '203 отзыва · ★ 9.5' },
+                { icon: 'movie_filter', name: 'Анастасия Волкова', detail: '142 отзыва · ★ 9.1' },
+              ].map((item, i) => (
+                <div key={i} className="flex items-center gap-4 group cursor-pointer">
+                  <div className="w-12 h-12 rounded-xl bg-surface border border-on-surface/5 flex items-center justify-center transition-all group-hover:bg-surface-container">
+                    <span className="material-symbols-outlined text-on-surface text-xl">{item.icon}</span>
                   </div>
-                ))}
-              </div>
+                  <div>
+                    <p className="text-sm font-semibold tracking-tight text-on-surface leading-tight">{item.name}</p>
+                    <p className="text-xs font-medium text-on-surface-muted mt-0.5">
+                      {item.detail}
+                    </p>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </div>
