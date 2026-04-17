@@ -78,7 +78,7 @@ export default function Leaderboard() {
                       <p className="text-xl font-black text-on-surface">{top3[0].stats?.avgRating || 0}</p>
                     </div>
                     <div className="bg-surface-container-low p-2.5 rounded-xl border border-on-surface/5 shadow-sm">
-                      <p className="text-[8px] uppercase font-black tracking-widest text-on-surface-muted mb-0.5 opacity-50">Рецензии</p>
+                      <p className="text-[8px] uppercase font-black tracking-widest text-on-surface-muted mb-0.5 opacity-50">Отзывы</p>
                       <p className="text-xl font-black text-on-surface">{top3[0].stats?.reviews || 0}</p>
                     </div>
                     <div className="bg-accent-amber p-2.5 rounded-xl shadow-md shadow-accent-amber/20">
@@ -111,7 +111,7 @@ export default function Leaderboard() {
                   </div>
                   <div className="text-right">
                     <p className="text-xl font-black text-on-surface">{top3[1].stats?.reviews || 0}</p>
-                    <p className="text-[8px] uppercase font-black tracking-widest text-on-surface-variant opacity-60">Рецензий</p>
+                    <p className="text-[8px] uppercase font-black tracking-widest text-on-surface-variant opacity-60">Отзывов</p>
                   </div>
                 </div>
               )}
@@ -135,7 +135,7 @@ export default function Leaderboard() {
                   </div>
                   <div className="text-right">
                     <p className="text-xl font-black text-on-surface">{top3[2].stats?.reviews || 0}</p>
-                    <p className="text-[8px] uppercase font-black tracking-widest text-on-surface-variant opacity-60">Рецензий</p>
+                    <p className="text-[8px] uppercase font-black tracking-widest text-on-surface-variant opacity-60">Отзывов</p>
                   </div>
                 </div>
               )}
@@ -177,7 +177,7 @@ export default function Leaderboard() {
                   <div className="flex items-center gap-8 pr-4">
                     <div className="hidden sm:block text-right">
                       <p className="text-sm font-black text-on-surface">{user.stats?.reviews || 0}</p>
-                      <p className="text-[8px] text-on-surface-variant uppercase font-black tracking-widest opacity-40">Рецензий</p>
+                      <p className="text-[8px] text-on-surface-variant uppercase font-black tracking-widest opacity-40">Отзывов</p>
                     </div>
                     <div className="text-right min-w-[80px]">
                       <p className="text-sm font-black text-on-surface">{user.stats?.publications || 0}</p>

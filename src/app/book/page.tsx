@@ -65,7 +65,7 @@ export default function BookDetails() {
           <h3 className="text-2xl font-black tracking-tighter text-on-surface ">Мнение сообщества</h3>
           <button className="bg-on-surface text-surface px-8 py-4 rounded-2xl flex items-center gap-3 hover:scale-105 active:scale-95 transition-all shadow-2xl shadow-on-surface/20">
             <span className="material-symbols-outlined text-[18px]">edit_note</span>
-            <span className="font-black text-[10px] uppercase tracking-widest">Оставить рецензию</span>
+            <span className="font-black text-[10px] uppercase tracking-widest">Оставить отзыв</span>
           </button>
         </div>
 

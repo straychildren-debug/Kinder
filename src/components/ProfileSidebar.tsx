@@ -129,7 +129,7 @@ export default function ProfileSidebar({ isOpen, onClose }: ProfileSidebarProps)
               </div>
               <div className="bg-surface-container-low rounded-xl p-3 text-center">
                 <span className="block text-lg font-bold">{user.stats.reviews}</span>
-                <span className="text-[9px] uppercase tracking-widest text-on-surface-variant font-semibold">Рецензии</span>
+                <span className="text-[9px] uppercase tracking-widest text-on-surface-variant font-semibold">Отзывы</span>
               </div>
               <div className="bg-surface-container-low rounded-xl p-3 text-center">
                 <span className="block text-lg font-bold">{user.stats.avgRating}</span>
@@ -253,7 +253,7 @@ export default function ProfileSidebar({ isOpen, onClose }: ProfileSidebarProps)
           <div className="flex-1 flex flex-col items-center justify-center px-6 space-y-6">
             <span className="material-symbols-outlined text-6xl text-on-surface-variant/30">account_circle</span>
             <p className="text-center text-on-surface-variant">
-              Войдите, чтобы создавать контент и оставлять рецензии
+              Войдите, чтобы создавать контент и оставлять отзывы
             </p>
             <Link
               href="/login"

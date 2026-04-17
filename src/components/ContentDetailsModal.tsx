@@ -124,13 +124,13 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
       if (freshContent) setContent(freshContent);
     } catch (e) {
       console.error(e);
-      alert('Ошибка при отправке рецензии. Возможно, вы уже оставляли рецензию.');
+      alert('Ошибка при отправке отзыва. Возможно, вы уже оставляли отзыв.');
     }
     setSubmittingReview(false);
   };
 
   const handleRateReview = async (reviewId: string, rating: number) => {
-    if (!user) return alert('Войдите, чтобы оценивать рецензии');
+    if (!user) return alert('Войдите, чтобы оценивать отзывы');
     try {
       await rateReview(reviewId, user.id, rating);
       // update local state optimistically or reload
@@ -298,7 +298,7 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
         {/* Reviews Section */}
         <div className="px-6 py-10 max-w-4xl mx-auto">
           <div className="flex items-center justify-between mb-8">
-            <h3 className="text-2xl font-black text-on-surface tracking-tighter">Рецензии</h3>
+            <h3 className="text-2xl font-black text-on-surface tracking-tighter">Отзывы</h3>
             {!showReviewForm && user && !reviews.find(r => r.userId === user.id) && (
               <button 
                 onClick={() => setShowReviewForm(true)}
@@ -369,7 +369,7 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
               </div>
            ) : reviews.length === 0 ? (
               <div className="text-center py-12 bg-surface-container-lowest rounded-3xl border border-on-surface/5">
-                 <p className="text-on-surface-variant font-black text-sm">Пока нет рецензий.</p>
+                 <p className="text-on-surface-variant font-black text-sm">Пока нет отзывов.</p>
                  <p className="text-[10px] uppercase tracking-widest text-on-surface-variant opacity-60 mt-2">Станьте первым!</p>
               </div>
            ) : (

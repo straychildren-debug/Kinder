@@ -35,7 +35,7 @@ function eventText(e: ActivityEvent): React.ReactNode {
       const title = (p.title as string) || 'на контент';
       return (
         <>
-          <b>{name}</b> оставил(а) рецензию на <b>«{title}»</b>
+          <b>{name}</b> оставил(а) отзыв на <b>«{title}»</b>
         </>
       );
     }

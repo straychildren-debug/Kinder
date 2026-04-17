@@ -121,7 +121,7 @@ export default function Profile() {
               <div className="flex items-center justify-center md:justify-start gap-8 pt-6 border-t border-on-surface/5 mt-4">
                 <div className="text-center md:text-left">
                   <span className="block text-2xl font-black tracking-tighter text-on-surface leading-none mb-1">{user.stats?.reviews || 0}</span>
-                  <span className="text-[9px] uppercase tracking-widest text-on-surface-muted font-black">Рецензии</span>
+                   <span className="text-[9px] uppercase tracking-widest text-on-surface-muted font-black">Отзывы</span>
                 </div>
                 <div className="text-center md:text-left">
                   <span className="block text-2xl font-black tracking-tighter text-on-surface leading-none mb-1">{user.stats?.followers || 0}</span>

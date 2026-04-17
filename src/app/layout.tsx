@@ -4,7 +4,7 @@ import AuthProvider from "@/components/AuthProvider";
 
 export const metadata: Metadata = {
   title: "Кинотека — Сообщество кино и литературы",
-  description: "Создавайте, обсуждайте и делитесь рецензиями на фильмы и книги вместе с сообществом",
+  description: "Создавайте, обсуждайте и делитесь отзывами на фильмы и книги вместе с сообществом",
 };
 
 export default function RootLayout({

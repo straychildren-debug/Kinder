@@ -265,7 +265,7 @@ export async function updateContentStatus(id: string, status: 'approved' | 'reje
   return mapContentItem(data);
 }
 
-// ===== Reviews (Рецензии) =====
+// ===== Reviews (Отзывы) =====
 
 export async function getReviewsForContent(contentId: string): Promise<Review[]> {
   // Fetch reviews, grabbing user profile, and trying to count comments/ratings if possible. 

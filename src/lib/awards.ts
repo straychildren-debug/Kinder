@@ -7,20 +7,20 @@ export const AWARD_META: Record<
   { title: string; description: string; icon: string; tone: string }
 > = {
   first_review: {
-    title: 'Первая рецензия',
-    description: 'Опубликована первая рецензия',
+    title: 'Первый отзыв',
+    description: 'Опубликован первый отзыв',
     icon: 'reviews',
     tone: 'bg-amber-50 text-amber-700 border-amber-100',
   },
   ten_reviews: {
-    title: '10 рецензий',
-    description: 'Десять опубликованных рецензий',
+    title: '10 отзывов',
+    description: 'Десять опубликованных отзывов',
     icon: 'auto_awesome',
     tone: 'bg-sky-50 text-sky-700 border-sky-100',
   },
   hundred_reviews: {
-    title: 'Сотня рецензий',
-    description: 'Целых сто рецензий — вы легенда',
+    title: 'Сотня отзывов',
+    description: 'Целых сто отзывов — вы легенда',
     icon: 'military_tech',
     tone: 'bg-violet-50 text-violet-700 border-violet-100',
   },

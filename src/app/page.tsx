@@ -272,7 +272,7 @@ export default function Home() {
                <div className="bg-surface p-10 rounded-3xl border border-on-surface/5 space-y-6 shadow-sm">
                  <h3 className="text-3xl font-black tracking-tighter leading-none text-on-surface">Присоединяйтесь!</h3>
                  <p className="text-sm text-on-surface-variant leading-relaxed font-medium">
-                   Войдите, чтобы создавать контент, оставлять рецензии и участвовать в рейтинге сообщества.
+                   Войдите, чтобы создавать контент, оставлять отзывы и участвовать в рейтинге сообщества.
                  </p>
                  <Link
                    href="/login"
@@ -287,8 +287,8 @@ export default function Home() {
               <h3 className="text-xl font-black text-on-surface mb-8 tracking-tight">Лучшие авторы</h3>
               <div className="grid grid-cols-1 gap-8">
                 {[
-                  { icon: 'auto_stories', name: 'Елена Радуга', detail: '203 рецензии • ★ 9.5' },
-                  { icon: 'movie_filter', name: 'Анастасия Волкова', detail: '142 рецензии • ★ 9.1' },
+                  { icon: 'auto_stories', name: 'Елена Радуга', detail: '203 отзыва • ★ 9.5' },
+                  { icon: 'movie_filter', name: 'Анастасия Волкова', detail: '142 отзыва • ★ 9.1' },
                 ].map((item, i) => (
                   <div key={i} className="flex items-center gap-6 group cursor-pointer">
                     <div className="w-16 h-16 rounded-xl bg-surface border border-on-surface/5 flex items-center justify-center shadow-sm transition-all group-hover:scale-105">
