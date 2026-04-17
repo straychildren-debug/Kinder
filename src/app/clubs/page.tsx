@@ -264,15 +264,18 @@ export default function Clubs() {
                 </p>
               </div>
             ) : (
-              <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
                 {filteredClubs.map((club, index) => (
                   <MotionListItem key={club.id} index={index}>
                     <div
                       onClick={() => handleJoin(club.id)}
-                      className="bg-surface rounded-2xl p-3 flex gap-4 hover:shadow-xl transition-all duration-300 hover:scale-[1.01] shadow-sm border border-on-surface/5 cursor-pointer group h-[124px]"
+                      className="bg-surface rounded-[24px] p-4 flex gap-5 hover:shadow-2xl hover:shadow-on-surface/5 transition-all duration-500 hover:-translate-y-1 shadow-sm border border-on-surface/5 cursor-pointer group h-[136px] relative overflow-hidden"
                     >
-                      {/* Thumbnail */}
-                      <div className="w-24 h-full bg-surface-container relative rounded-xl overflow-hidden flex-shrink-0">
+                      {/* Background accent glow */}
+                      <div className="absolute -top-10 -right-10 w-32 h-32 bg-on-surface/[0.02] rounded-full blur-3xl group-hover:bg-on-surface/[0.05] transition-colors" />
+
+                      {/* Thumbnail with deep shadow */}
+                      <div className="w-[104px] h-full bg-surface-container relative rounded-2xl overflow-hidden flex-shrink-0 shadow-lg shadow-black/5">
                         {club.imageUrl ? (
                           <Image
                             src={club.imageUrl}
@@ -281,56 +284,60 @@ export default function Clubs() {
                             sizes="120px"
                             placeholder="blur"
                             blurDataURL={defaultBlurDataURL}
-                            className="object-cover group-hover:scale-110 transition-transform duration-700"
+                            className="object-cover group-hover:scale-110 transition-transform duration-1000 ease-out"
                           />
                         ) : (
                           <div className="w-full h-full bg-surface-container flex items-center justify-center">
-                            <span className="material-symbols-outlined text-3xl text-on-surface/5">
+                            <span className="material-symbols-outlined text-3xl text-on-surface/10">
                               {CATEGORY_ICONS[club.category] || 'groups'}
                             </span>
                           </div>
                         )}
+                        
                         {/* Status Tags Overlay on Image */}
                         {typeof club.unreadCount === 'number' && club.unreadCount > 0 && (
-                          <div className="absolute top-1.5 right-1.5 w-4 h-4 bg-red-500 rounded-full border-2 border-surface animate-pulse" />
+                          <div className="absolute top-2 right-2 w-3 h-3 bg-red-500 rounded-full border-2 border-surface shadow-sm animate-pulse" />
                         )}
                       </div>
 
                       {/* Content Section */}
-                      <div className="flex-1 flex flex-col justify-between py-1 min-w-0">
-                        <div>
-                          <div className="flex flex-col gap-1 mb-2">
-                            <span className="self-start px-1.5 py-0.5 bg-on-surface/[0.03] text-[8px] font-black text-on-surface-muted rounded uppercase tracking-widest">
+                      <div className="flex-1 flex flex-col justify-between py-0.5 min-w-0 z-10">
+                        <div className="space-y-1">
+                          <div className="flex items-center gap-1.5 min-w-0">
+                            <span className="px-2 py-0.5 bg-on-surface/5 text-[7px] font-black text-on-surface-muted rounded-full uppercase tracking-[0.15em] whitespace-nowrap">
                               {CATEGORY_LABELS[club.category] || club.category}
                             </span>
-                            <h4 className="font-black text-on-surface text-sm tracking-tight truncate leading-none">
+                            <h4 className="font-black text-on-surface text-[15px] tracking-tight truncate leading-none pt-0.5">
                               {club.name}
                             </h4>
                           </div>
-                          <p className="text-[10px] text-on-surface-muted font-medium line-clamp-1 leading-relaxed">
+                          <p className="text-[11px] text-on-surface-muted font-medium line-clamp-1 leading-relaxed opacity-60">
                             {club.description}
                           </p>
                         </div>
 
                         <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2">
-                             <span className="text-[8px] font-bold uppercase tracking-widest text-on-surface-muted opacity-40">
-                              {club.memberCount} участников
-                            </span>
+                          <div className="flex items-center gap-3">
+                             <div className="flex items-center gap-1.5 bg-on-surface/[0.03] px-2 py-1 rounded-lg">
+                               <span className="material-symbols-outlined text-sm text-on-surface-muted/60">groups</span>
+                               <span className="text-[10px] font-black text-on-surface-muted">
+                                {club.memberCount}
+                              </span>
+                             </div>
                             {club.userRole === 'owner' && (
-                              <span className="text-[7px] font-black uppercase tracking-widest bg-accent-lilac/10 text-accent-lilac px-1.5 py-0.5 rounded">
+                              <span className="text-[7px] font-black uppercase tracking-widest bg-accent-lilac text-white px-2 py-1 rounded-lg shadow-sm shadow-accent-lilac/20">
                                 Владелец
                               </span>
                             )}
                             {typeof club.unreadCount === 'number' && club.unreadCount > 0 && (
-                               <span className="text-[7px] font-black uppercase tracking-widest bg-red-500 text-white px-1.5 py-0.5 rounded">
-                                +{club.unreadCount} сообщ.
+                               <span className="text-[7px] font-black uppercase tracking-widest bg-red-500 text-white px-2 py-1 rounded-lg shadow-sm shadow-red-500/20">
+                                +{club.unreadCount}
                                </span>
                             )}
                           </div>
-                          <button className="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center group-hover:bg-on-surface transition-colors">
-                            <span className="material-symbols-outlined text-on-surface-muted text-base group-hover:text-surface">
-                              login
+                          <button className="w-9 h-9 rounded-xl bg-surface-container-high flex items-center justify-center group-hover:bg-on-surface transition-all duration-300 shadow-sm border border-on-surface/5">
+                            <span className="material-symbols-outlined text-on-surface-muted text-lg group-hover:text-surface group-hover:translate-x-0.5 transition-all">
+                              arrow_forward
                             </span>
                           </button>
                         </div>
@@ -343,77 +350,115 @@ export default function Clubs() {
           </div>
         )}
 
-        {/* Popular Bento Grid (Moved here and conditional) */}
+        {/* Popular Bento Grid (Poster Glass Style) */}
         {!loading && activeMainTab === 'all' && heroClubs.length > 0 && (
           <section className="mt-16">
             <div className="flex items-center justify-between mb-8 px-2">
                <div>
                  <h2 className="text-3xl font-black tracking-tight text-on-surface leading-none mb-1">Популярные сообщества</h2>
-                 <p className="text-[10px] font-black uppercase tracking-widest text-on-surface-muted opacity-40">Клубы с самым большим количеством участников</p>
+                 <p className="text-[10px] font-black uppercase tracking-widest text-on-surface-muted opacity-40">Лучшее из жизни нашего сообщества</p>
                </div>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-6 mb-12">
-              {/* Large Featured Card */}
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-6 mb-12 uppercase tracking-[0.1em]">
+              {/* Large Featured Card - Poster Style */}
               {heroClubs[0] && (
                 <div
                   onClick={() => handleJoin(heroClubs[0].id)}
-                  className="md:col-span-8 bg-surface rounded-3xl overflow-hidden relative group shadow-xl border border-on-surface/5 cursor-pointer"
+                  className="md:col-span-8 bg-surface rounded-[32px] overflow-hidden relative group shadow-2xl border border-on-surface/5 cursor-pointer h-[480px]"
                 >
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-10 opacity-80"></div>
-                  <div className="relative w-full h-[450px]">
-                    {heroClubs[0].imageUrl ? (
-                      <Image
-                        src={heroClubs[0].imageUrl}
-                        alt={heroClubs[0].name}
-                        fill
-                        sizes="(min-width: 768px) 66vw, 100vw"
-                        placeholder="blur"
-                        blurDataURL={defaultBlurDataURL}
-                        className="object-cover group-hover:scale-110 transition-transform duration-[1500ms] ease-out"
-                      />
-                    ) : (
-                      <div className="w-full h-full bg-surface-container flex items-center justify-center text-on-surface-variant/10">
-                        <span className="material-symbols-outlined text-huge">{CATEGORY_ICONS[heroClubs[0].category] || 'groups'}</span>
-                      </div>
-                    )}
-                  </div>
-                  <div className="absolute bottom-0 left-0 p-10 z-20 w-full">
-                    <div className="flex justify-between items-end gap-6 flex-wrap">
-                      <div className="flex-1 min-w-[300px]">
-                        <span className="inline-block px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-[9px] text-white font-black uppercase tracking-[0.2em] mb-4 border border-white/10 shadow-sm">Популярное</span>
-                        <h2 className="text-4xl md:text-5xl font-black text-white mb-2 tracking-tighter leading-none">{heroClubs[0].name}</h2>
-                        <p className="text-white/70 text-sm max-w-md font-medium leading-relaxed">{heroClubs[0].description}</p>
-                      </div>
-                      <div className="text-right flex-shrink-0">
-                        <span className="text-white/40 text-[9px] font-black uppercase tracking-widest block mb-4">{heroClubs[0].memberCount} участников</span>
-                        <button className="bg-white text-on-surface px-6 py-2 rounded-xl font-black text-[10px] uppercase tracking-widest hover:scale-105 transition-transform shadow-xl">
-                          Вступить
-                        </button>
-                      </div>
+                  <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/90 via-black/20 to-transparent"></div>
+                  
+                  {heroClubs[0].imageUrl ? (
+                    <Image
+                      src={heroClubs[0].imageUrl}
+                      alt={heroClubs[0].name}
+                      fill
+                      sizes="(min-width: 768px) 66vw, 100vw"
+                      placeholder="blur"
+                      blurDataURL={defaultBlurDataURL}
+                      className="object-cover group-hover:scale-105 transition-transform duration-[2000ms] ease-out"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-surface-container flex items-center justify-center text-on-surface-variant/10">
+                      <span className="material-symbols-outlined text-huge font-thin opacity-5">
+                        {CATEGORY_ICONS[heroClubs[0].category] || 'groups'}
+                      </span>
+                    </div>
+                  )}
+
+                  {/* Glass Interface Over Image */}
+                  <div className="absolute inset-0 p-8 flex flex-col justify-end z-20">
+                    <div className="bg-white/10 backdrop-blur-xl border border-white/20 p-8 rounded-[24px] shadow-2xl overflow-hidden relative">
+                       {/* Subtle inner glow */}
+                       <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-white/30 to-transparent"></div>
+                       
+                       <div className="flex flex-col md:flex-row justify-between items-end gap-6">
+                         <div className="flex-1">
+                           <div className="flex items-center gap-3 mb-4">
+                             <span className="px-3 py-1 bg-white/20 rounded-full text-[9px] text-white font-black uppercase tracking-widest border border-white/10">Популярное</span>
+                             <div className="flex items-center gap-1.5 text-white/80">
+                               <span className="material-symbols-outlined text-base">groups</span>
+                               <span className="text-[10px] font-bold">{heroClubs[0].memberCount}</span>
+                             </div>
+                           </div>
+                           <h2 className="text-4xl md:text-5xl font-black text-white mb-3 tracking-tighter leading-none">{heroClubs[0].name}</h2>
+                           <p className="text-white/60 text-sm max-w-md font-medium leading-relaxed line-clamp-2">{heroClubs[0].description}</p>
+                         </div>
+                         <button className="bg-white text-on-surface px-8 py-3 rounded-2xl font-black text-[11px] uppercase tracking-widest hover:bg-on-surface hover:text-surface transition-all shadow-xl active:scale-95">
+                           Вступить в клуб
+                         </button>
+                       </div>
                     </div>
                   </div>
                 </div>
               )}
 
-              {/* Side Card */}
+              {/* Side Card - Modern Glass Hybrid */}
               {heroClubs[1] && (
                 <div
                   onClick={() => handleJoin(heroClubs[1].id)}
-                  className="md:col-span-4 bg-surface p-8 rounded-3xl flex flex-col justify-between shadow-sm border border-on-surface/5 cursor-pointer hover:shadow-xl transition-all duration-500 hover:scale-[1.02]"
+                  className="md:col-span-4 bg-surface rounded-[32px] overflow-hidden relative group shadow-sm border border-on-surface/5 cursor-pointer h-[480px]"
                 >
-                  <div>
-                    <div className="w-14 h-14 rounded-xl bg-surface-container flex items-center justify-center mb-10 shadow-inner border border-on-surface/[0.02]">
-                      <span className="material-symbols-outlined text-on-surface text-4xl">
+                   {heroClubs[1].imageUrl ? (
+                    <Image
+                      src={heroClubs[1].imageUrl}
+                      alt={heroClubs[1].name}
+                      fill
+                      sizes="33vw"
+                      placeholder="blur"
+                      blurDataURL={defaultBlurDataURL}
+                      className="object-cover group-hover:scale-110 transition-transform duration-[3000ms] ease-out brightness-[0.7] group-hover:brightness-[0.9]"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-surface-container flex items-center justify-center">
+                      <span className="material-symbols-outlined text-6xl text-on-surface/10">
                         {CATEGORY_ICONS[heroClubs[1].category] || 'groups'}
                       </span>
                     </div>
-                    <h3 className="text-2xl font-black mb-2 tracking-tight text-on-surface leading-none">{heroClubs[1].name}</h3>
-                    <p className="text-on-surface-muted text-sm font-medium leading-relaxed">{heroClubs[1].description}</p>
-                  </div>
-                  <div className="pt-10 flex justify-between items-center">
-                    <span className="text-[9px] font-black uppercase tracking-widest text-on-surface-muted opacity-40">{heroClubs[1].memberCount} участников</span>
-                    <button className="text-on-surface font-black text-[10px] uppercase tracking-widest hover:translate-x-1 transition-transform leading-none">Вступить →</button>
+                  )}
+                  
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent z-10"></div>
+
+                  <div className="absolute inset-0 p-8 flex flex-col justify-between z-20">
+                    <div className="flex justify-between items-start">
+                       <div className="w-12 h-12 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center shadow-lg">
+                         <span className="material-symbols-outlined text-white text-2xl">
+                           {CATEGORY_ICONS[heroClubs[1].category] || 'groups'}
+                         </span>
+                       </div>
+                       <div className="bg-white/10 backdrop-blur-md px-3 py-1.5 rounded-xl border border-white/20 text-white text-[10px] font-black uppercase tracking-widest">
+                         {heroClubs[1].memberCount} участников
+                       </div>
+                    </div>
+                    
+                    <div className="bg-black/20 backdrop-blur-md border border-white/10 p-6 rounded-[24px]">
+                      <h3 className="text-2xl font-black text-white mb-2 tracking-tight leading-none">{heroClubs[1].name}</h3>
+                      <p className="text-white/70 text-xs font-medium leading-relaxed line-clamp-2">{heroClubs[1].description}</p>
+                      <div className="mt-4 pt-4 border-t border-white/5 flex justify-end">
+                         <span className="material-symbols-outlined text-white group-hover:translate-x-2 transition-transform">arrow_right_alt</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
               )}
