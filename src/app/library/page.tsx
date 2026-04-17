@@ -120,13 +120,13 @@ export default function Library() {
                       </h4>
                       {book.rating && (
                         <div className="flex items-center gap-0.5 mt-0.5 shrink-0">
-                          <span className="material-symbols-outlined text-accent-lilac text-[10px]" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+                          <span className="material-symbols-outlined text-accent-lilac text-[15px]" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
                           <span className="text-on-surface-muted/60 text-[10px] font-bold">{book.rating}</span>
                         </div>
                       )}
                     </div>
                     <div className="flex items-center gap-1.5 mb-1 leading-none text-on-surface-muted/60">
-                      <p className="text-[10px] font-medium italic">
+                      <p className="text-[10px] font-medium">
                         {book.author || 'Неизвестный автор'}
                       </p>
                       {book.year && (
@@ -136,7 +136,7 @@ export default function Library() {
                       )}
                     </div>
                     {book.description && (
-                      <div className="bg-on-surface/[0.03] px-2 py-1 rounded-lg mt-0.5">
+                      <div className="bg-on-surface/[0.03] -ml-2 px-2 py-1 rounded-lg mt-0.5">
                         <p className="text-[10px] text-on-surface-muted/60 font-medium line-clamp-3 leading-[1.3] text-pretty">
                           {book.description}
                         </p>
