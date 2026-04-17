@@ -250,7 +250,7 @@ export default function Profile() {
         {/* Existing Sections for non-empty state or bottom support */}
         <section className="px-6 mt-16 space-y-12">
             <div>
-               <h2 className="text-[10px] uppercase tracking-[0.3em] font-black text-on-surface-variant opacity-40 mb-6">Список желаний</h2>
+               <h2 className="text-[10px] uppercase tracking-[0.3em] font-black text-on-surface-variant opacity-40 mb-6">Избранное</h2>
                <WishlistShelf userId={user.id} onOpenContent={(c) => setOpenedContent(c)} />
             </div>
 

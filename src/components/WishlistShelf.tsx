@@ -50,44 +50,67 @@ export default function WishlistShelf({
   }
 
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
+    <div className="grid grid-cols-3 md:grid-cols-6 gap-x-3 gap-y-8">
       {items.map((w, i) => {
         const c = w.content;
         if (!c) return null;
         return (
-          <motion.button
+          <motion.div
             key={w.id}
-            onClick={() => onOpenContent?.(c)}
-            whileHover={{ y: -4 }}
-            whileTap={{ scale: 0.97 }}
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.03 }}
-            className="group relative aspect-[3/4] rounded-2xl overflow-hidden bg-on-surface/5 text-left"
+            className="group cursor-pointer flex flex-col"
+            onClick={() => onOpenContent?.(c)}
           >
-            {c.imageUrl ? (
-              <Image
-                src={c.imageUrl}
-                alt={c.title}
-                fill
-                sizes="(min-width: 768px) 20vw, 50vw"
-                placeholder="blur"
-                blurDataURL={defaultBlurDataURL}
-                className="object-cover"
-              />
-            ) : (
-              <div className="w-full h-full flex items-center justify-center">
-                <span className="material-symbols-outlined text-on-surface-variant/30 text-3xl">
-                  {c.type === 'movie' ? 'movie' : 'auto_stories'}
-                </span>
+            <div className="relative aspect-[3/4] rounded-2xl overflow-hidden bg-surface-container border border-on-surface/5 shadow-sm group-hover:shadow-xl transition-all duration-500">
+              {c.imageUrl ? (
+                <Image
+                  src={c.imageUrl}
+                  alt={c.title}
+                  fill
+                  sizes="200px"
+                  placeholder="blur"
+                  blurDataURL={defaultBlurDataURL}
+                  className="object-cover group-hover:scale-110 transition-transform duration-[1.5s]"
+                />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center opacity-20 text-on-surface">
+                  <span className="material-symbols-outlined text-3xl">
+                    {c.type === 'movie' ? 'movie' : 'menu_book'}
+                  </span>
+                </div>
+              )}
+
+              <div className="absolute top-2 right-2">
+                 <div className="bg-white/80 backdrop-blur-md w-6 h-6 rounded-lg flex items-center justify-center border border-white shrink-0 shadow-sm">
+                    <span className="material-symbols-outlined text-[12px] text-on-surface">
+                      {c.type === 'movie' ? 'movie' : 'menu_book'}
+                    </span>
+                 </div>
               </div>
-            )}
-            <div className="absolute inset-x-0 bottom-0 p-3 bg-gradient-to-t from-black/80 via-black/30 to-transparent">
-              <p className="text-white text-xs font-black tracking-tight line-clamp-2 leading-snug">
-                {c.title}
-              </p>
             </div>
-          </motion.button>
+
+            <div className="mt-3 px-1">
+              <h4 className="text-[11px] font-black leading-tight tracking-tight line-clamp-2 min-h-[1.8rem] text-on-surface group-hover:text-accent-lilac transition-colors">
+                {c.title}
+              </h4>
+              <div className="flex items-center gap-1.5 mt-1">
+                 <span className="text-[8px] font-black text-on-surface-muted uppercase tracking-widest truncate">
+                    {c.type === 'movie' ? 'Кино' : 'Книга'}
+                 </span>
+                 {c.rating && (
+                   <>
+                     <span className="w-1 h-1 rounded-full bg-on-surface/10" />
+                     <div className="flex items-center gap-1">
+                        <span className="material-symbols-outlined text-[10px] text-accent-lilac" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+                        <span className="text-[10px] font-black">{c.rating.toFixed(1)}</span>
+                     </div>
+                   </>
+                 )}
+              </div>
+            </div>
+          </motion.div>
         );
       })}
     </div>
