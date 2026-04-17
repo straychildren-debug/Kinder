@@ -275,7 +275,7 @@ export default function Clubs() {
                       <div className="absolute -top-10 -right-10 w-32 h-32 bg-on-surface/[0.02] rounded-full blur-3xl group-hover:bg-on-surface/[0.05] transition-colors" />
 
                       {/* Thumbnail with deep shadow */}
-                      <div className="w-[104px] h-full bg-surface-container relative rounded-2xl overflow-hidden flex-shrink-0 shadow-lg shadow-black/5">
+                      <div className="w-[104px] aspect-square bg-surface-container relative rounded-2xl overflow-hidden flex-shrink-0 shadow-lg shadow-black/5">
                         {club.imageUrl ? (
                           <Image
                             src={club.imageUrl}
