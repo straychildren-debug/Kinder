@@ -1530,18 +1530,18 @@ export default function ClubDetail() {
       {/* Expanded Image Overlay */}
       {expandedImage && (
         <div
-          className="fixed inset-0 z-[150] glass-modal-overlay flex items-center justify-center p-6 animate-in fade-in duration-300"
+          className="fixed inset-0 z-[150] bg-black/95 flex items-center justify-center p-6 animate-in fade-in duration-300"
           onClick={() => setExpandedImage(null)}
         >
           <div 
-            className="relative glass-modal p-2 rounded-[32px] max-w-[95vw] max-h-[90vh] shadow-2xl animate-in zoom-in-95 duration-300"
+            className="relative bg-white p-2 rounded-[32px] max-w-[95vw] max-h-[90vh] shadow-2xl animate-in zoom-in-95 duration-300"
             onClick={(e) => e.stopPropagation()}
           >
             <button 
               onClick={() => setExpandedImage(null)}
-              className="absolute -top-4 -right-4 w-10 h-10 rounded-full glass-modal flex items-center justify-center hover:scale-110 active:scale-90 transition-all z-10 shadow-lg"
+              className="absolute -top-4 -right-4 w-10 h-10 rounded-full bg-white flex items-center justify-center hover:scale-110 active:scale-90 transition-all z-10 shadow-lg border border-on-surface/5"
             >
-              <span className="material-symbols-outlined text-[20px]">close</span>
+              <span className="material-symbols-outlined text-[20px] text-on-surface">close</span>
             </button>
             <Image
               src={expandedImage}
