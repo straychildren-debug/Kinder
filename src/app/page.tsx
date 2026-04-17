@@ -180,72 +180,45 @@ export default function Home() {
                <p className="text-on-surface-variant font-black uppercase text-[10px] tracking-widest">Лента сообщества пока пуста</p>
             </div>
           ) : (
-            <div className="space-y-10">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-10">
               {approvedContent.map((item, index) => (
                 <MotionListItem key={item.id} index={index}>
                 <article
                   onClick={() => setSelectedContent(item)}
-                  className="group cursor-pointer overflow-hidden bg-surface rounded-3xl border border-on-surface/5 shadow-md hover:shadow-lg transition-all duration-500"
+                  className="group cursor-pointer flex flex-col"
                 >
-                  {/* Content Image - Clean and Visible */}
-                  <div className="relative aspect-[3/2] md:aspect-video w-full overflow-hidden">
+                  <div className="relative aspect-[3/4] w-full rounded-2xl overflow-hidden bg-surface-container border border-on-surface/5 shadow-sm group-hover:shadow-xl transition-all duration-500">
                     {item.imageUrl && (
                       <Image
                         src={item.imageUrl}
                         alt={item.title}
                         fill
-                        sizes="(min-width: 768px) 42rem, 100vw"
+                        sizes="(min-width: 1024px) 20rem, 50vw"
                         placeholder="blur"
                         blurDataURL={defaultBlurDataURL}
-                        className="object-cover group-hover:scale-105 transition-transform duration-[1500ms] ease-out"
+                        className="object-cover group-hover:scale-110 transition-transform duration-[1500ms] ease-out"
                       />
                     )}
-                    <div className="absolute top-4 left-4">
-                      <span className="bg-white/90 backdrop-blur-md px-4 py-1.5 rounded-full text-[10px] font-black text-on-surface uppercase tracking-[0.2em] shadow-sm border border-white">
-                        {item.type === 'movie' ? 'Кино' : 'Книга'}
-                      </span>
+                    <div className="absolute top-2 right-2">
+                       <div className="bg-white/80 backdrop-blur-md w-7 h-7 rounded-lg flex items-center justify-center border border-white shrink-0 shadow-sm">
+                          <span className="material-symbols-outlined text-[14px] text-on-surface">
+                            {item.type === 'movie' ? 'movie' : 'menu_book'}
+                          </span>
+                       </div>
                     </div>
                   </div>
 
-                  {/* Editorial Content Card - Below the Image */}
-                  <div className="relative -mt-8 mx-4 mb-4 p-8 rounded-3xl bg-white/70 backdrop-blur-xl border border-white shadow-lg shadow-black/5 glass-card">
-                    <div className="flex items-center justify-between mb-6">
-                       <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-full bg-accent-lilac border border-white shadow-inner flex items-center justify-center text-[12px] font-black text-on-accent-lilac">
-                            {item.author?.charAt(0) || 'U'}
-                          </div>
-                          <div className="flex flex-col">
-                            <span className="text-sm font-black text-on-surface tracking-tight leading-none mb-1">{item.author || 'Автор'}</span>
-                            <span className="text-[9px] font-black text-on-surface-muted uppercase tracking-widest">
-                              {item.type === 'movie' ? 'Режиссер' : 'Писатель'}
-                            </span>
-                          </div>
-                       </div>
-                    </div>
-
-                    <h2 className="text-4xl md:text-5xl font-black text-on-surface leading-[0.9] tracking-tighter mb-6">
+                  <div className="mt-4 px-1">
+                    <h3 className="text-sm font-black text-on-surface leading-tight tracking-tight mb-1 line-clamp-2 min-h-[2.5rem] group-hover:text-accent-lilac transition-colors">
                       {item.title}
-                    </h2>
-
-                    <p className="text-on-surface-muted text-sm leading-relaxed line-clamp-2 font-medium mb-8">
-                      {item.description}
-                    </p>
-
-                    <div className="flex items-center justify-between pt-6 border-t border-on-surface/5">
-                      <div className="flex items-center gap-6">
-                        <div className="flex items-center gap-2 group/btn cursor-pointer">
-                          <span className="material-symbols-outlined text-[20px] text-on-surface/40 group-hover/btn:text-red-500 group-hover/btn:scale-110 transition-all" style={{ fontVariationSettings: "'FILL' 0" }}>favorite</span>
-                          <span className="text-[12px] font-bold text-on-surface-muted">{item.likeCount || 0}</span>
-                        </div>
-                        <div className="flex items-center gap-2 group/btn cursor-pointer">
-                          <span className="material-symbols-outlined text-[20px] text-on-surface/40 group-hover/btn:text-on-surface group-hover/btn:scale-110 transition-all">chat_bubble</span>
-                          <span className="text-[12px] font-bold text-on-surface-muted">{item.reviewCount || 0}</span>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center gap-2 bg-on-surface text-surface px-4 py-2 rounded-xl shadow-lg shadow-on-surface/10">
-                        <span className="material-symbols-outlined text-accent-lilac text-[16px]" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
-                        <span className="text-[13px] font-black tracking-tight">{item.rating ? item.rating.toFixed(1) : '—'}</span>
+                    </h3>
+                    <div className="flex items-center justify-between gap-2">
+                      <p className="text-[10px] font-black text-on-surface-muted uppercase tracking-widest truncate max-w-[70%]">
+                        {item.author || item.director || 'Автор'}
+                      </p>
+                      <div className="flex items-center gap-1.5 shrink-0">
+                         <span className="material-symbols-outlined text-[12px] text-accent-lilac" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+                         <span className="text-[11px] font-black">{item.rating ? item.rating.toFixed(1) : '—'}</span>
                       </div>
                     </div>
                   </div>

@@ -79,7 +79,7 @@ export default function Profile() {
     { id: 'all', label: 'Все', icon: 'grid_view' },
     { id: 'movies', label: 'Кино', icon: 'movie' },
     { id: 'books', label: 'Книги', icon: 'menu_book' },
-    { id: 'pending', label: 'Мои черновики', icon: 'pending_actions', color: 'text-amber-500', count: pendingCount },
+    { id: 'pending', label: 'Мои черновики', icon: 'pending_actions', count: pendingCount },
   ];
 
   if (loading) {
@@ -135,7 +135,7 @@ export default function Profile() {
             </div>
           </div>
 
-          <QuickCreateForm userId={user.id} onSuccess={loadData} />
+          {/* QuickCreateForm was here, now only in TopNavBar plus button */}
         </section>
 
         {/* Dynamic Content System */}
@@ -176,17 +176,17 @@ export default function Profile() {
                 <p className="text-xs font-black uppercase tracking-widest">Здесь пока ничего нет</p>
               </div>
             ) : (
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-10">
                 {filteredContent.map((item) => (
                   <motion.div
                     key={item.id}
                     layout
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    className="group flex flex-col"
+                    className="group cursor-pointer flex flex-col"
                     onClick={() => setOpenedContent(item)}
                   >
-                    <div className="relative aspect-[3/4] rounded-[28px] overflow-hidden bg-surface-container border border-on-surface/5 shadow-sm group-active:scale-95 transition-all cursor-pointer">
+                    <div className="relative aspect-[3/4] rounded-2xl overflow-hidden bg-surface-container border border-on-surface/5 shadow-sm group-hover:shadow-xl transition-all duration-500">
                       {item.imageUrl ? (
                         <Image
                           alt={item.title}
@@ -198,35 +198,47 @@ export default function Profile() {
                           className="object-cover group-hover:scale-110 transition-transform duration-[1.5s]"
                         />
                       ) : (
-                        <div className="w-full h-full flex items-center justify-center opacity-20">
+                        <div className="w-full h-full flex items-center justify-center opacity-20 text-on-surface">
                           <span className="material-symbols-outlined text-4xl">{item.type === 'movie' ? 'movie' : 'menu_book'}</span>
                         </div>
                       )}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
                       
-                      {/* Interaction Layer */}
-                      <div className="absolute inset-0 p-4 flex flex-col justify-between opacity-0 group-hover:opacity-100 transition-opacity backdrop-blur-[2px] bg-black/20">
-                         <div className="flex justify-end">
-                            <span className="bg-white/90 px-2 py-1 rounded-lg text-[8px] font-black uppercase tracking-widest text-on-surface">Детали</span>
-                         </div>
-                      </div>
-
-                      <div className="absolute bottom-4 left-4 right-4 text-white">
-                        <div className="flex items-center gap-1 mb-1 opacity-60">
-                           <span className="material-symbols-outlined text-[12px]">{item.type === 'movie' ? 'movie' : 'menu_book'}</span>
-                           <span className="text-[8px] font-black uppercase tracking-widest">{item.type === 'movie' ? 'Кино' : 'Книга'}</span>
-                        </div>
-                        <h4 className="text-sm font-black leading-tight tracking-tight line-clamp-2">{item.title}</h4>
-                      </div>
-
                       {/* Status Badge for Moderation view */}
                       {activeTab === 'pending' && (
-                        <div className={`absolute top-3 left-3 px-2 py-1 rounded-lg text-[7px] font-black uppercase tracking-widest shadow-xl ${
+                        <div className={`absolute top-2 left-2 px-2 py-0.5 rounded-lg text-[7px] font-black uppercase tracking-widest shadow-xl z-10 ${
                           item.status === 'pending' ? 'bg-amber-500 text-white' : 'bg-red-500 text-white'
                         }`}>
                           {item.status === 'pending' ? 'Модерация' : 'Отклонено'}
                         </div>
                       )}
+
+                      <div className="absolute top-2 right-2 z-10">
+                        <div className="bg-white/80 backdrop-blur-md w-6 h-6 rounded-lg flex items-center justify-center border border-white shrink-0 shadow-sm">
+                          <span className="material-symbols-outlined text-[12px] text-on-surface">
+                            {item.type === 'movie' ? 'movie' : 'menu_book'}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="mt-3 px-1">
+                      <h4 className="text-xs font-black leading-tight tracking-tight line-clamp-2 min-h-[2rem] text-on-surface group-hover:text-accent-lilac transition-colors">
+                        {item.title}
+                      </h4>
+                      <div className="flex items-center gap-1.5 mt-1">
+                         <span className="text-[9px] font-black text-on-surface-muted uppercase tracking-widest truncate">
+                            {item.type === 'movie' ? 'Кино' : 'Книга'}
+                         </span>
+                         {item.rating && (
+                           <>
+                             <span className="w-1 h-1 rounded-full bg-on-surface/10" />
+                             <div className="flex items-center gap-1">
+                                <span className="material-symbols-outlined text-[10px] text-accent-lilac" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+                                <span className="text-[10px] font-black">{item.rating.toFixed(1)}</span>
+                             </div>
+                           </>
+                         )}
+                      </div>
                     </div>
                   </motion.div>
                 ))}
@@ -238,13 +250,13 @@ export default function Profile() {
         {/* Existing Sections for non-empty state or bottom support */}
         <section className="px-6 mt-16 space-y-12">
             <div>
-               <h2 className="text-[10px] uppercase tracking-[0.3em] font-black text-on-surface-variant opacity-40 mb-6">Ваши достижения</h2>
-               <AwardsShelf userId={user.id} />
+               <h2 className="text-[10px] uppercase tracking-[0.3em] font-black text-on-surface-variant opacity-40 mb-6">Список желаний</h2>
+               <WishlistShelf userId={user.id} onOpenContent={(c) => setOpenedContent(c)} />
             </div>
 
             <div>
-               <h2 className="text-[10px] uppercase tracking-[0.3em] font-black text-on-surface-variant opacity-40 mb-6">Список желаний</h2>
-               <WishlistShelf userId={user.id} onOpenContent={(c) => setOpenedContent(c)} />
+               <h2 className="text-[10px] uppercase tracking-[0.3em] font-black text-on-surface-variant opacity-40 mb-6">Ваши достижения</h2>
+               <AwardsShelf userId={user.id} />
             </div>
         </section>
       </main>
