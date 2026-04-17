@@ -156,5 +156,6 @@ export default function ModerationActionModal({ content, onClose, onDecision, is
           </div>
         </div>
       </div>
+    </div>
   );
 }
