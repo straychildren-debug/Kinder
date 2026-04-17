@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import TopNavBar from "@/components/TopNavBar";
 import BottomNavBar from "@/components/BottomNavBar";
 import { getApprovedContent } from "@/lib/db";
@@ -13,14 +13,33 @@ import ContentDetailsModal from "@/components/ContentDetailsModal";
 import { FeedSkeletonList } from "@/components/Skeleton";
 import { MotionListItem } from "@/components/Motion";
 import ActivityFeed from "@/components/ActivityFeed";
-import OmniSearch from "@/components/OmniSearch";
+import { omnisearch, type OmnisearchResult } from "@/lib/search";
+
+const EMPTY_RESULTS: OmnisearchResult = { content: [], clubs: [], users: [] };
 
 export default function Home() {
   const { user } = useAuth();
   const [approvedContent, setApprovedContent] = useState<ContentItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedContent, setSelectedContent] = useState<ContentItem | null>(null);
-  const [searchOpen, setSearchOpen] = useState(false);
+  const [query, setQuery] = useState('');
+  const [results, setResults] = useState<OmnisearchResult>(EMPTY_RESULTS);
+  const [searching, setSearching] = useState(false);
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const handleQuery = (val: string) => {
+    setQuery(val);
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    if (!val.trim()) { setResults(EMPTY_RESULTS); setSearching(false); return; }
+    setSearching(true);
+    debounceRef.current = setTimeout(async () => {
+      const r = await omnisearch(val.trim());
+      setResults(r);
+      setSearching(false);
+    }, 220);
+  };
+
+  const hasResults = results.content.length > 0 || results.clubs.length > 0 || results.users.length > 0;
 
   useEffect(() => {
     async function load() {
@@ -37,17 +56,98 @@ export default function Home() {
       <main className="pt-24 px-4 pb-32 max-w-lg mx-auto md:max-w-7xl">
         {/* Search Bar */}
         <section className="mb-10">
-          <div className="relative group max-w-2xl mx-auto">
-            <span className="material-symbols-outlined absolute left-6 top-1/2 -translate-y-1/2 text-on-surface/40 transition-all text-[22px] pointer-events-none z-10">
-              search
+          <div className="relative max-w-2xl mx-auto">
+            <span className="material-symbols-outlined absolute left-5 top-1/2 -translate-y-1/2 text-on-surface/40 text-[22px] pointer-events-none z-10">
+              {searching ? 'hourglass_empty' : 'search'}
             </span>
-            <button
-              type="button"
-              onClick={() => setSearchOpen(true)}
-              className="w-full text-left bg-surface-container border-2 border-on-surface/5 rounded-2xl pl-16 pr-8 py-4.5 text-sm md:text-base font-medium focus:outline-none focus:border-accent-lilac focus:bg-white focus:shadow-xl focus:shadow-accent-lilac/5 hover:border-accent-lilac/30 hover:bg-white transition-all duration-300 text-on-surface-muted shadow-sm cursor-text"
-            >
-              Поиск книг, фильмов или авторов...
-            </button>
+            <input
+              type="text"
+              value={query}
+              onChange={(e) => handleQuery(e.target.value)}
+              placeholder="Поиск"
+              className="w-full bg-surface-container border-2 border-on-surface/5 rounded-2xl pl-14 pr-10 py-4 text-sm font-medium focus:outline-none focus:border-accent-lilac focus:bg-white focus:shadow-xl focus:shadow-accent-lilac/5 transition-all duration-300 placeholder:text-on-surface-muted shadow-sm"
+            />
+            {query && (
+              <button
+                onClick={() => { setQuery(''); setResults(EMPTY_RESULTS); }}
+                className="absolute right-4 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-on-surface/10 flex items-center justify-center hover:bg-on-surface/20 transition-all"
+              >
+                <span className="material-symbols-outlined text-[14px] text-on-surface/60">close</span>
+              </button>
+            )}
+
+            {/* Inline results dropdown */}
+            {query.trim() && (
+              <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl border border-on-surface/5 shadow-2xl shadow-black/10 z-40 overflow-hidden max-h-[60vh] overflow-y-auto">
+                {searching && !hasResults ? (
+                  <div className="flex items-center justify-center py-8 gap-3 text-on-surface-muted">
+                    <div className="w-4 h-4 border-2 border-on-surface/10 border-t-on-surface/50 rounded-full animate-spin" />
+                    <span className="text-xs font-medium">Поиск...</span>
+                  </div>
+                ) : !hasResults ? (
+                  <div className="py-8 text-center text-xs font-medium text-on-surface-muted">Ничего не найдено</div>
+                ) : (
+                  <div className="divide-y divide-on-surface/5">
+                    {results.content.length > 0 && (
+                      <div className="p-3">
+                        <p className="text-[9px] font-black uppercase tracking-widest text-on-surface/30 px-2 mb-2">Контент</p>
+                        {results.content.map((item) => (
+                          <button
+                            key={item.id}
+                            onClick={() => { setSelectedContent(item); setQuery(''); setResults(EMPTY_RESULTS); }}
+                            className="w-full flex items-center gap-3 px-2 py-2.5 rounded-xl hover:bg-surface-container transition-all text-left group"
+                          >
+                            <div className="relative w-9 h-12 rounded-lg overflow-hidden bg-surface-container shrink-0">
+                              {item.imageUrl
+                                ? <Image src={item.imageUrl} alt={item.title} fill sizes="36px" className="object-cover" />
+                                : <span className="text-[8px] font-black text-on-surface/20 flex items-center justify-center h-full">NA</span>
+                              }
+                            </div>
+                            <div className="min-w-0">
+                              <p className="text-sm font-black tracking-tight truncate">{item.title}</p>
+                              <p className="text-[10px] text-on-surface-muted truncate">{item.author || item.director || ''}</p>
+                            </div>
+                            <span className="ml-auto text-[8px] font-black uppercase tracking-widest text-on-surface/20 shrink-0">{item.type === 'movie' ? 'Кино' : 'Книга'}</span>
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                    {results.clubs.length > 0 && (
+                      <div className="p-3">
+                        <p className="text-[9px] font-black uppercase tracking-widest text-on-surface/30 px-2 mb-2">Клубы</p>
+                        {results.clubs.map((club) => (
+                          <Link
+                            key={club.id}
+                            href={`/clubs/${club.id}`}
+                            onClick={() => { setQuery(''); setResults(EMPTY_RESULTS); }}
+                            className="flex items-center gap-3 px-2 py-2.5 rounded-xl hover:bg-surface-container transition-all"
+                          >
+                            <span className="material-symbols-outlined text-on-surface/30 text-[20px]">groups</span>
+                            <div className="min-w-0">
+                              <p className="text-sm font-black tracking-tight truncate">{club.name}</p>
+                              <p className="text-[10px] text-on-surface-muted">{club.memberCount} участников</p>
+                            </div>
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                    {results.users.length > 0 && (
+                      <div className="p-3">
+                        <p className="text-[9px] font-black uppercase tracking-widest text-on-surface/30 px-2 mb-2">Люди</p>
+                        {results.users.map((u) => (
+                          <div key={u.id} className="flex items-center gap-3 px-2 py-2.5 rounded-xl hover:bg-surface-container transition-all">
+                            <div className="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center text-xs font-black text-on-surface/40 shrink-0">
+                              {(u.name || '?').charAt(0).toUpperCase()}
+                            </div>
+                            <p className="text-sm font-black tracking-tight truncate">{u.name}</p>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </section>
 
@@ -202,8 +302,6 @@ export default function Home() {
           </div>
         </div>
       </main>
-
-      <OmniSearch open={searchOpen} onClose={() => setSearchOpen(false)} />
 
       <BottomNavBar activeTab="home" />
     </>
