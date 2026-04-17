@@ -303,11 +303,11 @@ export default function Clubs() {
                       {/* Content Section */}
                       <div className="flex-1 flex flex-col justify-between py-0.5 min-w-0 z-10">
                         <div className="space-y-1">
-                          <div className="flex items-center gap-1.5 min-w-0">
-                            <span className="px-2 py-0.5 bg-on-surface/5 text-[7px] font-black text-on-surface-muted rounded-full uppercase tracking-[0.15em] whitespace-nowrap">
+                          <div className="min-w-0">
+                            <span className="inline-block px-2 py-0.5 bg-on-surface/5 text-[7px] font-black text-on-surface-muted rounded-full uppercase tracking-[0.15em] mb-1.5 whitespace-nowrap">
                               {CATEGORY_LABELS[club.category] || club.category}
                             </span>
-                            <h4 className="font-black text-on-surface text-[15px] tracking-tight truncate leading-none pt-0.5">
+                            <h4 className="font-black text-on-surface text-[16px] tracking-tight truncate leading-tight">
                               {club.name}
                             </h4>
                           </div>
