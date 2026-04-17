@@ -154,18 +154,22 @@ export default function ModerationPage() {
                     <span className="text-[10px] font-black uppercase tracking-[0.2em] opacity-30">Синхронизация данных...</span>
                   </div>
                 ) : pendingItems.length === 0 ? (
-                  <div className="bg-white rounded-[48px] p-24 text-center space-y-8 border border-on-surface/5 shadow-2xl shadow-indigo-900/5">
-                    <div className="w-24 h-24 bg-surface-container rounded-full flex items-center justify-center mx-auto mb-4 border-4 border-white shadow-xl">
-                      <span className="material-symbols-outlined text-5xl text-amber-500">verified</span>
+                  <div className="flex flex-col items-center justify-center py-20 px-8 animate-in fade-in zoom-in-95 duration-700">
+                    <div className="w-32 h-32 bg-white rounded-full flex items-center justify-center mb-8 border border-on-surface/5 shadow-[0_20px_40px_rgba(0,0,0,0.05)] relative">
+                      <div className="absolute inset-0 bg-amber-500/10 rounded-full animate-ping opacity-20"></div>
+                      <span className="material-symbols-outlined text-5xl text-amber-500 relative z-10">verified</span>
                     </div>
-                    <div className="space-y-2">
-                      <h3 className="text-2xl font-black tracking-tight">Всё проверено!</h3>
-                      <p className="text-on-surface-variant font-medium text-sm  opacity-50 max-w-xs mx-auto">Вы настоящий страж качества. Сейчас в очереди нет новых публикаций.</p>
+                    <div className="space-y-3 text-center mb-12">
+                      <h3 className="text-3xl font-extrabold tracking-tighter text-on-surface uppercase">Всё проверено!</h3>
+                      <p className="text-on-surface-variant font-medium text-sm opacity-50 max-w-xs mx-auto leading-relaxed">
+                        Вы настоящий страж качества.<br/>Сейчас в очереди нет новых публикаций.
+                      </p>
                     </div>
                     <button 
                        onClick={() => setShowPending(false)}
-                       className="px-12 py-5 bg-[#1a1c1e] text-white rounded-[24px] font-black text-[11px] uppercase tracking-[0.2em] shadow-2xl transition-all hover:scale-105 active:scale-95"
+                       className="px-10 h-14 bg-[#0f172a] text-white rounded-2xl font-bold text-[10px] uppercase tracking-[0.2em] shadow-xl hover:bg-black active:scale-95 transition-all flex items-center gap-3"
                     >
+                      <span className="material-symbols-outlined text-[18px]">analytics</span>
                       К статистике
                     </button>
                   </div>
