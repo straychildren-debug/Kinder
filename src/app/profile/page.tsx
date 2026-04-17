@@ -4,9 +4,11 @@ import React from "react";
 import TopNavBar from "@/components/TopNavBar";
 import BottomNavBar from "@/components/BottomNavBar";
 import { useAuth } from "@/components/AuthProvider";
-import { getContentByUser } from "@/lib/db";
+import { getContentByUser, getContentById } from "@/lib/db";
 import { ContentItem } from "@/lib/types";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
+import { defaultBlurDataURL } from "@/lib/image-blur";
 import AwardsShelf from "@/components/AwardsShelf";
 import WishlistShelf from "@/components/WishlistShelf";
 import ContentDetailsModal from "@/components/ContentDetailsModal";
@@ -17,12 +19,19 @@ export default function Profile() {
   const [userContent, setUserContent] = React.useState<ContentItem[]>([]);
   const [loading, setLoading] = React.useState(true);
   const [openedContent, setOpenedContent] = React.useState<ContentItem | null>(null);
+  const [pinnedContent, setPinnedContent] = React.useState<ContentItem | null>(null);
 
   React.useEffect(() => {
     async function load() {
       if (user) {
         const content = await getContentByUser(user.id);
         setUserContent(content);
+        if (user.pinnedContentId) {
+          const pinned = await getContentById(user.pinnedContentId);
+          setPinnedContent(pinned);
+        } else {
+          setPinnedContent(null);
+        }
       }
       setLoading(false);
     }
@@ -77,9 +86,9 @@ export default function Profile() {
         <section className="grid grid-cols-1 md:grid-cols-12 gap-12 mb-20 items-start">
           <div className="md:col-span-4 flex flex-col items-center md:items-start space-y-8">
             <div className="relative group">
-              <div className="w-56 h-56 rounded-3xl overflow-hidden shadow-[0_32px_64px_-16px_rgba(0,0,0,0.15)] transition-all duration-700 group-hover:scale-[1.05] group-hover:-rotate-2 border-4 border-white">
+              <div className="relative w-56 h-56 rounded-3xl overflow-hidden shadow-[0_32px_64px_-16px_rgba(0,0,0,0.15)] transition-all duration-700 group-hover:scale-[1.05] group-hover:-rotate-2 border-4 border-white">
                 {user.avatarUrl ? (
-                  <img alt={user.name} className="w-full h-full object-cover" src={user.avatarUrl} />
+                  <Image alt={user.name} fill sizes="224px" className="object-cover" src={user.avatarUrl} />
                 ) : (
                   <div className="w-full h-full bg-surface-container flex items-center justify-center text-6xl font-black text-on-surface/10 ">
                     {user.name.charAt(0)}
@@ -155,6 +164,52 @@ export default function Profile() {
               </div>
             </div>
 
+            {/* Закреплённое любимое */}
+            {pinnedContent && (
+              <div className="space-y-6">
+                <h2 className="text-[10px] uppercase tracking-[0.3em] font-black text-on-surface-muted">
+                  Любимое {pinnedContent.type === 'movie' ? 'кино' : 'книга'}
+                </h2>
+                <button
+                  onClick={() => setOpenedContent(pinnedContent)}
+                  className="w-full text-left group relative overflow-hidden rounded-[32px] border border-on-surface/5 shadow-xl hover:shadow-2xl transition-all duration-500 bg-surface"
+                >
+                  <div className="relative aspect-[16/7] w-full overflow-hidden">
+                    {pinnedContent.imageUrl ? (
+                      <Image
+                        alt={pinnedContent.title}
+                        src={pinnedContent.imageUrl}
+                        fill
+                        sizes="(min-width: 768px) 800px, 100vw"
+                        placeholder="blur"
+                        blurDataURL={defaultBlurDataURL}
+                        className="object-cover group-hover:scale-105 transition-transform duration-[1500ms] ease-out"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-surface-container" />
+                    )}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                    <div className="absolute top-5 left-5">
+                      <span className="bg-white/90 backdrop-blur-md px-4 py-1.5 rounded-full text-[10px] font-black text-on-surface uppercase tracking-[0.2em] shadow-sm border border-white flex items-center gap-2">
+                        <span className="material-symbols-outlined text-[14px]" style={{ fontVariationSettings: "'FILL' 1" }}>favorite</span>
+                        Закреплено
+                      </span>
+                    </div>
+                    <div className="absolute bottom-5 left-5 right-5 text-white">
+                      <p className="text-[10px] font-black uppercase tracking-[0.2em] opacity-80 mb-2">
+                        {pinnedContent.type === 'movie' ? 'Кино' : 'Книга'}
+                        {pinnedContent.author ? ` · ${pinnedContent.author}` : ''}
+                        {pinnedContent.director ? ` · ${pinnedContent.director}` : ''}
+                      </p>
+                      <h3 className="text-3xl md:text-4xl font-black tracking-tighter leading-[0.9]">
+                        {pinnedContent.title}
+                      </h3>
+                    </div>
+                  </div>
+                </button>
+              </div>
+            )}
+
             {/* Достижения */}
             <div className="space-y-6">
               <h2 className="text-[10px] uppercase tracking-[0.3em] font-black text-on-surface-variant opacity-40">Достижения</h2>
@@ -190,9 +245,9 @@ export default function Profile() {
                 <div className="grid gap-6">
                   {userContent.map(item => (
                     <div key={item.id} className="bg-white rounded-3xl overflow-hidden flex shadow-sm border border-on-surface/5 hover:shadow-2xl hover:scale-[1.01] transition-all group">
-                      <div className="w-32 h-32 md:w-44 md:h-44 shrink-0 bg-surface-container flex items-center justify-center overflow-hidden border-r border-on-surface/5">
+                      <div className="relative w-32 h-32 md:w-44 md:h-44 shrink-0 bg-surface-container flex items-center justify-center overflow-hidden border-r border-on-surface/5">
                         {item.imageUrl ? (
-                          <img alt={item.title} className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" src={item.imageUrl} />
+                          <Image alt={item.title} fill sizes="(min-width: 768px) 176px, 128px" placeholder="blur" blurDataURL={defaultBlurDataURL} className="object-cover grayscale group-hover:grayscale-0 transition-all duration-700" src={item.imageUrl} />
                         ) : (
                           <span className="material-symbols-outlined text-on-surface-variant/20 text-4xl ">image</span>
                         )}

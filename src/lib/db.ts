@@ -25,7 +25,30 @@ export async function getUserById(id: string): Promise<User | null> {
     role: data.role,
     stats: data.stats,
     joinedAt: data.joined_at,
+    pinnedContentId: data.pinned_content_id ?? null,
   };
+}
+
+export async function pinFavoriteContent(userId: string, contentId: string): Promise<void> {
+  const { error } = await supabase
+    .from('profiles')
+    .update({ pinned_content_id: contentId })
+    .eq('id', userId);
+  if (error) {
+    console.error('Error pinning content:', error);
+    throw error;
+  }
+}
+
+export async function unpinFavoriteContent(userId: string): Promise<void> {
+  const { error } = await supabase
+    .from('profiles')
+    .update({ pinned_content_id: null })
+    .eq('id', userId);
+  if (error) {
+    console.error('Error unpinning content:', error);
+    throw error;
+  }
 }
 
 export async function getUsersRanked(): Promise<User[]> {

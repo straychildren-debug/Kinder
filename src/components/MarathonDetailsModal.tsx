@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { ClubMarathon, MarathonItem, MarathonParticipantProgress } from '@/lib/types';
 import { getMarathonItems, getMarathonProgress, updateMarathonProgressItem } from '@/lib/db';
 import { motion } from 'framer-motion';
+import Image from 'next/image';
 
 interface Props {
   isOpen: boolean;
@@ -206,7 +207,14 @@ export default function MarathonDetailsModal({ isOpen, onClose, marathon, userId
                      <div className="flex items-center gap-5 mb-8 border-b border-on-surface/5 pb-8">
                        <div className="relative">
                          {userProg.userAvatar ? (
-                           <img src={userProg.userAvatar} alt="Avatar" className="w-14 h-14 rounded-[20px] object-cover grayscale brightness-90 border border-on-surface/5 shadow-sm" />
+                           <Image
+                             src={userProg.userAvatar}
+                             alt="Avatar"
+                             width={56}
+                             height={56}
+                             unoptimized
+                             className="w-14 h-14 rounded-[20px] object-cover grayscale brightness-90 border border-on-surface/5 shadow-sm"
+                           />
                          ) : (
                            <div className="w-14 h-14 rounded-[20px] bg-surface-container flex items-center justify-center text-[14px] font-black  text-on-surface/20 border border-on-surface/5">
                              {(userProg.userName || '?').charAt(0).toUpperCase()}

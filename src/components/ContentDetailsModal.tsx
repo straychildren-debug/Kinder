@@ -2,10 +2,13 @@
 
 import React, { useEffect, useState } from 'react';
 import { ContentItem, Review, User, ReviewComment } from '@/lib/types';
-import { getReviewsForContent, submitReview, rateReview, addReviewComment, getReviewComments, getContentById } from '@/lib/db';
+import { getReviewsForContent, submitReview, rateReview, addReviewComment, getReviewComments, getContentById, pinFavoriteContent, unpinFavoriteContent, getUserById } from '@/lib/db';
 import { addToWishlist, isInWishlist, removeFromWishlist } from '@/lib/wishlist';
+import { getSimilarContent } from '@/lib/recommendations';
+import { defaultBlurDataURL } from '@/lib/image-blur';
 import { useAuth } from './AuthProvider';
 import { motion } from 'framer-motion';
+import Image from 'next/image';
 import Link from 'next/link';
 
 interface ContentDetailsModalProps {
@@ -35,6 +38,13 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
   const [wishlisted, setWishlisted] = useState(false);
   const [wishlistBusy, setWishlistBusy] = useState(false);
 
+  // Pinned favorite state
+  const [pinned, setPinned] = useState(false);
+  const [pinBusy, setPinBusy] = useState(false);
+
+  // Similar content
+  const [similar, setSimilar] = useState<ContentItem[]>([]);
+
   useEffect(() => {
     if (!initialContent) return;
     
@@ -51,12 +61,34 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
       if (user) {
         const inList = await isInWishlist(user.id, initialContent!.id);
         setWishlisted(inList);
+        const me = await getUserById(user.id);
+        setPinned(me?.pinnedContentId === initialContent!.id);
       } else {
         setWishlisted(false);
+        setPinned(false);
       }
+
+      // Подгружаем похожее
+      const rec = await getSimilarContent(initialContent!.id, 6);
+      setSimilar(rec);
     }
     load();
   }, [initialContent?.id, user]);
+
+  const handleTogglePin = async () => {
+    if (!user || !content || pinBusy) return;
+    setPinBusy(true);
+    const next = !pinned;
+    setPinned(next);
+    try {
+      if (next) await pinFavoriteContent(user.id, content.id);
+      else await unpinFavoriteContent(user.id);
+    } catch (e) {
+      console.error(e);
+      setPinned(!next);
+    }
+    setPinBusy(false);
+  };
 
   const handleToggleWishlist = async () => {
     if (!user || !content || wishlistBusy) return;
@@ -153,7 +185,16 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
         {/* Hero Cover */}
         <div className="relative aspect-video md:aspect-[21/9] w-full bg-surface-container">
           {content.imageUrl ? (
-             <img src={content.imageUrl} alt={content.title} className="w-full h-full object-cover" />
+             <Image
+               src={content.imageUrl}
+               alt={content.title}
+               fill
+               sizes="(min-width: 768px) 1024px, 100vw"
+               placeholder="blur"
+               blurDataURL={defaultBlurDataURL}
+               className="object-cover"
+               priority
+             />
           ) : (
              <div className="w-full h-full flex items-center justify-center text-on-surface-variant">Нет обложки</div>
           )}
@@ -191,32 +232,57 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
             </p>
 
             {user && (
-              <motion.button
-                onClick={handleToggleWishlist}
-                disabled={wishlistBusy}
-                whileTap={{ scale: 0.95 }}
-                className={`mb-6 w-full flex items-center justify-center gap-3 py-4 rounded-xl font-black text-[11px] uppercase tracking-[0.2em] border transition-colors ${
-                  wishlisted
-                    ? 'bg-accent-lilac/30 text-on-accent-lilac border-accent-lilac/40'
-                    : 'bg-surface-container text-on-surface border-on-surface/5 hover:bg-surface-container-high'
-                }`}
-              >
-                <motion.span
-                  key={wishlisted ? 'filled' : 'empty'}
-                  initial={{ scale: 0.5, rotate: -30 }}
-                  animate={{ scale: 1, rotate: 0 }}
-                  transition={{ type: 'spring', stiffness: 500, damping: 18 }}
-                  className="material-symbols-outlined text-[20px]"
-                  style={{ fontVariationSettings: wishlisted ? "'FILL' 1" : "'FILL' 0" }}
+              <div className="mb-6 grid grid-cols-1 md:grid-cols-2 gap-3">
+                <motion.button
+                  onClick={handleToggleWishlist}
+                  disabled={wishlistBusy}
+                  whileTap={{ scale: 0.95 }}
+                  className={`flex items-center justify-center gap-3 py-4 rounded-xl font-black text-[11px] uppercase tracking-[0.2em] border transition-colors ${
+                    wishlisted
+                      ? 'bg-accent-lilac/30 text-on-accent-lilac border-accent-lilac/40'
+                      : 'bg-surface-container text-on-surface border-on-surface/5 hover:bg-surface-container-high'
+                  }`}
                 >
-                  bookmark
-                </motion.span>
-                {wishlisted
-                  ? 'В вашем списке'
-                  : content.type === 'movie'
-                  ? 'Хочу посмотреть'
-                  : 'Хочу прочитать'}
-              </motion.button>
+                  <motion.span
+                    key={wishlisted ? 'wl-filled' : 'wl-empty'}
+                    initial={{ scale: 0.5, rotate: -30 }}
+                    animate={{ scale: 1, rotate: 0 }}
+                    transition={{ type: 'spring', stiffness: 500, damping: 18 }}
+                    className="material-symbols-outlined text-[20px]"
+                    style={{ fontVariationSettings: wishlisted ? "'FILL' 1" : "'FILL' 0" }}
+                  >
+                    bookmark
+                  </motion.span>
+                  {wishlisted
+                    ? 'В вашем списке'
+                    : content.type === 'movie'
+                    ? 'Хочу посмотреть'
+                    : 'Хочу прочитать'}
+                </motion.button>
+
+                <motion.button
+                  onClick={handleTogglePin}
+                  disabled={pinBusy}
+                  whileTap={{ scale: 0.95 }}
+                  className={`flex items-center justify-center gap-3 py-4 rounded-xl font-black text-[11px] uppercase tracking-[0.2em] border transition-colors ${
+                    pinned
+                      ? 'bg-on-surface text-surface border-on-surface'
+                      : 'bg-surface-container text-on-surface border-on-surface/5 hover:bg-surface-container-high'
+                  }`}
+                >
+                  <motion.span
+                    key={pinned ? 'pin-filled' : 'pin-empty'}
+                    initial={{ scale: 0.5, rotate: -30 }}
+                    animate={{ scale: 1, rotate: 0 }}
+                    transition={{ type: 'spring', stiffness: 500, damping: 18 }}
+                    className="material-symbols-outlined text-[20px]"
+                    style={{ fontVariationSettings: pinned ? "'FILL' 1" : "'FILL' 0" }}
+                  >
+                    {pinned ? 'favorite' : 'favorite_border'}
+                  </motion.span>
+                  {pinned ? 'Любимое — закреплено' : 'Закрепить в профиле'}
+                </motion.button>
+              </div>
             )}
 
             {/* Metadata Grid */}
@@ -312,8 +378,10 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
                  <div key={review.id} className="bg-surface rounded-3xl p-6 border border-on-surface/5 shadow-sm">
                    <div className="flex items-start justify-between mb-4">
                      <div className="flex items-center gap-3">
-                       <div className="w-10 h-10 rounded-full bg-accent-lilac flex items-center justify-center text-on-accent-lilac font-black overflow-hidden border border-on-surface/5">
-                         {review.user?.avatarUrl ? <img src={review.user.avatarUrl} className="w-full h-full object-cover" /> : review.user?.name.charAt(0) || 'U'}
+                       <div className="relative w-10 h-10 rounded-full bg-accent-lilac flex items-center justify-center text-on-accent-lilac font-black overflow-hidden border border-on-surface/5">
+                         {review.user?.avatarUrl ? (
+                           <Image src={review.user.avatarUrl} alt={review.user.name || ''} fill sizes="40px" className="object-cover" />
+                         ) : review.user?.name.charAt(0) || 'U'}
                        </div>
                        <div>
                          <p className="font-black text-sm text-on-surface">{review.user?.name || 'Пользователь'}</p>
@@ -410,8 +478,10 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
                           ) : (
                             reviewComments.map(comment => (
                               <div key={comment.id} className="flex gap-3 bg-surface-container-lowest p-4 rounded-xl border border-on-surface/5">
-                                <div className="w-8 h-8 rounded-full bg-surface overflow-hidden flex-shrink-0 border border-on-surface/5 flex items-center justify-center font-bold text-on-surface text-xs">
-                                  {comment.user?.avatarUrl ? <img src={comment.user.avatarUrl} className="w-full h-full object-cover" /> : comment.user?.name.charAt(0) || 'U'}
+                                <div className="relative w-8 h-8 rounded-full bg-surface overflow-hidden flex-shrink-0 border border-on-surface/5 flex items-center justify-center font-bold text-on-surface text-xs">
+                                  {comment.user?.avatarUrl ? (
+                                    <Image src={comment.user.avatarUrl} alt={comment.user.name || ''} fill sizes="32px" className="object-cover" />
+                                  ) : comment.user?.name.charAt(0) || 'U'}
                                 </div>
                                 <div>
                                   <div className="flex items-baseline gap-2 mb-1">
@@ -435,6 +505,45 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
              </div>
            )}
         </div>
+
+        {/* Похожее */}
+        {similar.length > 0 && (
+          <div className="px-6 pb-16 max-w-6xl mx-auto">
+            <h3 className="text-2xl font-black text-on-surface tracking-tighter mb-6">
+              Похожее
+            </h3>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+              {similar.map((s) => (
+                <button
+                  key={s.id}
+                  onClick={() => setContent(s)}
+                  className="group text-left"
+                >
+                  <div className="relative aspect-[2/3] w-full rounded-2xl overflow-hidden bg-surface-container border border-on-surface/5 shadow-sm group-hover:shadow-lg transition-all">
+                    {s.imageUrl && (
+                      <Image
+                        src={s.imageUrl}
+                        alt={s.title}
+                        fill
+                        sizes="(min-width: 1024px) 180px, 45vw"
+                        placeholder="blur"
+                        blurDataURL={defaultBlurDataURL}
+                        className="object-cover group-hover:scale-105 transition-transform duration-500"
+                      />
+                    )}
+                  </div>
+                  <p className="mt-3 text-sm font-black text-on-surface line-clamp-2 leading-snug">
+                    {s.title}
+                  </p>
+                  <p className="mt-1 text-[9px] font-black uppercase tracking-widest text-on-surface-variant/60">
+                    {s.type === 'movie' ? 'Кино' : 'Книга'}
+                    {s.year ? ` · ${s.year}` : ''}
+                  </p>
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

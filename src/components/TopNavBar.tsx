@@ -3,7 +3,9 @@
 import React, { useState } from 'react';
 import { useAuth } from './AuthProvider';
 import ProfileSidebar from './ProfileSidebar';
+import OmniSearch from './OmniSearch';
 import Link from 'next/link';
+import Image from 'next/image';
 
 interface TopNavBarProps {
   title?: string;
@@ -12,7 +14,19 @@ interface TopNavBarProps {
 export default function TopNavBar({ title = 'Кинотека' }: TopNavBarProps) {
   const { user } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
+
+  React.useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        setSearchOpen((s) => !s);
+      }
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, []);
 
   React.useEffect(() => {
     if (!user) return;
@@ -48,9 +62,17 @@ export default function TopNavBar({ title = 'Кинотека' }: TopNavBarProps
           </Link>
           
           <div className="flex items-center gap-3 md:gap-6">
+            <button
+              onClick={() => setSearchOpen(true)}
+              aria-label="Поиск"
+              className="w-10 h-10 rounded-full flex items-center justify-center bg-surface-container text-on-surface-variant hover:text-on-surface hover:bg-on-surface/5 transition-all border border-on-surface/5 shadow-sm active:scale-95"
+            >
+              <span className="material-symbols-outlined text-[20px] md:text-[22px]">search</span>
+            </button>
+
             {user && (
-              <Link 
-                href="/create" 
+              <Link
+                href="/create"
                 className="w-10 h-10 rounded-full flex items-center justify-center bg-accent-lilac/10 text-on-accent-lilac hover:bg-accent-lilac/30 transition-all border border-accent-lilac/10 shadow-sm active:scale-95"
               >
                 <span className="material-symbols-outlined text-[20px] md:text-[22px]">add</span>
@@ -67,11 +89,13 @@ export default function TopNavBar({ title = 'Кинотека' }: TopNavBarProps
                 </span>
               )}
               {user?.avatarUrl ? (
-                <div className="w-10 h-10 rounded-full border border-on-surface/5 group-hover:border-on-surface transition-all p-0.5 shadow-sm active:scale-95">
-                  <img
+                <div className="relative w-10 h-10 rounded-full border border-on-surface/5 group-hover:border-on-surface transition-all p-0.5 shadow-sm active:scale-95 overflow-hidden">
+                  <Image
                     alt="Профиль"
                     src={user.avatarUrl}
-                    className="w-full h-full rounded-full object-cover"
+                    fill
+                    sizes="40px"
+                    className="rounded-full object-cover"
                   />
                 </div>
               ) : user ? (
@@ -89,6 +113,7 @@ export default function TopNavBar({ title = 'Кинотека' }: TopNavBarProps
       </nav>
 
       <ProfileSidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <OmniSearch open={searchOpen} onClose={() => setSearchOpen(false)} />
     </>
   );
 }

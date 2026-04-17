@@ -1,11 +1,14 @@
 'use client';
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import Image from 'next/image';
 import { useParams, useRouter } from 'next/navigation';
 import { useAuth } from '@/components/AuthProvider';
 import ClubSettingsModal from '@/components/ClubSettingsModal';
 import MarathonDetailsModal from '@/components/MarathonDetailsModal';
 import MarathonModal from '@/components/MarathonModal';
+import ClubEventsPanel from '@/components/ClubEventsPanel';
+import VoiceWaveform from '@/components/VoiceWaveform';
 import { Club, ClubMessage, ClubMarathon, ClubMember, PinnedMessage, ClubPoll, ClubPollOption } from '@/lib/types';
 import {
   getClubById,
@@ -68,96 +71,6 @@ function useCountdown(endsAt: string | null) {
   }, [endsAt]);
 
   return timeLeft;
-}
-
-// ===== Voice Waveform Component =====
-function VoiceMessagePlayer({ url, duration, isMine }: { url: string; duration: number; isMine: boolean }) {
-  const [playing, setPlaying] = useState(false);
-  const [progress, setProgress] = useState(0);
-  const audioRef = useRef<HTMLAudioElement>(null);
-  const animRef = useRef<number>(0);
-
-  const formatDuration = (s: number) => {
-    const m = Math.floor(s / 60);
-    const sec = Math.floor(s % 60);
-    return `${m}:${String(sec).padStart(2, '0')}`;
-  };
-
-  const tick = () => {
-    if (audioRef.current) {
-      const p = audioRef.current.currentTime / (audioRef.current.duration || duration);
-      setProgress(Math.min(p, 1));
-      if (!audioRef.current.paused) {
-        animRef.current = requestAnimationFrame(tick);
-      }
-    }
-  };
-
-  const togglePlay = () => {
-    if (!audioRef.current) return;
-    if (playing) {
-      audioRef.current.pause();
-      setPlaying(false);
-    } else {
-      audioRef.current.play();
-      setPlaying(true);
-      animRef.current = requestAnimationFrame(tick);
-    }
-  };
-
-  useEffect(() => {
-    const el = audioRef.current;
-    if (!el) return;
-    const handleEnded = () => {
-      setPlaying(false);
-      setProgress(0);
-    };
-    el.addEventListener('ended', handleEnded);
-    return () => {
-      el.removeEventListener('ended', handleEnded);
-      cancelAnimationFrame(animRef.current);
-    };
-  }, []);
-
-  // Generate fake waveform bars
-  const bars = Array.from({ length: 28 }, (_, i) => {
-    const h = 12 + Math.sin(i * 0.8) * 8 + Math.cos(i * 1.4) * 6 + Math.random() * 4;
-    return Math.max(4, Math.min(28, h));
-  });
-
-  return (
-    <div className="flex items-center gap-3 min-w-[200px]">
-      <audio ref={audioRef} src={url} preload="metadata" />
-      <button
-        onClick={togglePlay}
-        className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 transition-all active:scale-90 ${
-          isMine ? 'bg-surface/20 hover:bg-surface/30' : 'bg-primary/10 hover:bg-primary/20'
-        }`}
-      >
-        <span className="material-symbols-outlined text-[18px]" style={{ fontVariationSettings: "'FILL' 1" }}>
-          {playing ? 'pause' : 'play_arrow'}
-        </span>
-      </button>
-      <div className="flex-1">
-        <div className="flex items-end gap-[2px] h-7">
-          {bars.map((h, i) => (
-            <div
-              key={i}
-              className={`w-[3px] rounded-full transition-all duration-100 ${
-                i / bars.length <= progress
-                  ? isMine ? 'bg-surface' : 'bg-primary'
-                  : isMine ? 'bg-surface/30' : 'bg-primary/20'
-              }`}
-              style={{ height: `${h}px` }}
-            />
-          ))}
-        </div>
-        <span className={`text-[9px] font-bold mt-1 block ${isMine ? 'text-surface/50' : 'text-on-surface-variant/40'}`}>
-          {playing ? formatDuration((audioRef.current?.currentTime || 0)) : formatDuration(duration)}
-        </span>
-      </div>
-    </div>
-  );
 }
 
 // ===== Poll Card Component =====
@@ -493,7 +406,7 @@ function MentionsPopup({ members, onSelect, position }: {
           className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-surface-container transition-all text-left"
         >
           {m.userAvatar ? (
-            <img src={m.userAvatar} className="w-7 h-7 rounded-full object-cover" alt="" />
+            <Image src={m.userAvatar} width={28} height={28} unoptimized className="w-7 h-7 rounded-full object-cover" alt="" />
           ) : (
             <div className="w-7 h-7 rounded-full bg-surface-container flex items-center justify-center text-[10px] font-black">
               {(m.userName || '?')[0].toUpperCase()}
@@ -1211,6 +1124,11 @@ export default function ClubDetail() {
               </section>
             )}
 
+            {/* Club Events Calendar */}
+            <div className="mb-12">
+              <ClubEventsPanel clubId={clubId} canManage={isOwnerOrAdmin} />
+            </div>
+
             {/* Active Polls */}
             {polls.filter(p => p.isActive).map(poll => (
               <PollCard
@@ -1258,8 +1176,11 @@ export default function ClubDetail() {
                       <div className="w-10 overflow-hidden shrink-0">
                         {!isContinuous && (
                           msg.senderAvatar ? (
-                            <img
+                            <Image
                               alt={msg.senderName || ''}
+                              width={40}
+                              height={40}
+                              unoptimized
                               className="w-10 h-10 rounded-[14px] object-cover shadow-sm border border-on-surface/5"
                               src={msg.senderAvatar}
                             />
@@ -1309,7 +1230,7 @@ export default function ClubDetail() {
 
                         {/* Voice message */}
                         {msg.fileType === 'voice' && msg.fileUrl && (
-                          <VoiceMessagePlayer
+                          <VoiceWaveform
                             url={msg.fileUrl}
                             duration={msg.voiceDurationSeconds || 0}
                             isMine={isMine}
@@ -1322,9 +1243,12 @@ export default function ClubDetail() {
                             className={`relative overflow-hidden cursor-zoom-in group/img ${!msg.text ? 'rounded-[16px] shadow-sm border border-on-surface/10' : 'rounded-[16px] mb-3 border border-on-surface/10'}`}
                             onClick={() => setExpandedImage(msg.fileUrl!)}
                           >
-                            <img
+                            <Image
                               src={msg.fileUrl}
                               alt="Attached image"
+                              width={100}
+                              height={100}
+                              unoptimized
                               className="w-[100px] h-[100px] object-cover transition-transform duration-500 hover:scale-105"
                             />
                             <div className="absolute inset-0 bg-black/40 opacity-0 group-hover/img:opacity-100 transition-opacity flex items-center justify-center">
@@ -1621,10 +1545,13 @@ export default function ClubDetail() {
             >
               <span className="material-symbols-outlined text-[20px]">close</span>
             </button>
-            <img 
-              src={expandedImage} 
-              className="max-w-full max-h-[85vh] object-contain rounded-[24px] block" 
-              alt="Expanded" 
+            <Image
+              src={expandedImage}
+              width={1600}
+              height={1200}
+              unoptimized
+              className="max-w-full max-h-[85vh] object-contain rounded-[24px] block w-auto h-auto"
+              alt="Expanded"
             />
           </div>
         </div>

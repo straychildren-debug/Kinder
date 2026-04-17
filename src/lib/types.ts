@@ -18,6 +18,7 @@ export interface User {
     awards: number;
   };
   joinedAt: string;
+  pinnedContentId?: string | null;
 }
 
 export interface ContentItem {

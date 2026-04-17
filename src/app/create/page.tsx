@@ -8,6 +8,7 @@ import TopNavBar from '@/components/TopNavBar';
 import BottomNavBar from '@/components/BottomNavBar';
 import { createContent, updateContent, uploadCover, getContentById } from '@/lib/db';
 import type { ContentType } from '@/lib/types';
+import Image from 'next/image';
 
 function CreatePageContent() {
   const { user } = useAuth();
@@ -371,10 +372,13 @@ function CreatePageContent() {
                   </div>
                 ) : (
                   <div className="relative aspect-[16/9] w-full rounded-3xl overflow-hidden bg-surface-container border border-on-surface/5 group">
-                    <img 
-                      src={coverPreview || imageUrl} 
-                      alt="Preview" 
-                      className="w-full h-full object-cover"
+                    <Image
+                      src={coverPreview || imageUrl}
+                      alt="Preview"
+                      fill
+                      sizes="(min-width: 768px) 700px, 100vw"
+                      unoptimized={!!coverPreview}
+                      className="object-cover"
                     />
                     <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-4 backdrop-blur-sm">
                       <button

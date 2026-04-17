@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { ClubMember, ClubMarathon } from '@/lib/types';
 import { getClubMembers, updateMemberRole, removeMember } from '@/lib/db';
 import MarathonModal from './MarathonModal';
@@ -169,9 +170,12 @@ export default function ClubSettingsModal({
                     {/* Avatar */}
                     <div className="relative">
                       {member.userAvatar ? (
-                        <img
+                        <Image
                           src={member.userAvatar}
                           alt={member.userName || ''}
+                          width={44}
+                          height={44}
+                          unoptimized
                           className="w-11 h-11 rounded-[16px] object-cover grayscale brightness-90 group-hover:grayscale-0 transition-all border border-on-surface/5 shadow-sm"
                         />
                       ) : (

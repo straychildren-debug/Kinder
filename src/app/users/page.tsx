@@ -7,6 +7,7 @@ import { useAuth } from '@/components/AuthProvider';
 import { searchProfiles, updateUserRole } from '@/lib/db';
 import { User } from '@/lib/types';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
 export default function UsersManagementPage() {
   const { user: currentUser } = useAuth();
@@ -152,11 +153,16 @@ export default function UsersManagementPage() {
                     <tr key={u.id} className="hover:bg-surface-container/20 transition-all duration-300">
                       <td className="px-8 py-6">
                         <div className="flex items-center gap-4">
-                          <img 
-                            src={u.avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${u.id}`} 
-                            alt="" 
-                            className="w-10 h-10 rounded-[14px] bg-surface-container border border-on-surface/5 grayscale brightness-90" 
-                          />
+                          <div className="relative w-10 h-10 rounded-[14px] bg-surface-container border border-on-surface/5 overflow-hidden">
+                            <Image
+                              src={u.avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${u.id}`}
+                              alt={u.name}
+                              fill
+                              sizes="40px"
+                              unoptimized
+                              className="grayscale brightness-90"
+                            />
+                          </div>
                           <span className="font-black text-sm tracking-tighter">{u.name}</span>
                         </div>
                       </td>

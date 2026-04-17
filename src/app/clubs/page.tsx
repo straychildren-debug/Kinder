@@ -465,8 +465,8 @@ function CreateClubModal({
           <div>
             <label className="block text-xs font-semibold text-on-surface-variant mb-2">Обложка (необязательно)</label>
             {imagePreview ? (
-              <div className="relative rounded-xl overflow-hidden">
-                <img src={imagePreview} alt="Preview" className="w-full h-40 object-cover" />
+              <div className="relative rounded-xl overflow-hidden h-40">
+                <Image src={imagePreview} alt="Preview" fill sizes="400px" unoptimized className="object-cover" />
                 <button
                   type="button"
                   onClick={() => { setImageFile(null); setImagePreview(null); }}

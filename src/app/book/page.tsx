@@ -1,4 +1,5 @@
 import React from "react";
+import Image from "next/image";
 import TopNavBar from "@/components/TopNavBar";
 import BottomNavBar from "@/components/BottomNavBar";
 
@@ -13,9 +14,11 @@ export default function BookDetails() {
           <div className="lg:col-span-5 relative group">
             <div className="absolute inset-4 bg-on-surface/5 rounded-[48px] rotate-3 blur-2xl group-hover:rotate-6 transition-transform duration-1000"></div>
             <div className="relative z-10 w-full aspect-[3/4] overflow-hidden rounded-[40px] shadow-2xl transition-all duration-700 group-hover:scale-[1.02] border border-on-surface/5 bg-surface-container">
-              <img
-                className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-1000 brightness-95"
+              <Image
+                className="object-cover grayscale group-hover:grayscale-0 transition-all duration-1000 brightness-95"
                 alt="Premium book cover"
+                fill
+                sizes="(min-width: 1024px) 400px, 100vw"
                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuAhKW8-nd0TIs--x9AUHCPGhRUlhBp78XZ3eYyGuWcVtO8hP0qu3zf0UzlkxSmGUnNs9BVkAsRz0gwcyHKbHChI66omnUmue7y2-hlQWHQNNwfbZVraHDTKCMxzSYV-_53QoWk6bN4L_rzJiayhwVTfKtcQiIsQ940aGkrrxXaInmBHyzzP8aoM5DQ_vQR0XjKwF6UIjj4FYby7_NhWUpUbdItSFqHpuckX-Kf2Jn6qRAseL6aiZA41MLSwQki_V_d2jFLr4c9HTbo7"
               />
             </div>
@@ -73,9 +76,11 @@ export default function BookDetails() {
              <article className="bg-white p-12 rounded-[48px] border border-on-surface/5 shadow-sm space-y-10 group hover:shadow-2xl transition-all duration-700">
                 <div className="flex justify-between items-start">
                   <div className="flex items-center gap-5">
-                    <img
-                      className="w-14 h-14 rounded-[20px] object-cover grayscale brightness-90 group-hover:grayscale-0 transition-all"
+                    <Image
+                      className="rounded-[20px] object-cover grayscale brightness-90 group-hover:grayscale-0 transition-all"
                       alt="Avatar"
+                      width={56}
+                      height={56}
                       src="https://lh3.googleusercontent.com/aida-public/AB6AXuAJo8C1Dt7XKlmLz2DVxRo0Kg4kSIJQuET-oyAQKu0h3sHgbARj06FByEza77cr2kzky4E9AaSQC8fCnyUcz-NZD2m3yUrasx2BoHIwo2omacJTVoLuXtv7hbHis66W8EKeVvl9SnHYSeYIaMXFz0H4yLI2F52IiotJhakk7jivM_AVFLlR_KMrCBTNOcNwpZJxA3L4Cu_aXtjMALCPffIEySYXd2WBECghOQDgNtbWuLLKlaYmsuGVjCTSxS7IjNMnklrNPchGMhXx"
                     />
                     <div className="space-y-1">

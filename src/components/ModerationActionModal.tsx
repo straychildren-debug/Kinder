@@ -2,6 +2,8 @@
 
 import React, { useState } from 'react';
 import { ContentItem } from '@/lib/types';
+import Image from 'next/image';
+import { defaultBlurDataURL } from '@/lib/image-blur';
 
 interface ModerationActionModalProps {
   content: ContentItem;
@@ -46,10 +48,14 @@ export default function ModerationActionModal({ content, onClose, onDecision, is
         {/* Left: Image */}
         <div className="md:w-2/5 aspect-[3/4] md:aspect-auto relative overflow-hidden bg-surface-container shrink-0">
           {content.imageUrl ? (
-            <img 
-              src={content.imageUrl} 
-              alt={content.title} 
-              className="w-full h-full object-cover"
+            <Image
+              src={content.imageUrl}
+              alt={content.title}
+              fill
+              sizes="(min-width: 768px) 40vw, 100vw"
+              placeholder="blur"
+              blurDataURL={defaultBlurDataURL}
+              className="object-cover"
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center text-on-surface/10 text-4xl font-black uppercase">

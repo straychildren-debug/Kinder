@@ -8,6 +8,8 @@ import { getPendingContent, updateContentStatus, getUserById } from '@/lib/db';
 import { ContentItem } from '@/lib/types';
 import { useRouter } from 'next/navigation';
 import ModerationActionModal from '@/components/ModerationActionModal';
+import Image from 'next/image';
+import { defaultBlurDataURL } from '@/lib/image-blur';
 
 export default function ModerationPage() {
   const { user } = useAuth();
@@ -179,9 +181,17 @@ export default function ModerationPage() {
                           onClick={() => setSelectedForModeration(item)}
                           className="w-full bg-white rounded-2xl p-4 border border-on-surface/5 shadow-sm hover:shadow-md hover:border-indigo-500/20 transition-all flex items-center gap-4 group text-left"
                         >
-                          <div className="w-12 h-16 rounded-lg overflow-hidden bg-surface-container shrink-0">
+                          <div className="relative w-12 h-16 rounded-lg overflow-hidden bg-surface-container shrink-0">
                             {item.imageUrl ? (
-                              <img src={item.imageUrl} className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" />
+                              <Image
+                                src={item.imageUrl}
+                                alt={item.title}
+                                fill
+                                sizes="48px"
+                                placeholder="blur"
+                                blurDataURL={defaultBlurDataURL}
+                                className="object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
+                              />
                             ) : (
                               <div className="w-full h-full flex items-center justify-center text-[10px] font-black opacity-20">NA</div>
                             )}

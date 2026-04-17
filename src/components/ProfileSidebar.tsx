@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from './AuthProvider';
 import Link from 'next/link';
+import Image from 'next/image';
 import { 
   getNotifications, 
   markNotificationRead, 
@@ -95,9 +96,9 @@ export default function ProfileSidebar({ isOpen, onClose }: ProfileSidebarProps)
           <div className="flex-1 overflow-y-auto px-6">
             {/* Аватар и имя */}
             <div className="flex flex-col items-center text-center py-6 space-y-4">
-              <div className="w-24 h-24 rounded-xl overflow-hidden bg-surface-container-high shadow-md">
+              <div className="relative w-24 h-24 rounded-xl overflow-hidden bg-surface-container-high shadow-md">
                 {user.avatarUrl ? (
-                  <img src={user.avatarUrl} alt={user.name} className="w-full h-full object-cover" />
+                  <Image src={user.avatarUrl} alt={user.name} fill sizes="96px" className="object-cover" />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center text-3xl font-bold text-primary">
                     {user.name.charAt(0)}
@@ -215,9 +216,9 @@ export default function ProfileSidebar({ isOpen, onClose }: ProfileSidebarProps)
                         className={`group relative p-3 rounded-xl transition-all cursor-pointer border ${isUnread ? 'bg-accent-lilac/[0.03] border-accent-lilac/10' : 'bg-surface border-transparent hover:bg-surface-container-low'}`}
                       >
                         <div className="flex gap-3">
-                          <div className="w-8 h-8 rounded-full bg-surface-container-high overflow-hidden shrink-0 shadow-sm border border-white">
+                          <div className="relative w-8 h-8 rounded-full bg-surface-container-high overflow-hidden shrink-0 shadow-sm border border-white">
                             {n.actorAvatar ? (
-                              <img src={n.actorAvatar} alt="" className="w-full h-full object-cover" />
+                              <Image src={n.actorAvatar} alt={n.actorName || ''} fill sizes="32px" className="object-cover" />
                             ) : (
                               <div className="w-full h-full flex items-center justify-center text-[10px] font-black text-on-surface-variant">
                                 {n.actorName?.charAt(0) || 'U'}
