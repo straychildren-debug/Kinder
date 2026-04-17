@@ -53,10 +53,8 @@ export default function Movies() {
       <main className="pt-24 px-6 pb-32 max-w-lg mx-auto md:max-w-4xl">
         {/* Page Header */}
         <section className="py-8">
-           <h1 className="text-6xl font-black tracking-tighter leading-none text-on-surface mb-2">Все фильмы</h1>
-           <span className="text-[10px] font-black text-on-surface/80 uppercase tracking-[0.3em]">
-             кинотека сообщества
-           </span>
+           <span className="text-xs font-medium text-on-surface-muted mb-1.5 block">Кинотека сообщества</span>
+           <h1 className="text-2xl font-bold tracking-tight leading-tight text-on-surface">Все фильмы</h1>
         </section>
 
         {/* Tab Switcher */}

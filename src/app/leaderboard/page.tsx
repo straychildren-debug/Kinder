@@ -31,8 +31,8 @@ export default function Leaderboard() {
         <section className="mb-12">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
             <div>
-              <span className="text-[10px] font-black uppercase tracking-[0.3em] text-on-surface-variant block mb-2">Сообщество знатоков</span>
-              <h2 className="text-6xl font-black tracking-tighter text-on-surface leading-[0.9]">Рейтинг<br/>кураторов</h2>
+              <span className="text-xs font-medium text-on-surface-muted mb-1.5 block">Сообщество знатоков</span>
+              <h2 className="text-2xl font-bold tracking-tight text-on-surface leading-tight">Рейтинг кураторов</h2>
             </div>
             <div className="flex gap-2 mb-4">
               <button className="px-4 py-2 rounded-xl text-[8px] font-black uppercase tracking-widest transition-all whitespace-nowrap bg-surface-container-low text-on-surface-muted hover:bg-surface-container">

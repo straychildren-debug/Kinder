@@ -75,10 +75,10 @@ export default function ModerationPage() {
     <>
       <TopNavBar />
       <main className="pt-24 pb-32 px-6 max-w-4xl mx-auto">
-        <section className="mb-12">
-          <span className="text-[10px] font-black uppercase tracking-[0.3em] text-on-surface-variant mb-2 block opacity-40 ">Панель управления</span>
-          <h1 className="text-5xl font-black tracking-tighter text-on-surface leading-[0.9]">Секция<br/>модерации</h1>
-          <p className="text-on-surface-variant text-sm mt-6 font-medium opacity-70  leading-relaxed max-w-lg">
+        <section className="mb-10">
+          <span className="text-xs font-medium text-on-surface-muted mb-1.5 block">Панель управления</span>
+          <h1 className="text-2xl font-bold tracking-tight text-on-surface leading-tight">Секция модерации</h1>
+          <p className="text-on-surface-muted text-sm mt-4 font-medium leading-relaxed max-w-lg">
             Ваша роль — защитник качества сообщества. Проверьте последние публикации и вынесите вердикт.
           </p>
         </section>

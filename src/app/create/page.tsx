@@ -275,10 +275,10 @@ function CreatePageContent() {
           <span className="text-[10px] font-black uppercase tracking-widest">Назад</span>
         </button>
 
-        <section className="mb-12">
-          <span className="text-[10px] font-black uppercase tracking-[0.3em] text-on-surface-muted mb-2 block">Публикация</span>
-          <h1 className="text-5xl font-black tracking-tighter text-on-surface leading-[0.9]">Добавить<br/>контент</h1>
-          <p className="text-on-surface-muted text-sm mt-6 font-medium leading-relaxed max-w-xl">
+        <section className="mb-10">
+          <span className="text-xs font-medium text-on-surface-muted mb-1.5 block">Публикация</span>
+          <h1 className="text-2xl font-bold tracking-tight text-on-surface leading-tight">Добавить контент</h1>
+          <p className="text-on-surface-muted text-sm mt-4 font-medium leading-relaxed max-w-xl">
             Поделитесь своими открытиями. После отправки публикация будет проверена сообществом модераторов.
           </p>
         </section>

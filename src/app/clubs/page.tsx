@@ -179,7 +179,7 @@ export default function Clubs() {
         <header className="mb-8 flex flex-col md:flex-row md:justify-between md:items-end gap-5">
           <div>
             <span className="text-xs font-medium text-on-surface-muted mb-1.5 block">Сообщество</span>
-            <h1 className="text-4xl font-bold tracking-tight text-on-surface leading-tight">Клубы по интересам</h1>
+            <h1 className="text-2xl font-bold tracking-tight text-on-surface leading-tight">Клубы по интересам</h1>
           </div>
           <div className="flex flex-col sm:flex-row items-center gap-3">
             <div className="relative w-full sm:w-72">

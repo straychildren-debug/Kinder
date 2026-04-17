@@ -49,7 +49,7 @@ export default function Profile() {
              <span className="material-symbols-outlined text-4xl text-on-surface-variant/30 relative">person</span>
           </div>
           <div className="text-center space-y-3">
-            <h2 className="text-3xl font-black tracking-tighter text-on-surface">Ваш профиль</h2>
+            <h2 className="text-2xl font-bold tracking-tight text-on-surface">Ваш профиль</h2>
             <p className="text-on-surface-muted text-[13px] font-medium max-w-[240px] mx-auto leading-relaxed">
               Авторизуйтесь, чтобы видеть свои достижения и историю публикаций
             </p>

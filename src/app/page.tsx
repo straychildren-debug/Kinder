@@ -6,6 +6,7 @@ import BottomNavBar from "@/components/BottomNavBar";
 import { getApprovedContent } from "@/lib/db";
 import { useAuth } from "@/components/AuthProvider";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { ContentItem } from "@/lib/types";
 import { defaultBlurDataURL } from "@/lib/image-blur";
@@ -17,15 +18,24 @@ import { omnisearch, type OmnisearchResult } from "@/lib/search";
 
 const EMPTY_RESULTS: OmnisearchResult = { content: [], clubs: [], users: [] };
 
+type HomeTab = 'all' | 'movie' | 'book';
+
 export default function Home() {
   const { user } = useAuth();
+  const router = useRouter();
   const [approvedContent, setApprovedContent] = useState<ContentItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedContent, setSelectedContent] = useState<ContentItem | null>(null);
+  const [activeTab, setActiveTab] = useState<HomeTab>('all');
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<OmnisearchResult>(EMPTY_RESULTS);
   const [searching, setSearching] = useState(false);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const visibleContent = React.useMemo(() => {
+    if (activeTab === 'all') return approvedContent;
+    return approvedContent.filter((item) => item.type === activeTab);
+  }, [approvedContent, activeTab]);
 
   const handleQuery = (val: string) => {
     setQuery(val);
@@ -158,30 +168,43 @@ export default function Home() {
 
         {/* Category Tabs */}
         <section className="flex gap-2 overflow-x-auto scrollbar-hide py-3 mb-4">
-          {['Все', 'Кино', 'Книги', 'Клубы'].map((tab, i) => (
+          {([
+            { id: 'all', label: 'Все' },
+            { id: 'movie', label: 'Кино' },
+            { id: 'book', label: 'Книги' },
+          ] as { id: HomeTab; label: string }[]).map((tab) => (
             <button
-              key={tab}
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
               className={`px-4 py-2 rounded-lg text-[12px] font-semibold transition-all whitespace-nowrap active:scale-95 ${
-                i === 0 ? 'bg-on-surface text-surface' : 'bg-surface-container-low text-on-surface-muted hover:bg-surface-container'
+                activeTab === tab.id ? 'bg-on-surface text-surface' : 'bg-surface-container-low text-on-surface-muted hover:bg-surface-container'
               }`}
             >
-              {tab}
+              {tab.label}
             </button>
           ))}
+          <button
+            onClick={() => router.push('/clubs')}
+            className="px-4 py-2 rounded-lg text-[12px] font-semibold transition-all whitespace-nowrap active:scale-95 bg-surface-container-low text-on-surface-muted hover:bg-surface-container"
+          >
+            Клубы
+          </button>
         </section>
 
         {/* Community Feed Content */}
         <div className="flex flex-col gap-10">
           {loading ? (
             <FeedSkeletonList count={3} />
-          ) : approvedContent.length === 0 ? (
+          ) : visibleContent.length === 0 ? (
             <div className="text-center py-16 px-6 bg-surface rounded-2xl border border-on-surface/5">
               <div className="text-5xl mb-4 grayscale opacity-40">🎬</div>
-              <p className="text-on-surface-variant font-medium text-sm">Лента сообщества пока пуста</p>
+              <p className="text-on-surface-variant font-medium text-sm">
+                {activeTab === 'all' ? 'Лента сообщества пока пуста' : activeTab === 'movie' ? 'Пока нет фильмов' : 'Пока нет книг'}
+              </p>
             </div>
           ) : (
             <div className="grid grid-cols-3 md:grid-cols-6 gap-x-4 gap-y-8">
-              {approvedContent.map((item, index) => (
+              {visibleContent.map((item, index) => (
                 <MotionListItem key={item.id} index={index}>
                 <article
                   onClick={() => setSelectedContent(item)}
