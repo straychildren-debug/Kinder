@@ -89,17 +89,17 @@ export default function Library() {
             {displayBooks.map((book, index) => (
               <MotionListItem key={book.id} index={index}>
               <div
-                className="group flex bg-surface p-5 rounded-2xl border border-on-surface/5 shadow-[0_4px_20px_rgba(0,0,0,0.02)] hover:shadow-[0_20px_40px_rgba(0,0,0,0.04)] transition-all duration-500 hover:-translate-y-1 cursor-pointer transform-gpu"
+                className="group flex bg-surface p-5 rounded-2xl border border-on-surface/5 shadow-[0_4px_20px_rgba(0,0,0,0.02)] hover:shadow-[0_20px_40px_rgba(0,0,0,0.04)] transition-all duration-500 hover:-translate-y-1 cursor-pointer transform-gpu min-h-[130px]"
                 onClick={() => setSelectedContent(book)}
               >
                 {/* Book Thumbnail */}
-                <div className="relative w-[52px] aspect-[3/4] flex-shrink-0 rounded-lg overflow-hidden bg-surface-container shadow-sm border border-on-surface/5">
+                <div className="relative w-[60px] h-[90px] flex-shrink-0 rounded-lg overflow-hidden bg-surface-container shadow-sm border border-on-surface/5">
                   {book.imageUrl ? (
                     <Image
                       src={book.imageUrl}
                       alt={book.title}
                       fill
-                      sizes="52px"
+                      sizes="60px"
                       placeholder="blur"
                       blurDataURL={defaultBlurDataURL}
                       className="object-cover group-hover:scale-110 transition-transform duration-1000 ease-out"
