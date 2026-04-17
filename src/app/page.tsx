@@ -158,10 +158,10 @@ export default function Home() {
 
         {/* Category Tabs */}
         <section className="flex gap-3 overflow-x-auto scrollbar-hide py-4 mb-4">
-          {['Новое сегодня', 'Все книги', 'Все фильмы', 'Клубы'].map((tab, i) => (
+          {['Все', 'Кино', 'Книги', 'Клубы'].map((tab, i) => (
             <button 
               key={tab} 
-              className={`whitespace-nowrap px-5 py-2.5 rounded-xl text-[13px] font-black tracking-tight transition-all active:scale-95 hover:translate-y-[-1px] ${
+              className={`flex-1 whitespace-nowrap px-3 py-2 rounded-xl text-[11px] font-black tracking-tight transition-all active:scale-95 ${
                 i === 0 ? 'bg-on-surface text-surface shadow-lg shadow-on-surface/10' : 'bg-surface-container text-on-surface-muted hover:text-on-surface hover:bg-surface-container-high'
               }`}
             >
@@ -180,7 +180,7 @@ export default function Home() {
                <p className="text-on-surface-variant font-black uppercase text-[10px] tracking-widest">Лента сообщества пока пуста</p>
             </div>
           ) : (
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-10">
+            <div className="grid grid-cols-3 md:grid-cols-6 gap-x-4 gap-y-10">
               {approvedContent.map((item, index) => (
                 <MotionListItem key={item.id} index={index}>
                 <article
