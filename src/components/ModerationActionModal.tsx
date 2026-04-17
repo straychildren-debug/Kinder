@@ -73,34 +73,34 @@ export default function ModerationActionModal({ content, onClose, onDecision, is
         </div>
 
         {/* Content Section */}
-        <div className="flex-1 px-8 pb-8 flex flex-col min-w-0 overflow-y-auto -mt-12 relative z-10">
-          <div className="flex-1 space-y-7">
+        <div className="flex-1 px-7 pb-8 flex flex-col min-w-0 overflow-y-auto -mt-9 relative z-10">
+          <div className="flex-1 space-y-6">
             {/* Header */}
-            <div className="space-y-1 text-center sm:text-left">
-              <h2 className="text-3xl font-black tracking-tighter text-on-surface leading-[0.9] uppercase">
+            <div className="space-y-1 text-center">
+              <h2 className="text-3xl font-extrabold tracking-tighter text-on-surface leading-[0.95] uppercase">
                 {content.title}
               </h2>
-              <p className="text-sm font-medium text-on-surface-variant/60 tracking-wide uppercase mt-2">
+              <p className="text-[11px] font-semibold text-on-surface-variant/40 tracking-[0.1em] uppercase mt-2">
                 {content.author || content.director || 'Неизвестный автор'}
               </p>
             </div>
 
-            {/* Metadata Grid */}
-            <div className="flex flex-wrap items-center justify-center sm:justify-start gap-3">
+            {/* Metadata Grid (Lighter version) */}
+            <div className="flex flex-wrap items-center justify-center gap-6 py-2">
               {(content.year || content.pages || content.duration) && (
                 <>
                   {content.year && (
-                    <div className="flex items-center gap-2.5 px-4 py-2 bg-surface-container/40 rounded-xl border border-on-surface/5">
-                      <span className="material-symbols-outlined text-[18px] text-on-surface-variant/40">calendar_today</span>
-                      <span className="text-[11px] font-black tracking-widest text-on-surface-variant">{content.year}</span>
+                    <div className="flex items-center gap-2 text-on-surface-variant/70">
+                      <span className="material-symbols-outlined text-[16px] opacity-40">calendar_today</span>
+                      <span className="text-[12px] font-bold tracking-wider">{content.year}</span>
                     </div>
                   )}
                   {(content.pages || content.duration) && (
-                    <div className="flex items-center gap-2.5 px-4 py-2 bg-surface-container/40 rounded-xl border border-on-surface/5">
-                      <span className="material-symbols-outlined text-[18px] text-on-surface-variant/40">
+                    <div className="flex items-center gap-2 text-on-surface-variant/70">
+                      <span className="material-symbols-outlined text-[18px] opacity-40">
                         {content.type === 'movie' ? 'schedule' : 'auto_stories'}
                       </span>
-                      <span className="text-[11px] font-black tracking-widest text-on-surface-variant">
+                      <span className="text-[12px] font-bold tracking-wider">
                         {content.type === 'movie' ? content.duration : `${content.pages} стр.`}
                       </span>
                     </div>
@@ -110,59 +110,58 @@ export default function ModerationActionModal({ content, onClose, onDecision, is
             </div>
 
             {/* Description Block */}
-            <div className="p-6 bg-surface-container/30 rounded-[28px] border border-on-surface/5">
-              <p className="text-[13px] font-medium text-on-surface-variant leading-relaxed opacity-80">
+            <div className="p-6 bg-surface-container/20 rounded-[32px] border border-on-surface/5">
+              <p className="text-[13px] font-medium text-on-surface-variant/80 leading-relaxed text-center">
                 {content.description}
               </p>
             </div>
 
             {showRejectionInput && (
-              <div className="animate-in slide-in-from-bottom-2 fade-in duration-300 pt-2">
-                <div className="flex items-center gap-2 mb-3 ml-1">
-                  <div className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse"></div>
-                  <p className="text-[10px] font-black uppercase tracking-widest text-red-600">Причина нарушения</p>
+              <div className="animate-in slide-in-from-bottom-2 fade-in duration-300 pt-1">
+                <div className="flex items-center justify-center gap-2 mb-3">
+                  <div className="w-1 h-1 rounded-full bg-red-400"></div>
+                  <p className="text-[9px] font-black uppercase tracking-widest text-red-600 opacity-60">Замечания</p>
                 </div>
                 <textarea 
                   autoFocus
                   value={rejectionReason}
                   onChange={(e) => setRejectionReason(e.target.value)}
-                  placeholder="Опишите проблему автору..."
-                  className="w-full bg-surface-container-low border border-on-surface/10 rounded-2xl px-5 py-4 text-on-surface text-sm focus:outline-none focus:ring-4 focus:ring-red-500/10 focus:border-red-500/30 transition-all placeholder:text-on-surface/20 min-h-[100px] resize-none shadow-inner"
+                  placeholder="Что нужно исправить?"
+                  className="w-full bg-surface-container-low border border-on-surface/5 rounded-2xl px-5 py-3.5 text-on-surface text-sm focus:outline-none focus:ring-4 focus:ring-red-500/5 focus:border-red-500/20 transition-all placeholder:text-on-surface/10 min-h-[90px] resize-none shadow-sm"
                 />
               </div>
             )}
           </div>
 
-          {/* Action Buttons */}
-          <div className="mt-10 flex items-center gap-3 shrink-0">
+          {/* Action Buttons (Refined & Smaller) */}
+          <div className="mt-8 flex items-center gap-3 shrink-0 px-4 sm:px-0">
             <button
               onClick={handleApprove}
               disabled={isProcessing || showRejectionInput}
-              className="flex-[3] h-16 rounded-[24px] bg-[#1a2b3c] hover:bg-[#0c1621] disabled:opacity-20 text-white font-black text-[11px] uppercase tracking-[0.2em] flex items-center justify-center gap-3 shadow-2xl shadow-indigo-950/20 transition-all active:scale-95 group relative overflow-hidden"
+              className="flex-[3] h-13 rounded-2xl bg-[#0f172a] hover:bg-black disabled:opacity-20 text-white font-bold text-[10px] uppercase tracking-[0.2em] flex items-center justify-center gap-3 shadow-xl transition-all active:scale-95 group relative overflow-hidden"
             >
               <div className="absolute inset-0 bg-gradient-to-tr from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-              <span className="material-symbols-outlined text-[20px] text-green-400">done_all</span>
+              <span className="material-symbols-outlined text-[18px] text-emerald-400 opacity-80 group-hover:opacity-100">task_alt</span>
               Одобрить
             </button>
 
             <button
               onClick={handleReject}
               disabled={isProcessing || (showRejectionInput && !rejectionReason.trim())}
-              className={`h-16 rounded-[24px] flex items-center justify-center transition-all active:scale-95 shadow-2xl ${
+              className={`h-13 rounded-2xl flex items-center justify-center transition-all active:scale-95 shadow-lg ${
                 showRejectionInput 
-                  ? 'bg-red-600 text-white flex-[2] animate-in slide-in-from-right-4 shadow-red-500/20' 
-                  : 'w-16 bg-red-500/10 text-red-600 hover:bg-red-600 hover:text-white shadow-black/5'
+                  ? 'bg-red-500 text-white flex-[2] animate-in slide-in-from-right-4' 
+                  : 'w-13 bg-red-50 text-red-600 hover:bg-red-500 hover:text-white'
               }`}
             >
               {showRejectionInput ? (
-                <span className="font-black text-[11px] uppercase tracking-[0.2em]">Подтвердить</span>
+                <span className="font-bold text-[10px] uppercase tracking-[0.2em]">Готово</span>
               ) : (
-                <span className="material-symbols-outlined text-[24px]">close</span>
+                <span className="material-symbols-outlined text-[20px]">close</span>
               )}
             </button>
           </div>
         </div>
       </div>
-    </div>
   );
 }
