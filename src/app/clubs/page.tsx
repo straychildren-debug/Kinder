@@ -299,15 +299,15 @@ export default function Clubs() {
                       {/* Content Section */}
                       <div className="flex-1 flex flex-col justify-between py-1 min-w-0">
                         <div>
-                          <div className="flex items-center gap-2 mb-1.5">
-                            <span className="px-1.5 py-0.5 bg-on-surface/[0.03] text-[8px] font-black text-on-surface-muted rounded uppercase tracking-widest">
+                          <div className="flex flex-col gap-1 mb-2">
+                            <span className="self-start px-1.5 py-0.5 bg-on-surface/[0.03] text-[8px] font-black text-on-surface-muted rounded uppercase tracking-widest">
                               {CATEGORY_LABELS[club.category] || club.category}
                             </span>
                             <h4 className="font-black text-on-surface text-sm tracking-tight truncate leading-none">
                               {club.name}
                             </h4>
                           </div>
-                          <p className="text-[10px] text-on-surface-muted font-medium line-clamp-2 leading-relaxed">
+                          <p className="text-[10px] text-on-surface-muted font-medium line-clamp-1 leading-relaxed">
                             {club.description}
                           </p>
                         </div>
