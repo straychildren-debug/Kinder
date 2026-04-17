@@ -153,19 +153,12 @@ export default function Movies() {
                       )}
                     </div>
                     {movie.description && (
-                      <div className="bg-on-surface/[0.03] -ml-2 px-2 py-1 rounded-lg mt-0.5">
+                      <div className="bg-on-surface/[0.03] -ml-2 px-2 py-1 rounded-lg mt-2">
                         <p className="text-[10px] text-on-surface-muted/80 font-medium line-clamp-3 leading-[1.3] text-pretty">
                           {movie.description}
                         </p>
                       </div>
                     )}
-                  </div>
-
-                  {/* Footer: Arrow Only */}
-                  <div className="flex items-center justify-end mt-1 text-on-surface-muted/30 group-hover:text-on-surface transition-colors duration-300">
-                    <span className="material-symbols-outlined text-xl group-hover:translate-x-1 transition-transform">
-                      chevron_right
-                    </span>
                   </div>
                 </div>
               </div>
