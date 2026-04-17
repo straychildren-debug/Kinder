@@ -298,42 +298,37 @@ export default function Clubs() {
                       </div>
 
                       {/* Content Section */}
-                      <div className="flex-1 flex flex-col justify-between py-0.5 min-w-0 z-10">
-                        <div className="space-y-1">
-                          <div className="min-w-0">
-                            <span className="inline-block text-[9px] font-bold tracking-[0.2em] uppercase text-on-surface-variant/50 mb-1">
-                              {CATEGORY_LABELS[club.category] || club.category}
-                            </span>
-                            <h4 className="font-bold text-on-surface text-[16px] tracking-tight line-clamp-2 leading-tight mb-1.5">
-                              {club.name}
-                            </h4>
-                          </div>
-                          <p className="text-[11px] text-on-surface-muted font-medium line-clamp-1 leading-relaxed opacity-60">
-                            {club.description}
-                          </p>
+                      <div className="flex-1 flex flex-col justify-between h-[90px] min-w-0 z-10">
+                        <div className="min-w-0">
+                          <span className="inline-block text-[9px] font-bold tracking-[0.2em] uppercase text-on-surface-variant/50 mb-0.5">
+                            {CATEGORY_LABELS[club.category] || club.category}
+                          </span>
+                          <h4 className="font-bold text-on-surface text-[15px] tracking-tight line-clamp-2 leading-tight">
+                            {club.name}
+                          </h4>
                         </div>
 
                         <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-3">
+                          <div className="flex items-center gap-2">
                              <div className="flex items-center gap-1.5 bg-on-surface/[0.03] px-2 py-0.5 rounded-md">
                                <span className="material-symbols-outlined text-sm text-on-surface-muted/60">groups</span>
-                               <span className="text-[10px] font-bold text-on-surface-muted/80">
+                               <span className="text-[10px] font-bold text-on-surface-muted/80 leading-none">
                                 {club.memberCount}
                               </span>
                              </div>
                             {club.userRole === 'owner' && (
-                              <span className="text-[8px] font-bold uppercase tracking-widest bg-on-surface text-surface px-2 py-0.5 rounded-md">
+                              <span className="text-[8px] font-bold uppercase tracking-widest bg-on-surface text-surface px-1.5 py-0.5 rounded-md leading-none">
                                 Владелец
                               </span>
                             )}
                             {typeof club.unreadCount === 'number' && club.unreadCount > 0 && (
-                               <span className="text-[8px] font-bold uppercase tracking-widest bg-red-500 text-white px-2 py-0.5 rounded-md">
+                               <span className="text-[8px] font-bold uppercase tracking-widest bg-red-500 text-white px-1.5 py-0.5 rounded-md leading-none">
                                 +{club.unreadCount}
                                </span>
                             )}
                           </div>
                           <div className="text-on-surface-muted/30 group-hover:text-on-surface transition-colors duration-300">
-                            <span className="material-symbols-outlined text-2xl group-hover:translate-x-1 transition-transform">
+                            <span className="material-symbols-outlined text-xl group-hover:translate-x-1 transition-transform">
                               chevron_right
                             </span>
                           </div>

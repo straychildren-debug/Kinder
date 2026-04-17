@@ -118,30 +118,33 @@ export default function Library() {
                 </div>
                 
                 {/* Book Metadata */}
-                <div className="ml-6 flex-1 flex flex-col justify-center min-w-0">
-                  <h4 className="font-bold text-on-surface text-[16px] leading-tight mb-1.5 line-clamp-2">
-                    {book.title}
-                  </h4>
-                  <div className="flex items-center gap-2 flex-wrap leading-none mb-1">
-                    <p className="text-[10px] font-bold text-on-surface-muted/60 tracking-widest uppercase">
-                      {book.author || 'Неизвестный автор'}
-                    </p>
-                    {book.year && (
-                      <span className="text-[10px] font-bold text-on-surface-muted/30 tracking-widest uppercase">
-                        • {book.year}
-                      </span>
-                    )}
+                <div className="ml-6 flex-1 flex flex-col justify-between h-[90px] min-w-0">
+                  <div className="min-w-0">
+                    <h4 className="font-bold text-on-surface text-[15px] leading-tight mb-1 line-clamp-2">
+                      {book.title}
+                    </h4>
+                    <div className="flex items-center gap-2 flex-wrap leading-none">
+                      <p className="text-[9px] font-bold text-on-surface-muted/60 tracking-widest uppercase">
+                        {book.author || 'Неизвестный автор'}
+                      </p>
+                      {book.year && (
+                        <span className="text-[9px] font-bold text-on-surface-muted/30 tracking-widest uppercase">
+                          • {book.year}
+                        </span>
+                      )}
+                    </div>
                   </div>
+                  
                   {book.description && (
-                    <p className="text-[11px] text-on-surface-muted font-medium line-clamp-1 leading-relaxed opacity-60">
+                    <p className="text-[10px] text-on-surface-muted font-medium line-clamp-1 opacity-40 leading-none">
                       {book.description}
                     </p>
                   )}
                 </div>
                 
                 {/* Action Arrow */}
-                <div className="self-center ml-4 text-on-surface-muted/30 group-hover:text-on-surface transition-colors duration-300">
-                  <span className="material-symbols-outlined text-2xl group-hover:translate-x-1 transition-transform">
+                <div className="self-end mb-1 ml-4 text-on-surface-muted/30 group-hover:text-on-surface transition-colors duration-300 h-5 flex items-center">
+                  <span className="material-symbols-outlined text-xl group-hover:translate-x-1 transition-transform">
                     chevron_right
                   </span>
                 </div>

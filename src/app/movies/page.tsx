@@ -135,38 +135,40 @@ export default function Movies() {
                 </div>
                 
                 {/* Movie Metadata */}
-                <div className="ml-6 flex-1 flex flex-col justify-center min-w-0">
-                  <h4 className="font-bold text-on-surface text-[16px] leading-tight mb-1.5 line-clamp-2">
-                    {movie.title}
-                  </h4>
-                  <div className="flex items-center gap-2 flex-wrap leading-none mb-1">
-                    {movie.year && (
-                      <span className="text-[10px] font-bold text-on-surface-muted/30 tracking-widest uppercase">
-                        {movie.year}
-                      </span>
-                    )}
-                    <span className="text-[10px] font-bold text-on-surface-muted/30 tracking-widest uppercase">•</span>
-                    <p className="text-[10px] font-bold text-on-surface-muted/60 tracking-widest uppercase truncate max-w-[120px]">
-                      {movie.director || 'Неизвестный режиссер'}
-                    </p>
+                <div className="ml-6 flex-1 flex flex-col justify-between h-[90px] min-w-0">
+                  <div className="min-w-0">
+                    <h4 className="font-bold text-on-surface text-[15px] leading-tight mb-1 line-clamp-2">
+                      {movie.title}
+                    </h4>
+                    <div className="flex items-center gap-2 flex-wrap leading-none">
+                      {movie.year && (
+                        <span className="text-[9px] font-bold text-on-surface-muted/30 tracking-widest uppercase">
+                          {movie.year}
+                        </span>
+                      )}
+                      <span className="text-[9px] font-bold text-on-surface-muted/30 tracking-widest uppercase">•</span>
+                      <p className="text-[9px] font-bold text-on-surface-muted/60 tracking-widest uppercase truncate max-w-[120px]">
+                        {movie.director || 'Неизвестный режиссер'}
+                      </p>
+                    </div>
                   </div>
                   
                   {movie.actors && movie.actors.length > 0 && (
-                    <p className="text-[10px] font-medium text-on-surface-variant/40 line-clamp-1">
+                    <p className="text-[9px] font-medium text-on-surface-variant/30 line-clamp-1 h-3 flex items-center">
                       {movie.actors.join(', ')}
                     </p>
                   )}
                   
                   {movie.description && (
-                    <p className="mt-1 text-[11px] text-on-surface-muted font-medium line-clamp-1 leading-relaxed opacity-60">
+                    <p className="text-[10px] text-on-surface-muted font-medium line-clamp-1 opacity-40 leading-none">
                       {movie.description}
                     </p>
                   )}
                 </div>
 
                 {/* Action Arrow */}
-                <div className="self-center ml-4 text-on-surface-muted/30 group-hover:text-on-surface transition-colors duration-300">
-                  <span className="material-symbols-outlined text-2xl group-hover:translate-x-1 transition-transform">
+                <div className="self-end mb-1 ml-4 text-on-surface-muted/30 group-hover:text-on-surface transition-colors duration-300 h-5 flex items-center">
+                  <span className="material-symbols-outlined text-xl group-hover:translate-x-1 transition-transform">
                     chevron_right
                   </span>
                 </div>
