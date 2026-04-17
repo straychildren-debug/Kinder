@@ -23,14 +23,16 @@ const CATEGORY_ICONS: Record<string, string> = {
   'книги': 'menu_book',
 };
 
-type FilterTab = 'all' | ClubCategory | 'my';
+type FilterTab = 'all' | 'my';
+type SubFilter = 'all' | 'movie' | 'book' | 'owner' | 'member';
 
 export default function Clubs() {
   const { user } = useAuth();
   const router = useRouter();
   const [clubs, setClubs] = useState<Club[]>([]);
   const [loading, setLoading] = useState(true);
-  const [activeFilter, setActiveFilter] = useState<FilterTab>('all');
+  const [activeMainTab, setActiveMainTab] = useState<FilterTab>('all');
+  const [subFilter, setSubFilter] = useState<SubFilter>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
@@ -44,8 +46,7 @@ export default function Clubs() {
     }
   }, [user]);
 
-  // Realtime: увеличиваем unreadCount при новых сообщениях в клубах из списка.
-  // Подписываемся на все клубы текущего списка; сообщения от самого пользователя игнорируем.
+  // Realtime
   useEffect(() => {
     if (!user || clubs.length === 0) return;
 
@@ -85,9 +86,7 @@ export default function Clubs() {
       router.push('/login');
       return;
     }
-    // Администраторы и суперадминистраторы могут создавать клубы без ограничений
     const isPowerUser = user.role === 'admin' || user.role === 'superadmin';
-    
     if (!isPowerUser && approvedCount !== null && approvedCount < 20) {
       setShowTooltip(true);
       if (tooltipTimeout.current) clearTimeout(tooltipTimeout.current);
@@ -106,49 +105,71 @@ export default function Clubs() {
       await joinClub(clubId, user.id);
       router.push(`/clubs/${clubId}`);
     } catch {
-      // Already a member — just navigate
       router.push(`/clubs/${clubId}`);
     }
   };
 
-  // Logic for filtering and sorting
+  // Logic for filtering
   const filteredClubs = React.useMemo(() => {
     let result = clubs.filter((c) => {
       const matchesSearch = c.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
                            c.description.toLowerCase().includes(searchQuery.toLowerCase());
       
-      if (activeFilter === 'my') {
-        return !!c.userRole && matchesSearch;
+      if (!matchesSearch) return false;
+
+      // Stage 1: Main Tab Filter
+      if (activeMainTab === 'my') {
+        if (!c.userRole) return false;
+        
+        // Stage 2: Role Sub-filter
+        if (subFilter === 'owner') return c.userRole === 'owner';
+        if (subFilter === 'member') return c.userRole === 'member';
+      } else {
+        // All Communities Tab
+        // Stage 2: Category Sub-filter
+        if (subFilter === 'movie') return c.category === 'кино';
+        if (subFilter === 'book') return c.category === 'книги';
       }
-      
-      const matchesCategory = activeFilter === 'all' || c.category === activeFilter;
-      return matchesCategory && matchesSearch;
+
+      return true;
     });
 
-    // Special sorting for "My Clubs"
-    if (activeFilter === 'my') {
+    // Special sorting
+    if (activeMainTab === 'my') {
       return result.sort((a, b) => {
-        // Owner first
         if (a.userRole === 'owner' && b.userRole !== 'owner') return -1;
         if (a.userRole !== 'owner' && b.userRole === 'owner') return 1;
-        
-        // Then by unread count
-        if ((b.unreadCount ?? 0) !== (a.unreadCount ?? 0)) {
-          return (b.unreadCount ?? 0) - (a.unreadCount ?? 0);
-        }
-        
-        // Then newest first
+        if ((b.unreadCount ?? 0) !== (a.unreadCount ?? 0)) return (b.unreadCount ?? 0) - (a.unreadCount ?? 0);
         return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
       });
     }
 
-    return result;
-  }, [clubs, activeFilter, searchQuery]);
+    return result.sort((a, b) => (b.memberCount ?? 0) - (a.memberCount ?? 0));
+  }, [clubs, activeMainTab, subFilter, searchQuery]);
 
-  // Top 2 clubs by member count for hero section
-  const heroClubs = [...clubs].sort((a, b) => (b.memberCount ?? 0) - (a.memberCount ?? 0));
-  const heroMain = heroClubs[0];
-  const heroSide = heroClubs[1];
+  // Reset subfilter when switching main tabs
+  useEffect(() => {
+    setSubFilter('all');
+  }, [activeMainTab]);
+
+  const heroClubs = [...clubs].sort((a, b) => (b.memberCount ?? 0) - (a.memberCount ?? 0)).slice(0, 2);
+
+  const TABS = [
+    { id: 'all', label: 'Все сообщества' },
+    { id: 'my', label: 'Мои клубы', disabled: !user }
+  ];
+
+  const SUB_FILTERS = activeMainTab === 'all' 
+    ? [
+        { id: 'all', label: 'Все' },
+        { id: 'movie', label: 'Кино' },
+        { id: 'book', label: 'Книги' }
+      ]
+    : [
+        { id: 'all', label: 'Все мои' },
+        { id: 'owner', label: 'Я владелец' },
+        { id: 'member', label: 'Я участник' }
+      ];
 
   return (
     <>
@@ -160,7 +181,6 @@ export default function Clubs() {
             <span className="text-[10px] font-black uppercase tracking-[0.3em] text-on-surface-muted mb-2 block">Сообщество</span>
             <h1 className="text-6xl font-black tracking-tighter text-on-surface leading-[0.9]">Клубы по<br/>интересам</h1>
           </div>
-          {/* Action Row: Search and Create */}
           <div className="flex flex-col sm:flex-row items-center gap-4">
             <div className="relative w-full sm:w-80">
               <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant/50 text-xl">search</span>
@@ -183,7 +203,7 @@ export default function Clubs() {
               </button>
               {showTooltip && (
                 <div className="absolute right-0 top-full mt-2 z-50 bg-on-surface text-surface p-4 rounded-xl shadow-2xl whitespace-nowrap">
-                  <div className="flex items-center gap-2">
+                   <div className="flex items-center gap-2">
                     <span className="material-symbols-outlined text-amber-400 text-base">info</span>
                     <span className="text-[10px] font-black uppercase tracking-widest">Нужно ≥ 20 публикаций ({approvedCount})</span>
                   </div>
@@ -193,162 +213,192 @@ export default function Clubs() {
           </div>
         </header>
 
-        {/* Bento Grid Layout for Featured Clubs */}
-        {!loading && clubs.length > 0 && (
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-6 mb-12">
-            {/* Large Featured Card */}
-            {heroMain && (
-              <div
-                onClick={() => handleJoin(heroMain.id)}
-                className="md:col-span-8 bg-surface rounded-3xl overflow-hidden relative group shadow-xl border border-on-surface/5 cursor-pointer"
-              >
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-10 opacity-80"></div>
-                {heroMain.imageUrl ? (
-                  <div className="relative w-full h-[450px]">
-                    <Image
-                      src={heroMain.imageUrl}
-                      alt={heroMain.name}
-                      fill
-                      priority
-                      sizes="(min-width: 768px) 66vw, 100vw"
-                      placeholder="blur"
-                      blurDataURL={defaultBlurDataURL}
-                      className="object-cover group-hover:scale-110 transition-transform duration-[1500ms] ease-out"
-                    />
-                  </div>
-                ) : (
-                  <div className="w-full h-[450px] bg-surface-container flex items-center justify-center">
-                    <span className="material-symbols-outlined text-huge text-on-surface-variant/10">{CATEGORY_ICONS[heroMain.category] || 'groups'}</span>
-                  </div>
-                )}
-                <div className="absolute bottom-0 left-0 p-10 z-20 w-full">
-                  <div className="flex justify-between items-end gap-6 flex-wrap">
-                    <div className="flex-1 min-w-[300px]">
-                      <span className="inline-block px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-[9px] text-white font-black uppercase tracking-[0.2em] mb-4 border border-white/10 shadow-sm">Популярное</span>
-                      <h2 className="text-4xl md:text-5xl font-black text-white mb-2 tracking-tighter leading-none">{heroMain.name}</h2>
-                      <p className="text-white/70 text-sm max-w-md font-medium leading-relaxed">{heroMain.description}</p>
-                    </div>
-                    <div className="text-right flex-shrink-0">
-                      <span className="text-white/40 text-[9px] font-black uppercase tracking-widest block mb-4">{heroMain.memberCount} участников</span>
-                      <button className="bg-white text-on-surface px-6 py-2 rounded-xl font-black text-[10px] uppercase tracking-widest hover:scale-105 transition-transform shadow-xl">
-                        Вступить
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Side Card */}
-            {heroSide && (
-              <div
-                onClick={() => handleJoin(heroSide.id)}
-                className="md:col-span-4 bg-surface p-8 rounded-3xl flex flex-col justify-between shadow-sm border border-on-surface/5 cursor-pointer hover:shadow-xl transition-all duration-500 hover:scale-[1.02]"
-              >
-                <div>
-                  <div className="w-14 h-14 rounded-xl bg-surface-container flex items-center justify-center mb-10 shadow-inner border border-on-surface/[0.02]">
-                    <span className="material-symbols-outlined text-on-surface text-4xl">
-                      {CATEGORY_ICONS[heroSide.category] || 'groups'}
-                    </span>
-                  </div>
-                  <h3 className="text-2xl font-black mb-2 tracking-tight text-on-surface leading-none">{heroSide.name}</h3>
-                  <p className="text-on-surface-muted text-sm font-medium leading-relaxed">{heroSide.description}</p>
-                </div>
-                <div className="pt-10 flex justify-between items-center">
-                  <span className="text-[9px] font-black uppercase tracking-widest text-on-surface-muted opacity-40">{heroSide.memberCount} участников</span>
-                  <button className="text-on-surface font-black text-[10px] uppercase tracking-widest hover:translate-x-1 transition-transform leading-none">Вступить →</button>
-                </div>
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* Filter Tabs */}
-        <div className="flex gap-10 mb-10 border-b border-on-surface/5 overflow-x-auto whitespace-nowrap scrollbar-hide px-2">
-          {([
-            ['all', 'Все сообщества'], 
-            ['кино', 'Кино'], 
-            ['книги', 'Книги'],
-            ...(user ? [['my', 'Мои клубы']] : [])
-          ] as [FilterTab, string][]).map(([key, label]) => (
+        {/* Main Tabs */}
+        <div className="flex gap-10 mb-4 border-b border-on-surface/5 overflow-x-auto whitespace-nowrap scrollbar-hide px-2">
+          {TABS.map((tab) => (
             <button
-              key={key}
-              onClick={() => setActiveFilter(key)}
+              key={tab.id}
+              onClick={() => !tab.disabled && setActiveMainTab(tab.id as FilterTab)}
               className={`pb-4 border-b-[3px] text-[10px] font-black uppercase tracking-[0.2em] transition-all ${
-                activeFilter === key
+                tab.disabled ? 'opacity-20 cursor-not-allowed' : ''
+              } ${
+                activeMainTab === tab.id
                   ? 'border-on-surface text-on-surface'
                   : 'border-transparent text-on-surface-muted hover:text-on-surface hover:opacity-100'
               }`}
             >
-              {label}
+              {tab.label}
             </button>
           ))}
+        </div>
+
+        {/* Sub-Filters Chips */}
+        <div className="flex gap-2 mb-10 overlow-x-auto scrollbar-hide py-2">
+           {SUB_FILTERS.map(filter => (
+             <button
+               key={filter.id}
+               onClick={() => setSubFilter(filter.id as SubFilter)}
+               className={`px-4 py-2 rounded-xl text-[8px] font-black uppercase tracking-widest transition-all whitespace-nowrap ${
+                 subFilter === filter.id 
+                  ? 'bg-on-surface text-surface shadow-md' 
+                  : 'bg-surface-container-low text-on-surface-muted hover:bg-surface-container'
+               }`}
+             >
+               {filter.label}
+             </button>
+           ))}
         </div>
 
         {/* Loading */}
         {loading && <ClubSkeletonList count={4} />}
 
-        {/* Empty State */}
-        {!loading && filteredClubs.length === 0 && (
-          <div className="text-center py-24 bg-surface rounded-3xl border border-on-surface/5">
-            <span className="material-symbols-outlined text-8xl text-on-surface/5 mb-6 block">groups</span>
-            <h3 className="text-2xl font-black mb-2 text-on-surface tracking-tight">Пока нет клубов</h3>
-            <p className="text-on-surface-muted text-[10px] font-black uppercase tracking-widest">Станьте первым — создайте клуб!</p>
+        {/* Grid of Clubs */}
+        {!loading && (
+          <div className="min-h-[400px]">
+            {filteredClubs.length === 0 ? (
+              <div className="text-center py-24 bg-surface rounded-3xl border border-on-surface/5 opacity-50">
+                <span className="material-symbols-outlined text-8xl text-on-surface/5 mb-6 block">groups</span>
+                <h3 className="text-2xl font-black mb-2 text-on-surface tracking-tight">Пока нет клубов</h3>
+                <p className="text-on-surface-muted text-[10px] font-black uppercase tracking-widest">
+                  {activeMainTab === 'my' ? 'Вы еще не вступили ни в один клуб' : 'По вашему запросу ничего не найдено'}
+                </p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                {filteredClubs.map((club, index) => (
+                  <MotionListItem key={club.id} index={index}>
+                    <div
+                      onClick={() => handleJoin(club.id)}
+                      className="bg-surface rounded-3xl overflow-hidden hover:shadow-2xl transition-all duration-500 hover:scale-[1.02] shadow-sm border border-on-surface/5 cursor-pointer group h-full flex flex-col"
+                    >
+                      <div className="h-44 bg-surface-container relative overflow-hidden">
+                        {club.imageUrl ? (
+                          <Image
+                            src={club.imageUrl}
+                            alt={club.name}
+                            fill
+                            sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
+                            placeholder="blur"
+                            blurDataURL={defaultBlurDataURL}
+                            className="object-cover group-hover:scale-110 transition-transform duration-700"
+                          />
+                        ) : (
+                          <div className="w-full h-full bg-surface-container flex items-center justify-center">
+                            <span className="material-symbols-outlined text-5xl text-on-surface/5">
+                              {CATEGORY_ICONS[club.category] || 'groups'}
+                            </span>
+                          </div>
+                        )}
+                        <div className="absolute top-4 left-4 flex flex-col gap-2">
+                          <div className="px-2.5 py-1 bg-on-surface/90 backdrop-blur-md rounded-lg text-[9px] text-surface font-black uppercase tracking-widest inline-block self-start">
+                            {CATEGORY_LABELS[club.category] || club.category}
+                          </div>
+                          {club.userRole === 'owner' && (
+                            <div className="px-2.5 py-1 bg-accent-lilac text-white rounded-lg text-[9px] font-black uppercase tracking-widest inline-block self-start shadow-lg">
+                              Владелец
+                            </div>
+                          )}
+                        </div>
+                        {typeof club.unreadCount === 'number' && club.unreadCount > 0 && (
+                          <div className="absolute top-4 right-4 px-2.5 py-1 bg-red-500 text-white rounded-lg text-[9px] font-black uppercase tracking-widest animate-pulse shadow-lg">
+                            +{club.unreadCount}
+                          </div>
+                        )}
+                      </div>
+                      <div className="p-6 flex-1 flex flex-col">
+                        <h4 className="font-black text-on-surface text-lg mb-2 tracking-tight line-clamp-1 leading-none">{club.name}</h4>
+                        <p className="text-xs text-on-surface-muted font-medium line-clamp-2 mb-8 leading-relaxed flex-1">{club.description}</p>
+                        <div className="flex items-center justify-between mt-auto pt-4 border-t border-on-surface/5">
+                          <span className="text-[9px] font-black uppercase tracking-widest text-on-surface-muted opacity-40">{club.memberCount} участников</span>
+                          <button className="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center group-hover:bg-on-surface transition-colors shadow-sm">
+                            <span className="material-symbols-outlined text-on-surface-muted text-xl group-hover:text-surface">login</span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </MotionListItem>
+                ))}
+              </div>
+            )}
           </div>
         )}
 
-        {/* Grid of Clubs */}
-        {!loading && filteredClubs.length > 0 && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {filteredClubs.map((club, index) => (
-              <MotionListItem key={club.id} index={index}>
-              <div
-                onClick={() => handleJoin(club.id)}
-                className="bg-surface rounded-3xl overflow-hidden hover:shadow-2xl transition-all duration-500 hover:scale-[1.02] shadow-sm border border-on-surface/5 cursor-pointer group"
-              >
-                <div className="h-44 bg-surface-container relative overflow-hidden">
-                  {club.imageUrl ? (
-                    <Image
-                      src={club.imageUrl}
-                      alt={club.name}
-                      fill
-                      sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
-                      placeholder="blur"
-                      blurDataURL={defaultBlurDataURL}
-                      className="object-cover group-hover:scale-110 transition-transform duration-700"
-                    />
-                  ) : (
-                    <div className="w-full h-full bg-surface-container flex items-center justify-center">
-                      <span className="material-symbols-outlined text-5xl text-on-surface/5">
-                        {CATEGORY_ICONS[club.category] || 'groups'}
-                      </span>
-                    </div>
-                  )}
-                  <div className="absolute top-4 left-4 flex gap-2">
-                    <div className="px-2.5 py-1 bg-on-surface/90 backdrop-blur-md rounded-lg text-[9px] text-surface font-black uppercase tracking-widest">
-                      {CATEGORY_LABELS[club.category] || club.category}
-                    </div>
-                    {typeof club.unreadCount === 'number' && club.unreadCount > 0 && (
-                      <div className="px-2.5 py-1 bg-red-500 text-white rounded-lg text-[9px] font-black uppercase tracking-widest animate-pulse shadow-lg">
-                        +{club.unreadCount}
+        {/* Popular Bento Grid (Moved here and conditional) */}
+        {!loading && activeMainTab === 'all' && heroClubs.length > 0 && (
+          <section className="mt-24">
+            <div className="flex items-center justify-between mb-8 px-2">
+               <div>
+                 <h2 className="text-3xl font-black tracking-tight text-on-surface leading-none mb-1">Популярные сообщества</h2>
+                 <p className="text-[10px] font-black uppercase tracking-widest text-on-surface-muted opacity-40">Клубы с самым большим количеством участников</p>
+               </div>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-6 mb-12">
+              {/* Large Featured Card */}
+              {heroClubs[0] && (
+                <div
+                  onClick={() => handleJoin(heroClubs[0].id)}
+                  className="md:col-span-8 bg-surface rounded-3xl overflow-hidden relative group shadow-xl border border-on-surface/5 cursor-pointer"
+                >
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-10 opacity-80"></div>
+                  <div className="relative w-full h-[450px]">
+                    {heroClubs[0].imageUrl ? (
+                      <Image
+                        src={heroClubs[0].imageUrl}
+                        alt={heroClubs[0].name}
+                        fill
+                        sizes="(min-width: 768px) 66vw, 100vw"
+                        placeholder="blur"
+                        blurDataURL={defaultBlurDataURL}
+                        className="object-cover group-hover:scale-110 transition-transform duration-[1500ms] ease-out"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-surface-container flex items-center justify-center text-on-surface-variant/10">
+                        <span className="material-symbols-outlined text-huge">{CATEGORY_ICONS[heroClubs[0].category] || 'groups'}</span>
                       </div>
                     )}
                   </div>
-                </div>
-                <div className="p-6">
-                  <h4 className="font-black text-on-surface text-lg mb-2 tracking-tight line-clamp-1 leading-none">{club.name}</h4>
-                  <p className="text-xs text-on-surface-muted font-medium line-clamp-2 mb-8 leading-relaxed ">{club.description}</p>
-                  <div className="flex items-center justify-between">
-                    <span className="text-[9px] font-black uppercase tracking-widest text-on-surface-muted opacity-40">{club.memberCount} участников</span>
-                    <button className="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center group-hover:bg-on-surface transition-colors shadow-sm">
-                      <span className="material-symbols-outlined text-on-surface-muted text-xl group-hover:text-surface">login</span>
-                    </button>
+                  <div className="absolute bottom-0 left-0 p-10 z-20 w-full">
+                    <div className="flex justify-between items-end gap-6 flex-wrap">
+                      <div className="flex-1 min-w-[300px]">
+                        <span className="inline-block px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-[9px] text-white font-black uppercase tracking-[0.2em] mb-4 border border-white/10 shadow-sm">Популярное</span>
+                        <h2 className="text-4xl md:text-5xl font-black text-white mb-2 tracking-tighter leading-none">{heroClubs[0].name}</h2>
+                        <p className="text-white/70 text-sm max-w-md font-medium leading-relaxed">{heroClubs[0].description}</p>
+                      </div>
+                      <div className="text-right flex-shrink-0">
+                        <span className="text-white/40 text-[9px] font-black uppercase tracking-widest block mb-4">{heroClubs[0].memberCount} участников</span>
+                        <button className="bg-white text-on-surface px-6 py-2 rounded-xl font-black text-[10px] uppercase tracking-widest hover:scale-105 transition-transform shadow-xl">
+                          Вступить
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
-              </MotionListItem>
-            ))}
-          </div>
+              )}
+
+              {/* Side Card */}
+              {heroClubs[1] && (
+                <div
+                  onClick={() => handleJoin(heroClubs[1].id)}
+                  className="md:col-span-4 bg-surface p-8 rounded-3xl flex flex-col justify-between shadow-sm border border-on-surface/5 cursor-pointer hover:shadow-xl transition-all duration-500 hover:scale-[1.02]"
+                >
+                  <div>
+                    <div className="w-14 h-14 rounded-xl bg-surface-container flex items-center justify-center mb-10 shadow-inner border border-on-surface/[0.02]">
+                      <span className="material-symbols-outlined text-on-surface text-4xl">
+                        {CATEGORY_ICONS[heroClubs[1].category] || 'groups'}
+                      </span>
+                    </div>
+                    <h3 className="text-2xl font-black mb-2 tracking-tight text-on-surface leading-none">{heroClubs[1].name}</h3>
+                    <p className="text-on-surface-muted text-sm font-medium leading-relaxed">{heroClubs[1].description}</p>
+                  </div>
+                  <div className="pt-10 flex justify-between items-center">
+                    <span className="text-[9px] font-black uppercase tracking-widest text-on-surface-muted opacity-40">{heroClubs[1].memberCount} участников</span>
+                    <button className="text-on-surface font-black text-[10px] uppercase tracking-widest hover:translate-x-1 transition-transform leading-none">Вступить →</button>
+                  </div>
+                </div>
+              )}
+            </div>
+          </section>
         )}
 
         {/* Suggestion Section */}
