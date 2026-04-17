@@ -269,7 +269,7 @@ export default function Clubs() {
                   <MotionListItem key={club.id} index={index}>
                     <div
                       onClick={() => handleJoin(club.id)}
-                      className="bg-surface rounded-[24px] p-4 flex gap-5 hover:shadow-2xl hover:shadow-on-surface/5 transition-all duration-500 hover:-translate-y-1 shadow-sm border border-on-surface/5 cursor-pointer group h-[136px] relative overflow-hidden"
+                      className="bg-surface rounded-[24px] p-4 flex gap-5 hover:shadow-2xl hover:shadow-on-surface/5 transition-all duration-500 hover:-translate-y-1 shadow-sm border border-on-surface/5 cursor-pointer group min-h-[140px] h-auto relative"
                     >
                       {/* Background accent glow */}
                       <div className="absolute -top-10 -right-10 w-32 h-32 bg-on-surface/[0.02] rounded-full blur-3xl group-hover:bg-on-surface/[0.05] transition-colors" />
@@ -307,7 +307,7 @@ export default function Clubs() {
                             <span className="inline-block px-2 py-0.5 bg-on-surface/5 text-[7px] font-black text-on-surface-muted rounded-full uppercase tracking-[0.15em] mb-1.5 whitespace-nowrap">
                               {CATEGORY_LABELS[club.category] || club.category}
                             </span>
-                            <h4 className="font-black text-on-surface text-[16px] tracking-tight truncate leading-tight">
+                            <h4 className="font-black text-on-surface text-[16px] tracking-tight line-clamp-2 leading-tight">
                               {club.name}
                             </h4>
                           </div>
