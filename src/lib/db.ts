@@ -265,6 +265,25 @@ export async function updateContentStatus(id: string, status: 'approved' | 'reje
   return mapContentItem(data);
 }
 
+export async function getModerationStats(): Promise<{ approved: number; rejected: number; pending: number }> {
+  try {
+    const [approvedRes, rejectedRes, pendingRes] = await Promise.all([
+      supabase.from('content').select('*', { count: 'exact', head: true }).eq('status', 'approved'),
+      supabase.from('content').select('*', { count: 'exact', head: true }).eq('status', 'rejected'),
+      supabase.from('content').select('*', { count: 'exact', head: true }).eq('status', 'pending'),
+    ]);
+
+    return {
+      approved: approvedRes.count || 0,
+      rejected: rejectedRes.count || 0,
+      pending: pendingRes.count || 0
+    };
+  } catch (err) {
+    console.error('Error fetching moderation stats:', err);
+    return { approved: 0, rejected: 0, pending: 0 };
+  }
+}
+
 // ===== Reviews (Отзывы) =====
 
 export async function getReviewsForContent(contentId: string): Promise<Review[]> {

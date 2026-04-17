@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import TopNavBar from '@/components/TopNavBar';
 import BottomNavBar from '@/components/BottomNavBar';
 import { useAuth } from '@/components/AuthProvider';
-import { getPendingContent, updateContentStatus, getUserById } from '@/lib/db';
+import { getPendingContent, updateContentStatus, getUserById, getModerationStats } from '@/lib/db';
 import { ContentItem } from '@/lib/types';
 import { useRouter } from 'next/navigation';
 import ModerationActionModal from '@/components/ModerationActionModal';
@@ -19,10 +19,17 @@ export default function ModerationPage() {
   const [processingId, setProcessingId] = useState<string | null>(null);
   const [showPending, setShowPending] = useState(false);
   const [selectedForModeration, setSelectedForModeration] = useState<ContentItem | null>(null);
+  const [stats, setStats] = useState({ approved: 0, rejected: 0, pending: 0 });
+
+  const loadStats = async () => {
+    const s = await getModerationStats();
+    setStats(s);
+  };
 
   useEffect(() => {
     async function load() {
       if (user && (user.role === 'moderator' || user.role === 'admin' || user.role === 'superadmin')) {
+        await loadStats();
         const items = await getPendingContent();
         setPendingItems(items);
       }
@@ -64,11 +71,17 @@ export default function ModerationPage() {
       await updateContentStatus(id, decision, reason);
       setPendingItems(prev => prev.filter(item => item.id !== id));
       setSelectedForModeration(null);
+      await loadStats();
     } catch (e) {
       console.error(e);
     } finally {
       setProcessingId(null);
     }
+  };
+
+  const formatNumber = (num: number) => {
+    if (num >= 1000) return (num / 1000).toFixed(1) + 'k';
+    return num.toString();
   };
 
   return (
@@ -94,23 +107,25 @@ export default function ModerationPage() {
               Ожидают проверки
             </span>
             <div className="flex items-baseline gap-2">
-              <span className="text-5xl font-black tracking-tighter text-on-surface group-hover:text-amber-500 transition-colors">{pendingItems.length}</span>
+              <span className="text-5xl font-black tracking-tighter text-on-surface group-hover:text-amber-500 transition-colors">
+                {formatNumber(stats.pending)}
+              </span>
               <span className="text-[10px] font-black uppercase tracking-widest opacity-20">постов</span>
             </div>
           </button>
           
-          <div className="bg-white rounded-[32px] p-8 border border-on-surface/5 shadow-sm flex flex-col justify-between opacity-40">
+          <div className="bg-white rounded-[32px] p-8 border border-on-surface/5 shadow-sm flex flex-col justify-between group hover:shadow-xl transition-all duration-500">
             <span className="text-[9px] font-black uppercase tracking-widest text-green-600 mb-4 ">Всего одобрено</span>
             <div className="flex items-baseline gap-2">
-              <span className="text-5xl font-black tracking-tighter text-on-surface">1.2k</span>
+              <span className="text-5xl font-black tracking-tighter text-on-surface">{formatNumber(stats.approved)}</span>
               <span className="text-[10px] font-black uppercase tracking-widest opacity-20">актив</span>
             </div>
           </div>
 
-          <div className="bg-white rounded-[32px] p-8 border border-on-surface/5 shadow-sm flex flex-col justify-between opacity-40">
+          <div className="bg-white rounded-[32px] p-8 border border-on-surface/5 shadow-sm flex flex-col justify-between group hover:shadow-xl transition-all duration-500">
             <span className="text-[9px] font-black uppercase tracking-widest text-red-600 mb-4 ">Отклонено</span>
             <div className="flex items-baseline gap-2">
-              <span className="text-5xl font-black tracking-tighter text-on-surface">84</span>
+              <span className="text-5xl font-black tracking-tighter text-on-surface">{formatNumber(stats.rejected)}</span>
               <span className="text-[10px] font-black uppercase tracking-widest opacity-20">спам</span>
             </div>
           </div>
