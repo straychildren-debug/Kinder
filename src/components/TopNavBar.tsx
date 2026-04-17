@@ -62,14 +62,6 @@ export default function TopNavBar({ title = 'Кинотека' }: TopNavBarProps
           </Link>
           
           <div className="flex items-center gap-3 md:gap-6">
-            <button
-              onClick={() => setSearchOpen(true)}
-              aria-label="Поиск"
-              className="w-10 h-10 rounded-full flex items-center justify-center bg-surface-container text-on-surface-variant hover:text-on-surface hover:bg-on-surface/5 transition-all border border-on-surface/5 shadow-sm active:scale-95"
-            >
-              <span className="material-symbols-outlined text-[20px] md:text-[22px]">search</span>
-            </button>
-
             {user && (
               <Link
                 href="/create"

@@ -13,12 +13,14 @@ import ContentDetailsModal from "@/components/ContentDetailsModal";
 import { FeedSkeletonList } from "@/components/Skeleton";
 import { MotionListItem } from "@/components/Motion";
 import ActivityFeed from "@/components/ActivityFeed";
+import OmniSearch from "@/components/OmniSearch";
 
 export default function Home() {
   const { user } = useAuth();
   const [approvedContent, setApprovedContent] = useState<ContentItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedContent, setSelectedContent] = useState<ContentItem | null>(null);
+  const [searchOpen, setSearchOpen] = useState(false);
 
   useEffect(() => {
     async function load() {
@@ -39,11 +41,13 @@ export default function Home() {
             <span className="material-symbols-outlined absolute left-6 top-1/2 -translate-y-1/2 text-on-surface/40 transition-all text-[22px] pointer-events-none z-10">
               search
             </span>
-            <input 
-              type="text"
-              placeholder="Поиск книг, фильмов или авторов..."
-              className="w-full bg-surface-container border-2 border-on-surface/5 rounded-2xl pl-16 pr-8 py-4.5 text-sm md:text-base font-medium focus:outline-none focus:border-accent-lilac focus:bg-white focus:shadow-xl focus:shadow-accent-lilac/5 transition-all duration-300 placeholder:text-on-surface-muted shadow-sm"
-            />
+            <button
+              type="button"
+              onClick={() => setSearchOpen(true)}
+              className="w-full text-left bg-surface-container border-2 border-on-surface/5 rounded-2xl pl-16 pr-8 py-4.5 text-sm md:text-base font-medium focus:outline-none focus:border-accent-lilac focus:bg-white focus:shadow-xl focus:shadow-accent-lilac/5 hover:border-accent-lilac/30 hover:bg-white transition-all duration-300 text-on-surface-muted shadow-sm cursor-text"
+            >
+              Поиск книг, фильмов или авторов...
+            </button>
           </div>
         </section>
 
@@ -198,6 +202,8 @@ export default function Home() {
           </div>
         </div>
       </main>
+
+      <OmniSearch open={searchOpen} onClose={() => setSearchOpen(false)} />
 
       <BottomNavBar activeTab="home" />
     </>
