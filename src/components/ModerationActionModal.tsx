@@ -32,7 +32,7 @@ export default function ModerationActionModal({ content, onClose, onDecision, is
   };
 
   return (
-    <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 md:p-6 bg-on-surface/40 backdrop-blur-md animate-in fade-in duration-300">
+    <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 md:p-6 bg-white/60 backdrop-blur-xl animate-in fade-in duration-300">
       <div 
         className="w-full max-w-lg bg-white rounded-[40px] overflow-hidden border border-on-surface/5 shadow-[0_40px_80px_-20px_rgba(0,0,0,0.2)] flex flex-col relative animate-in zoom-in-95 duration-500 max-h-[92vh]"
         onClick={(e) => e.stopPropagation()}
