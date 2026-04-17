@@ -106,7 +106,7 @@ export default function Movies() {
             {displayMovies.map((movie, index) => (
               <MotionListItem key={movie.id} index={index}>
               <div
-                className="group flex bg-surface p-5 rounded-2xl border border-on-surface/5 shadow-[0_4px_20px_rgba(0,0,0,0.02)] hover:shadow-[0_20px_40px_rgba(0,0,0,0.04)] transition-all duration-500 hover:-translate-y-1 cursor-pointer transform-gpu min-h-[130px]"
+                className="group flex bg-surface p-5 rounded-2xl border border-on-surface/5 shadow-[0_4px_20_rgba(0,0,0,0.02)] hover:shadow-[0_20px_40px_rgba(0,0,0,0.04)] transition-all duration-500 hover:-translate-y-1 cursor-pointer transform-gpu"
                 onClick={() => setSelectedContent(movie)}
               >
                 {/* Movie Poster */}

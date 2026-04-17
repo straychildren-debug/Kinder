@@ -269,7 +269,7 @@ export default function Clubs() {
                   <MotionListItem key={club.id} index={index}>
                     <div
                       onClick={() => handleJoin(club.id)}
-                      className="bg-surface rounded-2xl p-5 flex gap-6 hover:shadow-2xl hover:shadow-on-surface/5 transition-all duration-500 hover:-translate-y-1 shadow-[0_4px_20px_rgba(0,0,0,0.02)] border border-on-surface/5 cursor-pointer group min-h-[130px] h-auto relative transform-gpu"
+                      className="bg-surface rounded-2xl p-5 flex gap-6 hover:shadow-2xl hover:shadow-on-surface/5 transition-all duration-500 hover:-translate-y-1 shadow-[0_4px_20px_rgba(0,0,0,0.02)] border border-on-surface/5 cursor-pointer group h-auto relative transform-gpu"
                     >
                       {/* Thumbnail with deep shadow */}
                       <div className="w-[60px] h-[90px] bg-surface-container relative rounded-lg overflow-hidden flex-shrink-0 shadow-sm border border-on-surface/5">
@@ -313,7 +313,7 @@ export default function Clubs() {
                           </p>
                         </div>
 
-                        <div className="flex items-center justify-between mt-4">
+                        <div className="flex items-center justify-between">
                           <div className="flex items-center gap-3">
                              <div className="flex items-center gap-1.5 bg-on-surface/[0.03] px-2 py-0.5 rounded-md">
                                <span className="material-symbols-outlined text-sm text-on-surface-muted/60">groups</span>
