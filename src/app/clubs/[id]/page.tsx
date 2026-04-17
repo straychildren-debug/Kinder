@@ -7,7 +7,7 @@ import { useAuth } from '@/components/AuthProvider';
 import ClubSettingsModal from '@/components/ClubSettingsModal';
 import MarathonDetailsModal from '@/components/MarathonDetailsModal';
 import MarathonModal from '@/components/MarathonModal';
-import ClubEventsPanel from '@/components/ClubEventsPanel';
+import ClubEventsModal from '@/components/ClubEventsModal';
 import VoiceWaveform from '@/components/VoiceWaveform';
 import { Club, ClubMessage, ClubMarathon, ClubMember, PinnedMessage, ClubPoll, ClubPollOption } from '@/lib/types';
 import {
@@ -474,6 +474,7 @@ export default function ClubDetail() {
   const [mentionQuery, setMentionQuery] = useState<string | null>(null);
   const [mentionResults, setMentionResults] = useState<ClubMember[]>([]);
   const [contextMenuMsg, setContextMenuMsg] = useState<string | null>(null);
+  const [showEventsModal, setShowEventsModal] = useState(false);
 
   const chatEndRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -1124,10 +1125,7 @@ export default function ClubDetail() {
               </section>
             )}
 
-            {/* Club Events Calendar */}
-            <div className="mb-12">
-              <ClubEventsPanel clubId={clubId} canManage={isOwnerOrAdmin} />
-            </div>
+
 
             {/* Active Polls */}
             {polls.filter(p => p.isActive).map(poll => (
@@ -1595,9 +1593,17 @@ export default function ClubDetail() {
           onMarathonChange={setMarathon}
           onLeave={handleLeave}
           onCreatePoll={() => setShowCreatePoll(true)}
+          onOpenEvents={() => setShowEventsModal(true)}
         />
       )}
 
+      {/* Events Modal */}
+      <ClubEventsModal
+        isOpen={showEventsModal}
+        onClose={() => setShowEventsModal(false)}
+        clubId={clubId}
+        canManage={isOwnerOrAdmin}
+      />
 
       {/* Marathon Details Modal */}
       {marathon && user && (

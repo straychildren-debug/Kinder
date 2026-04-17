@@ -16,6 +16,7 @@ interface ClubSettingsModalProps {
   onMarathonChange: (marathon: ClubMarathon | null) => void;
   onLeave: () => void;
   onCreatePoll: () => void;
+  onOpenEvents: () => void;
 }
 
 const ROLE_LABELS: Record<string, string> = {
@@ -40,6 +41,7 @@ export default function ClubSettingsModal({
   onMarathonChange,
   onLeave,
   onCreatePoll,
+  onOpenEvents,
 }: ClubSettingsModalProps) {
   const [members, setMembers] = useState<ClubMember[]>([]);
   const [loading, setLoading] = useState(true);
@@ -111,7 +113,17 @@ export default function ClubSettingsModal({
           {/* Quick Actions Group */}
           <section className="mb-12">
             <h3 className="text-[10px] font-black text-on-surface-variant uppercase tracking-[0.3em] mb-6 opacity-40 ">Действия</h3>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+              <button
+                onClick={() => { onClose(); onOpenEvents(); }}
+                className="p-6 rounded-[24px] glass-panel hover:bg-white/20 transition-all flex flex-col items-center justify-center gap-3 group"
+              >
+                <div className="w-10 h-10 rounded-xl bg-white/10 border border-white/10 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all">
+                  <span className="material-symbols-outlined text-[20px]">calendar_month</span>
+                </div>
+                <span className="text-[9px] font-black uppercase tracking-widest">Календарь</span>
+              </button>
+
               <button
                 onClick={() => { onClose(); onCreatePoll(); }}
                 className="p-6 rounded-[24px] glass-panel hover:bg-white/20 transition-all flex flex-col items-center justify-center gap-3 group"
@@ -137,7 +149,7 @@ export default function ClubSettingsModal({
               {userRole !== 'owner' && (
                 <button
                   onClick={() => { if (confirm('Выйти из клуба?')) { onClose(); onLeave(); } }}
-                  className="p-6 rounded-[24px] bg-red-50/50 hover:bg-red-50 hover:shadow-xl transition-all border border-transparent hover:border-red-100 flex flex-col items-center justify-center gap-3 group col-span-2 mt-2"
+                  className="p-6 rounded-[24px] bg-red-50/50 hover:bg-red-50 hover:shadow-xl transition-all border border-transparent hover:border-red-100 flex flex-col items-center justify-center gap-3 group sm:col-span-3 mt-2"
                 >
                   <div className="w-10 h-10 rounded-xl bg-white border border-red-100 flex items-center justify-center text-red-500 group-hover:bg-red-500 group-hover:text-white transition-all">
                     <span className="material-symbols-outlined text-[20px]">logout</span>
