@@ -264,54 +264,74 @@ export default function Clubs() {
                 </p>
               </div>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
                 {filteredClubs.map((club, index) => (
                   <MotionListItem key={club.id} index={index}>
                     <div
                       onClick={() => handleJoin(club.id)}
-                      className="bg-surface rounded-3xl overflow-hidden hover:shadow-2xl transition-all duration-500 hover:scale-[1.02] shadow-sm border border-on-surface/5 cursor-pointer group h-full flex flex-col"
+                      className="bg-surface rounded-2xl p-3 flex gap-4 hover:shadow-xl transition-all duration-300 hover:scale-[1.01] shadow-sm border border-on-surface/5 cursor-pointer group h-[124px]"
                     >
-                      <div className="h-44 bg-surface-container relative overflow-hidden">
+                      {/* Thumbnail */}
+                      <div className="w-24 h-full bg-surface-container relative rounded-xl overflow-hidden flex-shrink-0">
                         {club.imageUrl ? (
                           <Image
                             src={club.imageUrl}
                             alt={club.name}
                             fill
-                            sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
+                            sizes="120px"
                             placeholder="blur"
                             blurDataURL={defaultBlurDataURL}
                             className="object-cover group-hover:scale-110 transition-transform duration-700"
                           />
                         ) : (
                           <div className="w-full h-full bg-surface-container flex items-center justify-center">
-                            <span className="material-symbols-outlined text-5xl text-on-surface/5">
+                            <span className="material-symbols-outlined text-3xl text-on-surface/5">
                               {CATEGORY_ICONS[club.category] || 'groups'}
                             </span>
                           </div>
                         )}
-                        <div className="absolute top-4 left-4 flex flex-col gap-2">
-                          <div className="px-2.5 py-1 bg-on-surface/90 backdrop-blur-md rounded-lg text-[9px] text-surface font-black uppercase tracking-widest inline-block self-start">
-                            {CATEGORY_LABELS[club.category] || club.category}
-                          </div>
-                          {club.userRole === 'owner' && (
-                            <div className="px-2.5 py-1 bg-accent-lilac text-white rounded-lg text-[9px] font-black uppercase tracking-widest inline-block self-start shadow-lg">
-                              Владелец
-                            </div>
-                          )}
-                        </div>
+                        {/* Status Tags Overlay on Image */}
                         {typeof club.unreadCount === 'number' && club.unreadCount > 0 && (
-                          <div className="absolute top-4 right-4 px-2.5 py-1 bg-red-500 text-white rounded-lg text-[9px] font-black uppercase tracking-widest animate-pulse shadow-lg">
-                            +{club.unreadCount}
-                          </div>
+                          <div className="absolute top-1.5 right-1.5 w-4 h-4 bg-red-500 rounded-full border-2 border-surface animate-pulse" />
                         )}
                       </div>
-                      <div className="p-6 flex-1 flex flex-col">
-                        <h4 className="font-black text-on-surface text-lg mb-2 tracking-tight line-clamp-1 leading-none">{club.name}</h4>
-                        <p className="text-xs text-on-surface-muted font-medium line-clamp-2 mb-8 leading-relaxed flex-1">{club.description}</p>
-                        <div className="flex items-center justify-between mt-auto pt-4 border-t border-on-surface/5">
-                          <span className="text-[9px] font-black uppercase tracking-widest text-on-surface-muted opacity-40">{club.memberCount} участников</span>
-                          <button className="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center group-hover:bg-on-surface transition-colors shadow-sm">
-                            <span className="material-symbols-outlined text-on-surface-muted text-xl group-hover:text-surface">login</span>
+
+                      {/* Content Section */}
+                      <div className="flex-1 flex flex-col justify-between py-1 min-w-0">
+                        <div>
+                          <div className="flex items-center gap-2 mb-1.5">
+                            <span className="px-1.5 py-0.5 bg-on-surface/[0.03] text-[8px] font-black text-on-surface-muted rounded uppercase tracking-widest">
+                              {CATEGORY_LABELS[club.category] || club.category}
+                            </span>
+                            <h4 className="font-black text-on-surface text-sm tracking-tight truncate leading-none">
+                              {club.name}
+                            </h4>
+                          </div>
+                          <p className="text-[10px] text-on-surface-muted font-medium line-clamp-2 leading-relaxed">
+                            {club.description}
+                          </p>
+                        </div>
+
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                             <span className="text-[8px] font-bold uppercase tracking-widest text-on-surface-muted opacity-40">
+                              {club.memberCount} участников
+                            </span>
+                            {club.userRole === 'owner' && (
+                              <span className="text-[7px] font-black uppercase tracking-widest bg-accent-lilac/10 text-accent-lilac px-1.5 py-0.5 rounded">
+                                Владелец
+                              </span>
+                            )}
+                            {typeof club.unreadCount === 'number' && club.unreadCount > 0 && (
+                               <span className="text-[7px] font-black uppercase tracking-widest bg-red-500 text-white px-1.5 py-0.5 rounded">
+                                +{club.unreadCount} сообщ.
+                               </span>
+                            )}
+                          </div>
+                          <button className="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center group-hover:bg-on-surface transition-colors">
+                            <span className="material-symbols-outlined text-on-surface-muted text-base group-hover:text-surface">
+                              login
+                            </span>
                           </button>
                         </div>
                       </div>
