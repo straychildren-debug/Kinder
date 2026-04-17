@@ -182,12 +182,12 @@ export default function Home() {
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-3 md:grid-cols-6 gap-x-4 gap-y-8">
+            <div className="grid grid-cols-3 md:grid-cols-6 gap-x-3 gap-y-8">
               {visibleContent.map((item, index) => (
                 <MotionListItem key={item.id} index={index}>
                 <article
                   onClick={() => setSelectedContent(item)}
-                  className="group cursor-pointer flex flex-col"
+                  className="group cursor-pointer flex flex-col bg-surface-container-low/50 p-2 rounded-2xl border border-on-surface/[0.03] shadow-[0_4px_12px_rgba(0,0,0,0.01)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.04)] transition-all duration-300 h-full"
                 >
                   <div className="relative aspect-[3/4] w-full rounded-xl overflow-hidden bg-surface-container">
                     {item.imageUrl && (
@@ -203,16 +203,16 @@ export default function Home() {
                     )}
                     {/* Floating Rating Badge */}
                     <div className="absolute top-2 right-2 px-1.5 py-0.5 rounded-lg bg-black/60 backdrop-blur-md border border-white/10 flex items-center gap-1 z-10">
-                      <span className="material-symbols-outlined text-white" style={{ fontVariationSettings: "'FILL' 1", fontSize: '12px' }}>star</span>
+                      <span className="material-symbols-outlined text-white" style={{ fontVariationSettings: "'FILL' 1", fontSize: '10px' }}>star</span>
                       <span className="text-[10px] font-black text-white leading-none pt-[1px]">{item.rating ? item.rating.toFixed(1) : '—'}</span>
                     </div>
                   </div>
 
-                  <div className="mt-2.5 px-0.5">
-                    <h3 className="text-[12px] font-bold text-on-surface leading-tight tracking-tight mb-1 line-clamp-2">
+                  <div className="mt-2.5 px-0.5 flex-1 flex flex-col">
+                    <h3 className="text-[11px] font-bold text-on-surface leading-tight tracking-tight mb-1 line-clamp-2">
                       {item.title}
                     </h3>
-                    <p className="text-[10px] font-medium text-on-surface-variant opacity-85 truncate tracking-tight">
+                    <p className="mt-auto text-[10px] font-medium text-on-surface-variant opacity-85 truncate tracking-tight">
                       {item.author || item.director || 'Автор'}
                     </p>
                   </div>
