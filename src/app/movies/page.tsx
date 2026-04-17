@@ -106,62 +106,69 @@ export default function Movies() {
             {displayMovies.map((movie, index) => (
               <MotionListItem key={movie.id} index={index}>
               <div
-                className="group flex bg-surface p-3.5 rounded-3xl border border-on-surface/5 shadow-sm hover:shadow-md transition-all hover:scale-[1.01] cursor-pointer"
+                className="group flex bg-surface p-5 rounded-2xl border border-on-surface/5 shadow-[0_4px_20px_rgba(0,0,0,0.02)] hover:shadow-[0_20px_40px_rgba(0,0,0,0.04)] transition-all duration-500 hover:-translate-y-1 cursor-pointer transform-gpu"
                 onClick={() => setSelectedContent(movie)}
               >
                 {/* Movie Poster */}
-                <div className="relative w-20 aspect-[4/5] flex-shrink-0 rounded-xl overflow-hidden bg-on-surface/5 shadow-md">
+                <div className="relative w-[52px] aspect-[3/4] flex-shrink-0 rounded-lg overflow-hidden bg-surface-container shadow-sm border border-on-surface/5">
                   {movie.imageUrl ? (
                     <Image
                       src={movie.imageUrl}
                       alt={movie.title}
                       fill
-                      sizes="80px"
+                      sizes="52px"
                       placeholder="blur"
                       blurDataURL={defaultBlurDataURL}
-                      className="object-cover group-hover:scale-105 transition-transform duration-500"
+                      className="object-cover group-hover:scale-110 transition-transform duration-1000 ease-out"
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center">
-                      <span className="material-symbols-outlined text-on-surface-variant text-2xl opacity-20">movie</span>
+                      <span className="material-symbols-outlined text-on-surface/10 text-2xl">movie</span>
                     </div>
                   )}
                   {movie.rating && (
-                    <div className="absolute top-1.5 right-1.5 bg-accent-lilac/90 backdrop-blur-md px-2 py-0.5 rounded-full flex items-center gap-0.5 border border-white/50 shadow-sm">
-                      <span className="material-symbols-outlined text-on-accent-lilac text-[9px]" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
-                      <span className="text-on-accent-lilac text-[10px] font-black">{movie.rating}</span>
+                    <div className="absolute top-1 right-1 bg-accent-lilac/90 backdrop-blur-md px-1.5 py-0.5 rounded-md flex items-center gap-0.5 border border-white/50 shadow-sm">
+                      <span className="material-symbols-outlined text-on-accent-lilac text-[8px]" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+                      <span className="text-on-accent-lilac text-[9px] font-bold">{movie.rating}</span>
                     </div>
                   )}
                 </div>
                 
                 {/* Movie Metadata */}
-                <div className="ml-5 flex flex-col justify-center">
-                  <h4 className="font-black text-on-surface text-lg leading-tight mb-1 group-hover:text-on-surface-variant transition-colors">
+                <div className="ml-6 flex-1 flex flex-col justify-center min-w-0">
+                  <h4 className="font-bold text-on-surface text-[16px] leading-tight mb-1.5 line-clamp-2">
                     {movie.title}
                   </h4>
-                  <div className="flex items-center gap-2 flex-wrap mb-1">
+                  <div className="flex items-center gap-2 flex-wrap leading-none mb-1">
                     {movie.year && (
-                      <span className="text-[11px] font-black text-red-500 uppercase tracking-widest leading-none">
+                      <span className="text-[10px] font-bold text-on-surface-muted/30 tracking-widest uppercase">
                         {movie.year}
                       </span>
                     )}
-                    <span className="text-[11px] font-black text-on-surface-muted uppercase leading-none opacity-40">•</span>
-                    <p className="text-[10px] font-black text-on-surface-muted tracking-widest leading-none">
+                    <span className="text-[10px] font-bold text-on-surface-muted/30 tracking-widest uppercase">•</span>
+                    <p className="text-[10px] font-bold text-on-surface-muted/60 tracking-widest uppercase truncate max-w-[120px]">
                       {movie.director || 'Неизвестный режиссер'}
                     </p>
                   </div>
                   
                   {movie.actors && movie.actors.length > 0 && (
-                    <p className="text-[10px] font-medium text-on-surface-variant/60 line-clamp-1">
-                      В ролях: {movie.actors.join(', ')}
+                    <p className="text-[10px] font-medium text-on-surface-variant/40 line-clamp-1">
+                      {movie.actors.join(', ')}
                     </p>
                   )}
                   
                   {movie.description && (
-                    <p className="mt-2 text-xs text-on-surface-muted line-clamp-2 max-w-md opacity-70">
+                    <p className="mt-1 text-[11px] text-on-surface-muted font-medium line-clamp-1 leading-relaxed opacity-60">
                       {movie.description}
                     </p>
                   )}
+                </div>
+
+                {/* Action Arrow */}
+                <div className="self-center ml-4 text-on-surface-muted/30 group-hover:text-on-surface transition-colors duration-300">
+                  <span className="material-symbols-outlined text-2xl group-hover:translate-x-1 transition-transform">
+                    chevron_right
+                  </span>
                 </div>
               </div>
               </MotionListItem>
