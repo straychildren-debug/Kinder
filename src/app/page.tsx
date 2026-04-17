@@ -207,13 +207,13 @@ export default function Home() {
                     <h3 className="text-sm font-semibold text-on-surface leading-snug tracking-tight mb-1 line-clamp-2">
                       {item.title}
                     </h3>
-                    <div className="flex items-center justify-between gap-2">
-                      <p className="text-[11px] font-medium text-on-surface-muted truncate max-w-[70%]">
+                    <div className="flex items-center justify-between gap-2 mt-1">
+                      <p className="text-[13px] font-medium text-on-surface/80 truncate flex-1 min-w-0">
                         {item.author || item.director || 'Автор'}
                       </p>
                       <div className="flex items-center gap-1 shrink-0">
-                        <span className="material-symbols-outlined text-[11px] text-on-surface-muted" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
-                        <span className="text-[11px] font-semibold text-on-surface">{item.rating ? item.rating.toFixed(1) : '—'}</span>
+                        <span className="material-symbols-outlined text-on-surface-muted flex items-center justify-center" style={{ fontVariationSettings: "'FILL' 1", fontSize: '15px', width: '15px', height: '15px' }}>star</span>
+                        <span className="text-[13px] font-semibold text-on-surface leading-none">{item.rating ? item.rating.toFixed(1) : '—'}</span>
                       </div>
                     </div>
                   </div>
