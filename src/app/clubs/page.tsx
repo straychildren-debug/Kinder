@@ -254,11 +254,11 @@ export default function Clubs() {
 
         {/* Grid of Clubs */}
         {!loading && (
-          <div className="min-h-[400px]">
+          <div className="min-h-[200px]">
             {filteredClubs.length === 0 ? (
-              <div className="text-center py-24 bg-surface rounded-3xl border border-on-surface/5 opacity-50">
-                <span className="material-symbols-outlined text-8xl text-on-surface/5 mb-6 block">groups</span>
-                <h3 className="text-2xl font-black mb-2 text-on-surface tracking-tight">Пока нет клубов</h3>
+              <div className="text-center py-16 bg-surface rounded-3xl border border-on-surface/5 opacity-50">
+                <span className="material-symbols-outlined text-6xl text-on-surface/5 mb-4 block">groups</span>
+                <h3 className="text-xl font-black mb-1 text-on-surface tracking-tight">Пока нет клубов</h3>
                 <p className="text-on-surface-muted text-[10px] font-black uppercase tracking-widest">
                   {activeMainTab === 'my' ? 'Вы еще не вступили ни в один клуб' : 'По вашему запросу ничего не найдено'}
                 </p>
@@ -345,7 +345,7 @@ export default function Clubs() {
 
         {/* Popular Bento Grid (Moved here and conditional) */}
         {!loading && activeMainTab === 'all' && heroClubs.length > 0 && (
-          <section className="mt-24">
+          <section className="mt-16">
             <div className="flex items-center justify-between mb-8 px-2">
                <div>
                  <h2 className="text-3xl font-black tracking-tight text-on-surface leading-none mb-1">Популярные сообщества</h2>
