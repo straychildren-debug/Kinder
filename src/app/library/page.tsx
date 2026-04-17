@@ -128,9 +128,11 @@ export default function Library() {
                       )}
                     </div>
                     {book.description && (
-                      <p className="text-[10px] text-on-surface-muted/60 font-medium line-clamp-3 leading-[1.3] text-pretty">
-                        {book.description}
-                      </p>
+                      <div className="bg-on-surface/[0.03] px-2 py-1 rounded-lg mt-0.5">
+                        <p className="text-[10px] text-on-surface-muted/60 font-medium line-clamp-3 leading-[1.3] text-pretty">
+                          {book.description}
+                        </p>
+                      </div>
                     )}
                   </div>
 
