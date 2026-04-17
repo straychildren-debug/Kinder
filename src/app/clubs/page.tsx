@@ -269,26 +269,23 @@ export default function Clubs() {
                   <MotionListItem key={club.id} index={index}>
                     <div
                       onClick={() => handleJoin(club.id)}
-                      className="bg-surface rounded-[24px] p-4 flex gap-5 hover:shadow-2xl hover:shadow-on-surface/5 transition-all duration-500 hover:-translate-y-1 shadow-sm border border-on-surface/5 cursor-pointer group min-h-[140px] h-auto relative"
+                      className="bg-surface rounded-2xl p-5 flex gap-6 hover:shadow-2xl hover:shadow-on-surface/5 transition-all duration-500 hover:-translate-y-1 shadow-[0_4px_20px_rgba(0,0,0,0.02)] border border-on-surface/5 cursor-pointer group min-h-[120px] h-auto relative transform-gpu"
                     >
-                      {/* Background accent glow */}
-                      <div className="absolute -top-10 -right-10 w-32 h-32 bg-on-surface/[0.02] rounded-full blur-3xl group-hover:bg-on-surface/[0.05] transition-colors" />
-
                       {/* Thumbnail with deep shadow */}
-                      <div className="w-[50px] h-[50px] bg-surface-container relative rounded-xl overflow-hidden flex-shrink-0 shadow-lg shadow-black/5">
+                      <div className="w-[52px] aspect-[3/4] bg-surface-container relative rounded-lg overflow-hidden flex-shrink-0 shadow-sm border border-on-surface/5">
                         {club.imageUrl ? (
                           <Image
                             src={club.imageUrl}
                             alt={club.name}
                             fill
-                            sizes="50px"
+                            sizes="52px"
                             placeholder="blur"
                             blurDataURL={defaultBlurDataURL}
                             className="object-cover group-hover:scale-110 transition-transform duration-1000 ease-out"
                           />
                         ) : (
                           <div className="w-full h-full bg-surface-container flex items-center justify-center">
-                            <span className="material-symbols-outlined text-3xl text-on-surface/10">
+                            <span className="material-symbols-outlined text-2xl text-on-surface/10">
                               {CATEGORY_ICONS[club.category] || 'groups'}
                             </span>
                           </div>
@@ -296,7 +293,7 @@ export default function Clubs() {
                         
                         {/* Status Tags Overlay on Image */}
                         {typeof club.unreadCount === 'number' && club.unreadCount > 0 && (
-                          <div className="absolute top-2 right-2 w-3 h-3 bg-red-500 rounded-full border-2 border-surface shadow-sm animate-pulse" />
+                          <div className="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-surface shadow-sm animate-pulse" />
                         )}
                       </div>
 
@@ -304,10 +301,10 @@ export default function Clubs() {
                       <div className="flex-1 flex flex-col justify-between py-0.5 min-w-0 z-10">
                         <div className="space-y-1">
                           <div className="min-w-0">
-                            <span className="inline-block px-2 py-0.5 bg-on-surface/5 text-[7px] font-black text-on-surface-muted rounded-full uppercase tracking-[0.15em] mb-1.5 whitespace-nowrap">
+                            <span className="inline-block text-[9px] font-bold tracking-[0.2em] uppercase text-on-surface-variant/50 mb-1">
                               {CATEGORY_LABELS[club.category] || club.category}
                             </span>
-                            <h4 className="font-black text-on-surface text-[16px] tracking-tight line-clamp-2 leading-tight">
+                            <h4 className="font-bold text-on-surface text-[16px] tracking-tight line-clamp-2 leading-tight mb-1.5">
                               {club.name}
                             </h4>
                           </div>
@@ -316,30 +313,30 @@ export default function Clubs() {
                           </p>
                         </div>
 
-                        <div className="flex items-center justify-between">
+                        <div className="flex items-center justify-between mt-4">
                           <div className="flex items-center gap-3">
-                             <div className="flex items-center gap-1.5 bg-on-surface/[0.03] px-2 py-1 rounded-lg">
+                             <div className="flex items-center gap-1.5 bg-on-surface/[0.03] px-2 py-0.5 rounded-md">
                                <span className="material-symbols-outlined text-sm text-on-surface-muted/60">groups</span>
-                               <span className="text-[10px] font-black text-on-surface-muted">
+                               <span className="text-[10px] font-bold text-on-surface-muted/80">
                                 {club.memberCount}
                               </span>
                              </div>
                             {club.userRole === 'owner' && (
-                              <span className="text-[7px] font-black uppercase tracking-widest bg-accent-lilac text-white px-2 py-1 rounded-lg shadow-sm shadow-accent-lilac/20">
+                              <span className="text-[8px] font-bold uppercase tracking-widest bg-on-surface text-surface px-2 py-0.5 rounded-md">
                                 Владелец
                               </span>
                             )}
                             {typeof club.unreadCount === 'number' && club.unreadCount > 0 && (
-                               <span className="text-[7px] font-black uppercase tracking-widest bg-red-500 text-white px-2 py-1 rounded-lg shadow-sm shadow-red-500/20">
+                               <span className="text-[8px] font-bold uppercase tracking-widest bg-red-500 text-white px-2 py-0.5 rounded-md">
                                 +{club.unreadCount}
                                </span>
                             )}
                           </div>
-                          <button className="w-9 h-9 rounded-xl bg-surface-container-high flex items-center justify-center group-hover:bg-on-surface transition-all duration-300 shadow-sm border border-on-surface/5">
-                            <span className="material-symbols-outlined text-on-surface-muted text-lg group-hover:text-surface group-hover:translate-x-0.5 transition-all">
-                              arrow_forward
+                          <div className="text-on-surface-muted/30 group-hover:text-on-surface transition-colors duration-300">
+                            <span className="material-symbols-outlined text-2xl group-hover:translate-x-1 transition-transform">
+                              chevron_right
                             </span>
-                          </button>
+                          </div>
                         </div>
                       </div>
                     </div>
