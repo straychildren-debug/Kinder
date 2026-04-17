@@ -30,7 +30,7 @@ export default function Home() {
   const handleQuery = (val: string) => {
     setQuery(val);
     if (debounceRef.current) clearTimeout(debounceRef.current);
-    if (!val.trim()) { setResults(EMPTY_RESULTS); setSearching(false); return; }
+    if (val.trim().length < 2) { setResults(EMPTY_RESULTS); setSearching(false); return; }
     setSearching(true);
     debounceRef.current = setTimeout(async () => {
       const r = await omnisearch(val.trim());
