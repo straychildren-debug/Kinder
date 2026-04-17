@@ -147,28 +147,34 @@ export default function Profile() {
         {/* Dynamic Content System */}
         <section className="mt-4 px-4">
           {/* Sticky Tabs */}
-          <div className="sticky top-[72px] z-20 bg-surface/80 backdrop-blur-md pt-4 pb-2 mb-2 -mx-4 px-4 flex items-center gap-1.5 overflow-x-auto scrollbar-hide border-b border-on-surface/5">
+          <div className="sticky top-[72px] z-20 bg-surface/80 backdrop-blur-md pt-6 mb-8 -mx-4 px-6 flex items-center gap-10 overflow-x-auto scrollbar-hide border-b border-on-surface/5">
             {TABS.map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id as ProfileTab)}
-                className={`relative px-3 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all whitespace-nowrap flex items-center gap-1.5 ${
+                className={`relative pb-4 border-b-[3px] text-[10px] font-black uppercase tracking-[0.2em] transition-all whitespace-nowrap flex items-center gap-2 ${
                   activeTab === tab.id 
-                    ? 'bg-on-surface text-surface shadow-lg' 
-                    : 'bg-surface-container-low text-on-surface-muted hover:bg-surface-container'
+                    ? 'border-on-surface text-on-surface' 
+                    : 'border-transparent text-on-surface-muted hover:text-on-surface hover:opacity-100'
                 }`}
               >
-                <span className={`material-symbols-outlined text-[16px]`}>
+                <span className="material-symbols-outlined text-[16px] leading-none mb-0.5">
                   {tab.icon}
                 </span>
                 {tab.label}
                 {tab.count !== undefined && tab.count > 0 && (
-                  <span className={`ml-1 px-1.5 py-0.5 rounded-md text-[8px] ${activeTab === tab.id ? 'bg-white/20 text-white' : 'bg-accent-lilac text-white'}`}>
+                  <span className={`px-1.5 py-0.5 rounded-md text-[8px] font-black ${
+                    activeTab === tab.id ? 'bg-on-surface text-surface' : 'bg-on-surface/10 text-on-surface-muted'
+                  }`}>
                     {tab.count}
                   </span>
                 )}
                 {activeTab === tab.id && (
-                  <motion.div layoutId="active-tab" className="absolute inset-0 rounded-2xl border-2 border-on-surface/10 pointer-events-none" />
+                  <motion.div 
+                    layoutId="profileTabUnderline" 
+                    className="absolute bottom-[-3px] left-0 right-0 h-[3px] bg-on-surface" 
+                    transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                  />
                 )}
               </button>
             ))}
@@ -191,10 +197,10 @@ export default function Profile() {
                   <button
                     key={filter.id}
                     onClick={() => setPubFilter(filter.id as PublicationType)}
-                    className={`px-3 py-1 rounded-full text-[8px] font-black uppercase tracking-widest transition-all ${
+                    className={`px-4 py-2 rounded-xl text-[8px] font-black uppercase tracking-widest transition-all whitespace-nowrap ${
                       pubFilter === filter.id 
-                        ? 'bg-accent-lilac text-white' 
-                        : 'bg-surface-container text-on-surface-muted'
+                        ? 'bg-on-surface text-surface shadow-md' 
+                        : 'bg-surface-container-low text-on-surface-muted hover:bg-surface-container'
                     }`}
                   >
                     {filter.label}

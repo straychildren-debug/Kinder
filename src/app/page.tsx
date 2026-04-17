@@ -157,12 +157,12 @@ export default function Home() {
         </section>
 
         {/* Category Tabs */}
-        <section className="flex gap-3 overflow-x-auto scrollbar-hide py-4 mb-4">
+        <section className="flex gap-2 overflow-x-auto scrollbar-hide py-4 mb-4">
           {['Все', 'Кино', 'Книги', 'Клубы'].map((tab, i) => (
             <button 
               key={tab} 
-              className={`flex-1 whitespace-nowrap px-3 py-2 rounded-xl text-[11px] font-black tracking-tight transition-all active:scale-95 ${
-                i === 0 ? 'bg-on-surface text-surface shadow-lg shadow-on-surface/10' : 'bg-surface-container text-on-surface-muted hover:text-on-surface hover:bg-surface-container-high'
+              className={`px-4 py-2 rounded-xl text-[8px] font-black uppercase tracking-widest transition-all whitespace-nowrap active:scale-95 ${
+                i === 0 ? 'bg-on-surface text-surface shadow-md' : 'bg-surface-container-low text-on-surface-muted hover:bg-surface-container'
               }`}
             >
               {tab}

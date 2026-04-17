@@ -34,9 +34,13 @@ export default function Leaderboard() {
               <span className="text-[10px] font-black uppercase tracking-[0.3em] text-on-surface-variant block mb-2">Сообщество знатоков</span>
               <h2 className="text-6xl font-black tracking-tighter text-on-surface leading-[0.9]">Рейтинг<br/>кураторов</h2>
             </div>
-            <div className="flex gap-2">
-              <button className="bg-surface-container-low px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-surface-container-highest transition-colors">За месяц</button>
-              <button className="bg-on-surface text-surface px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest shadow-md shadow-on-surface/5 transition-all hover:scale-95">За всё время</button>
+            <div className="flex gap-2 mb-4">
+              <button className="px-4 py-2 rounded-xl text-[8px] font-black uppercase tracking-widest transition-all whitespace-nowrap bg-surface-container-low text-on-surface-muted hover:bg-surface-container">
+                За месяц
+              </button>
+              <button className="px-4 py-2 rounded-xl text-[8px] font-black uppercase tracking-widest transition-all whitespace-nowrap bg-on-surface text-surface shadow-md">
+                За всё время
+              </button>
             </div>
           </div>
         </section>

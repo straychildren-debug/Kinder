@@ -21,18 +21,20 @@ export default function CatalogTabs({
   myListCount
 }: CatalogTabsProps) {
   return (
-    <div className="flex p-1.5 bg-on-surface/[0.03] backdrop-blur-xl rounded-2xl border border-on-surface/5 w-fit mb-8">
+    <div className="flex gap-10 mb-10 border-b border-on-surface/5 overflow-x-auto whitespace-nowrap scrollbar-hide px-2 w-full">
       <button
         onClick={() => onTabChange('catalog')}
-        className={`relative px-6 py-2.5 rounded-xl text-[13px] font-black transition-all duration-300 ${
-          activeTab === 'catalog' ? 'text-surface shadow-lg' : 'text-on-surface-muted hover:text-on-surface'
+        className={`relative pb-4 border-b-[3px] text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-300 ${
+          activeTab === 'catalog' 
+            ? 'border-on-surface text-on-surface' 
+            : 'border-transparent text-on-surface-muted hover:text-on-surface hover:opacity-100'
         }`}
       >
-        <span className="relative z-10">{catalogLabel}</span>
+        <span>{catalogLabel}</span>
         {activeTab === 'catalog' && (
           <motion.div
-            layoutId="catalogTabActive"
-            className="absolute inset-0 bg-on-surface rounded-xl z-0"
+            layoutId="catalogTabUnderline"
+            className="absolute bottom-[-3px] left-0 right-0 h-[3px] bg-on-surface"
             transition={{ type: 'spring', stiffness: 400, damping: 30 }}
           />
         )}
@@ -40,22 +42,24 @@ export default function CatalogTabs({
 
       <button
         onClick={() => onTabChange('mylist')}
-        className={`relative px-6 py-2.5 rounded-xl text-[13px] font-black transition-all duration-300 flex items-center gap-2 ${
-          activeTab === 'mylist' ? 'text-surface shadow-lg' : 'text-on-surface-muted hover:text-on-surface'
+        className={`relative pb-4 border-b-[3px] text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-300 flex items-center gap-2 ${
+          activeTab === 'mylist' 
+            ? 'border-on-surface text-on-surface' 
+            : 'border-transparent text-on-surface-muted hover:text-on-surface hover:opacity-100'
         }`}
       >
-        <span className="relative z-10">{myListLabel}</span>
+        <span>{myListLabel}</span>
         {myListCount !== undefined && myListCount > 0 && (
-          <span className={`relative z-10 text-[9px] px-1.5 py-0.5 rounded-full ${
-            activeTab === 'mylist' ? 'bg-white/20' : 'bg-on-surface/10'
+          <span className={`px-1.5 py-0.5 rounded-full text-[8px] font-black ${
+            activeTab === 'mylist' ? 'bg-on-surface text-surface' : 'bg-on-surface/10 text-on-surface-muted'
           }`}>
             {myListCount}
           </span>
         )}
         {activeTab === 'mylist' && (
           <motion.div
-            layoutId="catalogTabActive"
-            className="absolute inset-0 bg-on-surface rounded-xl z-0"
+            layoutId="catalogTabUnderline"
+            className="absolute bottom-[-3px] left-0 right-0 h-[3px] bg-on-surface"
             transition={{ type: 'spring', stiffness: 400, damping: 30 }}
           />
         )}

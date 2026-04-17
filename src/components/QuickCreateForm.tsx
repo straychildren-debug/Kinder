@@ -123,8 +123,8 @@ export default function QuickCreateForm({ userId, onSuccess }: QuickCreateFormPr
                         key={t}
                         type="button"
                         onClick={() => setType(t)}
-                        className={`px-5 py-2.5 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all flex items-center gap-2 ${
-                          type === t ? 'bg-on-surface text-surface shadow-md' : 'text-on-surface-muted hover:bg-on-surface/5'
+                        className={`px-4 py-2 rounded-xl text-[8px] font-black uppercase tracking-widest transition-all flex items-center gap-2 whitespace-nowrap ${
+                          type === t ? 'bg-on-surface text-surface shadow-md' : 'bg-surface-container-low text-on-surface-muted hover:bg-on-surface/5'
                         }`}
                       >
                         <span className="material-symbols-outlined text-[16px]">
