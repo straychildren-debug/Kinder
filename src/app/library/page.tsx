@@ -51,7 +51,7 @@ export default function Library() {
       <TopNavBar />
       <main className="pt-24 px-6 pb-32 max-w-lg mx-auto md:max-w-4xl">
         {/* Page Header */}
-        <section className="py-8">
+        <section className="pb-8 pt-0">
            <span className="text-xs font-medium text-on-surface-muted mb-1.5 block">Каталог библиотеки</span>
            <h1 className="text-2xl font-bold tracking-tight leading-tight text-on-surface">Все книги</h1>
         </section>
