@@ -23,7 +23,7 @@ const CATEGORY_ICONS: Record<string, string> = {
   'книги': 'menu_book',
 };
 
-type FilterTab = 'all' | ClubCategory;
+type FilterTab = 'all' | ClubCategory | 'my';
 
 export default function Clubs() {
   const { user } = useAuth();
@@ -111,12 +111,39 @@ export default function Clubs() {
     }
   };
 
-  const filteredClubs = clubs.filter((c) => {
-    const matchesCategory = activeFilter === 'all' || c.category === activeFilter;
-    const matchesSearch = c.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                         c.description.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesCategory && matchesSearch;
-  });
+  // Logic for filtering and sorting
+  const filteredClubs = React.useMemo(() => {
+    let result = clubs.filter((c) => {
+      const matchesSearch = c.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                           c.description.toLowerCase().includes(searchQuery.toLowerCase());
+      
+      if (activeFilter === 'my') {
+        return !!c.userRole && matchesSearch;
+      }
+      
+      const matchesCategory = activeFilter === 'all' || c.category === activeFilter;
+      return matchesCategory && matchesSearch;
+    });
+
+    // Special sorting for "My Clubs"
+    if (activeFilter === 'my') {
+      return result.sort((a, b) => {
+        // Owner first
+        if (a.userRole === 'owner' && b.userRole !== 'owner') return -1;
+        if (a.userRole !== 'owner' && b.userRole === 'owner') return 1;
+        
+        // Then by unread count
+        if ((b.unreadCount ?? 0) !== (a.unreadCount ?? 0)) {
+          return (b.unreadCount ?? 0) - (a.unreadCount ?? 0);
+        }
+        
+        // Then newest first
+        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+      });
+    }
+
+    return result;
+  }, [clubs, activeFilter, searchQuery]);
 
   // Top 2 clubs by member count for hero section
   const heroClubs = [...clubs].sort((a, b) => (b.memberCount ?? 0) - (a.memberCount ?? 0));
@@ -238,7 +265,12 @@ export default function Clubs() {
 
         {/* Filter Tabs */}
         <div className="flex gap-10 mb-10 border-b border-on-surface/5 overflow-x-auto whitespace-nowrap scrollbar-hide px-2">
-          {([['all', 'Все сообщества'], ['кино', 'Кино'], ['книги', 'Книги']] as [FilterTab, string][]).map(([key, label]) => (
+          {([
+            ['all', 'Все сообщества'], 
+            ['кино', 'Кино'], 
+            ['книги', 'Книги'],
+            ...(user ? [['my', 'Мои клубы']] : [])
+          ] as [FilterTab, string][]).map(([key, label]) => (
             <button
               key={key}
               onClick={() => setActiveFilter(key)}

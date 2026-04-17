@@ -441,6 +441,7 @@ export async function getClubs(userId?: string): Promise<Club[]> {
       createdAt: row.created_at,
       memberCount: parseInt(row.member_count),
       unreadCount: parseInt(row.unread_count),
+      userRole: row.user_role,
     }));
   }
 

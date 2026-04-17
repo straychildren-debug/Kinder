@@ -94,6 +94,7 @@ export interface Club {
   createdAt: string;
   memberCount?: number;
   unreadCount?: number;
+  userRole?: ClubRole | string | null;
 }
 
 export interface ClubMember {
