@@ -212,7 +212,7 @@ export default function Home() {
                     <h3 className="text-[12px] font-bold text-on-surface leading-tight tracking-tight mb-1 line-clamp-2">
                       {item.title}
                     </h3>
-                    <p className="text-[11px] font-medium text-on-surface-variant opacity-80 truncate uppercase tracking-wide">
+                    <p className="text-[10px] font-medium text-on-surface-variant opacity-85 truncate tracking-tight">
                       {item.author || item.director || 'Автор'}
                     </p>
                   </div>
