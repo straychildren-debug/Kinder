@@ -37,6 +37,13 @@ export default function ModerationActionModal({ content, onClose, onDecision, is
         className="w-full max-w-lg bg-white rounded-[40px] overflow-hidden border border-on-surface/5 shadow-[0_40px_80px_-20px_rgba(0,0,0,0.2)] flex flex-col relative animate-in zoom-in-95 duration-500 max-h-[92vh]"
         onClick={(e) => e.stopPropagation()}
       >
+        {/* Close Button */}
+        <button 
+          onClick={onClose}
+          className="absolute top-6 left-6 w-11 h-11 rounded-2xl bg-white/20 backdrop-blur-xl border border-white/30 flex items-center justify-center text-white hover:bg-white/40 transition-all z-20 shadow-xl"
+        >
+          <span className="material-symbols-outlined text-[24px]">close</span>
+        </button>
         {/* Top Section with Image and Glass Tag */}
         <div className="w-full aspect-[4/3] relative overflow-hidden shrink-0 group">
           {content.imageUrl ? (
