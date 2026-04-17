@@ -146,16 +146,16 @@ function CreatePageContent() {
             Ваша публикация «{title}» успешно создана и отправлена на проверку модератору.
             После одобрения она появится в общей ленте.
           </p>
-          <div className="flex gap-3">
+          <div className="flex flex-col sm:flex-row gap-4 w-full justify-center">
             <button
               onClick={() => { setSubmitted(false); setTitle(''); setDescription(''); setDraftId(null); }}
-              className="px-6 py-3 bg-surface-container-low rounded-xl font-semibold text-sm hover:bg-surface-container-high transition-colors"
+              className="px-8 py-4 bg-surface-container text-on-surface rounded-2xl font-bold text-[10px] uppercase tracking-widest border border-on-surface/5 transition-all hover:bg-surface-container-high active:scale-[0.98]"
             >
               Добавить ещё
             </button>
             <button
               onClick={() => router.push('/')}
-              className="px-6 py-3 glass-btn text-white rounded-xl font-semibold text-sm transition-transform active:scale-95"
+              className="px-8 py-4 bg-on-surface text-surface rounded-2xl font-bold text-[10px] uppercase tracking-[0.2em] transition-all hover:shadow-xl hover:shadow-on-surface/10 active:scale-[0.98]"
             >
               На главную
             </button>
@@ -353,7 +353,10 @@ function CreatePageContent() {
                       className="flex flex-col items-center justify-center w-full h-40 border-2 border-dashed border-on-surface/5 rounded-3xl bg-surface-container-low hover:bg-surface-container-high cursor-pointer transition-all group"
                     >
                       <span className="material-symbols-outlined text-4xl text-on-surface-muted/20 group-hover:text-on-surface transition-colors">add_photo_alternate</span>
-                      <span className="text-[10px] font-black uppercase tracking-widest text-on-surface-muted opacity-40 mt-4">Выбрать файл</span>
+                      <div className="flex flex-col items-center gap-1 mt-4">
+                        <span className="text-[10px] font-black uppercase tracking-widest text-on-surface-muted opacity-40">Выбрать файл</span>
+                        <span className="text-[9px] font-medium text-on-surface-muted opacity-30">или вставить из буфера (Ctrl+V)</span>
+                      </div>
                     </label>
                     
                     <div className="flex items-center gap-4">
