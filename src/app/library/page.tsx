@@ -112,40 +112,40 @@ export default function Library() {
                 </div>
                 
                 {/* Book Metadata */}
-                <div className="ml-6 flex-1 flex flex-col justify-between h-[90px] min-w-0">
-                  <div className="min-w-0">
-                    <h4 className="font-bold text-on-surface text-[15px] leading-tight mb-1 line-clamp-2">
+                <div className="ml-6 flex-1 flex flex-col h-[90px] min-w-0">
+                  <div className="min-w-0 flex-1">
+                    <h4 className="font-bold text-on-surface text-[15px] leading-tight mb-0.5 line-clamp-1">
                       {book.title}
                     </h4>
-                    <div className="flex items-center gap-2 flex-wrap mb-1.5 leading-none">
-                      <p className="text-[9px] font-bold text-on-surface-muted/60 tracking-widest uppercase">
+                    <div className="flex items-center gap-1.5 mb-1 leading-none text-on-surface-muted/60">
+                      <p className="text-[10px] font-medium italic">
                         {book.author || 'Неизвестный автор'}
                       </p>
                       {book.year && (
-                        <span className="text-[9px] font-bold text-on-surface-muted/30 tracking-widest uppercase">
-                          • {book.year}
+                        <span className="text-[10px] opacity-40">
+                          {book.year}
                         </span>
-                      )}
-                      {book.rating && (
-                        <div className="flex items-center gap-0.5 ml-1">
-                          <span className="material-symbols-outlined text-accent-lilac text-[10px]" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
-                          <span className="text-on-surface-muted/60 text-[9px] font-bold">{book.rating}</span>
-                        </div>
                       )}
                     </div>
                     {book.description && (
-                      <p className="text-[10px] text-on-surface-muted font-medium line-clamp-1 opacity-40 leading-relaxed">
+                      <p className="text-[10px] text-on-surface-muted/60 font-medium line-clamp-3 leading-[1.3] text-pretty">
                         {book.description}
                       </p>
                     )}
                   </div>
-                </div>
-                
-                {/* Action Arrow */}
-                <div className="self-end mb-1 ml-4 text-on-surface-muted/30 group-hover:text-on-surface transition-colors duration-300 h-5 flex items-center">
-                  <span className="material-symbols-outlined text-xl group-hover:translate-x-1 transition-transform">
-                    chevron_right
-                  </span>
+
+                  {/* Footer: Rating & Arrow */}
+                  <div className="flex items-center justify-end gap-3 mt-1 text-on-surface-muted/30 group-hover:text-on-surface transition-colors duration-300">
+                    {book.rating && (
+                      <div className="flex items-center gap-0.5">
+                        <span className="material-symbols-outlined text-accent-lilac text-[12px]" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+                        <span className="text-on-surface-muted/60 text-[10px] font-bold">{book.rating}</span>
+                      </div>
+                    )}
+                    <span className="material-symbols-outlined text-xl group-hover:translate-x-1 transition-transform">
+                      chevron_right
+                    </span>
+                  </div>
                 </div>
               </div>
               </MotionListItem>
