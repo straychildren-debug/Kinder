@@ -120,24 +120,24 @@ export default function Library() {
                       </h4>
                       {book.rating && (
                         <div className="flex items-center gap-0.5 mt-0.5 shrink-0">
-                          <span className="material-symbols-outlined text-accent-lilac text-[15px]" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
-                          <span className="text-on-surface-muted/60 text-[10px] font-bold">{book.rating}</span>
+                          <span className="material-symbols-outlined text-accent-lilac leading-none" style={{ fontVariationSettings: "'FILL' 1", fontSize: '15px' }}>star</span>
+                          <span className="text-on-surface-muted/90 text-[10px] font-bold leading-none">{book.rating}</span>
                         </div>
                       )}
                     </div>
-                    <div className="flex items-center gap-1.5 mb-1 leading-none text-on-surface-muted/60">
+                    <div className="flex items-center gap-1.5 mb-1 leading-none text-on-surface-muted/90">
                       <p className="text-[10px] font-medium">
                         {book.author || 'Неизвестный автор'}
                       </p>
                       {book.year && (
-                        <span className="text-[10px] opacity-40">
+                        <span className="text-[10px] opacity-70">
                           {book.year}
                         </span>
                       )}
                     </div>
                     {book.description && (
                       <div className="bg-on-surface/[0.03] -ml-2 px-2 py-1 rounded-lg mt-0.5">
-                        <p className="text-[10px] text-on-surface-muted/60 font-medium line-clamp-3 leading-[1.3] text-pretty">
+                        <p className="text-[10px] text-on-surface-muted/80 font-medium line-clamp-3 leading-[1.3] text-pretty">
                           {book.description}
                         </p>
                       </div>
