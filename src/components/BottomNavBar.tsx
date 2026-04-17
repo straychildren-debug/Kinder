@@ -18,7 +18,7 @@ export default function BottomNavBar({ activeTab = 'home' }: BottomNavBarProps) 
     { id: 'books', icon: 'menu_book', label: 'Книги', href: '/library' },
     { id: 'movies', icon: 'movie', label: 'Фильмы', href: '/movies' },
     { id: 'clubs', icon: 'groups', label: 'Клубы', href: '/clubs' },
-    { id: 'profile', icon: 'person', label: 'Профиль', href: '/profile' },
+    { id: 'users', icon: 'leaderboard', label: 'Рейтинг', href: '/leaderboard' },
   ];
 
   return (
