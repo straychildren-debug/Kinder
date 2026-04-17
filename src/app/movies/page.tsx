@@ -126,12 +126,6 @@ export default function Movies() {
                       <span className="material-symbols-outlined text-on-surface/10 text-2xl">movie</span>
                     </div>
                   )}
-                  {movie.rating && (
-                    <div className="absolute top-1 right-1 bg-accent-lilac/90 backdrop-blur-md px-1.5 py-0.5 rounded-md flex items-center gap-0.5 border border-white/50 shadow-sm">
-                      <span className="material-symbols-outlined text-on-accent-lilac text-[8px]" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
-                      <span className="text-on-accent-lilac text-[9px] font-bold">{movie.rating}</span>
-                    </div>
-                  )}
                 </div>
                 
                 {/* Movie Metadata */}
@@ -140,7 +134,7 @@ export default function Movies() {
                     <h4 className="font-bold text-on-surface text-[15px] leading-tight mb-1 line-clamp-2">
                       {movie.title}
                     </h4>
-                    <div className="flex items-center gap-2 flex-wrap leading-none">
+                    <div className="flex items-center gap-2 flex-wrap mb-1.5 leading-none">
                       {movie.year && (
                         <span className="text-[9px] font-bold text-on-surface-muted/30 tracking-widest uppercase">
                           {movie.year}
@@ -150,20 +144,24 @@ export default function Movies() {
                       <p className="text-[9px] font-bold text-on-surface-muted/60 tracking-widest uppercase truncate max-w-[120px]">
                         {movie.director || 'Неизвестный режиссер'}
                       </p>
+                      {movie.rating && (
+                        <div className="flex items-center gap-0.5 ml-1">
+                          <span className="material-symbols-outlined text-accent-lilac text-[10px]" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+                          <span className="text-on-surface-muted/60 text-[9px] font-bold">{movie.rating}</span>
+                        </div>
+                      )}
                     </div>
+                    {movie.actors && movie.actors.length > 0 && (
+                      <p className="text-[9px] font-medium text-on-surface-variant/30 line-clamp-1 h-3 flex items-center mb-1">
+                        {movie.actors.join(', ')}
+                      </p>
+                    )}
+                    {movie.description && (
+                      <p className="text-[10px] text-on-surface-muted font-medium line-clamp-1 opacity-40 leading-relaxed">
+                        {movie.description}
+                      </p>
+                    )}
                   </div>
-                  
-                  {movie.actors && movie.actors.length > 0 && (
-                    <p className="text-[9px] font-medium text-on-surface-variant/30 line-clamp-1 h-3 flex items-center">
-                      {movie.actors.join(', ')}
-                    </p>
-                  )}
-                  
-                  {movie.description && (
-                    <p className="text-[10px] text-on-surface-muted font-medium line-clamp-1 opacity-40 leading-none">
-                      {movie.description}
-                    </p>
-                  )}
                 </div>
 
                 {/* Action Arrow */}

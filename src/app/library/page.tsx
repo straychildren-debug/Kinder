@@ -109,12 +109,6 @@ export default function Library() {
                       <span className="material-symbols-outlined text-on-surface/10 text-2xl">auto_stories</span>
                     </div>
                   )}
-                  {book.rating && (
-                    <div className="absolute top-1 right-1 bg-accent-lilac/90 backdrop-blur-md px-1.5 py-0.5 rounded-md flex items-center gap-0.5 border border-white/50 shadow-sm">
-                      <span className="material-symbols-outlined text-on-accent-lilac text-[8px]" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
-                      <span className="text-on-accent-lilac text-[9px] font-bold">{book.rating}</span>
-                    </div>
-                  )}
                 </div>
                 
                 {/* Book Metadata */}
@@ -123,7 +117,7 @@ export default function Library() {
                     <h4 className="font-bold text-on-surface text-[15px] leading-tight mb-1 line-clamp-2">
                       {book.title}
                     </h4>
-                    <div className="flex items-center gap-2 flex-wrap leading-none">
+                    <div className="flex items-center gap-2 flex-wrap mb-1.5 leading-none">
                       <p className="text-[9px] font-bold text-on-surface-muted/60 tracking-widest uppercase">
                         {book.author || 'Неизвестный автор'}
                       </p>
@@ -132,14 +126,19 @@ export default function Library() {
                           • {book.year}
                         </span>
                       )}
+                      {book.rating && (
+                        <div className="flex items-center gap-0.5 ml-1">
+                          <span className="material-symbols-outlined text-accent-lilac text-[10px]" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+                          <span className="text-on-surface-muted/60 text-[9px] font-bold">{book.rating}</span>
+                        </div>
+                      )}
                     </div>
+                    {book.description && (
+                      <p className="text-[10px] text-on-surface-muted font-medium line-clamp-1 opacity-40 leading-relaxed">
+                        {book.description}
+                      </p>
+                    )}
                   </div>
-                  
-                  {book.description && (
-                    <p className="text-[10px] text-on-surface-muted font-medium line-clamp-1 opacity-40 leading-none">
-                      {book.description}
-                    </p>
-                  )}
                 </div>
                 
                 {/* Action Arrow */}
