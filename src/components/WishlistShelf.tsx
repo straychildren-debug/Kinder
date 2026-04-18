@@ -50,7 +50,7 @@ export default function WishlistShelf({
   }
 
   return (
-    <div className="grid grid-cols-3 md:grid-cols-6 gap-x-3 gap-y-8">
+    <div className="grid grid-cols-3 gap-x-3 gap-y-10 sm:gap-x-5 sm:gap-y-12">
       {items.map((w, i) => {
         const c = w.content;
         if (!c) return null;
@@ -90,15 +90,6 @@ export default function WishlistShelf({
                   </span>
                 </div>
               )}
-
-              {/* Type Icon (Top Left) */}
-              <div className="absolute top-2 left-2">
-                 <div className="bg-white/80 backdrop-blur-md w-5 h-5 rounded-md flex items-center justify-center border border-white shrink-0 shadow-sm opacity-60">
-                    <span className="material-symbols-outlined text-[10px] text-on-surface">
-                      {c.type === 'movie' ? 'movie' : 'menu_book'}
-                    </span>
-                 </div>
-              </div>
             </div>
 
             {/* Simple Metadata (Library Style) */}
@@ -106,15 +97,9 @@ export default function WishlistShelf({
               <h4 className="text-[11px] font-bold text-on-surface leading-tight line-clamp-2 tracking-tight mb-1 group-hover:text-primary transition-colors">
                 {c.title}
               </h4>
-              <div className="flex items-center gap-1.5 truncate">
-                <span className="text-[10px] font-medium text-on-surface-variant/80 tracking-tight">
-                  {c.type === 'movie' ? 'Кино' : 'Книга'}
-                </span>
-                <span className="w-0.5 h-0.5 rounded-full bg-on-surface-variant/30" />
-                <span className="text-[10px] font-medium text-on-surface-variant/80 truncate tracking-tight">
-                  {(c as any).author || (c as any).director || 'Автор'}
-                </span>
-              </div>
+              <p className="text-[10px] font-medium text-on-surface-variant/80 truncate tracking-tight">
+                {(c as any).author || (c as any).director || (c.type === 'movie' ? 'Режиссер' : 'Автор')}
+              </p>
             </div>
           </motion.div>
         );

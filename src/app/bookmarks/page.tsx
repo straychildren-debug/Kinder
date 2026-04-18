@@ -40,7 +40,7 @@ export default function BookmarksPage() {
           <p className="text-on-surface-variant text-sm font-medium mt-2">Ваша персональная коллекция</p>
         </header>
 
-        <section className="bg-surface-container-lowest rounded-[32px] p-6 border border-on-surface/5">
+        <section className="min-h-[400px]">
           <WishlistShelf 
             userId={user.id} 
             onOpenContent={(c) => setOpenedContent(c)} 
