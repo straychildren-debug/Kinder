@@ -24,6 +24,7 @@ export default function PublicProfileModal({ user, onClose, onOpenContent }: Pub
   const [bookmarks, setBookmarks] = useState<WishlistItem[]>([]);
   const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedReview, setSelectedReview] = useState<Review | null>(null);
 
   useEffect(() => {
     async function loadAllData() {
@@ -195,7 +196,7 @@ export default function PublicProfileModal({ user, onClose, onOpenContent }: Pub
                       <EmptyState icon="rate_review" text="Пользователь еще не оставлял отзывы" />
                     ) : (
                       reviews.map((review) => (
-                        <ReviewItem key={review.id} review={review} onOpenContent={onOpenContent} />
+                        <ReviewItem key={review.id} review={review} onClick={() => setSelectedReview(review)} />
                       ))
                     )}
                   </motion.div>
@@ -204,6 +205,90 @@ export default function PublicProfileModal({ user, onClose, onOpenContent }: Pub
             )}
           </div>
         </motion.div>
+
+        {/* Full Review Sub-Modal */}
+        <AnimatePresence>
+          {selectedReview && (
+            <div className="fixed inset-0 z-[110] flex items-center justify-center p-6">
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                onClick={() => setSelectedReview(null)}
+                className="fixed inset-0 bg-on-surface/60 backdrop-blur-md"
+              />
+              <motion.div
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.9, opacity: 0 }}
+                className="relative w-full max-w-sm bg-surface rounded-[32px] p-8 shadow-2xl overflow-hidden"
+              >
+                <div className="flex items-start justify-between mb-6">
+                  <div className="flex gap-4">
+                    {selectedReview.content && (
+                      <div className="relative w-12 h-16 rounded-lg overflow-hidden shadow-md shrink-0 border border-on-surface/5">
+                        <Image 
+                          src={selectedReview.content.imageUrl || defaultBlurDataURL} 
+                          alt={selectedReview.content.title} 
+                          fill 
+                          className="object-cover" 
+                        />
+                      </div>
+                    )}
+                    <div>
+                      <h3 className="text-xs font-black uppercase tracking-widest text-on-surface leading-tight mb-1">
+                        {selectedReview.content?.title}
+                      </h3>
+                      <div className="flex items-center gap-1 text-accent-amber">
+                        {[...Array(5)].map((_, i) => (
+                          <span key={i} className="material-symbols-outlined text-[14px]" style={{ fontVariationSettings: i < (selectedReview.rating || 0) ? "'FILL' 1" : "'FILL' 0" }}>
+                            star
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                  <button 
+                    onClick={() => setSelectedReview(null)}
+                    className="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant"
+                  >
+                    <span className="material-symbols-outlined text-[18px]">close</span>
+                  </button>
+                </div>
+
+                <div className="max-h-[40vh] overflow-y-auto mb-8 pr-2 custom-scrollbar">
+                  <p className="text-[15px] font-medium text-on-surface/90 leading-[1.6] italic">
+                    «{selectedReview.text}»
+                  </p>
+                </div>
+
+                <div className="flex flex-col gap-3">
+                  {selectedReview.content && (
+                    <button
+                      onClick={() => {
+                        onOpenContent?.(selectedReview.content!);
+                        setSelectedReview(null);
+                      }}
+                      className="w-full py-4 bg-on-surface text-surface rounded-2xl font-black text-[10px] uppercase tracking-[0.2em] transition-all hover:scale-[1.02] active:scale-95 shadow-xl shadow-on-surface/10"
+                    >
+                      К произведению
+                    </button>
+                  )}
+                  <button
+                    onClick={() => setSelectedReview(null)}
+                    className="w-full py-3 text-[10px] font-black uppercase tracking-widest text-on-surface-variant/40"
+                  >
+                    Закрыть
+                  </button>
+                </div>
+              </motion.div>
+            </div>
+          )}
+        </AnimatePresence>
+      </div>
+    </AnimatePresence>
+  );
+}
       </div>
     </AnimatePresence>
   );
@@ -244,15 +329,15 @@ function ContentCard({ item, onClick }: { item: ContentItem; onClick: () => void
   );
 }
 
-function ReviewItem({ review, onOpenContent }: { review: Review; onOpenContent?: (c: ContentItem) => void }) {
+function ReviewItem({ review, onClick }: { review: Review; onClick: () => void }) {
   return (
-    <div className="bg-white p-4 rounded-2xl border border-on-surface/[0.03] shadow-sm">
+    <button
+      onClick={onClick}
+      className="w-full text-left bg-white p-4 rounded-2xl border border-on-surface/[0.03] shadow-sm hover:bg-surface-container-low hover:shadow-md transition-all group"
+    >
       <div className="flex gap-3 mb-3">
         {review.content && (
-          <button 
-            onClick={() => onOpenContent?.(review.content!)}
-            className="relative w-10 h-14 rounded-lg overflow-hidden bg-surface-container shrink-0 shadow-sm border border-on-surface/5"
-          >
+          <div className="relative w-10 h-14 rounded-lg overflow-hidden bg-surface-container shrink-0 shadow-sm border border-on-surface/5">
             {review.content.imageUrl ? (
               <Image src={review.content.imageUrl} alt={review.content.title} fill sizes="40px" className="object-cover" />
             ) : (
@@ -260,11 +345,11 @@ function ReviewItem({ review, onOpenContent }: { review: Review; onOpenContent?:
                 <span className="material-symbols-outlined text-[16px]">{review.content.type === 'movie' ? 'movie' : 'menu_book'}</span>
               </div>
             )}
-          </button>
+          </div>
         )}
         <div className="flex-1 min-w-0">
           <div className="flex items-center justify-between gap-2 mb-1">
-            <h4 className="text-[10px] font-black text-on-surface truncate uppercase tracking-widest">{review.content?.title || 'Без названия'}</h4>
+            <h4 className="text-[10px] font-black text-on-surface truncate uppercase tracking-widest group-hover:text-primary transition-colors">{review.content?.title || 'Без названия'}</h4>
             {review.rating && (
                <div className="flex items-center gap-0.5 px-1.5 py-0.5 rounded-full bg-accent-amber/10 text-accent-amber">
                  <span className="material-symbols-outlined text-[10px]" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
@@ -277,10 +362,10 @@ function ReviewItem({ review, onOpenContent }: { review: Review; onOpenContent?:
           </span>
         </div>
       </div>
-      <p className="text-[11px] font-medium text-on-surface/80 leading-relaxed line-clamp-4 italic">
+      <p className="text-[11px] font-medium text-on-surface/80 leading-relaxed line-clamp-3 italic">
         «{review.text}»
       </p>
-    </div>
+    </button>
   );
 }
 
