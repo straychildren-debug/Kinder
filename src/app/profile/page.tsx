@@ -124,7 +124,7 @@ export default function Profile() {
             </div>
 
             <div className="p-6 rounded-[32px] bg-surface-container-low border border-on-surface/5 flex items-center justify-between group cursor-pointer hover:bg-surface-container transition-colors"
-                 onClick={() => router.push('/bookmarks')}>
+                  onClick={() => router.push('/bookmarks')}>
                 <div className="flex items-center gap-4">
                   <div className="w-12 h-12 rounded-2xl bg-accent-lilac text-white flex items-center justify-center">
                     <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>bookmark</span>
@@ -132,6 +132,20 @@ export default function Profile() {
                   <div>
                     <h3 className="font-bold text-on-surface">Закладки</h3>
                     <p className="text-[11px] text-on-surface-muted uppercase font-bold tracking-widest mt-0.5">Вся ваша история</p>
+                  </div>
+                </div>
+                <span className="material-symbols-outlined text-on-surface-muted group-hover:translate-x-1 transition-transform">chevron_right</span>
+            </div>
+
+            <div className="p-6 rounded-[32px] bg-surface-container-low border border-on-surface/5 flex items-center justify-between group cursor-pointer hover:bg-surface-container transition-colors"
+                  onClick={() => router.push('/drafts')}>
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-2xl bg-on-surface-variant/10 text-on-surface-variant flex items-center justify-center">
+                    <span className="material-symbols-outlined">edit_note</span>
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-on-surface">Черновики</h3>
+                    <p className="text-[11px] text-on-surface-muted uppercase font-bold tracking-widest mt-0.5">Личное пространство</p>
                   </div>
                 </div>
                 <span className="material-symbols-outlined text-on-surface-muted group-hover:translate-x-1 transition-transform">chevron_right</span>

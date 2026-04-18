@@ -177,6 +177,14 @@ export default function ProfileSidebar({ isOpen, onClose }: ProfileSidebarProps)
                 <span className="text-sm font-medium">Закладки</span>
               </Link>
               <Link
+                href="/drafts"
+                onClick={onClose}
+                className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-surface-container-low transition-colors"
+              >
+                <span className="material-symbols-outlined text-[20px]">edit_note</span>
+                <span className="text-sm font-medium">Черновики</span>
+              </Link>
+              <Link
                 href="/create"
                 onClick={onClose}
                 className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-surface-container-low transition-colors"

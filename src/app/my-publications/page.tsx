@@ -51,7 +51,6 @@ export default function MyPublicationsPage() {
 
   const approvedCount = userContent.filter(c => c.status === 'approved').length;
   const moderationCount = userContent.filter(c => c.status === 'pending').length;
-  const draftsCount = userContent.filter(c => c.status === 'draft' || c.status === 'rejected').length;
 
   const filteredContent = userContent.filter(item => {
     if (activeTab === 'publications') {
@@ -61,14 +60,12 @@ export default function MyPublicationsPage() {
       return item.type === pubFilter;
     }
     if (activeTab === 'moderation') return item.status === 'pending';
-    if (activeTab === 'drafts') return item.status === 'draft' || item.status === 'rejected';
-    return true;
+    return false;
   });
 
   const TABS = [
     { id: 'publications', label: 'Опубликовано', count: approvedCount },
     { id: 'moderation', label: 'На модерации', count: moderationCount },
-    { id: 'drafts', label: 'Черновики', count: draftsCount },
   ];
 
   return (
@@ -77,12 +74,12 @@ export default function MyPublicationsPage() {
       <main className="pt-24 pb-32 max-w-lg mx-auto">
         <header className="px-6 mb-8 text-center">
           <h1 className="text-3xl font-black text-on-surface tracking-tighter uppercase mb-2">Мои публикации</h1>
-          <p className="text-on-surface-variant text-sm font-medium">Управление вашим контентом</p>
+          <p className="text-on-surface-variant text-sm font-medium">Ваш одобренный и активный контент</p>
         </header>
 
         {/* Dynamic Content System */}
         <section className="px-4 overflow-hidden">
-          {/* Tabs - Static & Ultra Minimalist (No sticky, no background to avoid overlap) */}
+          {/* Tabs - Premium Minimalist Style (No Background) */}
           <div className="pt-4 mb-8 flex items-center justify-between border-b border-on-surface/[0.03]">
             {TABS.map((tab) => (
               <button
