@@ -100,75 +100,71 @@ export default function Movies() {
              )}
           </div>
         ) : (
-               <div
-                className="group flex bg-white p-5 rounded-[32px] border border-on-surface/5 shadow-sm hover:shadow-xl transition-all duration-500 cursor-pointer items-start gap-5"
-                onClick={() => setSelectedContent(movie)}
-              >
-                {/* Movie Poster */}
-                <div className="shrink-0 flex flex-col items-center">
-                  <div className="relative w-16 h-24 rounded-2xl overflow-hidden bg-surface-container border border-on-surface/5 shadow-lg group-hover:scale-105 transition-transform duration-500">
-                    {movie.imageUrl ? (
-                      <Image
-                        src={movie.imageUrl}
-                        alt={movie.title}
-                        fill
-                        sizes="64px"
-                        placeholder="blur"
-                        blurDataURL={defaultBlurDataURL}
-                        className="object-cover group-hover:scale-110 transition-transform duration-700"
-                      />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center">
-                        <span className="material-symbols-outlined text-on-surface/10 text-2xl">movie</span>
-                      </div>
-                    )}
-                  </div>
-                </div>
-                
-                {/* Movie Metadata */}
-                <div className="flex-1 min-w-0 flex flex-col">
-                  <div className="flex items-center justify-between gap-4 mb-2">
-                    <div className="flex items-center gap-2">
-                      <span className="text-[8px] font-bold text-on-surface-variant opacity-40 uppercase tracking-widest">
-                        {movie.year || '—'}
-                      </span>
+          <div className="space-y-4">
+            {displayMovies.map((movie, index) => (
+              <MotionListItem key={movie.id} index={index}>
+                <div
+                  className="group flex bg-white p-5 rounded-[32px] border border-on-surface/5 shadow-sm hover:shadow-xl transition-all duration-500 cursor-pointer items-start gap-5"
+                  onClick={() => setSelectedContent(movie)}
+                >
+                  {/* Movie Poster */}
+                  <div className="shrink-0 flex flex-col items-center">
+                    <div className="relative w-16 h-24 rounded-2xl overflow-hidden bg-surface-container border border-on-surface/5 shadow-lg group-hover:scale-105 transition-transform duration-500">
+                      {movie.imageUrl ? (
+                        <Image
+                          src={movie.imageUrl}
+                          alt={movie.title}
+                          fill
+                          sizes="64px"
+                          placeholder="blur"
+                          blurDataURL={defaultBlurDataURL}
+                          className="object-cover group-hover:scale-110 transition-transform duration-700"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center">
+                          <span className="material-symbols-outlined text-on-surface/10 text-2xl">movie</span>
+                        </div>
+                      )}
                     </div>
-                    {movie.rating && (
-                      <div className="flex items-center gap-1.5 opacity-60">
-                        <span className="material-symbols-outlined text-[14px] text-amber-500 fill-1">star</span>
-                        <span className="text-[11px] font-black text-on-surface">{movie.rating}</span>
-                      </div>
-                    )}
                   </div>
-
-                  <h3 className="text-lg font-black text-on-surface truncate uppercase tracking-tighter leading-none mb-1 group-hover:text-on-surface transition-colors">
-                    {movie.title}
-                  </h3>
-                  <p className="text-[11px] text-on-surface-variant font-bold opacity-40 truncate mb-4">
-                    {movie.director || 'Неизвестный режиссер'}
-                  </p>
                   
-                  {movie.description && (
-                    <div className="p-4 bg-surface-container/30 rounded-[20px] border border-on-surface/5 relative group-hover:bg-surface-container/50 transition-colors">
-                      <p className="text-[11px] font-medium text-on-surface-variant/70 leading-relaxed line-clamp-2">
-                        {movie.description}
-                      </p>
+                  {/* Movie Metadata */}
+                  <div className="flex-1 min-w-0 flex flex-col">
+                    <div className="flex items-center justify-between gap-4 mb-2">
+                      <div className="flex items-center gap-2">
+                        <span className="text-[8px] font-bold text-on-surface-variant opacity-40 uppercase tracking-widest">
+                          {movie.year || '—'}
+                        </span>
+                      </div>
+                      {movie.rating && (
+                        <div className="flex items-center gap-1.5 opacity-60">
+                          <span className="material-symbols-outlined text-[14px] text-amber-500 fill-1">star</span>
+                          <span className="text-[11px] font-black text-on-surface">{movie.rating}</span>
+                        </div>
+                      )}
                     </div>
-                  )}
-                </div>
 
-                {/* Arrow */}
-                <div className="self-center shrink-0 w-10 h-10 rounded-full bg-surface-container/50 flex items-center justify-center opacity-30 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all duration-300">
-                  <span className="material-symbols-outlined text-[18px] text-on-surface">chevron_right</span>
-                </div>
-              </div>
-description}
+                    <h3 className="text-lg font-black text-on-surface truncate uppercase tracking-tighter leading-none mb-1 group-hover:text-on-surface transition-colors">
+                      {movie.title}
+                    </h3>
+                    <p className="text-[11px] text-on-surface-variant font-bold opacity-40 truncate mb-4">
+                      {movie.director || 'Неизвестный режиссер'}
+                    </p>
+                    
+                    {movie.description && (
+                      <div className="p-4 bg-surface-container/30 rounded-[20px] border border-on-surface/5 relative group-hover:bg-surface-container/50 transition-colors">
+                        <p className="text-[11px] font-medium text-on-surface-variant/70 leading-relaxed line-clamp-2">
+                          {movie.description}
                         </p>
                       </div>
                     )}
                   </div>
+
+                  {/* Arrow */}
+                  <div className="self-center shrink-0 w-10 h-10 rounded-full bg-surface-container/50 flex items-center justify-center opacity-30 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all duration-300">
+                    <span className="material-symbols-outlined text-[18px] text-on-surface">chevron_right</span>
+                  </div>
                 </div>
-              </div>
               </MotionListItem>
             ))}
           </div>
