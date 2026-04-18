@@ -177,7 +177,6 @@ export default function MyPublicationsPage() {
                       {/* Status Badges (Top Left) */}
                       {item.status === 'pending' && (
                         <div className="absolute top-2 left-2 px-2 py-0.5 rounded-md bg-amber-500 text-white text-[9px] font-bold z-10 shadow-lg border border-white/20">
-                        <div className="absolute top-2 left-2 px-2 py-0.5 rounded-md bg-amber-500 text-white text-[9px] font-bold z-10 shadow-lg">
                           ОЖИДАЕТ
                         </div>
                       )}
