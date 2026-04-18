@@ -82,8 +82,8 @@ export default function MyPublicationsPage() {
 
         {/* Dynamic Content System */}
         <section className="px-4 overflow-hidden">
-          {/* Sticky Tabs - Premium Minimalist Style */}
-          <div className="sticky top-[72px] z-20 bg-surface/80 backdrop-blur-md pt-4 mb-8 flex items-center justify-between border-b border-on-surface/5">
+          {/* Sticky Tabs - Ultra Minimalist Style (No Background) */}
+          <div className="sticky top-[72px] z-20 pt-4 mb-8 flex items-center justify-between border-b border-on-surface/[0.03]">
             {TABS.map((tab) => (
               <button
                 key={tab.id}
