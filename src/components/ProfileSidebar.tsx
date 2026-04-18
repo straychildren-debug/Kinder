@@ -161,6 +161,22 @@ export default function ProfileSidebar({ isOpen, onClose }: ProfileSidebarProps)
                 <span className="text-sm font-medium">Мой профиль</span>
               </Link>
               <Link
+                href="/my-publications"
+                onClick={onClose}
+                className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-surface-container-low transition-colors"
+              >
+                <span className="material-symbols-outlined text-[20px]">library_books</span>
+                <span className="text-sm font-medium">Мои публикации</span>
+              </Link>
+              <Link
+                href="/bookmarks"
+                onClick={onClose}
+                className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-surface-container-low transition-colors"
+              >
+                <span className="material-symbols-outlined text-[20px]">bookmark</span>
+                <span className="text-sm font-medium">Закладки</span>
+              </Link>
+              <Link
                 href="/create"
                 onClick={onClose}
                 className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-surface-container-low transition-colors"
