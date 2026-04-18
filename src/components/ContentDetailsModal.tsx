@@ -198,7 +198,7 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
           ) : (
              <div className="w-full h-full flex items-center justify-center text-on-surface-variant/20">Backdrop</div>
           )}
-          <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent"></div>
+          <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-white via-white/70 to-transparent"></div>
         </div>
 
         {/* Overlapping Poster — sits between backdrop and card */}
