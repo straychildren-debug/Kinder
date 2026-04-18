@@ -178,7 +178,7 @@ export default function Home() {
             </div>
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-5">
-              {visibleContent.map((item, index) => (
+              {visibleContent.slice(0, 6).map((item, index) => (
                 <MotionListItem key={item.id} index={index} className="h-full">
                 <button
                   onClick={() => setSelectedContent(item)}
