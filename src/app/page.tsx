@@ -212,7 +212,7 @@ export default function Home() {
                     </span>
                     
                     {item.description && (
-                      <p className="text-[10px] font-medium text-on-surface-variant/60 leading-normal line-clamp-2 mt-auto">
+                      <p className="text-[10px] font-medium text-on-surface-variant/60 leading-normal line-clamp-3 mt-auto">
                         {item.description}
                       </p>
                     )}
