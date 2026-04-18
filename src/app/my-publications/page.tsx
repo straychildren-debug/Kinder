@@ -70,7 +70,7 @@ export default function MyPublicationsPage() {
 
   return (
     <>
-      <TopNavBar title="Мои публикации" />
+      <TopNavBar title="Мои публикации" showBack={true} backPath="/profile" />
       <main className="pt-24 pb-32 max-w-lg mx-auto">
         <header className="px-6 mb-8 text-center">
           <h1 className="text-3xl font-black text-on-surface tracking-tighter uppercase mb-2">Мои публикации</h1>
@@ -201,18 +201,12 @@ export default function MyPublicationsPage() {
 
                     {/* Simple Metadata (Library Style) */}
                     <div className="mt-2.5 px-0.5 flex flex-col">
-                      <h4 className="text-[11px] font-bold text-on-surface leading-tight line-clamp-2 tracking-tight mb-1 group-hover:text-primary transition-colors">
+                      <h3 className="text-[11px] font-bold text-on-surface leading-tight line-clamp-2 tracking-tight mb-1 group-hover:text-primary transition-colors">
                         {item.title}
-                      </h4>
-                      <div className="flex items-center gap-1.5 truncate">
-                        <span className="text-[10px] font-medium text-on-surface-variant/80 tracking-tight">
-                          {item.type === 'movie' ? 'Кино' : 'Книга'}
-                        </span>
-                        <span className="w-0.5 h-0.5 rounded-full bg-on-surface-variant/30" />
-                        <span className="text-[10px] font-medium text-on-surface-variant/80 truncate tracking-tight">
-                          {(item as any).author || (item as any).director || 'Автор'}
-                        </span>
-                      </div>
+                      </h3>
+                      <p className="text-[10px] font-medium text-on-surface-variant/80 truncate tracking-tight">
+                        {(item as any).author || (item as any).director || (item.type === 'movie' ? 'Режиссер' : 'Автор')}
+                      </p>
                     </div>
                   </motion.div>
                 ))}

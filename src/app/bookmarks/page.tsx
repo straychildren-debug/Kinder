@@ -30,7 +30,7 @@ export default function BookmarksPage() {
 
   return (
     <>
-      <TopNavBar title="Закладки" />
+      <TopNavBar title="Закладки" showBack={true} backPath="/profile" />
       <main className="pt-24 pb-32 px-6 max-w-lg mx-auto">
         <header className="mb-10 text-center">
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-[24px] bg-accent-lilac/5 text-accent-lilac mb-4">

@@ -6,16 +6,28 @@ import ProfileSidebar from './ProfileSidebar';
 import OmniSearch from './OmniSearch';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 interface TopNavBarProps {
   title?: string;
+  showBack?: boolean;
+  backPath?: string;
 }
 
-export default function TopNavBar({ title = 'Кинотека' }: TopNavBarProps) {
+export default function TopNavBar({ title = 'Кинотека', showBack = false, backPath }: TopNavBarProps) {
   const { user } = useAuth();
+  const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
+
+  const handleBack = () => {
+    if (backPath) {
+      router.push(backPath);
+    } else {
+      window.history.back();
+    }
+  };
 
   React.useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -47,19 +59,30 @@ export default function TopNavBar({ title = 'Кинотека' }: TopNavBarProps
     <>
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-2xl border-b border-on-surface/5 px-4 md:px-8 py-4">
         <div className="max-w-full mx-auto flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2 md:gap-3 group">
-            <div className="w-9 h-9 md:w-10 md:h-10 bg-on-surface text-surface rounded-xl flex items-center justify-center shadow-md group-hover:scale-110 transition-transform duration-300">
-              <span className="text-lg md:text-xl font-black italic">K</span>
-            </div>
-            <div className="flex flex-col">
-              <span className="text-lg md:text-xl font-black tracking-tighter text-on-surface uppercase leading-tight">
-                Kinder
-              </span>
-              <span className="text-[7px] font-black text-on-surface-muted uppercase tracking-[0.3em] leading-none mb-0.5">
-                сообщество
-              </span>
-            </div>
-          </Link>
+          <div className="flex items-center gap-4">
+            {showBack ? (
+              <button
+                onClick={handleBack}
+                className="w-10 h-10 flex items-center justify-center rounded-xl bg-on-surface/5 text-on-surface hover:bg-on-surface/10 transition-all active:scale-95"
+              >
+                <span className="material-symbols-outlined text-[22px]">arrow_back</span>
+              </button>
+            ) : (
+              <Link href="/" className="flex items-center gap-2 md:gap-3 group">
+                <div className="w-9 h-9 md:w-10 md:h-10 bg-on-surface text-surface rounded-xl flex items-center justify-center shadow-md group-hover:scale-110 transition-transform duration-300">
+                  <span className="text-lg md:text-xl font-black italic">K</span>
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-lg md:text-xl font-black tracking-tighter text-on-surface uppercase leading-tight">
+                    Kinder
+                  </span>
+                  <span className="text-[7px] font-black text-on-surface-muted uppercase tracking-[0.3em] leading-none mb-0.5">
+                    сообщество
+                  </span>
+                </div>
+              </Link>
+            )}
+          </div>
           
           <div className="flex items-center gap-3 md:gap-6">
             {user && (
