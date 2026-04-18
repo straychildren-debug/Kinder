@@ -15,6 +15,38 @@ export default function Profile() {
   const { user, isLoading } = useAuth();
   const router = useRouter();
   const [openedContent, setOpenedContent] = useState<ContentItem | null>(null);
+  const [counts, setCounts] = useState({
+    publications: 0,
+    bookmarks: 0,
+    drafts: 0,
+    awards: 0
+  });
+  const [loadingStats, setLoadingStats] = useState(true);
+
+  const loadProfileStats = async () => {
+    if (!user) return;
+    try {
+      const [content, wishlist] = await Promise.all([
+        import('@/lib/db').then(m => m.getContentByUser(user.id)),
+        import('@/lib/wishlist').then(m => m.getWishlist(user.id))
+      ]);
+
+      setCounts({
+        publications: content.filter(i => i.status === 'approved').length,
+        bookmarks: wishlist.length,
+        drafts: content.filter(i => i.status === 'draft' || i.status === 'rejected').length,
+        awards: user.stats?.awards || 0
+      });
+    } catch (error) {
+      console.error('Error loading stats:', error);
+    } finally {
+      setLoadingStats(false);
+    }
+  };
+
+  React.useEffect(() => {
+    if (user) loadProfileStats();
+  }, [user]);
 
   if (isLoading) {
     return (
@@ -89,13 +121,15 @@ export default function Profile() {
           {/* Quick Stats Grid */}
           <div className="grid grid-cols-3 gap-4">
              {[
-               { label: 'Публикации', value: user.stats?.publications || 0 },
-               { label: 'Награды', value: user.stats?.awards || 0 },
+               { label: 'Публикации', value: counts.publications },
+               { label: 'Награды', value: counts.awards },
                { label: 'Рейтинг', value: (user.stats?.avgRating || 0).toFixed(1) }
              ].map((stat, i) => (
-               <div key={i} className="flex flex-col">
-                 <span className="text-xl font-black text-on-surface tracking-tighter">{stat.value}</span>
-                 <span className="text-[9px] font-bold uppercase tracking-widest text-on-surface-variant/50">{stat.label}</span>
+               <div key={i} className="flex flex-col items-center text-center">
+                 <span className="text-xl font-black text-on-surface tracking-tighter leading-none mb-1">
+                   {loadingStats ? '...' : stat.value}
+                 </span>
+                 <span className="text-[9px] font-bold uppercase tracking-widest text-on-surface-variant/40 leading-none">{stat.label}</span>
                </div>
              ))}
           </div>
@@ -103,9 +137,9 @@ export default function Profile() {
           {/* Navigation List */}
           <div className="bg-surface-container-low/30 rounded-[32px] border border-on-surface/[0.03] overflow-hidden">
             {[
-              { id: 'pubs', label: 'Мои публикации', path: '/my-publications', icon: 'library_books', count: user.stats?.publications },
-              { id: 'bookmarks', label: 'Закладки', path: '/bookmarks', icon: 'bookmark', count: null },
-              { id: 'drafts', label: 'Черновики', path: '/drafts', icon: 'edit_note', count: null }
+              { id: 'pubs', label: 'Мои публикации', path: '/my-publications', icon: 'library_books', count: counts.publications },
+              { id: 'bookmarks', label: 'Закладки', path: '/bookmarks', icon: 'bookmark', count: counts.bookmarks },
+              { id: 'drafts', label: 'Черновики', path: '/drafts', icon: 'edit_note', count: counts.drafts }
             ].map((item, i, arr) => (
               <button 
                 key={item.id}
@@ -118,14 +152,16 @@ export default function Profile() {
                       {item.icon}
                     </span>
                   </div>
-                  <span className="text-sm font-bold text-on-surface/90">{item.label}</span>
+                  <div className="flex items-center gap-2.5">
+                    <span className="text-sm font-bold text-on-surface/90">{item.label}</span>
+                    {!loadingStats && item.count > 0 && (
+                      <div className="min-w-[20px] h-[20px] px-1.5 flex items-center justify-center rounded-full bg-on-surface/[0.05] border border-on-surface/[0.03]">
+                        <span className="text-[10px] font-black text-on-surface-variant/70">{item.count}</span>
+                      </div>
+                    )}
+                  </div>
                 </div>
-                <div className="flex items-center gap-3">
-                  {item.count !== null && item.count > 0 && (
-                    <span className="text-[10px] font-black text-on-surface-variant/40">{item.count}</span>
-                  )}
-                  <span className="material-symbols-outlined text-on-surface-variant/30 text-[18px] group-hover:translate-x-0.5 transition-transform">chevron_right</span>
-                </div>
+                <span className="material-symbols-outlined text-on-surface-variant/30 text-[18px] group-hover:translate-x-0.5 transition-transform">chevron_right</span>
               </button>
             ))}
           </div>
