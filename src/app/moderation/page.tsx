@@ -329,8 +329,8 @@ export default function ModerationPage() {
                              )}
                           </div>
 
-                          <div className="self-center shrink-0 w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center opacity-0 group-hover:opacity-100 -translate-x-4 group-hover:translate-x-0 transition-all">
-                             <span className={`material-symbols-outlined text-[20px] ${
+                          <div className="self-center shrink-0 w-10 h-10 rounded-full bg-surface-container/50 flex items-center justify-center opacity-30 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all duration-300">
+                             <span className={`material-symbols-outlined text-[18px] ${
                                viewingList === 'approved' ? 'text-emerald-500' : viewingList === 'rejected' ? 'text-red-500' : 'text-amber-500'
                              }`}>chevron_right</span>
                           </div>
