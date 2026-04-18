@@ -87,11 +87,11 @@ export default function Library() {
             {displayBooks.map((book, index) => (
               <MotionListItem key={book.id} index={index} className="h-full">
                 <button
-                  className="w-full h-full flex flex-col group text-left outline-none bg-white p-3 rounded-[32px] border border-on-surface/5 shadow-sm hover:shadow-xl transition-all duration-500"
+                  className="w-full h-full flex flex-col group text-left outline-none bg-white p-3 rounded-2xl border border-on-surface/5 shadow-sm hover:shadow-xl transition-all duration-500"
                   onClick={() => setSelectedContent(book)}
                 >
                   {/* Fixed Aspect Ratio Poster */}
-                  <div className="relative aspect-[2/3] rounded-[24px] overflow-hidden bg-surface-container border border-on-surface/5 shadow-sm group-hover:scale-[1.02] transition-transform duration-500 mb-4 ring-1 ring-on-surface/5">
+                  <div className="relative aspect-[2/3] rounded-xl overflow-hidden bg-surface-container border border-on-surface/5 shadow-sm group-hover:scale-[1.02] transition-transform duration-500 mb-4 ring-1 ring-on-surface/5">
                     {book.rating && (
                       <div className="absolute top-2 right-2 px-1.5 py-0.5 rounded-lg bg-black/60 backdrop-blur-md border border-white/10 flex items-center gap-1 z-10">
                         <span className="material-symbols-outlined text-white" style={{ fontVariationSettings: "'FILL' 1", fontSize: '10px' }}>star</span>
