@@ -183,7 +183,7 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
 
       <div className="flex-1 overflow-y-auto pb-safe">
         {/* Cinematic Backdrop with Blurry Cover */}
-        <div className="relative aspect-video md:aspect-[21/9] w-full bg-surface-container overflow-hidden">
+        <div className="relative aspect-[4/3] md:aspect-[21/7] w-full bg-surface-container overflow-hidden">
           {content.imageUrl ? (
              <Image
                src={content.imageUrl}
