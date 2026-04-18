@@ -39,9 +39,6 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
   const [wishlisted, setWishlisted] = useState(false);
   const [wishlistBusy, setWishlistBusy] = useState(false);
 
-  const [wishlisted, setWishlisted] = useState(false);
-  const [wishlistBusy, setWishlistBusy] = useState(false);
-
   // Similar content
   const [similar, setSimilar] = useState<ContentItem[]>([]);
 
