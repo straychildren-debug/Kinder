@@ -83,7 +83,7 @@ export default function Library() {
              </p>
           </div>
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-5 gap-y-8">
+          <div className="grid grid-cols-3 gap-x-3 gap-y-10 sm:gap-x-5 sm:gap-y-12">
             {displayBooks.map((book, index) => (
               <MotionListItem key={book.id} index={index}>
                 <button
