@@ -84,7 +84,7 @@ export default function Library() {
              </p>
           </div>
         ) : (
-          <div className="grid grid-cols-3 gap-x-3 gap-y-10 sm:gap-x-5 sm:gap-y-12">
+          <div className="grid grid-cols-3 gap-x-2 gap-y-6 sm:gap-x-4 sm:gap-y-8">
             {displayBooks.map((book, index) => (
               <MotionListItem key={book.id} index={index}>
                 <button
@@ -92,13 +92,13 @@ export default function Library() {
                   onClick={() => setSelectedContent(book)}
                 >
                   {/* Card with Backing */}
-                  <div className="w-full bg-white p-2 pb-4 rounded-[28px] border border-on-surface/[0.03] shadow-[0_8px_24px_rgba(0,0,0,0.04)] group-hover:shadow-[0_12px_32px_rgba(0,0,0,0.08)] transition-all duration-500">
+                  <div className="w-full bg-white p-1.5 pb-3 rounded-[20px] border border-on-surface/[0.03] shadow-[0_4px_16px_rgba(0,0,0,0.03)] group-hover:shadow-[0_8px_24px_rgba(0,0,0,0.06)] transition-all duration-500">
                     {/* Compact Poster */}
-                    <div className="relative aspect-[2/3] w-full rounded-[20px] overflow-hidden bg-surface-container-low/50 border border-on-surface/[0.03]">
+                    <div className="relative aspect-[2/3] w-full rounded-[14px] overflow-hidden bg-surface-container-low/50 border border-on-surface/[0.03]">
                       {book.rating && (
-                        <div className="absolute top-2 right-2 px-1.5 py-0.5 rounded-lg bg-black/60 backdrop-blur-md border border-white/10 flex items-center gap-1 z-10">
-                          <span className="material-symbols-outlined text-white" style={{ fontVariationSettings: "'FILL' 1", fontSize: '10px' }}>star</span>
-                          <span className="text-[10px] font-black text-white">{book.rating.toFixed(1)}</span>
+                        <div className="absolute top-1.5 right-1.5 px-1 py-0.5 rounded-md bg-black/60 backdrop-blur-md border border-white/10 flex items-center gap-1 z-10">
+                          <span className="material-symbols-outlined text-white" style={{ fontVariationSettings: "'FILL' 1", fontSize: '9px' }}>star</span>
+                          <span className="text-[9px] font-black text-white">{book.rating.toFixed(1)}</span>
                         </div>
                       )}
                       {book.imageUrl ? (
@@ -117,11 +117,11 @@ export default function Library() {
                     </div>
 
                     {/* Simple Metadata */}
-                    <div className="mt-3 px-1.5 flex flex-col">
-                      <h3 className="text-[11px] font-bold text-on-surface leading-tight line-clamp-2 tracking-tight mb-1 group-hover:text-primary transition-colors min-h-[2.4em]">
+                    <div className="mt-2 px-1 flex flex-col">
+                      <h3 className="text-[10px] font-bold text-on-surface leading-tight line-clamp-2 tracking-tight mb-1 group-hover:text-primary transition-colors min-h-[2.4em]">
                         {book.title}
                       </h3>
-                      <p className="text-[10px] font-medium text-on-surface-variant/80 truncate tracking-tight">
+                      <p className="text-[9px] font-medium text-on-surface-variant/80 truncate tracking-tight">
                         {formatAuthor(book.author || '')}
                       </p>
                     </div>

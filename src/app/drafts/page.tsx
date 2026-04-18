@@ -63,7 +63,7 @@ export default function DraftsPage() {
                 <p className="text-sm font-medium uppercase tracking-widest text-[10px]">У вас пока нет черновиков</p>
               </div>
             ) : (
-              <div className="grid grid-cols-3 gap-x-3 gap-y-8">
+              <div className="grid grid-cols-3 gap-x-2 gap-y-6">
                 {userContent.map((item) => (
                   <motion.div
                     key={item.id}
@@ -74,12 +74,12 @@ export default function DraftsPage() {
                     onClick={() => setOpenedContent(item)}
                   >
                     {/* Card with Backing (Library Style) */}
-                    <div className="w-full bg-white p-2 pb-4 rounded-[28px] border border-on-surface/[0.03] shadow-[0_8px_24px_rgba(0,0,0,0.04)] group-hover:shadow-[0_12px_32px_rgba(0,0,0,0.08)] transition-all duration-500">
+                    <div className="w-full bg-white p-1.5 pb-3 rounded-[20px] border border-on-surface/[0.03] shadow-[0_4px_16px_rgba(0,0,0,0.03)] group-hover:shadow-[0_8px_24px_rgba(0,0,0,0.06)] transition-all duration-500">
                       {/* Compact Poster */}
-                      <div className="relative aspect-[2/3] w-full rounded-[20px] overflow-hidden bg-surface-container-low/50 border border-on-surface/[0.03]">
+                      <div className="relative aspect-[2/3] w-full rounded-[14px] overflow-hidden bg-surface-container-low/50 border border-on-surface/[0.03]">
                         {item.status === 'rejected' && (
-                          <div className="absolute top-2 left-2 px-2 py-0.5 rounded-md bg-red-500 text-white text-[9px] font-bold z-10 shadow-lg flex items-center gap-1">
-                            <span className="material-symbols-outlined text-[10px]">block</span>
+                          <div className="absolute top-1.5 left-1.5 px-1.5 py-0.5 rounded bg-red-500 text-white text-[8px] font-bold z-10 shadow-lg flex items-center gap-1">
+                            <span className="material-symbols-outlined text-[9px]">block</span>
                             <span>ОТКАЗ</span>
                           </div>
                         )}
@@ -102,11 +102,11 @@ export default function DraftsPage() {
                       </div>
 
                       {/* Simple Metadata (Library Style) */}
-                      <div className="mt-3 px-1.5 flex flex-col">
-                        <h3 className="text-[11px] font-bold text-on-surface leading-tight line-clamp-2 tracking-tight mb-1 group-hover:text-primary transition-colors min-h-[2.4em]">
+                      <div className="mt-2 px-1 flex flex-col">
+                        <h3 className="text-[10px] font-bold text-on-surface leading-tight line-clamp-2 tracking-tight mb-1 group-hover:text-primary transition-colors min-h-[2.4em]">
                           {item.title}
                         </h3>
-                        <p className="text-[10px] font-medium text-on-surface-variant/80 truncate tracking-tight">
+                        <p className="text-[9px] font-medium text-on-surface-variant/80 truncate tracking-tight">
                           {formatAuthor((item as any).author || (item as any).director || '')}
                         </p>
                       </div>
