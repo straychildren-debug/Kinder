@@ -254,49 +254,86 @@ export default function ModerationPage() {
                       >
                         <button 
                           onClick={() => setSelectedForModeration(item)}
-                          className={`w-full bg-white rounded-2xl p-4 border border-on-surface/5 shadow-sm hover:shadow-md transition-all flex items-center gap-4 group text-left ${
+                          className={`w-full bg-white rounded-[32px] p-5 border border-on-surface/5 shadow-sm hover:shadow-xl transition-all flex items-start gap-5 group text-left ${
                              viewingList === 'approved' ? 'hover:border-emerald-500/20' : viewingList === 'rejected' ? 'hover:border-red-500/20' : 'hover:border-amber-500/20'
                           }`}
                         >
-                          <div className="relative w-12 h-16 rounded-lg overflow-hidden bg-surface-container shrink-0">
-                            {item.imageUrl ? (
-                              <Image
-                                src={item.imageUrl}
-                                alt={item.title}
-                                fill
-                                sizes="48px"
-                                placeholder="blur"
-                                blurDataURL={defaultBlurDataURL}
-                                className="object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
-                              />
-                            ) : (
-                              <div className="w-full h-full flex items-center justify-center text-[10px] font-black opacity-20">NA</div>
-                            )}
+                          {/* Thumbnail Column */}
+                          <div className="shrink-0 flex flex-col items-center">
+                            <div className="relative w-16 h-24 rounded-2xl overflow-hidden bg-surface-container border border-on-surface/5 shadow-lg group-hover:scale-105 transition-transform duration-500">
+                              {item.imageUrl ? (
+                                <Image
+                                  src={item.imageUrl}
+                                  alt={item.title}
+                                  fill
+                                  sizes="64px"
+                                  placeholder="blur"
+                                  blurDataURL={defaultBlurDataURL}
+                                  className="object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
+                                />
+                              ) : (
+                                <div className="w-full h-full flex items-center justify-center text-[10px] font-black opacity-20 uppercase">No Cover</div>
+                              )}
+                              
+                              {/* Type Overlay */}
+                              <div className="absolute inset-x-0 bottom-0 bg-black/40 backdrop-blur-md py-1 text-center">
+                                <span className="text-[7px] font-black text-white uppercase tracking-widest">{item.type === 'movie' ? 'Кино' : 'Книга'}</span>
+                              </div>
+                            </div>
                           </div>
-                          <div className="flex-1 min-w-0">
-                             <div className="flex items-center gap-2 mb-0.5">
-                               <span className="text-[8px] font-bold uppercase tracking-widest opacity-40">{item.type === 'movie' ? 'Movie' : 'Book'}</span>
-                               <span className="text-[8px] font-bold opacity-20">{new Date(item.createdAt).toLocaleDateString()}</span>
-                               {item.status === 'rejected' && (
-                                 <span className="ml-auto text-[8px] font-black text-red-500 uppercase tracking-widest">Отклонено</span>
-                               )}
-                               {item.status === 'approved' && (
-                                 <span className="ml-auto text-[8px] font-black text-emerald-500 uppercase tracking-widest">Актив</span>
-                               )}
+
+                          {/* Content Column */}
+                          <div className="flex-1 min-w-0 flex flex-col">
+                             <div className="flex items-center justify-between gap-4 mb-2">
+                               <div className="flex items-center gap-2">
+                                 <span className="text-[8px] font-bold text-on-surface-variant opacity-40 uppercase tracking-widest">
+                                   {new Date(item.createdAt).toLocaleDateString()}
+                                 </span>
+                                 {item.status === 'rejected' && (
+                                   <span className="text-[8px] font-black text-red-500 uppercase tracking-widest bg-red-50 px-2 py-0.5 rounded-full">Отклонено</span>
+                                 )}
+                                 {item.status === 'approved' && (
+                                   <span className="text-[8px] font-black text-emerald-500 uppercase tracking-widest bg-emerald-50 px-2 py-0.5 rounded-full">Актив</span>
+                                 )}
+                               </div>
+                               
+                               {/* Rating Score */}
+                               <div className="flex items-center gap-1.5 opacity-60">
+                                 <span className="material-symbols-outlined text-[14px] text-amber-500 fill-1">star</span>
+                                 <span className="text-[11px] font-black text-on-surface">{item.rating || '—'}</span>
+                               </div>
                              </div>
-                             <h3 className="font-black text-on-surface truncate uppercase tracking-tight">{item.title}</h3>
-                             <p className="text-[10px] text-on-surface-variant font-medium opacity-50 truncate mb-1">{item.author || item.director || 'Unknown'}</p>
+
+                             <h3 className="text-lg font-black text-on-surface truncate uppercase tracking-tighter leading-none mb-1 group-hover:text-on-surface transition-colors">
+                               {item.title}
+                             </h3>
+                             <p className="text-[11px] text-on-surface-variant font-bold opacity-40 truncate mb-4">
+                               {item.author || item.director || 'Автор не указан'}
+                             </p>
                              
+                             {/* Description Bubble */}
+                             <div className="p-4 bg-surface-container/30 rounded-[20px] border border-on-surface/5 relative group-hover:bg-surface-container/50 transition-colors">
+                               <p className="text-[11px] font-medium text-on-surface-variant/70 leading-relaxed line-clamp-2">
+                                 {item.description || 'Описание отсутствует...'}
+                               </p>
+                             </div>
+
                              {item.status === 'rejected' && item.rejectionReason && (
-                               <div className="flex items-start gap-1.5 mt-2 p-2 bg-red-50 rounded-lg border border-red-100/50">
-                                 <span className="material-symbols-outlined text-[14px] text-red-500 mt-0.5">error</span>
-                                 <p className="text-[9px] font-bold text-red-700 leading-tight line-clamp-2">{item.rejectionReason}</p>
+                               <div className="flex items-start gap-2 mt-4 p-3 bg-red-500/5 rounded-2xl border border-red-500/10">
+                                 <span className="material-symbols-outlined text-[16px] text-red-500 mt-0.5">warning</span>
+                                 <div className="flex-1">
+                                   <span className="text-[8px] font-black text-red-600 uppercase tracking-widest block mb-1">Причина отказа</span>
+                                   <p className="text-[10px] font-bold text-red-900 leading-tight">{item.rejectionReason}</p>
+                                 </div>
                                </div>
                              )}
                           </div>
-                          <span className={`material-symbols-outlined opacity-0 group-hover:opacity-100 transition-opacity ${
-                            viewingList === 'approved' ? 'text-emerald-500' : viewingList === 'rejected' ? 'text-red-500' : 'text-amber-500'
-                          }`}>chevron_right</span>
+
+                          <div className="self-center shrink-0 w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center opacity-0 group-hover:opacity-100 -translate-x-4 group-hover:translate-x-0 transition-all">
+                             <span className={`material-symbols-outlined text-[20px] ${
+                               viewingList === 'approved' ? 'text-emerald-500' : viewingList === 'rejected' ? 'text-red-500' : 'text-amber-500'
+                             }`}>chevron_right</span>
+                          </div>
                         </button>
                       </div>
                     ))}
