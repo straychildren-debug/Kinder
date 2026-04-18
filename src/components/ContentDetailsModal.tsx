@@ -192,7 +192,7 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
                sizes="(min-width: 768px) 1024px, 100vw"
                placeholder="blur"
                blurDataURL={defaultBlurDataURL}
-               className="object-cover scale-105 blur-lg opacity-60 brightness-75"
+               className="object-cover scale-105 blur-sm opacity-60 brightness-75"
                priority
              />
           ) : (
@@ -204,7 +204,7 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
         {/* Overlapping Poster — sits between backdrop and card */}
         <div className="relative z-30 flex justify-center -mt-28 mb-[-60px] pointer-events-none">
           <div className="w-32 md:w-40 aspect-[2/3] pointer-events-auto">
-            <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-xl border-4 border-white">
+            <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-lg border-4 border-white">
                {content.imageUrl ? (
                  <Image
                    src={content.imageUrl}
