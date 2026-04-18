@@ -182,8 +182,8 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
       </div>
 
       <div className="flex-1 overflow-y-auto pb-safe">
-        {/* Cinematic Backdrop with Blurry Cover */}
-        <div className="relative aspect-[4/3] md:aspect-[21/7] w-full bg-surface-container overflow-hidden">
+        {/* Cinematic Backdrop */}
+        <div className="relative aspect-[4/3] md:aspect-[21/9] w-full bg-surface-container overflow-hidden">
           {content.imageUrl ? (
              <Image
                src={content.imageUrl}
@@ -198,11 +198,11 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
           ) : (
              <div className="w-full h-full flex items-center justify-center text-on-surface-variant/20">Backdrop</div>
           )}
-          <div className="absolute inset-0 bg-gradient-to-t from-background via-black/20 to-transparent"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent"></div>
         </div>
 
         {/* Overlapping Poster — sits between backdrop and card */}
-        <div className="relative z-30 flex justify-center -mt-28 mb-[-60px] pointer-events-none">
+        <div className="relative z-30 flex justify-center -mt-36 mb-[-60px] pointer-events-none">
           <div className="w-32 md:w-40 aspect-[2/3] pointer-events-auto">
             <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-lg border-4 border-white">
                {content.imageUrl ? (
@@ -223,7 +223,7 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
         </div>
 
         {/* Content Info */}
-        <div className="px-6 relative z-10">
+        <div className="px-6 relative z-10 -mt-6">
           <div className="bg-surface rounded-3xl p-8 pt-20 border border-on-surface/5 shadow-2xl">
 
             <div className="text-center mb-6">
