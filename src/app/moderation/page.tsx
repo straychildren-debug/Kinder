@@ -245,7 +245,7 @@ export default function ModerationPage() {
                     </button>
                   </div>
                 ) : (
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-6 gap-y-10">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-5">
                     {itemsList.map((item, index) => (
                       <div 
                         key={item.id} 
@@ -254,10 +254,10 @@ export default function ModerationPage() {
                       >
                         <button 
                           onClick={() => setSelectedForModeration(item)}
-                          className="w-full flex flex-col group text-left outline-none"
+                          className="w-full h-full flex flex-col group text-left outline-none bg-white p-3 rounded-[32px] border border-on-surface/5 shadow-sm hover:shadow-xl transition-all duration-500"
                         >
                           {/* Poster Column */}
-                          <div className="relative aspect-[2/3] rounded-3xl overflow-hidden bg-surface-container border border-on-surface/5 shadow-sm group-hover:shadow-2xl group-hover:-translate-y-2 transition-all duration-500 mb-4 ring-1 ring-on-surface/5">
+                          <div className="relative aspect-[2/3] rounded-2xl overflow-hidden bg-surface-container border border-on-surface/5 shadow-sm group-hover:scale-[1.02] transition-transform duration-500 mb-4 ring-1 ring-on-surface/5">
                             {item.rating && (
                               <div className="absolute top-2 right-2 px-1.5 py-0.5 rounded-lg bg-black/60 backdrop-blur-md border border-white/10 flex items-center gap-1 z-10 animate-in fade-in zoom-in duration-500">
                                 <span className="material-symbols-outlined text-white" style={{ fontVariationSettings: "'FILL' 1", fontSize: '10px' }}>star</span>
@@ -293,15 +293,19 @@ export default function ModerationPage() {
                           </div>
 
                           {/* Metadata Block */}
-                          <div className="space-y-1">
-                            <h3 className="text-sm font-black text-[#1a1c1e] leading-tight line-clamp-2 uppercase tracking-tight group-hover:text-amber-600 transition-colors">
+                          <div className="px-1 flex flex-col h-full">
+                            <h3 className="text-[11px] font-black text-[#1a1c1e] leading-tight line-clamp-2 uppercase tracking-tight group-hover:text-amber-600 transition-colors mb-1">
                               {item.title}
                             </h3>
-                            <div className="flex items-center justify-between gap-2">
-                              <span className="text-[11px] font-bold text-on-surface-variant/60 truncate flex-1 leading-none">
-                                {item.author || item.director || 'Unknown'}
-                              </span>
-                            </div>
+                            <span className="text-[10px] font-bold text-on-surface-variant/40 truncate leading-none mb-3 block">
+                              {item.author || item.director || 'Unknown'}
+                            </span>
+
+                            {item.description && (
+                              <p className="text-[10px] font-medium text-on-surface-variant/60 leading-normal line-clamp-2 mt-auto min-h-[2.4em]">
+                                {item.description}
+                              </p>
+                            )}
                           </div>
                         </button>
                       </div>
