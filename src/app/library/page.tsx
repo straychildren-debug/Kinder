@@ -83,15 +83,15 @@ export default function Library() {
              </p>
           </div>
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-5">
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-5 gap-y-8">
             {displayBooks.map((book, index) => (
-              <MotionListItem key={book.id} index={index} className="h-full">
+              <MotionListItem key={book.id} index={index}>
                 <button
-                  className="w-full h-full flex flex-col group text-left outline-none bg-white p-3 rounded-2xl border border-on-surface/5 shadow-sm hover:shadow-xl transition-all duration-500"
+                  className="w-full flex flex-col group text-left outline-none"
                   onClick={() => setSelectedContent(book)}
                 >
-                  {/* Fixed Aspect Ratio Poster */}
-                  <div className="relative aspect-[2/3] rounded-xl overflow-hidden bg-surface-container border border-on-surface/5 shadow-sm group-hover:scale-[1.02] transition-transform duration-500 mb-4 ring-1 ring-on-surface/5">
+                  {/* Compact Poster */}
+                  <div className="relative aspect-[2/3] w-full rounded-xl overflow-hidden bg-surface-container-low/50 border border-on-surface/[0.03] shadow-[0_4px_12px_rgba(0,0,0,0.01)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.04)] transition-all duration-300">
                     {book.rating && (
                       <div className="absolute top-2 right-2 px-1.5 py-0.5 rounded-lg bg-black/60 backdrop-blur-md border border-white/10 flex items-center gap-1 z-10">
                         <span className="material-symbols-outlined text-white" style={{ fontVariationSettings: "'FILL' 1", fontSize: '10px' }}>star</span>
@@ -106,29 +106,21 @@ export default function Library() {
                         sizes="(max-width: 768px) 50vw, 33vw"
                         placeholder="blur"
                         blurDataURL={defaultBlurDataURL}
-                        className="object-cover transition-transform duration-700 group-hover:scale-110"
+                        className="object-cover transition-transform duration-700 group-hover:scale-105"
                       />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center">
-                        <span className="material-symbols-outlined text-on-surface/10 text-3xl">auto_stories</span>
-                      </div>
+                      <div className="w-full h-full flex items-center justify-center text-[10px] font-black opacity-20 uppercase">No Poster</div>
                     )}
                   </div>
 
-                  {/* Metadata Block */}
-                  <div className="px-1 flex flex-col flex-1">
-                    <h3 className="text-[11px] font-black text-[#1a1c1e] leading-tight line-clamp-2 uppercase tracking-tight group-hover:text-amber-600 transition-colors mb-1">
+                  {/* Simple Metadata */}
+                  <div className="mt-2.5 px-0.5 flex flex-col">
+                    <h3 className="text-[11px] font-bold text-on-surface leading-tight line-clamp-2 tracking-tight mb-1 group-hover:text-primary transition-colors">
                       {book.title}
                     </h3>
-                    <span className="text-[10px] font-bold text-on-surface-variant/40 truncate leading-none mb-3 block">
-                      {book.author || 'Unknown Author'}
-                    </span>
-                    
-                    {book.description && (
-                      <p className="text-[10px] font-medium text-on-surface-variant/60 leading-normal line-clamp-2 mt-auto">
-                        {book.description}
-                      </p>
-                    )}
+                    <p className="text-[10px] font-medium text-on-surface-variant/80 truncate tracking-tight">
+                      {book.author || 'Автор'}
+                    </p>
                   </div>
                 </button>
               </MotionListItem>
