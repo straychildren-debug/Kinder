@@ -13,6 +13,7 @@ import { MotionListItem } from "@/components/Motion";
 import CatalogTabs, { CatalogTab } from "@/components/CatalogTabs";
 import Image from "next/image";
 import { defaultBlurDataURL } from "@/lib/image-blur";
+import { formatAuthor } from "@/lib/format";
 
 export default function Library() {
   const { user } = useAuth();
@@ -115,11 +116,11 @@ export default function Library() {
 
                   {/* Simple Metadata */}
                   <div className="mt-2.5 px-0.5 flex flex-col">
-                    <h3 className="text-[11px] font-bold text-on-surface leading-tight line-clamp-2 tracking-tight mb-1 group-hover:text-primary transition-colors">
+                    <h3 className="text-[11px] font-bold text-on-surface leading-tight line-clamp-2 tracking-tight mb-1 group-hover:text-primary transition-colors min-h-[2.4em]">
                       {book.title}
                     </h3>
                     <p className="text-[10px] font-medium text-on-surface-variant/80 truncate tracking-tight">
-                      {book.author || 'Автор'}
+                      {formatAuthor(book.author || '')}
                     </p>
                   </div>
                 </button>

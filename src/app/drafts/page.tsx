@@ -11,6 +11,7 @@ import Image from "next/image";
 import { defaultBlurDataURL } from "@/lib/image-blur";
 import ContentDetailsModal from "@/components/ContentDetailsModal";
 import { motion } from "framer-motion";
+import { formatAuthor } from "@/lib/format";
 
 export default function DraftsPage() {
   const { user, isLoading } = useAuth();
@@ -98,11 +99,11 @@ export default function DraftsPage() {
                     </div>
                       {/* Simple Metadata (Library Style) */}
                     <div className="mt-2.5 px-0.5 flex flex-col">
-                      <h3 className="text-[11px] font-bold text-on-surface leading-tight line-clamp-2 tracking-tight mb-1 group-hover:text-primary transition-colors">
+                      <h3 className="text-[11px] font-bold text-on-surface leading-tight line-clamp-2 tracking-tight mb-1 group-hover:text-primary transition-colors min-h-[2.4em]">
                         {item.title}
                       </h3>
                       <p className="text-[10px] font-medium text-on-surface-variant/80 truncate tracking-tight">
-                        {(item as any).author || (item as any).director || (item.type === 'movie' ? 'Режиссер' : 'Автор')}
+                        {formatAuthor((item as any).author || (item as any).director || '')}
                       </p>
                     </div>
                   </motion.div>

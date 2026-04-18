@@ -6,6 +6,7 @@ import { motion } from 'framer-motion';
 import { getWishlist } from '@/lib/wishlist';
 import type { WishlistItem, ContentItem } from '@/lib/types';
 import { defaultBlurDataURL } from '@/lib/image-blur';
+import { formatAuthor } from '@/lib/format';
 
 export default function WishlistShelf({
   userId,
@@ -94,11 +95,11 @@ export default function WishlistShelf({
 
             {/* Simple Metadata (Library Style) */}
             <div className="mt-2.5 px-0.5 flex flex-col">
-              <h4 className="text-[11px] font-bold text-on-surface leading-tight line-clamp-2 tracking-tight mb-1 group-hover:text-primary transition-colors">
+              <h4 className="text-[11px] font-bold text-on-surface leading-tight line-clamp-2 tracking-tight mb-1 group-hover:text-primary transition-colors min-h-[2.4em]">
                 {c.title}
               </h4>
               <p className="text-[10px] font-medium text-on-surface-variant/80 truncate tracking-tight">
-                {(c as any).author || (c as any).director || (c.type === 'movie' ? 'Режиссер' : 'Автор')}
+                {formatAuthor((c as any).author || (c as any).director || '')}
               </p>
             </div>
           </motion.div>
