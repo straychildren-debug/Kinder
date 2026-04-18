@@ -265,6 +265,17 @@ export default function ModerationPage() {
 
                           {/* Poster Column */}
                           <div className="relative aspect-[2/3] rounded-3xl overflow-hidden bg-surface-container border border-on-surface/5 shadow-sm group-hover:shadow-2xl group-hover:-translate-y-2 transition-all duration-500 mb-4 ring-1 ring-on-surface/5">
+                            {item.rating && (
+                              <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-md px-2 py-1 rounded-xl flex items-center gap-1 shadow-lg z-10 border border-white/20 animate-in fade-in zoom-in duration-500">
+                                <span 
+                                  className="material-symbols-outlined text-[10px] text-amber-500" 
+                                  style={{ fontVariationSettings: "'FILL' 1, 'wght' 700" }}
+                                >
+                                  star
+                                </span>
+                                <span className="text-[10px] font-black text-on-surface tracking-tighter">{item.rating}</span>
+                              </div>
+                            )}
                             {item.imageUrl ? (
                               <Image
                                 src={item.imageUrl}
@@ -299,13 +310,9 @@ export default function ModerationPage() {
                               {item.title}
                             </h3>
                             <div className="flex items-center justify-between gap-2">
-                              <span className="text-[11px] font-bold text-on-surface-variant/60 truncate flex-1">
+                              <span className="text-[11px] font-bold text-on-surface-variant/60 truncate flex-1 leading-none">
                                 {item.author || item.director || 'Unknown'}
                               </span>
-                              <div className="flex items-center gap-1 shrink-0 bg-surface-container px-2 py-0.5 rounded-full border border-on-surface/5">
-                                <span className="material-symbols-outlined text-[12px] text-amber-500 fill-1">star</span>
-                                <span className="text-[10px] font-black text-on-surface">{item.rating || '—'}</span>
-                              </div>
                             </div>
                           </div>
                         </button>
