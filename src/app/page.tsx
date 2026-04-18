@@ -3,11 +3,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import TopNavBar from "@/components/TopNavBar";
 import BottomNavBar from "@/components/BottomNavBar";
-import { getApprovedContent } from "@/lib/db";
+import { getApprovedContent, getTopAuthorsByLikes, getTopCommenters, getTopPublicists } from "@/lib/db";
 import { useAuth } from "@/components/AuthProvider";
 import Link from "next/link";
 import Image from "next/image";
-import { ContentItem } from "@/lib/types";
+import { ContentItem, LeaderboardUser } from "@/lib/types";
 import { defaultBlurDataURL } from "@/lib/image-blur";
 import ContentDetailsModal from "@/components/ContentDetailsModal";
 import { FeedSkeletonList } from "@/components/Skeleton";
@@ -25,6 +25,9 @@ export default function Home() {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<OmnisearchResult>(EMPTY_RESULTS);
   const [searching, setSearching] = useState(false);
+  const [topAuthors, setTopAuthors] = useState<LeaderboardUser[]>([]);
+  const [topCommenters, setTopCommenters] = useState<LeaderboardUser[]>([]);
+  const [topPublicists, setTopPublicists] = useState<LeaderboardUser[]>([]);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const visibleContent = approvedContent;
@@ -46,8 +49,16 @@ export default function Home() {
   useEffect(() => {
     async function load() {
       try {
-        const data = await getApprovedContent();
-        setApprovedContent(data);
+        const [contentData, authors, commenters, publicists] = await Promise.all([
+          getApprovedContent(),
+          getTopAuthorsByLikes(5),
+          getTopCommenters(5),
+          getTopPublicists(5)
+        ]);
+        setApprovedContent(contentData);
+        setTopAuthors(authors);
+        setTopCommenters(commenters);
+        setTopPublicists(publicists);
       } catch (err) {
         console.error('Initial load failed:', err);
       } finally {
@@ -237,48 +248,124 @@ export default function Home() {
           />
         )}
 
-        {/* Social Proof & Sidebar Elements */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-12">
-           {!user && (
-             <div className="bg-surface p-8 rounded-2xl border border-on-surface/5 space-y-5">
-               <h3 className="text-2xl font-bold tracking-tight leading-tight text-on-surface">Присоединяйтесь</h3>
-               <p className="text-sm text-on-surface-variant leading-relaxed">
-                 Войдите, чтобы создавать контент, оставлять отзывы и участвовать в рейтинге сообщества.
-               </p>
-               <Link
-                 href="/login"
-                 className="block w-full py-3 bg-on-surface text-surface rounded-xl font-semibold text-center text-sm transition-all hover:opacity-90 active:scale-[0.98]"
-               >
-                 Войти
-               </Link>
-             </div>
-           )}
+        {/* Leaderboards Section */}
+        <section className="pb-16">
+          <div className="flex flex-col gap-2 mb-10">
+            <h2 className="text-3xl font-black text-on-surface tracking-tighter uppercase leading-none">Герои нашего форума</h2>
+            <div className="h-1 w-12 bg-amber-500 rounded-full"></div>
+          </div>
 
-          <div className="bg-surface-container-low p-8 rounded-2xl border border-on-surface/5">
-            <h3 className="text-lg font-bold text-on-surface mb-6 tracking-tight">Лучшие авторы</h3>
-            <div className="flex flex-col gap-5">
-              {[
-                { icon: 'auto_stories', name: 'Елена Радуга', detail: '203 отзыва · ★ 9.5' },
-                { icon: 'movie_filter', name: 'Анастасия Волкова', detail: '142 отзыва · ★ 9.1' },
-              ].map((item, i) => (
-                <div key={i} className="flex items-center gap-4 group cursor-pointer">
-                  <div className="w-12 h-12 rounded-xl bg-surface border border-on-surface/5 flex items-center justify-center transition-all group-hover:bg-surface-container">
-                    <span className="material-symbols-outlined text-on-surface text-xl">{item.icon}</span>
-                  </div>
-                  <div>
-                    <p className="text-sm font-semibold tracking-tight text-on-surface leading-tight">{item.name}</p>
-                    <p className="text-xs font-medium text-on-surface-muted mt-0.5">
-                      {item.detail}
-                    </p>
-                  </div>
-                </div>
-              ))}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* Top Authors */}
+            <LeaderboardColumn 
+              title="Лучшие авторы" 
+              subtitle="Больше всего лайков за отзывы"
+              icon="stars" 
+              users={topAuthors} 
+              metricLabel="лайков"
+            />
+            {/* Top Commenters */}
+            <LeaderboardColumn 
+              title="Комментаторы" 
+              subtitle="Самые активные в обсуждениях"
+              icon="forum" 
+              users={topCommenters} 
+              metricLabel="ответов"
+            />
+            {/* Top Publicists */}
+            <LeaderboardColumn 
+              title="Публицисты" 
+              subtitle="Главные поставщики контента"
+              icon="library_add" 
+              users={topPublicists} 
+              metricLabel="публ."
+            />
+          </div>
+        </section>
+
+        {!user && (
+          <div className="bg-surface-container-high/40 backdrop-blur-sm p-8 rounded-3xl border border-on-surface/5 mb-16 relative overflow-hidden group">
+            <div className="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 bg-amber-500/5 rounded-full blur-3xl group-hover:bg-amber-500/10 transition-colors duration-1000"></div>
+            <div className="relative z-10 flex flex-col items-center text-center max-w-lg mx-auto space-y-4">
+              <h3 className="text-2xl font-black tracking-tight leading-tight text-on-surface uppercase">Присоединяйтесь к нам</h3>
+              <p className="text-sm text-on-surface-variant font-medium leading-relaxed">
+                Войдите, чтобы создавать контент, оставлять отзывы и занять своё место в рейтинге лучших участников клуба.
+              </p>
+              <Link
+                href="/login"
+                className="inline-flex items-center gap-2 px-8 py-3 bg-on-surface text-surface rounded-2xl font-black text-sm transition-all hover:scale-105 active:scale-95 shadow-lg shadow-black/10"
+              >
+                <span>Стать участником</span>
+                <span className="material-symbols-outlined text-[18px]">login</span>
+              </Link>
             </div>
           </div>
-        </div>
+        )}
       </main>
 
       <BottomNavBar activeTab="home" />
     </>
+  );
+}
+
+function LeaderboardColumn({ 
+  title, 
+  subtitle, 
+  icon, 
+  users, 
+  metricLabel 
+}: { 
+  title: string, 
+  subtitle: string, 
+  icon: string, 
+  users: LeaderboardUser[], 
+  metricLabel: string 
+}) {
+  return (
+    <div className="bg-surface rounded-3xl p-6 border border-on-surface/5 flex flex-col h-full shadow-sm hover:shadow-md transition-shadow">
+      <div className="flex items-center gap-3 mb-1">
+        <div className="w-10 h-10 rounded-xl bg-on-surface/5 flex items-center justify-center text-on-surface">
+          <span className="material-symbols-outlined text-[20px]">{icon}</span>
+        </div>
+        <h3 className="font-black text-sm text-on-surface uppercase tracking-tight leading-none">{title}</h3>
+      </div>
+      <p className="text-[10px] font-bold text-on-surface-variant/40 uppercase tracking-widest mb-6 ml-[52px]">
+        {subtitle}
+      </p>
+
+      <div className="space-y-3 flex-1">
+        {users.length === 0 ? (
+          <div className="flex flex-col items-center justify-center h-32 opacity-20 italic text-xs">Нет данных</div>
+        ) : users.map((u, i) => (
+          <div key={u.id} className="flex items-center gap-3 group">
+            <div className="relative w-10 h-10 rounded-full bg-surface-container overflow-hidden border border-on-surface/5 flex-shrink-0">
+              {u.avatarUrl ? (
+                <Image src={u.avatarUrl} alt={u.name} fill className="object-cover" />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center text-[10px] font-black">{u.name.charAt(0)}</div>
+              )}
+              {/* Rank Badge */}
+              <div className={`absolute -top-1 -right-1 w-5 h-5 rounded-full flex items-center justify-center text-[9px] font-black border-2 border-surface ${
+                i === 0 ? 'bg-amber-400 text-amber-950' : 
+                i === 1 ? 'bg-slate-300 text-slate-900' : 
+                i === 2 ? 'bg-orange-400 text-orange-950' : 
+                'bg-surface-container-high text-on-surface-variant'
+              }`}>
+                {i + 1}
+              </div>
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-xs font-black text-on-surface truncate tracking-tight">{u.name}</p>
+              <p className="text-[10px] font-bold text-on-surface-variant/60 uppercase tracking-tighter">
+                {u.metricValue} {metricLabel}
+              </p>
+            </div>
+            {i === 0 && (
+              <span className="material-symbols-outlined text-amber-500 text-[16px]" style={{ fontVariationSettings: "'FILL' 1" }}>emoji_events</span>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }

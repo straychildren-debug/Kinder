@@ -63,6 +63,13 @@ export interface Review {
   user?: User; // Joined user info
 }
 
+export interface LeaderboardUser {
+  id: string;
+  name: string;
+  avatarUrl: string | null;
+  metricValue: number;
+}
+
 export interface ReviewRating {
   id: string;
   reviewId: string;

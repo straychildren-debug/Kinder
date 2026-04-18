@@ -1392,3 +1392,104 @@ export async function searchClubMembers(clubId: string, query: string): Promise<
       userAvatar: row.profiles?.avatar_url,
     }));
 }
+// ===== Leaderboards (Рейтинги) =====
+
+export async function getTopAuthorsByLikes(limitCount: number = 5): Promise<LeaderboardUser[]> {
+  // Fetch all review ratings (likes) and aggregate by review author
+  const { data, error } = await supabase
+    .from('review_ratings')
+    .select('rating, reviews(user_id, profiles:user_id(name, avatar_url))')
+    .gte('rating', 4);
+
+  if (error || !data) return [];
+
+  const userStats: Record<string, { name: string, avatarUrl: string, count: number }> = {};
+  
+  data.forEach((item: any) => {
+    const userId = item.reviews?.user_id;
+    if (!userId) return;
+    if (!userStats[userId]) {
+      userStats[userId] = { 
+        name: item.reviews.profiles?.name || 'Пользователь', 
+        avatarUrl: item.reviews.profiles?.avatar_url, 
+        count: 0 
+      };
+    }
+    userStats[userId].count++;
+  });
+
+  return Object.entries(userStats)
+    .sort((a, b) => b[1].count - a[1].count)
+    .slice(0, limitCount)
+    .map(([id, info]) => ({
+      id,
+      name: info.name,
+      avatarUrl: info.avatarUrl,
+      metricValue: info.count
+    }));
+}
+
+export async function getTopCommenters(limitCount: number = 5): Promise<LeaderboardUser[]> {
+  const { data, error } = await supabase
+    .from('review_comments')
+    .select('user_id, profiles:user_id(name, avatar_url)');
+
+  if (error || !data) return [];
+
+  const userStats: Record<string, { name: string, avatarUrl: string, count: number }> = {};
+  
+  data.forEach((item: any) => {
+    const userId = item.user_id;
+    if (!userStats[userId]) {
+      userStats[userId] = { 
+        name: item.profiles?.name || 'Пользователь', 
+        avatarUrl: item.profiles?.avatar_url, 
+        count: 0 
+      };
+    }
+    userStats[userId].count++;
+  });
+
+  return Object.entries(userStats)
+    .sort((a, b) => b[1].count - a[1].count)
+    .slice(0, limitCount)
+    .map(([id, info]) => ({
+      id,
+      name: info.name,
+      avatarUrl: info.avatarUrl,
+      metricValue: info.count
+    }));
+}
+
+export async function getTopPublicists(limitCount: number = 5): Promise<LeaderboardUser[]> {
+  const { data, error } = await supabase
+    .from('content')
+    .select('created_by, profiles:created_by(name, avatar_url)')
+    .eq('status', 'approved');
+
+  if (error || !data) return [];
+
+  const userStats: Record<string, { name: string, avatarUrl: string, count: number }> = {};
+  
+  data.forEach((item: any) => {
+    const userId = item.created_by;
+    if (!userStats[userId]) {
+      userStats[userId] = { 
+        name: item.profiles?.name || 'Пользователь', 
+        avatarUrl: item.profiles?.avatar_url, 
+        count: 0 
+      };
+    }
+    userStats[userId].count++;
+  });
+
+  return Object.entries(userStats)
+    .sort((a, b) => b[1].count - a[1].count)
+    .slice(0, limitCount)
+    .map(([id, info]) => ({
+      id,
+      name: info.name,
+      avatarUrl: info.avatarUrl,
+      metricValue: info.count
+    }));
+}
