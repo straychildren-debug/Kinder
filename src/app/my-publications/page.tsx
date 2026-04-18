@@ -66,9 +66,9 @@ export default function MyPublicationsPage() {
   });
 
   const TABS = [
-    { id: 'publications', label: 'Опубликовано', icon: 'auto_awesome', count: approvedCount },
-    { id: 'moderation', label: 'На модерации', icon: 'pending_actions', count: moderationCount },
-    { id: 'drafts', label: 'Черновики', icon: 'edit_note', count: draftsCount },
+    { id: 'publications', label: 'Опубликовано', count: approvedCount },
+    { id: 'moderation', label: 'На модерации', count: moderationCount },
+    { id: 'drafts', label: 'Черновики', count: draftsCount },
   ];
 
   return (
@@ -82,25 +82,22 @@ export default function MyPublicationsPage() {
 
         {/* Dynamic Content System */}
         <section className="px-4 overflow-hidden">
-          {/* Sticky Tabs */}
+          {/* Sticky Tabs - Premium Minimalist Style */}
           <div className="sticky top-[72px] z-20 bg-surface/80 backdrop-blur-md pt-4 mb-8 flex items-center justify-between border-b border-on-surface/5">
             {TABS.map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id as ProfileTab)}
-                className={`relative flex-1 pb-3 border-b-2 text-[12px] font-bold transition-all whitespace-nowrap flex items-center justify-center gap-1.5 ${
+                className={`relative flex-1 pb-4 border-b text-[10px] font-black uppercase tracking-[0.1em] transition-all whitespace-nowrap flex items-center justify-center gap-1.5 ${
                   activeTab === tab.id
-                    ? 'border-on-surface text-on-surface'
-                    : 'border-transparent text-on-surface-muted hover:text-on-surface'
+                    ? 'text-on-surface'
+                    : 'text-on-surface-muted hover:text-on-surface'
                 }`}
               >
-                <span className="material-symbols-outlined text-[16px] leading-none">
-                  {tab.icon}
-                </span>
                 {tab.label}
                 {tab.count !== undefined && tab.count > 0 && (
-                  <span className={`px-1.5 py-0.5 rounded-md text-[10px] font-semibold ${
-                    activeTab === tab.id ? 'bg-on-surface text-surface' : 'bg-on-surface/10 text-on-surface-muted'
+                  <span className={`text-[9px] font-bold ${
+                    activeTab === tab.id ? 'text-on-surface' : 'text-on-surface-muted/60'
                   }`}>
                     {tab.count}
                   </span>
@@ -108,7 +105,7 @@ export default function MyPublicationsPage() {
                 {activeTab === tab.id && (
                   <motion.div 
                     layoutId="pubTabUnderline" 
-                    className="absolute bottom-[-3px] left-0 right-0 h-[3px] bg-on-surface" 
+                    className="absolute bottom-[-1px] left-0 right-0 h-[2px] bg-on-surface" 
                     transition={{ type: 'spring', stiffness: 400, damping: 30 }}
                   />
                 )}
