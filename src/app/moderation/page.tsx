@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import TopNavBar from '@/components/TopNavBar';
 import BottomNavBar from '@/components/BottomNavBar';
 import { useAuth } from '@/components/AuthProvider';
-import { getPendingContent, updateContentStatus, getUserById, getModerationStats } from '@/lib/db';
+import { getPendingContent, updateContentStatus, getUserById, getModerationStats, getApprovedContent, getRejectedContent, getModeratorStats } from '@/lib/db';
 import { ContentItem } from '@/lib/types';
 import { useRouter } from 'next/navigation';
 import ModerationActionModal from '@/components/ModerationActionModal';
@@ -14,29 +14,51 @@ import { defaultBlurDataURL } from '@/lib/image-blur';
 export default function ModerationPage() {
   const { user } = useAuth();
   const router = useRouter();
-  const [pendingItems, setPendingItems] = useState<ContentItem[]>([]);
+  const [itemsList, setItemsList] = useState<ContentItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [processingId, setProcessingId] = useState<string | null>(null);
-  const [showPending, setShowPending] = useState(false);
+  const [viewingList, setViewingList] = useState<'pending' | 'approved' | 'rejected' | null>(null);
   const [selectedForModeration, setSelectedForModeration] = useState<ContentItem | null>(null);
-  const [stats, setStats] = useState({ approved: 0, rejected: 0, pending: 0 });
+  const [globalStats, setGlobalStats] = useState({ approved: 0, rejected: 0, pending: 0 });
+  const [personalStats, setPersonalStats] = useState({ approved: 0, rejected: 0 });
 
   const loadStats = async () => {
-    const s = await getModerationStats();
-    setStats(s);
+    if (!user) return;
+    const gStats = await getModerationStats();
+    setGlobalStats(gStats);
+    const pStats = await getModeratorStats(user.id);
+    setPersonalStats(pStats);
+  };
+
+  const fetchListView = async (view: 'pending' | 'approved' | 'rejected') => {
+    setLoading(true);
+    let items: ContentItem[] = [];
+    if (view === 'pending') {
+      items = await getPendingContent();
+    } else if (view === 'approved') {
+      items = await getApprovedContent(user?.id);
+    } else if (view === 'rejected') {
+      items = await getRejectedContent(user?.id);
+    }
+    setItemsList(items);
+    setLoading(false);
   };
 
   useEffect(() => {
-    async function load() {
+    async function init() {
       if (user && (user.role === 'moderator' || user.role === 'admin' || user.role === 'superadmin')) {
         await loadStats();
-        const items = await getPendingContent();
-        setPendingItems(items);
       }
       setLoading(false);
     }
-    load();
+    init();
   }, [user]);
+
+  useEffect(() => {
+    if (viewingList && user) {
+      fetchListView(viewingList);
+    }
+  }, [viewingList, user]);
 
   if (!user || (user.role !== 'moderator' && user.role !== 'admin' && user.role !== 'superadmin')) {
     // ... (Unauthorized view remains the same)
@@ -68,8 +90,8 @@ export default function ModerationPage() {
   const handleDecision = async (id: string, decision: 'approved' | 'rejected', reason?: string) => {
     setProcessingId(id);
     try {
-      await updateContentStatus(id, decision, reason);
-      setPendingItems(prev => prev.filter(item => item.id !== id));
+      await updateContentStatus(id, decision, reason, user.id);
+      setItemsList(prev => prev.filter(item => item.id !== id));
       setSelectedForModeration(null);
       await loadStats();
     } catch (e) {
@@ -83,6 +105,16 @@ export default function ModerationPage() {
     if (num >= 1000) return (num / 1000).toFixed(1) + 'k';
     return num.toString();
   };
+
+  const getHeaderConfig = () => {
+    switch(viewingList) {
+      case 'approved': return { title: 'Одобрено вами', color: 'emerald', icon: 'verified' };
+      case 'rejected': return { title: 'Отклонено вами', color: 'red', icon: 'report' };
+      default: return { title: 'Очередь проверки', color: 'amber', icon: 'pending_actions' };
+    }
+  };
+
+  const header = getHeaderConfig();
 
   return (
     <>
@@ -99,8 +131,8 @@ export default function ModerationPage() {
         {/* Статистика */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
           <button 
-            onClick={() => setShowPending(true)}
-            className="text-left bg-white rounded-[32px] p-8 border border-on-surface/5 shadow-sm flex flex-col justify-between group hover:shadow-2xl transition-all duration-500 active:scale-[0.98]"
+            onClick={() => setViewingList('pending')}
+            className={`text-left bg-white rounded-[32px] p-8 border border-on-surface/5 shadow-sm flex flex-col justify-between group hover:shadow-2xl transition-all duration-500 active:scale-[0.98] ${viewingList === 'pending' ? 'ring-2 ring-amber-500/20 shadow-xl' : ''}`}
           >
             <span className="text-[9px] font-black uppercase tracking-widest text-amber-500 mb-4 flex items-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
@@ -108,51 +140,72 @@ export default function ModerationPage() {
             </span>
             <div className="flex items-baseline gap-2">
               <span className="text-5xl font-black tracking-tighter text-on-surface group-hover:text-amber-500 transition-colors">
-                {formatNumber(stats.pending)}
+                {formatNumber(globalStats.pending)}
               </span>
               <span className="text-[10px] font-black uppercase tracking-widest opacity-20">постов</span>
             </div>
           </button>
           
-          <div className="bg-white rounded-[32px] p-8 border border-on-surface/5 shadow-sm flex flex-col justify-between group hover:shadow-xl transition-all duration-500">
-            <span className="text-[9px] font-black uppercase tracking-widest text-green-600 mb-4 ">Всего одобрено</span>
+          <button 
+            onClick={() => setViewingList('approved')}
+            className={`text-left bg-white rounded-[32px] p-8 border border-on-surface/5 shadow-sm flex flex-col justify-between group hover:shadow-2xl transition-all duration-500 active:scale-[0.98] ${viewingList === 'approved' ? 'ring-2 ring-emerald-500/20 shadow-xl' : ''}`}
+          >
+            <div className="flex justify-between items-start mb-4">
+               <span className="text-[9px] font-black uppercase tracking-widest text-emerald-600">Всего одобрено</span>
+               <span className="text-[8px] font-bold bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-full">Вами: {personalStats.approved}</span>
+            </div>
             <div className="flex items-baseline gap-2">
-              <span className="text-5xl font-black tracking-tighter text-on-surface">{formatNumber(stats.approved)}</span>
+              <span className="text-5xl font-black tracking-tighter text-on-surface group-hover:text-emerald-600 transition-colors">
+                {formatNumber(globalStats.approved)}
+              </span>
               <span className="text-[10px] font-black uppercase tracking-widest opacity-20">актив</span>
             </div>
-          </div>
+          </button>
 
-          <div className="bg-white rounded-[32px] p-8 border border-on-surface/5 shadow-sm flex flex-col justify-between group hover:shadow-xl transition-all duration-500">
-            <span className="text-[9px] font-black uppercase tracking-widest text-red-600 mb-4 ">Отклонено</span>
+          <button 
+            onClick={() => setViewingList('rejected')}
+            className={`text-left bg-white rounded-[32px] p-8 border border-on-surface/5 shadow-sm flex flex-col justify-between group hover:shadow-2xl transition-all duration-500 active:scale-[0.98] ${viewingList === 'rejected' ? 'ring-2 ring-red-500/20 shadow-xl' : ''}`}
+          >
+            <div className="flex justify-between items-start mb-4">
+               <span className="text-[9px] font-black uppercase tracking-widest text-red-600">Отклонено</span>
+               <span className="text-[8px] font-bold bg-red-50 text-red-700 px-2 py-0.5 rounded-full">Вами: {personalStats.rejected}</span>
+            </div>
             <div className="flex items-baseline gap-2">
-              <span className="text-5xl font-black tracking-tighter text-on-surface">{formatNumber(stats.rejected)}</span>
+              <span className="text-5xl font-black tracking-tighter text-on-surface group-hover:text-red-600 transition-colors">
+                {formatNumber(globalStats.rejected)}
+              </span>
               <span className="text-[10px] font-black uppercase tracking-widest opacity-20">спам</span>
             </div>
-          </div>
+          </button>
         </div>
 
 
         {/* --- MODAL WINDOW FOR LIST --- */}
-        {showPending && (
+        {viewingList && (
           <div className="fixed inset-0 z-[100] flex flex-col bg-[#f8f9fc] animate-in slide-in-from-bottom-8 duration-500">
             {/* Background Decoration */}
-            <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-amber-500/5 blur-[120px] rounded-full -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
-            <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-indigo-500/5 blur-[120px] rounded-full translate-y-1/2 -translate-x-1/2 pointer-events-none"></div>
-
+            <div className={`absolute top-0 right-0 w-[500px] h-[500px] blur-[120px] rounded-full -translate-y-1/2 translate-x-1/2 pointer-events-none transition-colors duration-700 ${
+              viewingList === 'approved' ? 'bg-emerald-500/5' : viewingList === 'rejected' ? 'bg-red-500/5' : 'bg-amber-500/5'
+            }`}></div>
+            
             {/* Header (Glassmorphism) */}
-            <header className="sticky top-0 bg-white/70 backdrop-blur-xl border-b border-on-surface/5 z-20 px-8 py-7 flex items-center justify-between">
-              <div className="flex items-center gap-6">
-                <button 
-                  onClick={() => setShowPending(false)}
-                  className="w-14 h-14 rounded-[20px] bg-white shadow-sm border border-on-surface/5 flex items-center justify-center hover:bg-surface-container-high hover:scale-105 active:scale-95 transition-all"
-                >
-                  <span className="material-symbols-outlined text-on-surface">arrow_back</span>
-                </button>
-                <div>
-                  <h2 className="text-3xl font-black tracking-tighter text-[#1a1c1e] leading-none mb-1">Очередь проверки</h2>
-                  <div className="flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
-                    <span className="text-[10px] font-black uppercase tracking-widest opacity-40">{pendingItems.length} новых объектов</span>
+            <header className="sticky top-0 bg-white/70 backdrop-blur-xl border-b border-on-surface/5 z-20 px-8 py-7">
+              <div className="max-w-4xl mx-auto flex items-center justify-between">
+                <div className="flex items-center gap-6">
+                  <button 
+                    onClick={() => setViewingList(null)}
+                    className="w-14 h-14 rounded-[20px] bg-white shadow-sm border border-on-surface/5 flex items-center justify-center hover:bg-surface-container-high hover:scale-105 active:scale-95 transition-all focus:outline-none"
+                  >
+                    <span className="material-symbols-outlined text-on-surface">arrow_back</span>
+                  </button>
+                  <div>
+                    <h2 className="text-3xl font-black tracking-tighter text-[#1a1c1e] leading-none mb-1">{header.title}</h2>
+                    <div className="flex items-center gap-2">
+                      <span className={`w-1.5 h-1.5 rounded-full animate-pulse bg-${header.color}-500`}></span>
+                      <span className="text-[10px] font-black uppercase tracking-widest opacity-40">
+                        {loading ? 'Загрузка...' : `${itemsList.length} объектов`}
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -162,24 +215,30 @@ export default function ModerationPage() {
               <div className="max-w-4xl mx-auto">
                 {loading ? (
                   <div className="flex flex-col items-center justify-center p-20 gap-4">
-                    <div className="w-14 h-14 border-[6px] border-amber-500/10 border-t-amber-500 rounded-full animate-spin"></div>
+                    <div className={`w-14 h-14 border-[6px] border-${header.color}-500/10 border-t-${header.color}-500 rounded-full animate-spin`}></div>
                     <span className="text-[10px] font-black uppercase tracking-[0.2em] opacity-30">Синхронизация данных...</span>
                   </div>
-                ) : pendingItems.length === 0 ? (
+                ) : itemsList.length === 0 ? (
                   <div className="flex flex-col items-center justify-center py-20 px-8 animate-in fade-in zoom-in-95 duration-700">
                     <div className="w-32 h-32 bg-white rounded-full flex items-center justify-center mb-8 border border-on-surface/5 shadow-[0_20px_40px_rgba(0,0,0,0.05)] relative">
-                      <div className="absolute inset-0 bg-amber-500/10 rounded-full animate-ping opacity-20"></div>
-                      <span className="material-symbols-outlined text-5xl text-amber-500 relative z-10">verified</span>
+                      <div className={`absolute inset-0 bg-${header.color}-500/10 rounded-full animate-ping opacity-20`}></div>
+                      <span className={`material-symbols-outlined text-5xl text-${header.color}-500 relative z-10`}>{header.icon}</span>
                     </div>
                     <div className="space-y-3 text-center mb-12">
-                      <h3 className="text-3xl font-extrabold tracking-tighter text-on-surface uppercase">Всё проверено!</h3>
+                      <h3 className="text-3xl font-extrabold tracking-tighter text-on-surface uppercase">
+                        {viewingList === 'pending' ? 'Всё проверено!' : 'Список пуст'}
+                      </h3>
                       <p className="text-on-surface-variant font-medium text-sm opacity-50 max-w-xs mx-auto leading-relaxed">
-                        Вы настоящий страж качества.<br/>Сейчас в очереди нет новых публикаций.
+                        {viewingList === 'pending' 
+                          ? 'Вы настоящий страж качества. Сейчас в очереди нет новых публикаций.' 
+                          : viewingList === 'approved' 
+                          ? 'Вы еще не одобрили ни одной публикации. Ваше мнение важно!'
+                          : 'Вы не отклонили ни одной публикации. Идеальный контент?'}
                       </p>
                     </div>
                     <button 
-                       onClick={() => setShowPending(false)}
-                       className="px-10 h-14 bg-[#0f172a] text-white rounded-2xl font-bold text-[10px] uppercase tracking-[0.2em] shadow-xl hover:bg-black active:scale-95 transition-all flex items-center gap-3"
+                       onClick={() => setViewingList(null)}
+                       className="px-10 h-14 bg-[#0f172a] text-white rounded-2xl font-bold text-[10px] uppercase tracking-[0.2em] shadow-xl hover:bg-black active:scale-95 transition-all flex items-center gap-3 focus:outline-none"
                     >
                       <span className="material-symbols-outlined text-[18px]">analytics</span>
                       К статистике
@@ -187,7 +246,7 @@ export default function ModerationPage() {
                   </div>
                 ) : (
                   <div className="space-y-3">
-                    {pendingItems.map((item, index) => (
+                    {itemsList.map((item, index) => (
                       <div 
                         key={item.id} 
                         className="animate-in fade-in slide-in-from-bottom-4 duration-500 fill-mode-both"
@@ -195,7 +254,9 @@ export default function ModerationPage() {
                       >
                         <button 
                           onClick={() => setSelectedForModeration(item)}
-                          className="w-full bg-white rounded-2xl p-4 border border-on-surface/5 shadow-sm hover:shadow-md hover:border-indigo-500/20 transition-all flex items-center gap-4 group text-left"
+                          className={`w-full bg-white rounded-2xl p-4 border border-on-surface/5 shadow-sm hover:shadow-md transition-all flex items-center gap-4 group text-left ${
+                             viewingList === 'approved' ? 'hover:border-emerald-500/20' : viewingList === 'rejected' ? 'hover:border-red-500/20' : 'hover:border-amber-500/20'
+                          }`}
                         >
                           <div className="relative w-12 h-16 rounded-lg overflow-hidden bg-surface-container shrink-0">
                             {item.imageUrl ? (
@@ -216,11 +277,26 @@ export default function ModerationPage() {
                              <div className="flex items-center gap-2 mb-0.5">
                                <span className="text-[8px] font-bold uppercase tracking-widest opacity-40">{item.type === 'movie' ? 'Movie' : 'Book'}</span>
                                <span className="text-[8px] font-bold opacity-20">{new Date(item.createdAt).toLocaleDateString()}</span>
+                               {item.status === 'rejected' && (
+                                 <span className="ml-auto text-[8px] font-black text-red-500 uppercase tracking-widest">Отклонено</span>
+                               )}
+                               {item.status === 'approved' && (
+                                 <span className="ml-auto text-[8px] font-black text-emerald-500 uppercase tracking-widest">Актив</span>
+                               )}
                              </div>
                              <h3 className="font-black text-on-surface truncate uppercase tracking-tight">{item.title}</h3>
-                             <p className="text-[10px] text-on-surface-variant font-medium opacity-50 truncate">{item.author || item.director || 'Unknown'}</p>
+                             <p className="text-[10px] text-on-surface-variant font-medium opacity-50 truncate mb-1">{item.author || item.director || 'Unknown'}</p>
+                             
+                             {item.status === 'rejected' && item.rejectionReason && (
+                               <div className="flex items-start gap-1.5 mt-2 p-2 bg-red-50 rounded-lg border border-red-100/50">
+                                 <span className="material-symbols-outlined text-[14px] text-red-500 mt-0.5">error</span>
+                                 <p className="text-[9px] font-bold text-red-700 leading-tight line-clamp-2">{item.rejectionReason}</p>
+                               </div>
+                             )}
                           </div>
-                          <span className="material-symbols-outlined opacity-0 group-hover:opacity-100 transition-opacity text-indigo-500">chevron_right</span>
+                          <span className={`material-symbols-outlined opacity-0 group-hover:opacity-100 transition-opacity ${
+                            viewingList === 'approved' ? 'text-emerald-500' : viewingList === 'rejected' ? 'text-red-500' : 'text-amber-500'
+                          }`}>chevron_right</span>
                         </button>
                       </div>
                     ))}

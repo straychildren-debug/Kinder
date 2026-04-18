@@ -129,19 +129,44 @@ function mapContentItem(row: any): ContentItem {
     createdBy: row.created_by,
     createdAt: row.created_at,
     rejectionReason: row.rejection_reason,
+    moderatedBy: row.metadata?.moderatedBy,
     ...row.metadata // Разворачиваем JSONB поле (director, author, rating и т.д.)
   };
 }
 
-export async function getApprovedContent(): Promise<ContentItem[]> {
-  const { data, error } = await supabase
+export async function getApprovedContent(moderatorId?: string): Promise<ContentItem[]> {
+  let query = supabase
     .from('content')
     .select('*')
-    .eq('status', 'approved')
-    .order('created_at', { ascending: false });
+    .eq('status', 'approved');
+  
+  if (moderatorId) {
+    query = query.filter('metadata->>moderatedBy', 'eq', moderatorId);
+  }
+
+  const { data, error } = await query.order('created_at', { ascending: false });
 
   if (error) {
     console.error('Error fetching approved content:', error);
+    return [];
+  }
+  return data.map(mapContentItem);
+}
+
+export async function getRejectedContent(moderatorId?: string): Promise<ContentItem[]> {
+  let query = supabase
+    .from('content')
+    .select('*')
+    .eq('status', 'rejected');
+  
+  if (moderatorId) {
+    query = query.filter('metadata->>moderatedBy', 'eq', moderatorId);
+  }
+
+  const { data, error } = await query.order('created_at', { ascending: false });
+
+  if (error) {
+    console.error('Error fetching rejected content:', error);
     return [];
   }
   return data.map(mapContentItem);
@@ -247,12 +272,20 @@ export async function updateContent(id: string, content: Partial<ContentItem>) {
 }
 
 // Функция для обновления статуса модератором
-export async function updateContentStatus(id: string, status: 'approved' | 'rejected' | 'draft', rejectionReason?: string) {
+export async function updateContentStatus(id: string, status: 'approved' | 'rejected' | 'draft', rejectionReason?: string, moderatorId?: string) {
+  // Fetch existing content to preserve other metadata
+  const { data: existing } = await supabase.from('content').select('metadata').eq('id', id).single();
+  const updatedMetadata = { 
+    ...(existing?.metadata || {}), 
+    moderatedBy: moderatorId || existing?.metadata?.moderatedBy 
+  };
+
   const { data, error } = await supabase
     .from('content')
     .update({ 
       status,
-      rejection_reason: rejectionReason || null
+      rejection_reason: rejectionReason || null,
+      metadata: updatedMetadata
     })
     .eq('id', id)
     .select()
@@ -281,6 +314,23 @@ export async function getModerationStats(): Promise<{ approved: number; rejected
   } catch (err) {
     console.error('Error fetching moderation stats:', err);
     return { approved: 0, rejected: 0, pending: 0 };
+  }
+}
+
+export async function getModeratorStats(moderatorId: string): Promise<{ approved: number; rejected: number }> {
+  try {
+    const [approvedRes, rejectedRes] = await Promise.all([
+      supabase.from('content').select('*', { count: 'exact', head: true }).eq('status', 'approved').filter('metadata->>moderatedBy', 'eq', moderatorId),
+      supabase.from('content').select('*', { count: 'exact', head: true }).eq('status', 'rejected').filter('metadata->>moderatedBy', 'eq', moderatorId),
+    ]);
+
+    return {
+      approved: approvedRes.count || 0,
+      rejected: rejectedRes.count || 0
+    };
+  } catch (err) {
+    console.error('Error fetching personal moderation stats:', err);
+    return { approved: 0, rejected: 0 };
   }
 }
 
