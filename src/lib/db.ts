@@ -385,6 +385,44 @@ export async function getReviewsForContent(contentId: string, currentUserId?: st
   });
 }
 
+export async function getReviewsByUser(userId: string): Promise<Review[]> {
+  const { data, error } = await supabase
+    .from('reviews')
+    .select(`
+      *,
+      content:content_id(*),
+      review_comments(count),
+      review_ratings(rating, user_id)
+    `)
+    .eq('user_id', userId)
+    .order('created_at', { ascending: false });
+
+  if (error || !data) {
+    console.error('Error fetching user reviews:', error);
+    return [];
+  }
+
+  return data.map((r: any) => {
+    const ratings = r.review_ratings || [];
+    const likesCount = ratings.filter((rat: any) => rat.rating >= 4).length;
+    const dislikesCount = ratings.filter((rat: any) => rat.rating <= 2).length;
+
+    return {
+      id: r.id,
+      contentId: r.content_id,
+      userId: r.user_id,
+      text: r.text,
+      rating: r.rating,
+      likesCount,
+      dislikesCount,
+      myVote: 0,
+      commentCount: r.review_comments?.[0]?.count ?? 0,
+      createdAt: r.created_at,
+      content: r.content ? mapContentItem(r.content) : undefined
+    };
+  });
+}
+
 export async function submitReview(contentId: string, userId: string, text: string, rating: number) {
   const { data, error } = await supabase
     .from('reviews')

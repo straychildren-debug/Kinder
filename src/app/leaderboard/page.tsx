@@ -4,12 +4,16 @@ import React, { useEffect, useState } from "react";
 import TopNavBar from "@/components/TopNavBar";
 import BottomNavBar from "@/components/BottomNavBar";
 import { getUsersRanked } from "@/lib/db";
-import { User } from "@/lib/types";
+import { User, ContentItem } from "@/lib/types";
 import Image from "next/image";
+import PublicProfileModal from "@/components/PublicProfileModal";
+import ContentDetailsModal from "@/components/ContentDetailsModal";
 
 export default function Leaderboard() {
   const [rankedUsers, setRankedUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [openedContent, setOpenedContent] = useState<ContentItem | null>(null);
 
   useEffect(() => {
     async function load() {
@@ -32,7 +36,7 @@ export default function Leaderboard() {
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
             <div>
               <span className="text-xs font-medium text-on-surface-muted mb-1.5 block">Сообщество знатоков</span>
-              <h2 className="text-2xl font-bold tracking-tight text-on-surface leading-tight">Рейтинг кураторов</h2>
+              <h2 className="text-2xl font-bold tracking-tight text-on-surface leading-tight">Рейтинг пользователей</h2>
             </div>
             <div className="flex gap-2 mb-4">
               <button className="px-4 py-2 rounded-xl text-[8px] font-black uppercase tracking-widest transition-all whitespace-nowrap bg-surface-container-low text-on-surface-muted hover:bg-surface-container">
@@ -52,7 +56,10 @@ export default function Leaderboard() {
           <div className="grid grid-cols-1 md:grid-cols-12 gap-6 mb-16">
             {/* Rank 1 */}
             {top3[0] && (
-              <div className="md:col-span-6 bg-surface rounded-3xl p-5 relative overflow-hidden group shadow-xl border border-accent-amber/10 golden-glow">
+              <div 
+                onClick={() => setSelectedUser(top3[0])}
+                className="md:col-span-6 bg-surface rounded-3xl p-5 relative overflow-hidden group shadow-xl border border-accent-amber/10 golden-glow cursor-pointer hover:scale-[1.01] transition-all"
+              >
                 <div className="absolute -top-4 -right-4 text-[120px] font-black text-accent-amber/10 select-none leading-none">1</div>
                 <div className="relative z-10">
                   <div className="flex items-center gap-6 mb-6">
@@ -78,8 +85,8 @@ export default function Leaderboard() {
                   </div>
                   <div className="grid grid-cols-3 gap-3">
                     <div className="bg-surface-container-low p-2.5 rounded-xl border border-on-surface/5 shadow-sm">
-                      <p className="text-[8px] uppercase font-black tracking-widest text-on-surface-muted mb-0.5 opacity-50">Лайки</p>
-                      <p className="text-xl font-black text-on-surface">{top3[0].stats?.avgRating || 0}</p>
+                      <p className="text-[8px] uppercase font-black tracking-widest text-on-surface-muted mb-0.5 opacity-50">Публикации</p>
+                      <p className="text-xl font-black text-on-surface">{top3[0].stats?.publications || 0}</p>
                     </div>
                     <div className="bg-surface-container-low p-2.5 rounded-xl border border-on-surface/5 shadow-sm">
                       <p className="text-[8px] uppercase font-black tracking-widest text-on-surface-muted mb-0.5 opacity-50">Отзывы</p>
@@ -87,7 +94,7 @@ export default function Leaderboard() {
                     </div>
                     <div className="bg-accent-amber p-2.5 rounded-xl shadow-md shadow-accent-amber/20">
                       <p className="text-[8px] uppercase font-black tracking-widest text-white/60 mb-0.5">Очки</p>
-                      <p className="text-xl font-black text-white">{(top3[0].stats?.publications || 0) * 10}</p>
+                      <p className="text-xl font-black text-white">{(top3[0].stats?.publications || 0) * 10 + (top3[0].stats?.reviews || 0) * 2}</p>
                     </div>
                   </div>
                 </div>
@@ -98,7 +105,10 @@ export default function Leaderboard() {
             <div className="md:col-span-6 flex flex-col gap-6">
               {/* Rank 2 */}
               {top3[1] && (
-                <div className="bg-surface rounded-3xl p-4 flex items-center justify-between group shadow-sm border border-on-surface/5 hover:shadow-md transition-shadow">
+                <div 
+                  onClick={() => setSelectedUser(top3[1])}
+                  className="bg-surface rounded-3xl p-4 flex items-center justify-between group shadow-sm border border-on-surface/5 hover:shadow-md transition-all cursor-pointer hover:scale-[1.01]"
+                >
                   <div className="flex items-center gap-4">
                     <div className="text-2xl font-black text-slate-300 mr-2 tracking-tighter">02</div>
                     <div className="relative w-14 h-14 rounded-xl overflow-hidden bg-surface-container flex items-center justify-center font-black text-lg text-on-surface border border-on-surface/5 shadow-inner">
@@ -122,7 +132,10 @@ export default function Leaderboard() {
 
               {/* Rank 3 */}
               {top3[2] && (
-                <div className="bg-surface rounded-3xl p-4 flex items-center justify-between group shadow-sm border border-on-surface/5 hover:shadow-md transition-shadow">
+                <div 
+                  onClick={() => setSelectedUser(top3[2])}
+                  className="bg-surface rounded-3xl p-4 flex items-center justify-between group shadow-sm border border-on-surface/5 hover:shadow-md transition-all cursor-pointer hover:scale-[1.01]"
+                >
                   <div className="flex items-center gap-4">
                     <div className="text-2xl font-black text-orange-200 mr-2 tracking-tighter">03</div>
                     <div className="relative w-14 h-14 rounded-xl overflow-hidden bg-surface-container flex items-center justify-center font-black text-lg text-on-surface border border-on-surface/5 shadow-inner">
@@ -156,8 +169,12 @@ export default function Leaderboard() {
             </h4>
             <div className="space-y-3">
               {restUsers.map((user, idx) => (
-                <div key={user.id} className="bg-surface rounded-2xl p-2.5 flex items-center transition-all hover:bg-surface-container hover:scale-[1.01] shadow-sm border border-on-surface/5">
-                  <div className="w-8 text-center text-on-surface-variant font-black text-xs opacity-30">{4 + idx}</div>
+                <div 
+                  key={user.id} 
+                  onClick={() => setSelectedUser(user)}
+                  className="bg-surface rounded-2xl p-2.5 flex items-center transition-all hover:bg-surface-container hover:scale-[1.01] shadow-sm border border-on-surface/5 cursor-pointer group"
+                >
+                  <div className="w-8 text-center text-on-surface-variant font-black text-xs opacity-30 group-hover:opacity-60">{4 + idx}</div>
                   <div className="flex items-center gap-4 flex-1 px-4">
                     <div className="relative w-11 h-11 rounded-xl bg-surface-container overflow-hidden flex items-center justify-center text-on-surface font-black text-sm border border-on-surface/5">
                       {user.avatarUrl ? (
@@ -167,7 +184,7 @@ export default function Leaderboard() {
                       )}
                     </div>
                     <div>
-                      <p className="font-black text-sm text-on-surface tracking-tight">{user.name}</p>
+                      <p className="font-black text-sm text-on-surface tracking-tight group-hover:text-primary transition-colors">{user.name}</p>
                       <div className="flex gap-1 mt-1">
                         <span className={`text-[8px] px-1.5 py-0.5 rounded-full font-black uppercase tracking-widest ${
                           user.role === 'superadmin' ? 'bg-purple-100 text-purple-700' : 
@@ -187,7 +204,7 @@ export default function Leaderboard() {
                       <p className="text-sm font-black text-on-surface">{user.stats?.publications || 0}</p>
                       <p className="text-[8px] text-on-surface-variant uppercase font-black tracking-widest opacity-40">Публикаций</p>
                     </div>
-                    <span className="material-symbols-outlined text-on-surface-variant opacity-20">chevron_right</span>
+                    <span className="material-symbols-outlined text-on-surface-variant opacity-20 group-hover:translate-x-1 transition-transform">chevron_right</span>
                   </div>
                 </div>
               ))}
@@ -195,6 +212,24 @@ export default function Leaderboard() {
           </div>
         )}
       </main>
+      
+      {selectedUser && (
+        <PublicProfileModal
+          user={selectedUser}
+          onClose={() => setSelectedUser(null)}
+          onOpenContent={(c) => {
+            setOpenedContent(c);
+          }}
+        />
+      )}
+
+      {openedContent && (
+        <ContentDetailsModal
+          content={openedContent}
+          onClose={() => setOpenedContent(null)}
+        />
+      )}
+
       <BottomNavBar activeTab="users" />
     </>
   );

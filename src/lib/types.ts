@@ -61,6 +61,7 @@ export interface Review {
   commentCount?: number;
   createdAt: string;
   user?: User; // Joined user info
+  content?: ContentItem; // Linked content info
 }
 
 export interface LeaderboardUser {
