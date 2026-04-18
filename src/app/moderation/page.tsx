@@ -256,13 +256,6 @@ export default function ModerationPage() {
                           onClick={() => setSelectedForModeration(item)}
                           className="w-full flex flex-col group text-left outline-none"
                         >
-                          {/* Top Label (Type) */}
-                          <div className="mb-3">
-                            <span className="text-[10px] font-black tracking-[0.2em] text-on-surface-variant/40 uppercase">
-                              {item.type === 'movie' ? 'Feature Film' : 'Fiction'}
-                            </span>
-                          </div>
-
                           {/* Poster Column */}
                           <div className="relative aspect-[2/3] rounded-3xl overflow-hidden bg-surface-container border border-on-surface/5 shadow-sm group-hover:shadow-2xl group-hover:-translate-y-2 transition-all duration-500 mb-4 ring-1 ring-on-surface/5">
                             {item.rating && (

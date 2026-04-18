@@ -90,13 +90,6 @@ export default function Library() {
                   className="w-full flex flex-col group text-left outline-none"
                   onClick={() => setSelectedContent(book)}
                 >
-                  {/* Top Label */}
-                  <div className="mb-3">
-                    <span className="text-[10px] font-black tracking-[0.2em] text-on-surface-variant/40 uppercase">
-                      Fiction
-                    </span>
-                  </div>
-
                   {/* Cover Column */}
                   <div className="relative aspect-[2/3] rounded-3xl overflow-hidden bg-surface-container border border-on-surface/5 shadow-sm group-hover:shadow-2xl group-hover:-translate-y-2 transition-all duration-500 mb-4 ring-1 ring-on-surface/5">
                     {book.rating && (
