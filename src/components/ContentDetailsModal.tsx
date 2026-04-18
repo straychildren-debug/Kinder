@@ -196,64 +196,61 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
                priority
              />
           ) : (
-             <div className="w-full h-full flex items-center justify-center text-on-surface-variant/20"> Backdrop </div>
+             <div className="w-full h-full flex items-center justify-center text-on-surface-variant/20">Backdrop</div>
           )}
           <div className="absolute inset-0 bg-gradient-to-t from-background via-black/20 to-transparent"></div>
-          
-          {/* Main Overlapping Poster */}
-          <div className="absolute left-1/2 -translate-x-1/2 top-12 md:top-16 w-36 md:w-48 aspect-[2/3] z-20">
-             <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-[0_25px_60px_-15px_rgba(0,0,0,0.6)] border border-white/10">
-                {content.imageUrl ? (
-                  <Image
-                    src={content.imageUrl}
-                    alt={content.title}
-                    fill
-                    sizes="(min-width: 768px) 200px, 150px"
-                    placeholder="blur"
-                    blurDataURL={defaultBlurDataURL}
-                    className="object-cover"
-                  />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center bg-surface-container text-on-surface-variant font-bold text-xs">NO COVER</div>
-                )}
-             </div>
+        </div>
+
+        {/* Overlapping Poster — sits between backdrop and card */}
+        <div className="relative z-30 flex justify-center -mt-28 mb-[-60px] pointer-events-none">
+          <div className="w-32 md:w-40 aspect-[2/3] pointer-events-auto">
+            <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-[0_25px_60px_-15px_rgba(0,0,0,0.5)] border-4 border-white">
+               {content.imageUrl ? (
+                 <Image
+                   src={content.imageUrl}
+                   alt={content.title}
+                   fill
+                   sizes="(min-width: 768px) 160px, 128px"
+                   placeholder="blur"
+                   blurDataURL={defaultBlurDataURL}
+                   className="object-cover"
+                 />
+               ) : (
+                 <div className="w-full h-full flex items-center justify-center bg-surface-container text-on-surface-variant font-bold text-xs">—</div>
+               )}
+            </div>
           </div>
         </div>
 
         {/* Content Info */}
-        <div className="px-6 -mt-16 relative z-10">
-          <div className="bg-surface rounded-3xl p-8 pt-20 border border-on-surface/5 shadow-2xl relative overflow-hidden">
-            {/* Action/Rating Header Overlay */}
-            <div className="absolute top-6 right-6 z-20">
-               <div className="flex flex-col items-center justify-center bg-surface-container-high/60 backdrop-blur-md rounded-2xl py-3 px-4 border border-on-surface/5">
-                 <div className="flex items-center gap-1.5">
-                   <span className="material-symbols-outlined text-[16px] text-amber-500" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
-                   <span className="text-lg font-black tracking-tighter text-on-surface">{content.rating?.toFixed(1) || '—'}</span>
-                 </div>
-                 <span className="text-[9px] font-black uppercase tracking-widest opacity-40 leading-none mt-1">{content.reviewCount || 0} оценок</span>
-               </div>
-            </div>
+        <div className="px-6 relative z-10">
+          <div className="bg-surface rounded-3xl p-8 pt-20 border border-on-surface/5 shadow-2xl">
 
-            <div className="text-center md:text-left">
-               <div className="flex flex-col items-center md:items-start">
-                 {content.status === 'rejected' && content.rejectionReason && (
-                   <div className="mb-6 w-full p-4 bg-red-50/50 border border-red-100/50 rounded-2xl flex gap-3 items-start backdrop-blur-sm">
-                     <span className="material-symbols-outlined text-red-500 shrink-0">report_problem</span>
-                     <div className="text-left">
-                       <p className="text-[10px] font-black uppercase tracking-widest text-red-600 mb-1">Причина отклонения</p>
-                       <p className="text-sm font-medium text-red-900 leading-relaxed">{content.rejectionReason}</p>
-                     </div>
+            <div className="text-center mb-6">
+               {content.status === 'rejected' && content.rejectionReason && (
+                 <div className="mb-6 w-full p-4 bg-red-50/50 border border-red-100/50 rounded-2xl flex gap-3 items-start backdrop-blur-sm text-left">
+                   <span className="material-symbols-outlined text-red-500 shrink-0">report_problem</span>
+                   <div>
+                     <p className="text-[10px] font-black uppercase tracking-widest text-red-600 mb-1">Причина отклонения</p>
+                     <p className="text-sm font-medium text-red-900 leading-relaxed">{content.rejectionReason}</p>
                    </div>
-                 )}
-                 <span className="inline-block px-3 py-1 bg-surface-container-high/50 text-on-surface-muted text-[10px] font-bold uppercase tracking-widest rounded-lg mb-4">
-                   {content.type === 'movie' ? 'Кино' : 'Книга'}
-                 </span>
-                 <h1 className="text-3xl font-black text-on-surface leading-tight tracking-tighter mb-2">
-                   {content.title}
-                 </h1>
-                 <p className="text-on-surface-variant font-medium text-base mb-8">
-                   {content.author || content.director || 'Неизвестный автор'}
-                 </p>
+                 </div>
+               )}
+               <span className="inline-block px-3 py-1 bg-surface-container-high/50 text-on-surface-muted text-[10px] font-bold uppercase tracking-widest rounded-lg mb-3">
+                 {content.type === 'movie' ? 'Кино' : 'Книга'}
+               </span>
+               <h1 className="text-3xl font-black text-on-surface leading-tight tracking-tighter mb-1">
+                 {content.title}
+               </h1>
+               <p className="text-on-surface-variant font-medium text-base mb-4">
+                 {content.author || content.director || 'Неизвестный автор'}
+               </p>
+
+               {/* Rating Badge — inline, under the title */}
+               <div className="inline-flex items-center gap-2 bg-surface-container-high/50 backdrop-blur-sm rounded-xl py-2 px-4 border border-on-surface/5">
+                 <span className="material-symbols-outlined text-[16px] text-amber-500" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+                 <span className="text-lg font-black tracking-tighter text-on-surface">{content.rating?.toFixed(1) || '—'}</span>
+                 <span className="text-[9px] font-black uppercase tracking-widest opacity-40">{content.reviewCount || 0} оценок</span>
                </div>
             </div>
 
