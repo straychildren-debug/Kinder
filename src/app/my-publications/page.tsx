@@ -82,8 +82,8 @@ export default function MyPublicationsPage() {
 
         {/* Dynamic Content System */}
         <section className="px-4 overflow-hidden">
-          {/* Sticky Tabs - Ultra Minimalist (Opaque background to prevent overlap) */}
-          <div className="sticky top-[72px] z-30 bg-surface pt-4 mb-8 flex items-center justify-between border-b border-on-surface/[0.03]">
+          {/* Tabs - Static & Ultra Minimalist (No sticky, no background to avoid overlap) */}
+          <div className="pt-4 mb-8 flex items-center justify-between border-b border-on-surface/[0.03]">
             {TABS.map((tab) => (
               <button
                 key={tab.id}
