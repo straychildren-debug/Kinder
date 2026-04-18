@@ -217,14 +217,6 @@ export default function ProfileSidebar({ isOpen, onClose }: ProfileSidebarProps)
                   <span className="text-sm font-medium">Управление ролями</span>
                 </Link>
               )}
-              <Link
-                href="/leaderboard"
-                onClick={onClose}
-                className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-surface-container-low transition-colors border-b border-on-surface/5 pb-6 mb-6"
-              >
-                <span className="material-symbols-outlined text-[20px]">leaderboard</span>
-                <span className="text-sm font-medium">Рейтинг пользователей</span>
-              </Link>
             </nav>
 
             {/* Уведомления */}
