@@ -33,6 +33,7 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
   const [reviewComments, setReviewComments] = useState<ReviewComment[]>([]);
   const [newCommentText, setNewCommentText] = useState('');
   const [loadingComments, setLoadingComments] = useState(false);
+  const [replyTarget, setReplyTarget] = useState<ReviewComment | null>(null);
 
   // Wishlist state
   const [wishlisted, setWishlisted] = useState(false);
@@ -154,8 +155,9 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
   const handleSubmitComment = async (reviewId: string) => {
     if (!user || !newCommentText.trim()) return;
     try {
-      await addReviewComment(reviewId, user.id, newCommentText);
+      await addReviewComment(reviewId, user.id, replyTarget ? `@${replyTarget.user?.name}, ${newCommentText}` : newCommentText);
       setNewCommentText('');
+      setReplyTarget(null);
       const comments = await getReviewComments(reviewId);
       setReviewComments(comments);
       // update comment count on the review item
@@ -492,26 +494,36 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
                       {/* Add Comment Input - Moved to top for visibility */}
                       <div className="mb-6">
                         {user ? (
-                          <div className="flex gap-2 bg-surface-container-low p-3 rounded-xl border border-on-surface/5">
-                            <input
-                              type="text"
-                              value={newCommentText}
-                              onChange={e => setNewCommentText(e.target.value)}
-                              placeholder="Написать комментарий..."
-                              className="flex-1 bg-surface border border-on-surface/10 rounded-xl px-4 py-2.5 text-sm font-medium focus:outline-none focus:border-on-surface/40"
-                              onKeyDown={e => e.key === 'Enter' && handleSubmitComment(review.id)}
-                            />
-                            <button 
-                              type="button"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleSubmitComment(review.id);
-                              }}
-                              disabled={!newCommentText.trim()}
-                              className="w-10 h-10 bg-on-surface text-surface rounded-xl flex items-center justify-center disabled:opacity-50 transition-all active:scale-95 shrink-0 cursor-pointer"
-                            >
-                              <span className="material-symbols-outlined text-[18px]">arrow_upward</span>
-                            </button>
+                          <div className="flex flex-col gap-2">
+                            {replyTarget && (
+                              <div className="flex items-center justify-between bg-on-surface/5 px-3 py-1.5 rounded-lg border border-on-surface/5 animate-in fade-in slide-in-from-top-1">
+                                <span className="text-[10px] font-black uppercase tracking-widest text-on-surface-variant">
+                                  Ответ для @{replyTarget.user?.name}
+                                </span>
+                                <button onClick={() => setReplyTarget(null)} className="material-symbols-outlined text-[14px] text-on-surface-variant hover:text-red-500">close</button>
+                              </div>
+                            )}
+                            <div className="flex gap-2 bg-surface-container-low p-3 rounded-xl border border-on-surface/5">
+                              <input
+                                type="text"
+                                value={newCommentText}
+                                onChange={e => setNewCommentText(e.target.value)}
+                                placeholder={replyTarget ? `Ответить @${replyTarget.user?.name}...` : "Написать комментарий..."}
+                                className="flex-1 bg-surface border border-on-surface/10 rounded-xl px-4 py-2.5 text-sm font-medium focus:outline-none focus:border-on-surface/40"
+                                onKeyDown={e => e.key === 'Enter' && handleSubmitComment(review.id)}
+                              />
+                              <button 
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleSubmitComment(review.id);
+                                }}
+                                disabled={!newCommentText.trim()}
+                                className="w-10 h-10 bg-on-surface text-surface rounded-xl flex items-center justify-center disabled:opacity-50 transition-all active:scale-95 shrink-0 cursor-pointer"
+                              >
+                                <span className="material-symbols-outlined text-[18px]">arrow_upward</span>
+                              </button>
+                            </div>
                           </div>
                         ) : (
                           <div className="text-center py-4 bg-surface-container-lowest rounded-xl border border-dashed border-on-surface/10">
@@ -538,11 +550,33 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
                                 <div>
                                   <div className="flex items-baseline gap-2 mb-1">
                                     <span className="font-semibold text-xs text-on-surface">{comment.user?.name}</span>
-                                    <span className="text-[11px] text-on-surface-muted font-medium">
+                                    <span className="text-[11px] text-on-surface-variant font-medium">
                                       {new Date(comment.createdAt).toLocaleDateString('ru-RU')}
                                     </span>
+                                    {user && (
+                                       <button 
+                                         onClick={() => {
+                                           setReplyTarget(comment);
+                                           // scroll to input would be nice here
+                                         }}
+                                         className="text-[11px] font-black uppercase tracking-wider text-on-surface-variant hover:text-on-surface transition-colors"
+                                       >
+                                         Ответить
+                                       </button>
+                                    )}
                                   </div>
-                                  <p className="text-sm text-on-surface-variant leading-relaxed">{comment.text}</p>
+                                  <p className="text-sm text-on-surface-variant leading-relaxed">
+                                    {comment.text.startsWith('@') ? (
+                                      <>
+                                        <span className="inline-block px-1.5 py-0.5 rounded bg-on-surface/5 text-on-surface font-black text-[10px] uppercase tracking-tight mr-1.5 align-middle">
+                                          {comment.text.split(',')[0]}
+                                        </span>
+                                        {comment.text.split(',').slice(1).join(',')}
+                                      </>
+                                    ) : (
+                                      comment.text
+                                    )}
+                                  </p>
                                 </div>
                               </div>
                             ))
