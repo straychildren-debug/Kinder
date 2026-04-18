@@ -83,71 +83,57 @@ export default function Library() {
              </p>
           </div>
         ) : (
-          <div className="space-y-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-6 gap-y-10">
             {displayBooks.map((book, index) => (
               <MotionListItem key={book.id} index={index}>
-              <div
-                className="group flex bg-white p-5 rounded-[32px] border border-on-surface/5 shadow-sm hover:shadow-xl transition-all duration-500 cursor-pointer items-start gap-5"
-                onClick={() => setSelectedContent(book)}
-              >
-                {/* Book Thumbnail */}
-                <div className="shrink-0 flex flex-col items-center">
-                  <div className="relative w-16 h-24 rounded-2xl overflow-hidden bg-surface-container border border-on-surface/5 shadow-lg group-hover:scale-105 transition-transform duration-500">
+                <button
+                  className="w-full flex flex-col group text-left outline-none"
+                  onClick={() => setSelectedContent(book)}
+                >
+                  {/* Top Label */}
+                  <div className="mb-3">
+                    <span className="text-[10px] font-black tracking-[0.2em] text-on-surface-variant/40 uppercase">
+                      Fiction
+                    </span>
+                  </div>
+
+                  {/* Cover Column */}
+                  <div className="relative aspect-[2/3] rounded-3xl overflow-hidden bg-surface-container border border-on-surface/5 shadow-sm group-hover:shadow-2xl group-hover:-translate-y-2 transition-all duration-500 mb-4 ring-1 ring-on-surface/5">
                     {book.imageUrl ? (
                       <Image
                         src={book.imageUrl}
                         alt={book.title}
                         fill
-                        sizes="64px"
+                        sizes="(max-width: 768px) 50vw, 33vw"
                         placeholder="blur"
                         blurDataURL={defaultBlurDataURL}
-                        className="object-cover group-hover:scale-110 transition-transform duration-700"
+                        className="object-cover transition-transform duration-700 group-hover:scale-110"
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center">
-                        <span className="material-symbols-outlined text-on-surface/10 text-2xl">auto_stories</span>
+                        <span className="material-symbols-outlined text-on-surface/10 text-3xl">auto_stories</span>
                       </div>
                     )}
                   </div>
-                </div>
-                
-                {/* Book Metadata */}
-                <div className="flex-1 min-w-0 flex flex-col">
-                  <div className="flex items-center justify-between gap-4 mb-2">
-                    <div className="flex items-center gap-2">
-                      <span className="text-[8px] font-bold text-on-surface-variant opacity-40 uppercase tracking-widest">
-                        {book.year || '—'}
+
+                  {/* Metadata Block */}
+                  <div className="space-y-1 px-1">
+                    <h3 className="text-sm font-black text-[#1a1c1e] leading-tight line-clamp-2 uppercase tracking-tight group-hover:text-amber-600 transition-colors">
+                      {book.title}
+                    </h3>
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="text-[11px] font-bold text-on-surface-variant/60 truncate flex-1 leading-none">
+                        {book.author || 'Unknown Author'}
                       </span>
+                      {book.rating && (
+                        <div className="flex items-center gap-1 shrink-0 bg-surface-container px-2 py-0.5 rounded-full border border-on-surface/5">
+                          <span className="material-symbols-outlined text-[12px] text-amber-500 fill-1">star</span>
+                          <span className="text-[10px] font-black text-on-surface">{book.rating}</span>
+                        </div>
+                      )}
                     </div>
-                    {book.rating && (
-                      <div className="flex items-center gap-1.5 opacity-60">
-                        <span className="material-symbols-outlined text-[14px] text-amber-500 fill-1">star</span>
-                        <span className="text-[11px] font-black text-on-surface">{book.rating}</span>
-                      </div>
-                    )}
                   </div>
-
-                  <h3 className="text-lg font-black text-on-surface truncate uppercase tracking-tighter leading-none mb-1 group-hover:text-on-surface transition-colors">
-                    {book.title}
-                  </h3>
-                  <p className="text-[11px] text-on-surface-variant font-bold opacity-40 truncate mb-4">
-                    {book.author || 'Неизвестный автор'}
-                  </p>
-                  
-                  {book.description && (
-                    <div className="p-4 bg-surface-container/30 rounded-[20px] border border-on-surface/5 relative group-hover:bg-surface-container/50 transition-colors">
-                      <p className="text-[11px] font-medium text-on-surface-variant/70 leading-relaxed line-clamp-2">
-                        {book.description}
-                      </p>
-                    </div>
-                  )}
-                </div>
-
-                {/* Arrow */}
-                <div className="self-center shrink-0 w-10 h-10 rounded-full bg-surface-container/50 flex items-center justify-center opacity-30 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all duration-300">
-                  <span className="material-symbols-outlined text-[18px] text-on-surface">chevron_right</span>
-                </div>
-              </div>
+                </button>
               </MotionListItem>
             ))}
           </div>
