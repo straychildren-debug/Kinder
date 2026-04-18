@@ -63,7 +63,16 @@ export default function WishlistShelf({
             className="group cursor-pointer flex flex-col"
             onClick={() => onOpenContent?.(c)}
           >
-            <div className="relative aspect-[3/4] rounded-2xl overflow-hidden bg-surface-container border border-on-surface/5 shadow-sm group-hover:shadow-xl transition-all duration-500">
+            {/* Poster Container with 2/3 Aspect Ratio (Library Style) */}
+            <div className="relative aspect-[2/3] rounded-xl overflow-hidden bg-surface-container-low/50 border border-on-surface/[0.03] shadow-[0_4px_12px_rgba(0,0,0,0.01)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.04)] transition-all duration-300">
+              {/* Rating Label (Top Right) */}
+              {c.rating && (
+                <div className="absolute top-2 right-2 px-1.5 py-0.5 rounded-lg bg-black/60 backdrop-blur-md border border-white/10 flex items-center gap-1 z-10">
+                  <span className="material-symbols-outlined text-white" style={{ fontVariationSettings: "'FILL' 1", fontSize: '10px' }}>star</span>
+                  <span className="text-[10px] font-black text-white">{c.rating.toFixed(1)}</span>
+                </div>
+              )}
+
               {c.imageUrl ? (
                 <Image
                   src={c.imageUrl}
@@ -72,7 +81,7 @@ export default function WishlistShelf({
                   sizes="200px"
                   placeholder="blur"
                   blurDataURL={defaultBlurDataURL}
-                  className="object-cover group-hover:scale-110 transition-transform duration-[1.5s]"
+                  className="object-cover group-hover:scale-105 transition-transform duration-700"
                 />
               ) : (
                 <div className="w-full h-full flex items-center justify-center opacity-20 text-on-surface">
@@ -82,32 +91,29 @@ export default function WishlistShelf({
                 </div>
               )}
 
-              <div className="absolute top-2 right-2">
-                 <div className="bg-white/80 backdrop-blur-md w-6 h-6 rounded-lg flex items-center justify-center border border-white shrink-0 shadow-sm">
-                    <span className="material-symbols-outlined text-[12px] text-on-surface">
+              {/* Type Icon (Top Left) */}
+              <div className="absolute top-2 left-2">
+                 <div className="bg-white/80 backdrop-blur-md w-5 h-5 rounded-md flex items-center justify-center border border-white shrink-0 shadow-sm opacity-60">
+                    <span className="material-symbols-outlined text-[10px] text-on-surface">
                       {c.type === 'movie' ? 'movie' : 'menu_book'}
                     </span>
                  </div>
               </div>
             </div>
 
-            <div className="mt-3 px-1">
-              <h4 className="text-[11px] font-black leading-tight tracking-tight line-clamp-2 min-h-[1.8rem] text-on-surface group-hover:text-accent-lilac transition-colors">
+            {/* Simple Metadata (Library Style) */}
+            <div className="mt-2.5 px-0.5 flex flex-col">
+              <h4 className="text-[11px] font-bold text-on-surface leading-tight line-clamp-2 tracking-tight mb-1 group-hover:text-primary transition-colors">
                 {c.title}
               </h4>
-              <div className="flex items-center gap-1.5 mt-1">
-                 <span className="text-[8px] font-black text-on-surface-muted uppercase tracking-widest truncate">
-                    {c.type === 'movie' ? 'Кино' : 'Книга'}
-                 </span>
-                 {c.rating && (
-                   <>
-                     <span className="w-1 h-1 rounded-full bg-on-surface/10" />
-                     <div className="flex items-center gap-1">
-                        <span className="material-symbols-outlined text-[10px] text-accent-lilac" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
-                        <span className="text-[10px] font-black">{c.rating.toFixed(1)}</span>
-                     </div>
-                   </>
-                 )}
+              <div className="flex items-center gap-1.5 truncate">
+                <span className="text-[10px] font-medium text-on-surface-variant/80 tracking-tight">
+                  {c.type === 'movie' ? 'Кино' : 'Книга'}
+                </span>
+                <span className="w-0.5 h-0.5 rounded-full bg-on-surface-variant/30" />
+                <span className="text-[10px] font-medium text-on-surface-variant/80 truncate tracking-tight">
+                  {(c as any).author || (c as any).director || 'Автор'}
+                </span>
               </div>
             </div>
           </motion.div>

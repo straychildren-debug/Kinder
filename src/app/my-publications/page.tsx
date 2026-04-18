@@ -177,12 +177,13 @@ export default function MyPublicationsPage() {
                       {/* Status Badges (Top Left) */}
                       {item.status === 'pending' && (
                         <div className="absolute top-2 left-2 px-2 py-0.5 rounded-md bg-amber-500 text-white text-[9px] font-bold z-10 shadow-lg border border-white/20">
+                        <div className="absolute top-2 left-2 px-2 py-0.5 rounded-md bg-amber-500 text-white text-[9px] font-bold z-10 shadow-lg">
                           ОЖИДАЕТ
                         </div>
                       )}
 
                       {item.status === 'rejected' && (
-                        <div className="absolute top-2 left-2 px-2 py-0.5 rounded-md bg-red-500 text-white text-[9px] font-bold z-10 shadow-lg border border-white/20 flex items-center gap-1">
+                        <div className="absolute top-2 left-2 px-2 py-0.5 rounded-md bg-red-500 text-white text-[9px] font-bold z-10 shadow-lg flex items-center gap-1">
                           <span className="material-symbols-outlined text-[10px]">block</span>
                           <span>ОТКАЗ</span>
                         </div>
@@ -210,12 +211,12 @@ export default function MyPublicationsPage() {
                       <h4 className="text-[11px] font-bold text-on-surface leading-tight line-clamp-2 tracking-tight mb-1 group-hover:text-primary transition-colors">
                         {item.title}
                       </h4>
-                      <div className="flex items-center gap-1.5 truncate opacity-70">
-                        <span className="text-[10px] font-medium text-on-surface tracking-tight">
+                      <div className="flex items-center gap-1.5 truncate">
+                        <span className="text-[10px] font-medium text-on-surface-variant/80 tracking-tight">
                           {item.type === 'movie' ? 'Кино' : 'Книга'}
                         </span>
-                        <span className="w-0.5 h-0.5 rounded-full bg-on-surface/30" />
-                        <span className="text-[10px] font-medium text-on-surface truncate tracking-tight">
+                        <span className="w-0.5 h-0.5 rounded-full bg-on-surface-variant/30" />
+                        <span className="text-[10px] font-medium text-on-surface-variant/80 truncate tracking-tight">
                           {(item as any).author || (item as any).director || 'Автор'}
                         </span>
                       </div>
