@@ -85,13 +85,13 @@ export default function Library() {
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-5">
             {displayBooks.map((book, index) => (
-              <MotionListItem key={book.id} index={index}>
+              <MotionListItem key={book.id} index={index} className="h-full">
                 <button
-                  className="w-full flex flex-col group text-left outline-none bg-white p-3 rounded-[32px] border border-on-surface/5 shadow-sm hover:shadow-xl transition-all duration-500"
+                  className="w-full h-full flex flex-col group text-left outline-none bg-white p-3 rounded-[32px] border border-on-surface/5 shadow-sm hover:shadow-xl transition-all duration-500"
                   onClick={() => setSelectedContent(book)}
                 >
                   {/* Fixed Aspect Ratio Poster */}
-                  <div className="relative aspect-[2/3] rounded-24 overflow-hidden bg-surface-container border border-on-surface/5 shadow-sm group-hover:scale-[1.02] transition-transform duration-500 mb-4 ring-1 ring-on-surface/5">
+                  <div className="relative aspect-[2/3] rounded-[24px] overflow-hidden bg-surface-container border border-on-surface/5 shadow-sm group-hover:scale-[1.02] transition-transform duration-500 mb-4 ring-1 ring-on-surface/5">
                     {book.rating && (
                       <div className="absolute top-2 right-2 px-1.5 py-0.5 rounded-lg bg-black/60 backdrop-blur-md border border-white/10 flex items-center gap-1 z-10">
                         <span className="material-symbols-outlined text-white" style={{ fontVariationSettings: "'FILL' 1", fontSize: '10px' }}>star</span>
@@ -116,7 +116,7 @@ export default function Library() {
                   </div>
 
                   {/* Metadata Block */}
-                  <div className="px-1 flex flex-col h-full">
+                  <div className="px-1 flex flex-col flex-1">
                     <h3 className="text-[11px] font-black text-[#1a1c1e] leading-tight line-clamp-2 uppercase tracking-tight group-hover:text-amber-600 transition-colors mb-1">
                       {book.title}
                     </h3>
@@ -125,7 +125,7 @@ export default function Library() {
                     </span>
                     
                     {book.description && (
-                      <p className="text-[10px] font-medium text-on-surface-variant/60 leading-normal line-clamp-2 mt-auto min-h-[2.4em]">
+                      <p className="text-[10px] font-medium text-on-surface-variant/60 leading-normal line-clamp-2 mt-auto">
                         {book.description}
                       </p>
                     )}
