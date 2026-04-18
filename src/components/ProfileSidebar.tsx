@@ -10,6 +10,7 @@ import {
   markAllNotificationsRead, 
   subscribeToNotifications 
 } from '@/lib/notifications';
+import { getPendingContent } from '@/lib/db';
 import { Notification } from '@/lib/types';
 
 interface ProfileSidebarProps {
@@ -20,14 +21,21 @@ interface ProfileSidebarProps {
 export default function ProfileSidebar({ isOpen, onClose }: ProfileSidebarProps) {
   const { user, logout } = useAuth();
   const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [pendingCount, setPendingCount] = useState(0);
 
   useEffect(() => {
     if (!user || !isOpen) return;
 
     let alive = true;
     const load = async () => {
-      const data = await getNotifications(user.id, 10);
-      if (alive) setNotifications(data);
+      const [notifsData, pendingData] = await Promise.all([
+        getNotifications(user.id, 10),
+        getPendingContent()
+      ]);
+      if (alive) {
+        setNotifications(notifsData);
+        setPendingCount(pendingData.length);
+      }
     };
 
     load();
@@ -163,7 +171,11 @@ export default function ProfileSidebar({ isOpen, onClose }: ProfileSidebarProps)
                 >
                   <span className="material-symbols-outlined text-[20px]">shield</span>
                   <span className="text-sm font-medium">Модерация</span>
-                  <span className="ml-auto bg-error text-on-error text-xs font-bold px-2 py-0.5 rounded-full">2</span>
+                  {pendingCount > 0 && (
+                    <span className="ml-auto bg-error text-on-error text-xs font-bold px-2 py-0.5 rounded-full">
+                      {pendingCount}
+                    </span>
+                  )}
                 </Link>
               )}
               {(user.role === 'admin' || user.role === 'superadmin') && (
