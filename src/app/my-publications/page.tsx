@@ -154,7 +154,7 @@ export default function MyPublicationsPage() {
                 <p className="text-sm font-medium">Здесь пока ничего нет</p>
               </div>
             ) : (
-              <div className="grid grid-cols-3 gap-x-3 gap-y-8">
+              <div className="grid grid-cols-3 gap-x-3 gap-y-10">
                 {filteredContent.map((item) => (
                   <motion.div
                     key={item.id}
@@ -164,7 +164,30 @@ export default function MyPublicationsPage() {
                     className="group cursor-pointer flex flex-col"
                     onClick={() => setOpenedContent(item)}
                   >
-                    <div className="relative aspect-[3/4] rounded-xl overflow-hidden bg-surface-container">
+                    {/* Poster Container with 2/3 Aspect Ratio */}
+                    <div className="relative aspect-[2/3] rounded-xl overflow-hidden bg-surface-container-low/50 border border-on-surface/[0.03] shadow-[0_4px_12px_rgba(0,0,0,0.01)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.04)] transition-all duration-300">
+                      {/* Rating Label (Library Style) */}
+                      {item.status === 'approved' && item.rating && (
+                        <div className="absolute top-2 right-2 px-1.5 py-0.5 rounded-lg bg-black/60 backdrop-blur-md border border-white/10 flex items-center gap-1 z-10 shadow-lg">
+                          <span className="material-symbols-outlined text-white" style={{ fontVariationSettings: "'FILL' 1", fontSize: '10px' }}>star</span>
+                          <span className="text-[10px] font-black text-white">{item.rating.toFixed(1)}</span>
+                        </div>
+                      )}
+
+                      {/* Status Badges (Top Left) */}
+                      {item.status === 'pending' && (
+                        <div className="absolute top-2 left-2 px-2 py-0.5 rounded-md bg-amber-500 text-white text-[9px] font-bold z-10 shadow-lg border border-white/20">
+                          ОЖИДАЕТ
+                        </div>
+                      )}
+
+                      {item.status === 'rejected' && (
+                        <div className="absolute top-2 left-2 px-2 py-0.5 rounded-md bg-red-500 text-white text-[9px] font-bold z-10 shadow-lg border border-white/20 flex items-center gap-1">
+                          <span className="material-symbols-outlined text-[10px]">block</span>
+                          <span>ОТКАЗ</span>
+                        </div>
+                      )}
+
                       {item.imageUrl ? (
                         <Image
                           alt={item.title}
@@ -173,46 +196,28 @@ export default function MyPublicationsPage() {
                           sizes="200px"
                           placeholder="blur"
                           blurDataURL={defaultBlurDataURL}
-                          className="object-cover group-hover:scale-[1.03] transition-transform duration-500"
+                          className="object-cover group-hover:scale-[1.05] transition-transform duration-700"
                         />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center opacity-20 text-on-surface">
-                          <span className="material-symbols-outlined text-4xl">{item.type === 'movie' ? 'movie' : 'menu_book'}</span>
-                        </div>
-                      )}
-
-                      {/* Status Badges */}
-                      {item.status === 'pending' && (
-                        <div className="absolute top-2 left-2 px-2 py-0.5 rounded-md bg-amber-500 text-white text-[10px] font-semibold z-10">
-                          Ожидает
-                        </div>
-                      )}
-
-                      {item.status === 'rejected' && (
-                        <div className="absolute top-2 left-2 px-2 py-0.5 rounded-md bg-red-500 text-white text-[10px] font-semibold z-10 flex items-center gap-1">
-                          <span className="material-symbols-outlined text-[11px]">block</span>
-                          <span>Отказ</span>
+                          <span className="material-symbols-outlined text-3xl">{item.type === 'movie' ? 'movie' : 'menu_book'}</span>
                         </div>
                       )}
                     </div>
 
-                    <div className="mt-2.5 px-0.5">
-                      <h4 className="text-xs font-semibold leading-snug tracking-tight line-clamp-2 text-on-surface">
+                    {/* Simple Metadata (Library Style) */}
+                    <div className="mt-2.5 px-0.5 flex flex-col">
+                      <h4 className="text-[11px] font-bold text-on-surface leading-tight line-clamp-2 tracking-tight mb-1 group-hover:text-primary transition-colors">
                         {item.title}
                       </h4>
-                      <div className="flex items-center gap-1.5 mt-1">
-                        <span className="text-[11px] font-medium text-on-surface-muted truncate">
+                      <div className="flex items-center gap-1.5 truncate opacity-70">
+                        <span className="text-[10px] font-medium text-on-surface tracking-tight">
                           {item.type === 'movie' ? 'Кино' : 'Книга'}
                         </span>
-                        {item.status === 'approved' && item.rating && (
-                          <>
-                            <span className="w-1 h-1 rounded-full bg-on-surface/10" />
-                            <div className="flex items-center gap-0.5">
-                              <span className="material-symbols-outlined text-[11px] text-on-surface-muted" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
-                              <span className="text-[11px] font-semibold">{item.rating.toFixed(1)}</span>
-                            </div>
-                          </>
-                        )}
+                        <span className="w-0.5 h-0.5 rounded-full bg-on-surface/30" />
+                        <span className="text-[10px] font-medium text-on-surface truncate tracking-tight">
+                          {(item as any).author || (item as any).director || 'Автор'}
+                        </span>
                       </div>
                     </div>
                   </motion.div>
