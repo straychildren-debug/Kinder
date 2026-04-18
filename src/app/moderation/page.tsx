@@ -22,6 +22,8 @@ export default function ModerationPage() {
   const [globalStats, setGlobalStats] = useState({ approved: 0, rejected: 0, pending: 0 });
   const [personalStats, setPersonalStats] = useState({ approved: 0, rejected: 0 });
 
+  const [viewFilter, setViewFilter] = useState<'mine' | 'all'>('mine');
+
   const loadStats = async () => {
     if (!user) return;
     const gStats = await getModerationStats();
@@ -36,9 +38,9 @@ export default function ModerationPage() {
     if (view === 'pending') {
       items = await getPendingContent();
     } else if (view === 'approved') {
-      items = await getApprovedContent(user?.id);
+      items = await getApprovedContent(viewFilter === 'mine' ? user?.id : undefined);
     } else if (view === 'rejected') {
-      items = await getRejectedContent(user?.id);
+      items = await getRejectedContent(viewFilter === 'mine' ? user?.id : undefined);
     }
     setItemsList(items);
     setLoading(false);
@@ -58,7 +60,11 @@ export default function ModerationPage() {
     if (viewingList && user) {
       fetchListView(viewingList);
     }
-  }, [viewingList, user]);
+  }, [viewingList, user, viewFilter]);
+
+  useEffect(() => {
+    setViewFilter('mine');
+  }, [viewingList]);
 
   if (!user || (user.role !== 'moderator' && user.role !== 'admin' && user.role !== 'superadmin')) {
     // ... (Unauthorized view remains the same)
@@ -208,6 +214,32 @@ export default function ModerationPage() {
                     </div>
                   </div>
                 </div>
+
+                {/* Switcher for Approved/Rejected */}
+                {(viewingList === 'approved' || viewingList === 'rejected') && (
+                  <div className="flex bg-surface-container rounded-2xl p-1.5 gap-1 shadow-inner border border-on-surface/5">
+                    <button
+                      onClick={() => setViewFilter('mine')}
+                      className={`px-6 py-2.5 rounded-xl text-[9px] font-black uppercase tracking-wider transition-all ${
+                        viewFilter === 'mine' 
+                          ? `bg-${header.color}-500 text-white shadow-xl shadow-${header.color}-500/20` 
+                          : 'text-on-surface/40 hover:text-on-surface'
+                      }`}
+                    >
+                      Мои
+                    </button>
+                    <button
+                      onClick={() => setViewFilter('all')}
+                      className={`px-6 py-2.5 rounded-xl text-[9px] font-black uppercase tracking-wider transition-all ${
+                        viewFilter === 'all' 
+                          ? `bg-${header.color}-500 text-white shadow-xl shadow-${header.color}-500/20` 
+                          : 'text-on-surface/40 hover:text-on-surface'
+                      }`}
+                    >
+                      Все
+                    </button>
+                  </div>
+                )}
               </div>
             </header>
 
@@ -232,17 +264,28 @@ export default function ModerationPage() {
                         {viewingList === 'pending' 
                           ? 'Вы настоящий страж качества. Сейчас в очереди нет новых публикаций.' 
                           : viewingList === 'approved' 
-                          ? 'Вы еще не одобрили ни одной публикации. Ваше мнение важно!'
-                          : 'Вы не отклонили ни одной публикации. Идеальный контент?'}
+                          ? (viewFilter === 'mine' ? 'Вы еще не одобрили ни одной публикации лично.' : 'В системе пока нет одобренных публикаций.')
+                          : (viewFilter === 'mine' ? 'Вы еще не отклонили ни одной публикации лично.' : 'В системе пока нет отклоненных публикаций.')}
                       </p>
                     </div>
-                    <button 
-                       onClick={() => setViewingList(null)}
-                       className="px-10 h-14 bg-[#0f172a] text-white rounded-2xl font-bold text-[10px] uppercase tracking-[0.2em] shadow-xl hover:bg-black active:scale-95 transition-all flex items-center gap-3 focus:outline-none"
-                    >
-                      <span className="material-symbols-outlined text-[18px]">analytics</span>
-                      К статистике
-                    </button>
+                    <div className="flex items-center gap-4">
+                      {viewFilter === 'mine' && (viewingList === 'approved' || viewingList === 'rejected') && itemsList.length === 0 && (
+                        <button 
+                          onClick={() => setViewFilter('all')}
+                          className={`px-10 h-14 border-2 border-${header.color}-500/20 text-${header.color}-600 rounded-2xl font-bold text-[10px] uppercase tracking-[0.2em] hover:bg-${header.color}-500 hover:text-white active:scale-95 transition-all flex items-center gap-3 focus:outline-none`}
+                        >
+                          <span className="material-symbols-outlined text-[18px]">public</span>
+                          Показать все
+                        </button>
+                      )}
+                      <button 
+                         onClick={() => setViewingList(null)}
+                         className="px-10 h-14 bg-[#0f172a] text-white rounded-2xl font-bold text-[10px] uppercase tracking-[0.2em] shadow-xl hover:bg-black active:scale-95 transition-all flex items-center gap-3 focus:outline-none"
+                      >
+                        <span className="material-symbols-outlined text-[18px]">analytics</span>
+                        К статистике
+                      </button>
+                    </div>
                   </div>
                 ) : (
                   <div className="space-y-3">
