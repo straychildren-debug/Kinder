@@ -245,94 +245,68 @@ export default function ModerationPage() {
                     </button>
                   </div>
                 ) : (
-                  <div className="space-y-3">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-6 gap-y-10">
                     {itemsList.map((item, index) => (
                       <div 
                         key={item.id} 
-                        className="animate-in fade-in slide-in-from-bottom-4 duration-500 fill-mode-both"
+                        className="animate-in fade-in slide-in-from-bottom-4 duration-700 fill-mode-both"
                         style={{ animationDelay: `${index * 50}ms` }}
                       >
                         <button 
                           onClick={() => setSelectedForModeration(item)}
-                          className={`w-full bg-white rounded-[32px] p-5 border border-on-surface/5 shadow-sm hover:shadow-xl transition-all flex items-start gap-5 group text-left ${
-                             viewingList === 'approved' ? 'hover:border-emerald-500/20' : viewingList === 'rejected' ? 'hover:border-red-500/20' : 'hover:border-amber-500/20'
-                          }`}
+                          className="w-full flex flex-col group text-left outline-none"
                         >
-                          {/* Thumbnail Column */}
-                          <div className="shrink-0 flex flex-col items-center">
-                            <div className="relative w-16 h-24 rounded-2xl overflow-hidden bg-surface-container border border-on-surface/5 shadow-lg group-hover:scale-105 transition-transform duration-500">
-                              {item.imageUrl ? (
-                                <Image
-                                  src={item.imageUrl}
-                                  alt={item.title}
-                                  fill
-                                  sizes="64px"
-                                  placeholder="blur"
-                                  blurDataURL={defaultBlurDataURL}
-                                  className="object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
-                                />
-                              ) : (
-                                <div className="w-full h-full flex items-center justify-center text-[10px] font-black opacity-20 uppercase">No Cover</div>
-                              )}
-                              
-                              {/* Type Overlay */}
-                              <div className="absolute inset-x-0 bottom-0 bg-black/40 backdrop-blur-md py-1 text-center">
-                                <span className="text-[7px] font-black text-white uppercase tracking-widest">{item.type === 'movie' ? 'Кино' : 'Книга'}</span>
+                          {/* Top Label (Type) */}
+                          <div className="mb-3">
+                            <span className="text-[10px] font-black tracking-[0.2em] text-on-surface-variant/40 uppercase">
+                              {item.type === 'movie' ? 'Feature Film' : 'Fiction'}
+                            </span>
+                          </div>
+
+                          {/* Poster Column */}
+                          <div className="relative aspect-[2/3] rounded-3xl overflow-hidden bg-surface-container border border-on-surface/5 shadow-sm group-hover:shadow-2xl group-hover:-translate-y-2 transition-all duration-500 mb-4 ring-1 ring-on-surface/5">
+                            {item.imageUrl ? (
+                              <Image
+                                src={item.imageUrl}
+                                alt={item.title}
+                                fill
+                                sizes="(max-width: 768px) 50vw, 33vw"
+                                placeholder="blur"
+                                blurDataURL={defaultBlurDataURL}
+                                className="object-cover transition-transform duration-700 group-hover:scale-110"
+                              />
+                            ) : (
+                              <div className="w-full h-full flex items-center justify-center text-[10px] font-black opacity-20 uppercase">No Poster</div>
+                            )}
+
+                            {/* Status Indicator Overlays */}
+                            {item.status === 'rejected' && (
+                              <div className="absolute inset-x-0 bottom-0 bg-red-500/90 backdrop-blur-md py-3 px-4 flex items-center justify-between">
+                                <span className="text-[9px] font-black text-white uppercase tracking-widest">Rejected</span>
+                                <span className="material-symbols-outlined text-white text-[14px]">error</span>
+                              </div>
+                            )}
+                            {item.status === 'approved' && (
+                              <div className="absolute top-4 right-4 bg-emerald-500/90 backdrop-blur-md w-8 h-8 rounded-full flex items-center justify-center shadow-lg">
+                                <span className="material-symbols-outlined text-white text-[16px]">verified</span>
+                              </div>
+                            )}
+                          </div>
+
+                          {/* Metadata Block */}
+                          <div className="space-y-1">
+                            <h3 className="text-sm font-black text-[#1a1c1e] leading-tight line-clamp-2 uppercase tracking-tight group-hover:text-amber-600 transition-colors">
+                              {item.title}
+                            </h3>
+                            <div className="flex items-center justify-between gap-2">
+                              <span className="text-[11px] font-bold text-on-surface-variant/60 truncate flex-1">
+                                {item.author || item.director || 'Unknown'}
+                              </span>
+                              <div className="flex items-center gap-1 shrink-0 bg-surface-container px-2 py-0.5 rounded-full border border-on-surface/5">
+                                <span className="material-symbols-outlined text-[12px] text-amber-500 fill-1">star</span>
+                                <span className="text-[10px] font-black text-on-surface">{item.rating || '—'}</span>
                               </div>
                             </div>
-                          </div>
-
-                          {/* Content Column */}
-                          <div className="flex-1 min-w-0 flex flex-col">
-                             <div className="flex items-center justify-between gap-4 mb-2">
-                               <div className="flex items-center gap-2">
-                                 <span className="text-[8px] font-bold text-on-surface-variant opacity-40 uppercase tracking-widest">
-                                   {new Date(item.createdAt).toLocaleDateString()}
-                                 </span>
-                                 {item.status === 'rejected' && (
-                                   <span className="text-[8px] font-black text-red-500 uppercase tracking-widest bg-red-50 px-2 py-0.5 rounded-full">Отклонено</span>
-                                 )}
-                                 {item.status === 'approved' && (
-                                   <span className="text-[8px] font-black text-emerald-500 uppercase tracking-widest bg-emerald-50 px-2 py-0.5 rounded-full">Актив</span>
-                                 )}
-                               </div>
-                               
-                               {/* Rating Score */}
-                               <div className="flex items-center gap-1.5 opacity-60">
-                                 <span className="material-symbols-outlined text-[14px] text-amber-500 fill-1">star</span>
-                                 <span className="text-[11px] font-black text-on-surface">{item.rating || '—'}</span>
-                               </div>
-                             </div>
-
-                             <h3 className="text-lg font-black text-on-surface truncate uppercase tracking-tighter leading-none mb-1 group-hover:text-on-surface transition-colors">
-                               {item.title}
-                             </h3>
-                             <p className="text-[11px] text-on-surface-variant font-bold opacity-40 truncate mb-4">
-                               {item.author || item.director || 'Автор не указан'}
-                             </p>
-                             
-                             {/* Description Bubble */}
-                             <div className="p-4 bg-surface-container/30 rounded-[20px] border border-on-surface/5 relative group-hover:bg-surface-container/50 transition-colors">
-                               <p className="text-[11px] font-medium text-on-surface-variant/70 leading-relaxed line-clamp-2">
-                                 {item.description || 'Описание отсутствует...'}
-                               </p>
-                             </div>
-
-                             {item.status === 'rejected' && item.rejectionReason && (
-                               <div className="flex items-start gap-2 mt-4 p-3 bg-red-500/5 rounded-2xl border border-red-500/10">
-                                 <span className="material-symbols-outlined text-[16px] text-red-500 mt-0.5">warning</span>
-                                 <div className="flex-1">
-                                   <span className="text-[8px] font-black text-red-600 uppercase tracking-widest block mb-1">Причина отказа</span>
-                                   <p className="text-[10px] font-bold text-red-900 leading-tight">{item.rejectionReason}</p>
-                                 </div>
-                               </div>
-                             )}
-                          </div>
-
-                          <div className="self-center shrink-0 w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center opacity-0 group-hover:opacity-100 -translate-x-4 group-hover:translate-x-0 transition-all">
-                             <span className={`material-symbols-outlined text-[20px] ${
-                               viewingList === 'approved' ? 'text-emerald-500' : viewingList === 'rejected' ? 'text-red-500' : 'text-amber-500'
-                             }`}>chevron_right</span>
                           </div>
                         </button>
                       </div>
