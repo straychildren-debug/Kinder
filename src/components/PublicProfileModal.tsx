@@ -289,10 +289,6 @@ export default function PublicProfileModal({ user, onClose, onOpenContent }: Pub
     </AnimatePresence>
   );
 }
-      </div>
-    </AnimatePresence>
-  );
-}
 
 function ContentCard({ item, onClick }: { item: ContentItem; onClick: () => void }) {
   return (
