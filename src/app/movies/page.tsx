@@ -100,60 +100,69 @@ export default function Movies() {
              )}
           </div>
         ) : (
-          <div className="space-y-4">
-            {displayMovies.map((movie, index) => (
-              <MotionListItem key={movie.id} index={index}>
-              <div
-                className="group flex bg-surface p-5 rounded-2xl border border-on-surface/5 shadow-[0_4px_20_rgba(0,0,0,0.02)] hover:shadow-[0_20px_40px_rgba(0,0,0,0.04)] transition-all duration-500 hover:-translate-y-1 cursor-pointer transform-gpu"
+               <div
+                className="group flex bg-white p-5 rounded-[32px] border border-on-surface/5 shadow-sm hover:shadow-xl transition-all duration-500 cursor-pointer items-start gap-5"
                 onClick={() => setSelectedContent(movie)}
               >
                 {/* Movie Poster */}
-                <div className="relative w-[60px] h-[90px] flex-shrink-0 rounded-lg overflow-hidden bg-surface-container shadow-sm border border-on-surface/5">
-                  {movie.imageUrl ? (
-                    <Image
-                      src={movie.imageUrl}
-                      alt={movie.title}
-                      fill
-                      sizes="60px"
-                      placeholder="blur"
-                      blurDataURL={defaultBlurDataURL}
-                      className="object-cover group-hover:scale-110 transition-transform duration-1000 ease-out"
-                    />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center">
-                      <span className="material-symbols-outlined text-on-surface/10 text-2xl">movie</span>
-                    </div>
-                  )}
+                <div className="shrink-0 flex flex-col items-center">
+                  <div className="relative w-16 h-24 rounded-2xl overflow-hidden bg-surface-container border border-on-surface/5 shadow-lg group-hover:scale-105 transition-transform duration-500">
+                    {movie.imageUrl ? (
+                      <Image
+                        src={movie.imageUrl}
+                        alt={movie.title}
+                        fill
+                        sizes="64px"
+                        placeholder="blur"
+                        blurDataURL={defaultBlurDataURL}
+                        className="object-cover group-hover:scale-110 transition-transform duration-700"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center">
+                        <span className="material-symbols-outlined text-on-surface/10 text-2xl">movie</span>
+                      </div>
+                    )}
+                  </div>
                 </div>
                 
                 {/* Movie Metadata */}
-                <div className="ml-6 flex-1 flex flex-col h-[90px] min-w-0">
-                  <div className="min-w-0 flex-1">
-                    <div className="flex items-start justify-between gap-2">
-                      <h4 className="font-bold text-on-surface text-[15px] leading-tight mb-0.5 line-clamp-1 flex-1">
-                        {movie.title}
-                      </h4>
-                      {movie.rating && (
-                        <div className="flex items-center gap-0.5 mt-0.5 shrink-0">
-                          <span className="material-symbols-outlined text-accent-lilac leading-none" style={{ fontVariationSettings: "'FILL' 1", fontSize: '15px' }}>star</span>
-                          <span className="text-on-surface text-[10px] font-bold leading-none">{movie.rating}</span>
-                        </div>
-                      )}
+                <div className="flex-1 min-w-0 flex flex-col">
+                  <div className="flex items-center justify-between gap-4 mb-2">
+                    <div className="flex items-center gap-2">
+                      <span className="text-[8px] font-bold text-on-surface-variant opacity-40 uppercase tracking-widest">
+                        {movie.year || '—'}
+                      </span>
                     </div>
-                    <div className="flex items-center gap-1.5 mb-1.5 leading-none text-on-surface">
-                      <p className="text-[11px] font-bold">
-                        {movie.director || 'Неизвестный режиссер'}
+                    {movie.rating && (
+                      <div className="flex items-center gap-1.5 opacity-60">
+                        <span className="material-symbols-outlined text-[14px] text-amber-500 fill-1">star</span>
+                        <span className="text-[11px] font-black text-on-surface">{movie.rating}</span>
+                      </div>
+                    )}
+                  </div>
+
+                  <h3 className="text-lg font-black text-on-surface truncate uppercase tracking-tighter leading-none mb-1 group-hover:text-on-surface transition-colors">
+                    {movie.title}
+                  </h3>
+                  <p className="text-[11px] text-on-surface-variant font-bold opacity-40 truncate mb-4">
+                    {movie.director || 'Неизвестный режиссер'}
+                  </p>
+                  
+                  {movie.description && (
+                    <div className="p-4 bg-surface-container/30 rounded-[20px] border border-on-surface/5 relative group-hover:bg-surface-container/50 transition-colors">
+                      <p className="text-[11px] font-medium text-on-surface-variant/70 leading-relaxed line-clamp-2">
+                        {movie.description}
                       </p>
-                      {movie.year && (
-                        <span className="text-[11px] text-on-surface/80 font-bold">
-                          {movie.year}
-                        </span>
-                      )}
                     </div>
-                    {movie.description && (
-                      <div className="bg-on-surface/[0.04] -ml-2 px-2 py-1.5 rounded-lg mt-2">
-                        <p className="text-[11px] text-on-surface font-semibold line-clamp-3 leading-[1.3] text-pretty">
-                          {movie.description}
+                  )}
+                </div>
+
+                {/* Arrow */}
+                <div className="self-center shrink-0 w-10 h-10 rounded-full bg-surface-container/50 flex items-center justify-center opacity-30 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all duration-300">
+                  <span className="material-symbols-outlined text-[18px] text-on-surface">chevron_right</span>
+                </div>
+              </div>
+description}
                         </p>
                       </div>
                     )}
