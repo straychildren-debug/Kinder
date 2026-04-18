@@ -192,7 +192,7 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
                sizes="(min-width: 768px) 1024px, 100vw"
                placeholder="blur"
                blurDataURL={defaultBlurDataURL}
-               className="object-cover scale-105 blur-sm opacity-60 brightness-75"
+               className="object-cover scale-105 blur-[2px] opacity-60 brightness-75"
                priority
              />
           ) : (
