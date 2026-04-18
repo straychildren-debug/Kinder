@@ -91,37 +91,40 @@ export default function Library() {
                   className="w-full flex flex-col group text-left outline-none"
                   onClick={() => setSelectedContent(book)}
                 >
-                  {/* Compact Poster */}
-                  <div className="relative aspect-[2/3] w-full rounded-xl overflow-hidden bg-surface-container-low/50 border border-on-surface/[0.03] shadow-[0_4px_12px_rgba(0,0,0,0.01)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.04)] transition-all duration-300">
-                    {book.rating && (
-                      <div className="absolute top-2 right-2 px-1.5 py-0.5 rounded-lg bg-black/60 backdrop-blur-md border border-white/10 flex items-center gap-1 z-10">
-                        <span className="material-symbols-outlined text-white" style={{ fontVariationSettings: "'FILL' 1", fontSize: '10px' }}>star</span>
-                        <span className="text-[10px] font-black text-white">{book.rating.toFixed(1)}</span>
-                      </div>
-                    )}
-                    {book.imageUrl ? (
-                      <Image
-                        src={book.imageUrl}
-                        alt={book.title}
-                        fill
-                        sizes="(max-width: 768px) 50vw, 33vw"
-                        placeholder="blur"
-                        blurDataURL={defaultBlurDataURL}
-                        className="object-cover transition-transform duration-700 group-hover:scale-105"
-                      />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center text-[10px] font-black opacity-20 uppercase">No Poster</div>
-                    )}
-                  </div>
+                  {/* Card with Backing */}
+                  <div className="w-full bg-white p-2 pb-4 rounded-[28px] border border-on-surface/[0.03] shadow-[0_8px_24px_rgba(0,0,0,0.04)] group-hover:shadow-[0_12px_32px_rgba(0,0,0,0.08)] transition-all duration-500">
+                    {/* Compact Poster */}
+                    <div className="relative aspect-[2/3] w-full rounded-[20px] overflow-hidden bg-surface-container-low/50 border border-on-surface/[0.03]">
+                      {book.rating && (
+                        <div className="absolute top-2 right-2 px-1.5 py-0.5 rounded-lg bg-black/60 backdrop-blur-md border border-white/10 flex items-center gap-1 z-10">
+                          <span className="material-symbols-outlined text-white" style={{ fontVariationSettings: "'FILL' 1", fontSize: '10px' }}>star</span>
+                          <span className="text-[10px] font-black text-white">{book.rating.toFixed(1)}</span>
+                        </div>
+                      )}
+                      {book.imageUrl ? (
+                        <Image
+                          src={book.imageUrl}
+                          alt={book.title}
+                          fill
+                          sizes="(max-width: 768px) 50vw, 33vw"
+                          placeholder="blur"
+                          blurDataURL={defaultBlurDataURL}
+                          className="object-cover transition-transform duration-700 group-hover:scale-105"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center text-[10px] font-black opacity-20 uppercase">No Poster</div>
+                      )}
+                    </div>
 
-                  {/* Simple Metadata */}
-                  <div className="mt-2.5 px-0.5 flex flex-col">
-                    <h3 className="text-[11px] font-bold text-on-surface leading-tight line-clamp-2 tracking-tight mb-1 group-hover:text-primary transition-colors min-h-[2.4em]">
-                      {book.title}
-                    </h3>
-                    <p className="text-[10px] font-medium text-on-surface-variant/80 truncate tracking-tight">
-                      {formatAuthor(book.author || '')}
-                    </p>
+                    {/* Simple Metadata */}
+                    <div className="mt-3 px-1.5 flex flex-col">
+                      <h3 className="text-[11px] font-bold text-on-surface leading-tight line-clamp-2 tracking-tight mb-1 group-hover:text-primary transition-colors min-h-[2.4em]">
+                        {book.title}
+                      </h3>
+                      <p className="text-[10px] font-medium text-on-surface-variant/80 truncate tracking-tight">
+                        {formatAuthor(book.author || '')}
+                      </p>
+                    </div>
                   </div>
                 </button>
               </MotionListItem>

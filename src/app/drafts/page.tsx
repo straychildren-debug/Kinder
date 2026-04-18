@@ -73,38 +73,43 @@ export default function DraftsPage() {
                     className="group cursor-pointer flex flex-col"
                     onClick={() => setOpenedContent(item)}
                   >
-                    <div className="relative aspect-[2/3] rounded-xl overflow-hidden bg-surface-container-low/50 border border-on-surface/[0.03] shadow-[0_4px_12px_rgba(0,0,0,0.01)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.04)] transition-all duration-300">
-                      {item.status === 'rejected' && (
-                        <div className="absolute top-2 left-2 px-2 py-0.5 rounded-md bg-red-500 text-white text-[9px] font-bold z-10 shadow-lg flex items-center gap-1">
-                          <span className="material-symbols-outlined text-[10px]">block</span>
-                          <span>ОТКАЗ</span>
-                        </div>
-                      )}
-                      
-                      {item.imageUrl ? (
-                        <Image
-                          alt={item.title}
-                          src={item.imageUrl}
-                          fill
-                          sizes="200px"
-                          placeholder="blur"
-                          blurDataURL={defaultBlurDataURL}
-                          className="object-cover group-hover:scale-[1.05] transition-transform duration-700"
-                        />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center opacity-20 text-on-surface">
-                          <span className="material-symbols-outlined text-3xl">{item.type === 'movie' ? 'movie' : 'menu_book'}</span>
-                        </div>
-                      )}
-                    </div>
+                    {/* Card with Backing (Library Style) */}
+                    <div className="w-full bg-white p-2 pb-4 rounded-[28px] border border-on-surface/[0.03] shadow-[0_8px_24px_rgba(0,0,0,0.04)] group-hover:shadow-[0_12px_32px_rgba(0,0,0,0.08)] transition-all duration-500">
+                      {/* Compact Poster */}
+                      <div className="relative aspect-[2/3] w-full rounded-[20px] overflow-hidden bg-surface-container-low/50 border border-on-surface/[0.03]">
+                        {item.status === 'rejected' && (
+                          <div className="absolute top-2 left-2 px-2 py-0.5 rounded-md bg-red-500 text-white text-[9px] font-bold z-10 shadow-lg flex items-center gap-1">
+                            <span className="material-symbols-outlined text-[10px]">block</span>
+                            <span>ОТКАЗ</span>
+                          </div>
+                        )}
+                        
+                        {item.imageUrl ? (
+                          <Image
+                            alt={item.title}
+                            src={item.imageUrl}
+                            fill
+                            sizes="200px"
+                            placeholder="blur"
+                            blurDataURL={defaultBlurDataURL}
+                            className="object-cover group-hover:scale-[1.05] transition-transform duration-700"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center opacity-20 text-on-surface">
+                            <span className="material-symbols-outlined text-3xl">{item.type === 'movie' ? 'movie' : 'menu_book'}</span>
+                          </div>
+                        )}
+                      </div>
+
                       {/* Simple Metadata (Library Style) */}
-                    <div className="mt-2.5 px-0.5 flex flex-col">
-                      <h3 className="text-[11px] font-bold text-on-surface leading-tight line-clamp-2 tracking-tight mb-1 group-hover:text-primary transition-colors min-h-[2.4em]">
-                        {item.title}
-                      </h3>
-                      <p className="text-[10px] font-medium text-on-surface-variant/80 truncate tracking-tight">
-                        {formatAuthor((item as any).author || (item as any).director || '')}
-                      </p>
+                      <div className="mt-3 px-1.5 flex flex-col">
+                        <h3 className="text-[11px] font-bold text-on-surface leading-tight line-clamp-2 tracking-tight mb-1 group-hover:text-primary transition-colors min-h-[2.4em]">
+                          {item.title}
+                        </h3>
+                        <p className="text-[10px] font-medium text-on-surface-variant/80 truncate tracking-tight">
+                          {formatAuthor((item as any).author || (item as any).director || '')}
+                        </p>
+                      </div>
                     </div>
                   </motion.div>
                 ))}

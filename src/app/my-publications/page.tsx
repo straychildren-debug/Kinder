@@ -159,8 +159,10 @@ export default function MyPublicationsPage() {
                     className="group cursor-pointer flex flex-col"
                     onClick={() => setOpenedContent(item)}
                   >
-                    {/* Poster Container with 2/3 Aspect Ratio */}
-                    <div className="relative aspect-[2/3] rounded-xl overflow-hidden bg-surface-container-low/50 border border-on-surface/[0.03] shadow-[0_4px_12px_rgba(0,0,0,0.01)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.04)] transition-all duration-300">
+                  {/* Card with Backing (Library Style) */}
+                  <div className="w-full bg-white p-2 pb-4 rounded-[28px] border border-on-surface/[0.03] shadow-[0_8px_24px_rgba(0,0,0,0.04)] group-hover:shadow-[0_12px_32px_rgba(0,0,0,0.08)] transition-all duration-500">
+                    {/* Compact Poster */}
+                    <div className="relative aspect-[2/3] w-full rounded-[20px] overflow-hidden bg-surface-container-low/50 border border-on-surface/[0.03]">
                       {/* Rating Label (Library Style) */}
                       {item.status === 'approved' && item.rating && (
                         <div className="absolute top-2 right-2 px-1.5 py-0.5 rounded-lg bg-black/60 backdrop-blur-md border border-white/10 flex items-center gap-1 z-10 shadow-lg">
@@ -201,7 +203,7 @@ export default function MyPublicationsPage() {
                     </div>
 
                     {/* Simple Metadata (Library Style) */}
-                    <div className="mt-2.5 px-0.5 flex flex-col">
+                    <div className="mt-3 px-1.5 flex flex-col">
                       <h3 className="text-[11px] font-bold text-on-surface leading-tight line-clamp-2 tracking-tight mb-1 group-hover:text-primary transition-colors min-h-[2.4em]">
                         {item.title}
                       </h3>
@@ -209,6 +211,7 @@ export default function MyPublicationsPage() {
                         {formatAuthor((item as any).author || (item as any).director || '')}
                       </p>
                     </div>
+                  </div>
                   </motion.div>
                 ))}
               </div>

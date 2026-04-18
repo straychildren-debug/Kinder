@@ -64,43 +64,46 @@ export default function WishlistShelf({
             className="group cursor-pointer flex flex-col"
             onClick={() => onOpenContent?.(c)}
           >
-            {/* Poster Container with 2/3 Aspect Ratio (Library Style) */}
-            <div className="relative aspect-[2/3] rounded-xl overflow-hidden bg-surface-container-low/50 border border-on-surface/[0.03] shadow-[0_4px_12px_rgba(0,0,0,0.01)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.04)] transition-all duration-300">
-              {/* Rating Label (Top Right) */}
-              {c.rating && (
-                <div className="absolute top-2 right-2 px-1.5 py-0.5 rounded-lg bg-black/60 backdrop-blur-md border border-white/10 flex items-center gap-1 z-10">
-                  <span className="material-symbols-outlined text-white" style={{ fontVariationSettings: "'FILL' 1", fontSize: '10px' }}>star</span>
-                  <span className="text-[10px] font-black text-white">{c.rating.toFixed(1)}</span>
-                </div>
-              )}
+            {/* Card with Backing (Library Style) */}
+            <div className="w-full bg-white p-2 pb-4 rounded-[28px] border border-on-surface/[0.03] shadow-[0_8px_24px_rgba(0,0,0,0.04)] group-hover:shadow-[0_12px_32px_rgba(0,0,0,0.08)] transition-all duration-500">
+              {/* Poster Container with 2/3 Aspect Ratio */}
+              <div className="relative aspect-[2/3] rounded-[20px] overflow-hidden bg-surface-container-low/50 border border-on-surface/[0.03]">
+                {/* Rating Label (Top Right) */}
+                {c.rating && (
+                  <div className="absolute top-2 right-2 px-1.5 py-0.5 rounded-lg bg-black/60 backdrop-blur-md border border-white/10 flex items-center gap-1 z-10">
+                    <span className="material-symbols-outlined text-white" style={{ fontVariationSettings: "'FILL' 1", fontSize: '10px' }}>star</span>
+                    <span className="text-[10px] font-black text-white">{c.rating.toFixed(1)}</span>
+                  </div>
+                )}
 
-              {c.imageUrl ? (
-                <Image
-                  src={c.imageUrl}
-                  alt={c.title}
-                  fill
-                  sizes="200px"
-                  placeholder="blur"
-                  blurDataURL={defaultBlurDataURL}
-                  className="object-cover group-hover:scale-105 transition-transform duration-700"
-                />
-              ) : (
-                <div className="w-full h-full flex items-center justify-center opacity-20 text-on-surface">
-                  <span className="material-symbols-outlined text-3xl">
-                    {c.type === 'movie' ? 'movie' : 'menu_book'}
-                  </span>
-                </div>
-              )}
-            </div>
+                {c.imageUrl ? (
+                  <Image
+                    src={c.imageUrl}
+                    alt={c.title}
+                    fill
+                    sizes="200px"
+                    placeholder="blur"
+                    blurDataURL={defaultBlurDataURL}
+                    className="object-cover group-hover:scale-105 transition-transform duration-700"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center opacity-20 text-on-surface">
+                    <span className="material-symbols-outlined text-3xl">
+                      {c.type === 'movie' ? 'movie' : 'menu_book'}
+                    </span>
+                  </div>
+                )}
+              </div>
 
-            {/* Simple Metadata (Library Style) */}
-            <div className="mt-2.5 px-0.5 flex flex-col">
-              <h4 className="text-[11px] font-bold text-on-surface leading-tight line-clamp-2 tracking-tight mb-1 group-hover:text-primary transition-colors min-h-[2.4em]">
-                {c.title}
-              </h4>
-              <p className="text-[10px] font-medium text-on-surface-variant/80 truncate tracking-tight">
-                {formatAuthor((c as any).author || (c as any).director || '')}
-              </p>
+              {/* Simple Metadata (Library Style) */}
+              <div className="mt-3 px-1.5 flex flex-col">
+                <h4 className="text-[11px] font-bold text-on-surface leading-tight line-clamp-2 tracking-tight mb-1 group-hover:text-primary transition-colors min-h-[2.4em]">
+                  {c.title}
+                </h4>
+                <p className="text-[10px] font-medium text-on-surface-variant/80 truncate tracking-tight">
+                  {formatAuthor((c as any).author || (c as any).director || '')}
+                </p>
+              </div>
             </div>
           </motion.div>
         );
