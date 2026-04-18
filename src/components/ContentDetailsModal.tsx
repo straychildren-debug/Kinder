@@ -202,7 +202,7 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
         </div>
 
         {/* Overlapping Poster — sits between backdrop and card */}
-        <div className="relative z-30 flex justify-center -mt-28 mb-[-60px] pointer-events-none">
+        <div className="relative z-30 flex justify-center -mt-48 mb-[-60px] pointer-events-none">
           <div className="w-32 md:w-40 aspect-[2/3] pointer-events-auto">
             <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-lg border-4 border-white">
                {content.imageUrl ? (
@@ -223,7 +223,7 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
         </div>
 
         {/* Content Info */}
-        <div className="px-6 relative z-10">
+        <div className="px-6 relative z-10 -mt-16">
           <div className="bg-surface rounded-3xl p-8 pt-20 border border-on-surface/5 shadow-2xl">
 
             <div className="text-center mb-6">
