@@ -145,14 +145,14 @@ export default function Profile() {
         </section>
 
         {/* Dynamic Content System */}
-        <section className="mt-4 px-4">
-          {/* Sticky Tabs */}
-          <div className="sticky top-[72px] z-20 bg-surface/80 backdrop-blur-md pt-6 mb-8 -mx-4 px-6 flex items-center gap-10 overflow-x-auto scrollbar-hide border-b border-on-surface/5">
+        <section className="mt-4 px-4 overflow-hidden">
+          {/* Sticky Tabs - Optimized to fit one screen */}
+          <div className="sticky top-[72px] z-20 bg-surface/80 backdrop-blur-md pt-6 mb-8 flex items-center justify-between border-b border-on-surface/5">
             {TABS.map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id as ProfileTab)}
-                className={`relative pb-3 border-b-2 text-sm font-semibold transition-all whitespace-nowrap flex items-center gap-2 ${
+                className={`relative flex-1 pb-3 border-b-2 text-[12px] font-bold transition-all whitespace-nowrap flex items-center justify-center gap-1.5 ${
                   activeTab === tab.id
                     ? 'border-on-surface text-on-surface'
                     : 'border-transparent text-on-surface-muted hover:text-on-surface'
@@ -289,7 +289,7 @@ export default function Profile() {
         {/* Existing Sections for non-empty state or bottom support */}
         <section className="px-6 mt-12 space-y-10">
             <div>
-              <h2 className="text-sm font-semibold text-on-surface-variant mb-4">Избранное</h2>
+              <h2 className="text-sm font-black text-on-surface uppercase tracking-widest mb-4">Закладки</h2>
               <WishlistShelf userId={user.id} onOpenContent={(c) => setOpenedContent(c)} />
             </div>
 

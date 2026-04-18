@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { ContentItem, Review, User, ReviewComment } from '@/lib/types';
-import { getReviewsForContent, submitReview, rateReview, addReviewComment, getReviewComments, getContentById, pinFavoriteContent, unpinFavoriteContent, getUserById } from '@/lib/db';
+import { getReviewsForContent, submitReview, rateReview, addReviewComment, getReviewComments, getContentById, getUserById } from '@/lib/db';
 import { addToWishlist, isInWishlist, removeFromWishlist } from '@/lib/wishlist';
 import { getSimilarContent } from '@/lib/recommendations';
 import { defaultBlurDataURL } from '@/lib/image-blur';
@@ -39,9 +39,8 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
   const [wishlisted, setWishlisted] = useState(false);
   const [wishlistBusy, setWishlistBusy] = useState(false);
 
-  // Pinned favorite state
-  const [pinned, setPinned] = useState(false);
-  const [pinBusy, setPinBusy] = useState(false);
+  const [wishlisted, setWishlisted] = useState(false);
+  const [wishlistBusy, setWishlistBusy] = useState(false);
 
   // Similar content
   const [similar, setSimilar] = useState<ContentItem[]>([]);
@@ -62,11 +61,8 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
       if (user) {
         const inList = await isInWishlist(user.id, initialContent!.id);
         setWishlisted(inList);
-        const me = await getUserById(user.id);
-        setPinned(me?.pinnedContentId === initialContent!.id);
       } else {
         setWishlisted(false);
-        setPinned(false);
       }
 
       // Подгружаем похожее
@@ -76,20 +72,6 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
     load();
   }, [initialContent?.id, user]);
 
-  const handleTogglePin = async () => {
-    if (!user || !content || pinBusy) return;
-    setPinBusy(true);
-    const next = !pinned;
-    setPinned(next);
-    try {
-      if (next) await pinFavoriteContent(user.id, content.id);
-      else await unpinFavoriteContent(user.id);
-    } catch (e) {
-      console.error(e);
-      setPinned(!next);
-    }
-    setPinBusy(false);
-  };
 
   const handleToggleWishlist = async () => {
     if (!user || !content || wishlistBusy) return;
@@ -299,15 +281,15 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
             </p>
 
             {user && (
-              <div className="mb-6 grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div className="mb-6">
                 <motion.button
                   onClick={handleToggleWishlist}
                   disabled={wishlistBusy}
                   whileTap={{ scale: 0.95 }}
-                  className={`flex items-center justify-center gap-2 py-3 rounded-xl font-semibold text-sm border transition-colors ${
+                  className={`w-full flex items-center justify-center gap-2 py-3.5 rounded-2xl font-bold text-sm border transition-all ${
                     wishlisted
                       ? 'bg-on-surface/5 text-on-surface border-on-surface/10'
-                      : 'bg-surface-container text-on-surface border-on-surface/5 hover:bg-surface-container-high'
+                      : 'bg-on-surface text-surface border-on-surface active:scale-95 shadow-lg shadow-black/10'
                   }`}
                 >
                   <motion.span
@@ -320,34 +302,7 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
                   >
                     bookmark
                   </motion.span>
-                  {wishlisted
-                    ? 'В вашем списке'
-                    : content.type === 'movie'
-                    ? 'Хочу посмотреть'
-                    : 'Хочу прочитать'}
-                </motion.button>
-
-                <motion.button
-                  onClick={handleTogglePin}
-                  disabled={pinBusy}
-                  whileTap={{ scale: 0.95 }}
-                  className={`flex items-center justify-center gap-2 py-3 rounded-xl font-semibold text-sm border transition-colors ${
-                    pinned
-                      ? 'bg-on-surface text-surface border-on-surface'
-                      : 'bg-surface-container text-on-surface border-on-surface/5 hover:bg-surface-container-high'
-                  }`}
-                >
-                  <motion.span
-                    key={pinned ? 'pin-filled' : 'pin-empty'}
-                    initial={{ scale: 0.5, rotate: -30 }}
-                    animate={{ scale: 1, rotate: 0 }}
-                    transition={{ type: 'spring', stiffness: 500, damping: 18 }}
-                    className="material-symbols-outlined text-[20px]"
-                    style={{ fontVariationSettings: pinned ? "'FILL' 1" : "'FILL' 0" }}
-                  >
-                    {pinned ? 'favorite' : 'favorite_border'}
-                  </motion.span>
-                  {pinned ? 'Любимое — закреплено' : 'Закрепить в профиле'}
+                  {wishlisted ? 'В закладках' : 'Добавить в закладки'}
                 </motion.button>
               </div>
             )}
