@@ -266,14 +266,9 @@ export default function ModerationPage() {
                           {/* Poster Column */}
                           <div className="relative aspect-[2/3] rounded-3xl overflow-hidden bg-surface-container border border-on-surface/5 shadow-sm group-hover:shadow-2xl group-hover:-translate-y-2 transition-all duration-500 mb-4 ring-1 ring-on-surface/5">
                             {item.rating && (
-                              <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-md px-2 py-1 rounded-xl flex items-center gap-1 shadow-lg z-10 border border-white/20 animate-in fade-in zoom-in duration-500">
-                                <span 
-                                  className="material-symbols-outlined text-[10px] text-amber-500" 
-                                  style={{ fontVariationSettings: "'FILL' 1, 'wght' 700" }}
-                                >
-                                  star
-                                </span>
-                                <span className="text-[10px] font-black text-on-surface tracking-tighter">{item.rating}</span>
+                              <div className="absolute top-2 right-2 px-1.5 py-0.5 rounded-lg bg-black/60 backdrop-blur-md border border-white/10 flex items-center gap-1 z-10 animate-in fade-in zoom-in duration-500">
+                                <span className="material-symbols-outlined text-white" style={{ fontVariationSettings: "'FILL' 1", fontSize: '10px' }}>star</span>
+                                <span className="text-[10px] font-black text-white leading-none">{item.rating.toFixed(1)}</span>
                               </div>
                             )}
                             {item.imageUrl ? (
