@@ -254,29 +254,31 @@ export default function ModerationPage() {
                       >
                         <button 
                           onClick={() => setSelectedForModeration(item)}
-                          className={`w-full bg-white rounded-[32px] p-5 border border-on-surface/5 shadow-sm hover:shadow-2xl transition-all flex items-start gap-6 group text-left relative overflow-hidden ${
-                             viewingList === 'approved' ? 'hover:border-emerald-500/10' : viewingList === 'rejected' ? 'hover:border-red-500/10' : 'hover:border-amber-500/10'
+                          className={`w-full bg-white rounded-[32px] p-5 border border-on-surface/5 shadow-sm hover:shadow-xl transition-all flex items-start gap-5 group text-left ${
+                             viewingList === 'approved' ? 'hover:border-emerald-500/20' : viewingList === 'rejected' ? 'hover:border-red-500/20' : 'hover:border-amber-500/20'
                           }`}
                         >
-                          {/* Rich Cover Section */}
-                          <div className="relative w-20 h-28 rounded-2xl overflow-hidden bg-surface-container shrink-0 group-hover:shadow-2xl transition-shadow duration-500 ring-1 ring-on-surface/5">
-                            {item.imageUrl ? (
-                              <Image
-                                src={item.imageUrl}
-                                alt={item.title}
-                                fill
-                                sizes="80px"
-                                placeholder="blur"
-                                blurDataURL={defaultBlurDataURL}
-                                className="object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
-                              />
-                            ) : (
-                              <div className="w-full h-full flex items-center justify-center text-[10px] font-black opacity-20 uppercase">No Cover</div>
-                            )}
-                            
-                            {/* Type Overlay */}
-                            <div className="absolute inset-x-0 bottom-0 bg-black/40 backdrop-blur-md py-1 text-center">
-                              <span className="text-[7px] font-black text-white uppercase tracking-widest">{item.type === 'movie' ? 'Кино' : 'Книга'}</span>
+                          {/* Thumbnail Column */}
+                          <div className="shrink-0 flex flex-col items-center">
+                            <div className="relative w-16 h-24 rounded-2xl overflow-hidden bg-surface-container border border-on-surface/5 shadow-lg group-hover:scale-105 transition-transform duration-500">
+                              {item.imageUrl ? (
+                                <Image
+                                  src={item.imageUrl}
+                                  alt={item.title}
+                                  fill
+                                  sizes="64px"
+                                  placeholder="blur"
+                                  blurDataURL={defaultBlurDataURL}
+                                  className="object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
+                                />
+                              ) : (
+                                <div className="w-full h-full flex items-center justify-center text-[10px] font-black opacity-20 uppercase">No Cover</div>
+                              )}
+                              
+                              {/* Type Overlay */}
+                              <div className="absolute inset-x-0 bottom-0 bg-black/40 backdrop-blur-md py-1 text-center">
+                                <span className="text-[7px] font-black text-white uppercase tracking-widest">{item.type === 'movie' ? 'Кино' : 'Книга'}</span>
+                              </div>
                             </div>
                           </div>
 
@@ -288,24 +290,24 @@ export default function ModerationPage() {
                                    {new Date(item.createdAt).toLocaleDateString()}
                                  </span>
                                  {item.status === 'rejected' && (
-                                   <span className="text-[8px] font-black text-red-500 uppercase tracking-widest bg-red-50 px-2 py-0.5 rounded-full border border-red-100">Отклонено</span>
+                                   <span className="text-[8px] font-black text-red-500 uppercase tracking-widest bg-red-50 px-2 py-0.5 rounded-full">Отклонено</span>
                                  )}
                                  {item.status === 'approved' && (
-                                   <span className="text-[8px] font-black text-emerald-500 uppercase tracking-widest bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-100">Актив</span>
+                                   <span className="text-[8px] font-black text-emerald-500 uppercase tracking-widest bg-emerald-50 px-2 py-0.5 rounded-full">Актив</span>
                                  )}
                                </div>
                                
-                               {/* Rating (Placeholder for now) */}
+                               {/* Rating Score */}
                                <div className="flex items-center gap-1.5 opacity-60">
                                  <span className="material-symbols-outlined text-[14px] text-amber-500 fill-1">star</span>
-                                 <span className="text-[11px] font-black text-on-surface">5.0</span>
+                                 <span className="text-[11px] font-black text-on-surface">{item.rating || '—'}</span>
                                </div>
                              </div>
 
                              <h3 className="text-lg font-black text-on-surface truncate uppercase tracking-tighter leading-none mb-1 group-hover:text-on-surface transition-colors">
                                {item.title}
                              </h3>
-                             <p className="text-[11px] text-on-surface-variant font-bold opacity-40 truncate mb-4 uppercase tracking-wider">
+                             <p className="text-[11px] text-on-surface-variant font-bold opacity-40 truncate mb-4">
                                {item.author || item.director || 'Автор не указан'}
                              </p>
                              
@@ -318,19 +320,19 @@ export default function ModerationPage() {
 
                              {item.status === 'rejected' && item.rejectionReason && (
                                <div className="flex items-start gap-2 mt-4 p-3 bg-red-500/5 rounded-2xl border border-red-500/10">
-                                 <span className="material-symbols-outlined text-[16px] text-red-500 mt-0.5">error_outline</span>
+                                 <span className="material-symbols-outlined text-[16px] text-red-500 mt-0.5">warning</span>
                                  <div className="flex-1">
-                                   <span className="text-[8px] font-black text-red-600 uppercase tracking-widest block mb-1">Замечание</span>
-                                   <p className="text-[10px] font-bold text-red-900/70 leading-tight">{item.rejectionReason}</p>
+                                   <span className="text-[8px] font-black text-red-600 uppercase tracking-widest block mb-1">Причина отказа</span>
+                                   <p className="text-[10px] font-bold text-red-900 leading-tight">{item.rejectionReason}</p>
                                  </div>
                                </div>
                              )}
                           </div>
 
-                          <div className={`self-center shrink-0 w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center opacity-0 group-hover:opacity-100 -translate-x-4 group-hover:translate-x-0 transition-all ${
-                            viewingList === 'approved' ? 'text-emerald-500' : viewingList === 'rejected' ? 'text-red-500' : 'text-amber-500'
-                          }`}>
-                            <span className="material-symbols-outlined text-[20px]">chevron_right</span>
+                          <div className="self-center shrink-0 w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center opacity-0 group-hover:opacity-100 -translate-x-4 group-hover:translate-x-0 transition-all">
+                             <span className={`material-symbols-outlined text-[20px] ${
+                               viewingList === 'approved' ? 'text-emerald-500' : viewingList === 'rejected' ? 'text-red-500' : 'text-amber-500'
+                             }`}>chevron_right</span>
                           </div>
                         </button>
                       </div>
