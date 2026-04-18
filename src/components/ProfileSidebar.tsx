@@ -10,7 +10,7 @@ import {
   markAllNotificationsRead, 
   subscribeToNotifications 
 } from '@/lib/notifications';
-import { getPendingContent } from '@/lib/db';
+import { getPendingContent, syncUserStats } from '@/lib/db';
 import { Notification } from '@/lib/types';
 
 interface ProfileSidebarProps {
@@ -19,7 +19,7 @@ interface ProfileSidebarProps {
 }
 
 export default function ProfileSidebar({ isOpen, onClose }: ProfileSidebarProps) {
-  const { user, logout } = useAuth();
+  const { user, logout, refreshUser } = useAuth();
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [pendingCount, setPendingCount] = useState(0);
 
@@ -28,13 +28,18 @@ export default function ProfileSidebar({ isOpen, onClose }: ProfileSidebarProps)
 
     let alive = true;
     const load = async () => {
+      // Sync stats and fetch notifications/pending count
       const [notifsData, pendingData] = await Promise.all([
         getNotifications(user.id, 10),
-        getPendingContent()
+        getPendingContent(),
+        syncUserStats(user.id) // Background sync on open
       ]);
+      
       if (alive) {
         setNotifications(notifsData);
         setPendingCount(pendingData.length);
+        // Refresh local auth user skip calling if nothing changed? No, just call it to be safe
+        refreshUser();
       }
     };
 

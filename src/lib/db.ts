@@ -295,6 +295,12 @@ export async function updateContentStatus(id: string, status: 'approved' | 'reje
     console.error('Error updating content status:', error);
     throw error;
   }
+
+  // Sync author stats if status changed (especially to/from approved)
+  if (data.created_by) {
+    syncUserStats(data.created_by).catch(console.error);
+  }
+
   return mapContentItem(data);
 }
 
@@ -395,6 +401,10 @@ export async function submitReview(contentId: string, userId: string, text: stri
     console.error('Error submitting review:', error);
     throw error;
   }
+
+  // Sync reviewer stats
+  syncUserStats(userId).catch(console.error);
+
   return data;
 }
 
@@ -1492,4 +1502,51 @@ export async function getTopPublicists(limitCount: number = 5): Promise<Leaderbo
       avatarUrl: info.avatarUrl,
       metricValue: info.count
     }));
+}
+// ===== Статистика пользователя (Stats Sync) =====
+
+export async function syncUserStats(userId: string): Promise<void> {
+  try {
+    // 1. Count approved publications and average rating of those publications
+    const { data: contentData, error: contentError } = await supabase
+      .from('content')
+      .select('rating')
+      .eq('created_by', userId)
+      .eq('status', 'approved');
+
+    if (contentError) throw contentError;
+
+    const publicationsCount = contentData?.length || 0;
+    const avgRating = publicationsCount > 0 
+      ? contentData.reduce((acc, curr) => acc + (curr.rating || 0), 0) / publicationsCount 
+      : 0;
+
+    // 2. Count total reviews by user
+    const { count: reviewsCount, error: reviewsError } = await supabase
+      .from('reviews')
+      .select('id', { count: 'exact', head: true })
+      .eq('user_id', userId);
+
+    if (reviewsError) throw reviewsError;
+
+    // 3. Update profile stats
+    const { error: updateError } = await supabase
+      .from('profiles')
+      .update({
+        stats: {
+          publications: publicationsCount,
+          reviews: reviewsCount || 0,
+          avgRating: Number(avgRating.toFixed(1)),
+          followers: 0, // Placeholder
+          awards: 0     // Placeholder
+        }
+      })
+      .eq('id', userId);
+
+    if (updateError) throw updateError;
+
+    console.log(`Stats synced for user ${userId}: pubs=${publicationsCount}, reviews=${reviewsCount}, rating=${avgRating}`);
+  } catch (err) {
+    console.error('Failed to sync user stats:', err);
+  }
 }
