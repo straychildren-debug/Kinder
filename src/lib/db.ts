@@ -336,16 +336,14 @@ export async function getModeratorStats(moderatorId: string): Promise<{ approved
 
 // ===== Reviews (Отзывы) =====
 
-export async function getReviewsForContent(contentId: string): Promise<Review[]> {
-  // Fetch reviews, grabbing user profile, and trying to count comments/ratings if possible. 
-  // Since we don't have views, we'll do basic joins.
+export async function getReviewsForContent(contentId: string, currentUserId?: string): Promise<Review[]> {
   const { data, error } = await supabase
     .from('reviews')
     .select(`
       *,
       profiles:user_id(name, avatar_url),
       review_comments(count),
-      review_ratings(rating)
+      review_ratings(rating, user_id)
     `)
     .eq('content_id', contentId)
     .order('created_at', { ascending: false });
@@ -356,11 +354,10 @@ export async function getReviewsForContent(contentId: string): Promise<Review[]>
   }
 
   return data.map((r: any) => {
-    // calculate average rating for review itself
     const ratings = r.review_ratings || [];
-    const avgRating = ratings.length > 0 
-      ? ratings.reduce((sum: number, item: any) => sum + item.rating, 0) / ratings.length 
-      : 0;
+    const likesCount = ratings.filter((rat: any) => rat.rating >= 4).length;
+    const dislikesCount = ratings.filter((rat: any) => rat.rating <= 2).length;
+    const myVote = currentUserId ? (ratings.find((rat: any) => rat.user_id === currentUserId)?.rating || 0) : 0;
 
     return {
       id: r.id,
@@ -368,10 +365,10 @@ export async function getReviewsForContent(contentId: string): Promise<Review[]>
       userId: r.user_id,
       text: r.text,
       rating: r.rating,
-      likes: r.likes,
+      likesCount,
+      dislikesCount,
+      myVote,
       commentCount: r.review_comments?.[0]?.count ?? 0,
-      avgRating: Number(avgRating.toFixed(1)),
-      reviewRatingCount: ratings.length,
       createdAt: r.created_at,
       user: r.profiles ? { 
         id: r.user_id, 

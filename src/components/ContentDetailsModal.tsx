@@ -54,7 +54,7 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
       const freshContent = await getContentById(initialContent!.id);
       if (freshContent) setContent(freshContent);
       
-      const revs = await getReviewsForContent(initialContent!.id);
+      const revs = await getReviewsForContent(initialContent!.id, user?.id);
       setReviews(revs);
       setLoading(false);
 
@@ -107,17 +107,16 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
   };
 
   const handleSubmitReview = async () => {
-    if (!user || !content || newReviewRating === 0 || !newReviewText.trim()) return;
+    if (!user || !content || !newReviewText.trim()) return;
     
     setSubmittingReview(true);
     try {
       await submitReview(content.id, user.id, newReviewText, newReviewRating);
       // reload reviews
-      const revs = await getReviewsForContent(content.id);
+      const revs = await getReviewsForContent(content.id, user.id);
       setReviews(revs);
       setShowReviewForm(false);
       setNewReviewText('');
-      setNewReviewRating(0);
       
       // refresh content to update main rating
       const freshContent = await getContentById(content.id);
@@ -133,8 +132,7 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
     if (!user) return alert('Войдите, чтобы оценивать отзывы');
     try {
       await rateReview(reviewId, user.id, rating);
-      // update local state optimistically or reload
-      const revs = await getReviewsForContent(content!.id);
+      const revs = await getReviewsForContent(content!.id, user.id);
       setReviews(revs);
     } catch (e) {
       console.error(e);
@@ -248,11 +246,49 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
                  {content.author || content.director || 'Неизвестный автор'}
                </p>
 
-               {/* Rating Badge — inline, under the title */}
-               <div className="inline-flex items-center gap-2 bg-surface-container-high/50 backdrop-blur-sm rounded-xl py-2 px-4 border border-on-surface/5">
-                 <span className="material-symbols-outlined text-[16px] text-amber-500" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
-                 <span className="text-lg font-black tracking-tighter text-on-surface">{content.rating?.toFixed(1) || '—'}</span>
-                 <span className="text-[9px] font-black uppercase tracking-widest opacity-40">{content.reviewCount || 0} оценок</span>
+               {/* Overall Publication Rating (Interactive Stars) */}
+               <div className="flex flex-col items-center gap-3 bg-surface-container-high/40 backdrop-blur-sm rounded-2xl py-6 px-8 border border-on-surface/5 mb-6">
+                 <div className="flex items-center gap-2">
+                   <span className="material-symbols-outlined text-[18px] text-amber-500" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+                   <span className="text-2xl font-black tracking-tighter text-on-surface">{content.rating?.toFixed(1) || '0.0'}</span>
+                   <span className="text-[10px] font-bold uppercase tracking-widest opacity-40 ml-1">{content.reviewCount || 0} оценок</span>
+                 </div>
+                 
+                 {user && (
+                   <div className="flex flex-col items-center gap-2">
+                     <p className="text-[10px] font-black uppercase tracking-[0.15em] text-on-surface-muted">Оцените {content.type === 'movie' ? 'фильм' : 'книгу'}</p>
+                     <div className="flex gap-1.5">
+                       {[1, 2, 3, 4, 5].map(star => {
+                         const isRated = (reviews.find(r => r.userId === user.id)?.rating || 0) >= star;
+                         return (
+                           <button 
+                             key={star} 
+                             onClick={async () => {
+                               const existing = reviews.find(r => r.userId === user.id);
+                               if (existing) {
+                                 await submitReview(content.id, user.id, existing.text, star);
+                               } else {
+                                 await submitReview(content.id, user.id, '', star);
+                               }
+                               const fresh = await getContentById(content.id);
+                               if (fresh) setContent(fresh);
+                               const revs = await getReviewsForContent(content.id, user.id);
+                               setReviews(revs);
+                             }}
+                             className="transition-all hover:scale-110 active:scale-90"
+                           >
+                             <span
+                               className={`material-symbols-outlined text-2xl ${isRated ? 'text-amber-500' : 'text-on-surface-variant/20'}`}
+                               style={{ fontVariationSettings: isRated ? "'FILL' 1" : "'FILL' 0" }}
+                             >
+                               star
+                             </span>
+                           </button>
+                         );
+                       })}
+                     </div>
+                   </div>
+                 )}
                </div>
             </div>
 
@@ -342,29 +378,11 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
            {showReviewForm && (
              <div className="bg-surface-container-low p-6 rounded-2xl mb-6 border border-on-surface/5">
                 <h4 className="font-semibold text-on-surface mb-1 text-base">
-                  Оцените {content.type === 'movie' ? 'фильм' : 'книгу'}
+                  Написать отзыв
                 </h4>
-                <p className="text-xs text-on-surface-muted font-medium mb-4">
-                  Поделитесь своим мнением о произведении с другими участниками клуба.
+                <p className="text-xs text-on-surface-muted font-medium mb-6">
+                  Расскажите, что вы думаете о произведении. Отзывы оцениваются лайками сообщества.
                 </p>
-                
-                {/* Star Rating Input */}
-                <div className="flex gap-2 mb-6">
-                  {[1, 2, 3, 4, 5].map(star => (
-                    <button 
-                      key={star} 
-                      onClick={() => setNewReviewRating(star)}
-                      className="transition-transform hover:scale-110"
-                    >
-                      <span
-                        className={`material-symbols-outlined text-3xl ${newReviewRating >= star ? 'text-on-surface' : 'text-on-surface-variant/30'}`}
-                        style={{ fontVariationSettings: newReviewRating >= star ? "'FILL' 1" : "'FILL' 0" }}
-                      >
-                        star
-                      </span>
-                    </button>
-                  ))}
-                </div>
 
                 <textarea
                   value={newReviewText}
@@ -382,7 +400,7 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
                   </button>
                   <button
                     onClick={handleSubmitReview}
-                    disabled={submittingReview || newReviewRating === 0 || !newReviewText.trim()}
+                    disabled={submittingReview || !newReviewText.trim()}
                     className="bg-on-surface text-surface px-5 py-2 rounded-xl font-semibold text-sm disabled:opacity-50 hover:bg-on-surface/90 transition-colors"
                   >
                     {submittingReview ? 'Отправка...' : 'Опубликовать'}
@@ -419,11 +437,6 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
                          </p>
                        </div>
                      </div>
-                     {/* User's rating for the content */}
-                     <div className="bg-surface-container px-2 py-1 rounded-md flex items-center gap-1">
-                       <span className="material-symbols-outlined text-[14px] text-on-surface" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
-                       <span className="text-sm font-semibold text-on-surface">{review.rating}</span>
-                     </div>
                    </div>
 
                    <p className="text-sm text-on-surface leading-relaxed mb-6 whitespace-pre-wrap">
@@ -431,23 +444,33 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
                    </p>
 
                    <div className="flex items-center justify-between border-t border-on-surface/5 pt-4 gap-2">
-                      <div className="flex items-center">
-                        <div className="flex items-center bg-surface-container-lowest rounded-lg p-1 border border-on-surface/5">
-                          <span className="pl-3 pr-2 text-xs font-medium text-on-surface-muted leading-none">
-                            {review.userId === user?.id ? 'Рейтинг' : 'Оценить'}: {review.avgRating && review.avgRating > 0 ? (review.avgRating >= 4 ? '👍' : review.avgRating <= 2 ? '👎' : '😐') : '—'}
-                          </span>
-                          {(!user || review.userId !== user.id) && (
-                            <div className="flex gap-1 border-l border-on-surface/10 ml-1 pl-2 pr-1">
-                              <button onClick={() => handleRateReview(review.id, 5)} className="hover:scale-110 transition-transform p-1 text-on-surface-muted hover:text-green-500">
-                                <span className="material-symbols-outlined text-[18px]">thumb_up</span>
-                              </button>
-                              <button onClick={() => handleRateReview(review.id, 1)} className="hover:scale-110 transition-transform p-1 text-on-surface-muted hover:text-red-500">
-                                <span className="material-symbols-outlined text-[18px]">thumb_down</span>
-                              </button>
-                            </div>
-                          )}
-                        </div>
-                      </div>
+                       <div className="flex items-center gap-2">
+                          <button 
+                            disabled={review.userId === user?.id}
+                            onClick={() => handleRateReview(review.id, 5)} 
+                            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border transition-all ${
+                              review.myVote === 5 
+                                ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-600' 
+                                : 'bg-surface-container-lowest border-on-surface/5 text-on-surface-muted hover:text-emerald-500 hover:border-emerald-500/20'
+                            } ${review.userId === user?.id ? 'opacity-50 cursor-default' : ''}`}
+                          >
+                            <span className="material-symbols-outlined text-[18px]" style={{ fontVariationSettings: review.myVote === 5 ? "'FILL' 1" : "'FILL' 0" }}>thumb_up</span>
+                            <span className="text-xs font-bold">{review.likesCount || 0}</span>
+                          </button>
+                          
+                          <button 
+                            disabled={review.userId === user?.id}
+                            onClick={() => handleRateReview(review.id, 1)} 
+                            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border transition-all ${
+                              review.myVote === 1 
+                                ? 'bg-red-500/10 border-red-500/20 text-red-600' 
+                                : 'bg-surface-container-lowest border-on-surface/5 text-on-surface-muted hover:text-red-500 hover:border-red-500/20'
+                            } ${review.userId === user?.id ? 'opacity-50 cursor-default' : ''}`}
+                          >
+                            <span className="material-symbols-outlined text-[18px]" style={{ fontVariationSettings: review.myVote === 1 ? "'FILL' 1" : "'FILL' 0" }}>thumb_down</span>
+                            <span className="text-xs font-bold">{review.dislikesCount || 0}</span>
+                          </button>
+                       </div>
 
                      {/* Comments Toggle */}
                      <button

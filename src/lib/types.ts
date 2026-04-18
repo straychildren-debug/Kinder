@@ -54,10 +54,10 @@ export interface Review {
   contentId: string;
   userId: string;
   text: string;
-  rating: number;
-  likes: number; // Left for backwards compatibility, maybe we replace with avgRating slowly
-  avgRating?: number; // Fetched dynamically: the average of review_ratings 
-  reviewRatingCount?: number; // Number of people who rated this review
+  rating?: number; // Optional: overall publication rating contribution
+  likesCount?: number; 
+  dislikesCount?: number;
+  myVote?: number; // 5 for like, 1 for dislike, 0 or null for none
   commentCount?: number;
   createdAt: string;
   user?: User; // Joined user info
