@@ -87,12 +87,12 @@ function eventHref(e: ActivityEvent): string | null {
   return null;
 }
 
-export default function ActivityFeed() {
+export default function ActivityFeed({ limit = 5 }: { limit?: number }) {
   const [items, setItems] = useState<ActivityEvent[] | null>(null);
 
   useEffect(() => {
     let alive = true;
-    getGlobalActivity(20)
+    getGlobalActivity(limit)
       .then((list) => {
         if (alive) setItems(list || []);
       })
@@ -104,7 +104,7 @@ export default function ActivityFeed() {
     let unsub = () => {};
     try {
       unsub = subscribeToActivity((e) => {
-        setItems((prev) => [e, ...(prev ?? [])].slice(0, 20));
+        setItems((prev) => [e, ...(prev ?? [])].slice(0, limit));
       });
     } catch (err) {
       console.error('ActivityFeed subscription error:', err);
@@ -113,7 +113,7 @@ export default function ActivityFeed() {
       alive = false;
       unsub();
     };
-  }, []);
+  }, [limit]);
 
   return (
     <aside className="bg-surface p-8 rounded-3xl border border-on-surface/5 shadow-sm">

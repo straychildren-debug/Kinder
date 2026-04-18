@@ -158,13 +158,8 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Лента активности сообщества */}
-        <section className="mb-12">
-          <ActivityFeed />
-        </section>
-
         {/* New Publications Grid */}
-        <section className="mb-16">
+        <section className="mb-12">
           <div className="flex items-center justify-between mb-8 px-2">
             <div>
               <span className="text-xs font-medium text-on-surface-muted mb-1.5 block">Рекомендации</span>
@@ -221,6 +216,11 @@ export default function Home() {
               ))}
             </div>
           )}
+        </section>
+
+        {/* Лента активности сообщества */}
+        <section className="mb-16">
+          <ActivityFeed limit={5} />
         </section>
 
         {/* Details Modal */}
