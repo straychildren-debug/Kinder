@@ -1,5 +1,5 @@
 import { supabase } from './supabase';
-import { User, ContentItem, Review, Club, ClubMember, ClubMessage, ClubMarathon, ClubRole, ClubCategory, MarathonItem, MarathonParticipantProgress, PinnedMessage, ClubPoll, ClubPollOption } from './types';
+import { User, ContentItem, Review, Club, ClubMember, ClubMessage, ClubMarathon, ClubRole, ClubCategory, MarathonItem, MarathonParticipantProgress, PinnedMessage, ClubPoll, ClubPollOption, LeaderboardUser } from './types';
 
 // ===== Пользователи (Профили) =====
 
