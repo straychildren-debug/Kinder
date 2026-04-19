@@ -169,6 +169,34 @@ export default function Home() {
           </div>
         </section>
 
+        {/* Discover CTA */}
+        {user && (
+          <section className="mb-10 px-2">
+            <Link
+              href="/discover"
+              className="group flex items-center gap-4 bg-surface rounded-2xl p-4 border border-on-surface/5 hover:border-on-surface/10 transition-all active:scale-[0.99]"
+            >
+              <div className="w-11 h-11 rounded-xl bg-on-surface/5 flex items-center justify-center shrink-0">
+                <span
+                  className="material-symbols-outlined text-[22px] text-on-surface"
+                  style={{ fontVariationSettings: "'FILL' 1" }}
+                >
+                  swipe
+                </span>
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-semibold text-on-surface leading-tight">Откройте для себя</p>
+                <p className="text-xs font-medium text-on-surface-muted mt-0.5 leading-snug">
+                  Свайпните карточки и соберите свою подборку
+                </p>
+              </div>
+              <span className="material-symbols-outlined text-[18px] text-on-surface-muted group-hover:translate-x-0.5 transition-transform shrink-0">
+                arrow_forward
+              </span>
+            </Link>
+          </section>
+        )}
+
         {/* New Publications Grid */}
         <section className="mb-12">
           <div className="flex items-center justify-between mb-8 px-2">
