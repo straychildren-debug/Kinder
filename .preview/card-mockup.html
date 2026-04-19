@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<title>Kinder — card mockup</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined" rel="stylesheet" />
+<style>
+  body { font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; background: #f6f6f7; }
+  .on-surface { color: #1a1a1a; }
+  .on-surface-muted { color: #8a8a8f; }
+  .on-surface-variant { color: #5c5c62; }
+  .surface { background: #fff; }
+  .surface-container { background: #eeeeef; }
+  .surface-container-low { background: #f2f2f3; }
+  .label { font-size: 11px; font-weight: 500; color: #8a8a8f; letter-spacing: 0.02em; }
+  .divider { border-left: 1px dashed #d4d4d8; }
+</style>
+</head>
+<body class="p-10">
+
+<div class="max-w-[1100px] mx-auto">
+
+  <h1 class="text-2xl font-bold tracking-tight on-surface mb-1">Макет карточки — было / стало</h1>
+  <p class="text-sm on-surface-muted mb-10">Сравнение текущего и предлагаемого варианта карточки в блоке «Новые публикации» на главной.</p>
+
+  <div class="grid grid-cols-2 gap-10">
+
+    <!-- BEFORE -->
+    <div>
+      <span class="label block mb-3">Сейчас</span>
+      <div class="bg-[#f6f6f7] rounded-2xl p-5">
+        <div class="grid grid-cols-2 gap-5">
+
+          <!-- Current card A -->
+          <div class="w-full h-full flex flex-col text-left bg-white p-3 rounded-2xl border border-black/5 shadow-sm">
+            <div class="relative aspect-[2/3] w-full rounded-xl overflow-hidden bg-[#eee] border border-black/5 shadow-sm mb-4 ring-1 ring-black/5">
+              <img src="https://m.media-amazon.com/images/M/MV5BNjNhZTk0ZmEtNjJhMi00YzFlLWE1MmEtYzM1M2ZmMGMwMTU4XkEyXkFqcGc@._V1_.jpg" class="absolute inset-0 w-full h-full object-cover" />
+              <div class="absolute top-2 right-2 px-1.5 py-0.5 rounded-lg bg-black/60 backdrop-blur-md border border-white/10 flex items-center gap-1 z-10">
+                <span class="material-symbols-outlined text-white" style="font-variation-settings: 'FILL' 1; font-size: 10px;">star</span>
+                <span class="text-[10px] font-black text-white leading-none">8.6</span>
+              </div>
+            </div>
+            <div class="px-1 flex flex-col flex-1">
+              <h3 class="text-[11px] font-black leading-tight line-clamp-2 uppercase tracking-tight mb-1 text-black">Молчание ягнят</h3>
+              <span class="text-[10px] font-bold text-black/40 truncate leading-none mb-3 block">Джонатан Демми</span>
+              <p class="text-[10px] font-medium text-black/60 leading-normal line-clamp-3 mt-auto">Психопат похищает и убивает молодых женщин по всему Среднему Западу.</p>
+            </div>
+          </div>
+
+          <!-- Current card B -->
+          <div class="w-full h-full flex flex-col text-left bg-white p-3 rounded-2xl border border-black/5 shadow-sm">
+            <div class="relative aspect-[2/3] w-full rounded-xl overflow-hidden bg-[#eee] border border-black/5 shadow-sm mb-4 ring-1 ring-black/5">
+              <img src="https://m.media-amazon.com/images/M/MV5BNDE3ODcxYzMtY2YzZC00NmNlLWJiNDMtZDViZWM2MzIxZDYwXkEyXkFqcGc@._V1_.jpg" class="absolute inset-0 w-full h-full object-cover" />
+              <div class="absolute top-2 right-2 px-1.5 py-0.5 rounded-lg bg-black/60 backdrop-blur-md border border-white/10 flex items-center gap-1 z-10">
+                <span class="material-symbols-outlined text-white" style="font-variation-settings: 'FILL' 1; font-size: 10px;">star</span>
+                <span class="text-[10px] font-black text-white leading-none">9.3</span>
+              </div>
+            </div>
+            <div class="px-1 flex flex-col flex-1">
+              <h3 class="text-[11px] font-black leading-tight line-clamp-2 uppercase tracking-tight mb-1 text-black">Побег из Шоушенка</h3>
+              <span class="text-[10px] font-bold text-black/40 truncate leading-none mb-3 block">Фрэнк Дарабонт</span>
+              <p class="text-[10px] font-medium text-black/60 leading-normal line-clamp-3 mt-auto">«Побег из Шоушенка» рассказывает о талантливом банкире.</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <ul class="mt-6 space-y-2 text-[13px] on-surface-variant leading-relaxed">
+        <li class="flex gap-2"><span class="on-surface-muted">—</span> матрёшка: рамка карточки + рамка постера + ring</li>
+        <li class="flex gap-2"><span class="on-surface-muted">—</span> название uppercase + font-black в 11px</li>
+        <li class="flex gap-2"><span class="on-surface-muted">—</span> автор text-black/40 — почти прозрачный</li>
+        <li class="flex gap-2"><span class="on-surface-muted">—</span> три строки описания в превью</li>
+        <li class="flex gap-2"><span class="on-surface-muted">—</span> чёрный бейдж рейтинга перекрывает кадр</li>
+      </ul>
+    </div>
+
+    <!-- AFTER -->
+    <div>
+      <span class="label block mb-3">Предложение</span>
+      <div class="bg-[#f6f6f7] rounded-2xl p-5">
+        <div class="grid grid-cols-2 gap-x-4 gap-y-6">
+
+          <!-- New card A -->
+          <button class="group w-full flex flex-col text-left outline-none">
+            <div class="relative aspect-[2/3] w-full rounded-xl overflow-hidden bg-[#eee] border border-black/5">
+              <img src="https://m.media-amazon.com/images/M/MV5BNjNhZTk0ZmEtNjJhMi00YzFlLWE1MmEtYzM1M2ZmMGMwMTU4XkEyXkFqcGc@._V1_.jpg" class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]" />
+            </div>
+            <div class="mt-3">
+              <h3 class="text-sm font-semibold leading-snug tracking-tight line-clamp-2 on-surface">Молчание ягнят</h3>
+              <div class="flex items-center justify-between gap-2 mt-1">
+                <p class="text-xs font-medium on-surface-muted truncate">Джонатан Демми · 1991</p>
+                <div class="flex items-center gap-0.5 shrink-0">
+                  <span class="material-symbols-outlined on-surface-muted" style="font-variation-settings: 'FILL' 1; font-size: 12px;">star</span>
+                  <span class="text-xs font-semibold on-surface">8.6</span>
+                </div>
+              </div>
+            </div>
+          </button>
+
+          <!-- New card B -->
+          <button class="group w-full flex flex-col text-left outline-none">
+            <div class="relative aspect-[2/3] w-full rounded-xl overflow-hidden bg-[#eee] border border-black/5">
+              <img src="https://m.media-amazon.com/images/M/MV5BNDE3ODcxYzMtY2YzZC00NmNlLWJiNDMtZDViZWM2MzIxZDYwXkEyXkFqcGc@._V1_.jpg" class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]" />
+            </div>
+            <div class="mt-3">
+              <h3 class="text-sm font-semibold leading-snug tracking-tight line-clamp-2 on-surface">Побег из Шоушенка</h3>
+              <div class="flex items-center justify-between gap-2 mt-1">
+                <p class="text-xs font-medium on-surface-muted truncate">Фрэнк Дарабонт · 1994</p>
+                <div class="flex items-center gap-0.5 shrink-0">
+                  <span class="material-symbols-outlined on-surface-muted" style="font-variation-settings: 'FILL' 1; font-size: 12px;">star</span>
+                  <span class="text-xs font-semibold on-surface">9.3</span>
+                </div>
+              </div>
+            </div>
+          </button>
+
+          <!-- New card C (book example) -->
+          <button class="group w-full flex flex-col text-left outline-none">
+            <div class="relative aspect-[2/3] w-full rounded-xl overflow-hidden bg-[#eee] border border-black/5">
+              <img src="https://m.media-amazon.com/images/I/71nXPpR7HCL._AC_UF1000,1000_QL80_.jpg" class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]" />
+            </div>
+            <div class="mt-3">
+              <h3 class="text-sm font-semibold leading-snug tracking-tight line-clamp-2 on-surface">Мастер и Маргарита</h3>
+              <div class="flex items-center justify-between gap-2 mt-1">
+                <p class="text-xs font-medium on-surface-muted truncate">Михаил Булгаков · 1967</p>
+                <div class="flex items-center gap-0.5 shrink-0">
+                  <span class="material-symbols-outlined on-surface-muted" style="font-variation-settings: 'FILL' 1; font-size: 12px;">star</span>
+                  <span class="text-xs font-semibold on-surface">9.1</span>
+                </div>
+              </div>
+            </div>
+          </button>
+
+          <!-- New card D (no rating) -->
+          <button class="group w-full flex flex-col text-left outline-none">
+            <div class="relative aspect-[2/3] w-full rounded-xl overflow-hidden bg-[#eee] border border-black/5">
+              <img src="https://m.media-amazon.com/images/M/MV5BMTY3NjUwOTA3OV5BMl5BanBnXkFtZTgwMzA2NDY2MTE@._V1_.jpg" class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]" />
+            </div>
+            <div class="mt-3">
+              <h3 class="text-sm font-semibold leading-snug tracking-tight line-clamp-2 on-surface">Начало</h3>
+              <div class="flex items-center justify-between gap-2 mt-1">
+                <p class="text-xs font-medium on-surface-muted truncate">Кристофер Нолан · 2010</p>
+                <div class="flex items-center gap-0.5 shrink-0">
+                  <span class="material-symbols-outlined on-surface-muted" style="font-variation-settings: 'FILL' 1; font-size: 12px;">star</span>
+                  <span class="text-xs font-semibold on-surface">—</span>
+                </div>
+              </div>
+            </div>
+          </button>
+
+        </div>
+      </div>
+
+      <ul class="mt-6 space-y-2 text-[13px] on-surface-variant leading-relaxed">
+        <li class="flex gap-2"><span class="on-surface-muted">—</span> постер = карточка, без подложки и двух рамок</li>
+        <li class="flex gap-2"><span class="on-surface-muted">—</span> название text-sm font-semibold, натуральный регистр</li>
+        <li class="flex gap-2"><span class="on-surface-muted">—</span> автор + год одной строкой, читаемо</li>
+        <li class="flex gap-2"><span class="on-surface-muted">—</span> рейтинг справа в метаданных, кадр чистый</li>
+        <li class="flex gap-2"><span class="on-surface-muted">—</span> hover только масштаб 1.03 на постере</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <!-- Mobile sizing preview -->
+  <div class="mt-14">
+    <span class="label block mb-3">Мобильная ширина (2 колонки, как на скрине)</span>
+    <div class="max-w-[420px] bg-[#f6f6f7] rounded-2xl p-5">
+      <div class="grid grid-cols-2 gap-x-4 gap-y-6">
+        <button class="group w-full flex flex-col text-left outline-none">
+          <div class="relative aspect-[2/3] w-full rounded-xl overflow-hidden bg-[#eee] border border-black/5">
+            <img src="https://m.media-amazon.com/images/M/MV5BNjNhZTk0ZmEtNjJhMi00YzFlLWE1MmEtYzM1M2ZmMGMwMTU4XkEyXkFqcGc@._V1_.jpg" class="absolute inset-0 w-full h-full object-cover" />
+          </div>
+          <div class="mt-3">
+            <h3 class="text-sm font-semibold leading-snug tracking-tight line-clamp-2 on-surface">Молчание ягнят</h3>
+            <div class="flex items-center justify-between gap-2 mt-1">
+              <p class="text-xs font-medium on-surface-muted truncate">Джонатан Демми · 1991</p>
+              <div class="flex items-center gap-0.5 shrink-0">
+                <span class="material-symbols-outlined on-surface-muted" style="font-variation-settings: 'FILL' 1; font-size: 12px;">star</span>
+                <span class="text-xs font-semibold on-surface">8.6</span>
+              </div>
+            </div>
+          </div>
+        </button>
+        <button class="group w-full flex flex-col text-left outline-none">
+          <div class="relative aspect-[2/3] w-full rounded-xl overflow-hidden bg-[#eee] border border-black/5">
+            <img src="https://m.media-amazon.com/images/M/MV5BNDE3ODcxYzMtY2YzZC00NmNlLWJiNDMtZDViZWM2MzIxZDYwXkEyXkFqcGc@._V1_.jpg" class="absolute inset-0 w-full h-full object-cover" />
+          </div>
+          <div class="mt-3">
+            <h3 class="text-sm font-semibold leading-snug tracking-tight line-clamp-2 on-surface">Побег из Шоушенка</h3>
+            <div class="flex items-center justify-between gap-2 mt-1">
+              <p class="text-xs font-medium on-surface-muted truncate">Фрэнк Дарабонт · 1994</p>
+              <div class="flex items-center gap-0.5 shrink-0">
+                <span class="material-symbols-outlined on-surface-muted" style="font-variation-settings: 'FILL' 1; font-size: 12px;">star</span>
+                <span class="text-xs font-semibold on-surface">9.3</span>
+              </div>
+            </div>
+          </div>
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>
