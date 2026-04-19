@@ -19,23 +19,26 @@ export default function Profile() {
     publications: 0,
     bookmarks: 0,
     drafts: 0,
-    awards: 0
+    awards: 0,
+    reviews: 0
   });
   const [loadingStats, setLoadingStats] = useState(true);
 
   const loadProfileStats = async () => {
     if (!user) return;
     try {
-      const [content, wishlist] = await Promise.all([
+      const [content, wishlist, reviews] = await Promise.all([
         import('@/lib/db').then(m => m.getContentByUser(user.id)),
-        import('@/lib/wishlist').then(m => m.getWishlist(user.id))
+        import('@/lib/wishlist').then(m => m.getWishlist(user.id)),
+        import('@/lib/db').then(m => m.getReviewsByUser(user.id))
       ]);
 
       setCounts({
         publications: content.filter(i => i.status === 'approved').length,
         bookmarks: wishlist.length,
         drafts: content.filter(i => i.status === 'draft' || i.status === 'rejected').length,
-        awards: user.stats?.awards || 0
+        awards: user.stats?.awards || 0,
+        reviews: reviews.length
       });
     } catch (error) {
       console.error('Error loading stats:', error);
@@ -138,6 +141,7 @@ export default function Profile() {
           <div className="bg-surface-container-low/30 rounded-[32px] border border-on-surface/[0.03] overflow-hidden">
             {[
               { id: 'pubs', label: 'Мои публикации', path: '/my-publications', icon: 'library_books', count: counts.publications },
+              { id: 'reviews', label: 'Мои отзывы', path: '/my-reviews', icon: 'rate_review', count: counts.reviews },
               { id: 'bookmarks', label: 'Закладки', path: '/bookmarks', icon: 'bookmark', count: counts.bookmarks },
               { id: 'drafts', label: 'Черновики', path: '/drafts', icon: 'edit_note', count: counts.drafts }
             ].map((item, i, arr) => (
