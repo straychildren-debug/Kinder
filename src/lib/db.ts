@@ -54,28 +54,46 @@ export async function unpinFavoriteContent(userId: string): Promise<void> {
 export async function getUsersRanked(): Promise<User[]> {
   const { data, error } = await supabase
     .from('profiles')
-    .select('*');
+    .select(`
+      *,
+      content:content!created_by(id, status),
+      reviews:reviews(id, rating)
+    `);
 
   if (error || !data) {
     console.error('Error fetching users for leaderboard:', error);
     return [];
   }
 
-  const users: User[] = data.map(d => ({
-    id: d.id,
-    name: d.name,
-    email: d.email,
-    avatarUrl: d.avatar_url,
-    bio: d.bio,
-    role: d.role,
-    stats: d.stats,
-    joinedAt: d.joined_at,
-  }));
+  const users: User[] = data.map(d => {
+    const approvedPubs = (d.content || []).filter((c: any) => c.status === 'approved').length;
+    const revsCount = (d.reviews || []).length;
+    const avgRating = revsCount > 0 
+      ? (d.reviews || []).reduce((acc: number, curr: any) => acc + (curr.rating || 0), 0) / revsCount 
+      : 0;
 
-  // В реальности это лучше делать через SQL View, но для простоты расчета:
+    return {
+      id: d.id,
+      name: d.name,
+      email: d.email,
+      avatarUrl: d.avatar_url,
+      bio: d.bio,
+      role: d.role,
+      joinedAt: d.joined_at,
+      stats: {
+        publications: approvedPubs,
+        reviews: revsCount,
+        avgRating: Number(avgRating.toFixed(1)),
+        awards: d.stats?.awards || 0,
+        followers: d.stats?.followers || 0
+      }
+    };
+  });
+
   return users.sort((a, b) => {
-    const scoreA = (a.stats?.publications || 0) * 3 + (a.stats?.reviews || 0) * 2 + (a.stats?.avgRating || 0) * 10 + (a.stats?.awards || 0);
-    const scoreB = (b.stats?.publications || 0) * 3 + (b.stats?.reviews || 0) * 2 + (b.stats?.avgRating || 0) * 10 + (b.stats?.awards || 0);
+    // Score formula: (Pubs * 10) + (Reviews * 2) + (Rating * 5)
+    const scoreA = (a.stats?.publications || 0) * 10 + (a.stats?.reviews || 0) * 2 + (a.stats?.avgRating || 0) * 5;
+    const scoreB = (b.stats?.publications || 0) * 10 + (b.stats?.reviews || 0) * 2 + (b.stats?.avgRating || 0) * 5;
     return scoreB - scoreA;
   });
 }

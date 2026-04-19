@@ -157,7 +157,7 @@ export default function PublicProfileModal({ user, onClose, onOpenContent }: Pub
                     className="grid grid-cols-3 gap-1"
                   >
                     {publications.length === 0 ? (
-                      <EmptyState icon="auto_stories" text="Нет опубликованных работ" />
+                      <EmptyState icon="auto_stories" text="Нет публикаций" />
                     ) : (
                       publications.map((item) => (
                         <ContentCard key={item.id} item={item} onClick={() => onOpenContent?.(item)} />
