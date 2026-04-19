@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { ContentItem, Review, User, ReviewComment } from '@/lib/types';
-import { getReviewsForContent, submitReview, rateReview, addReviewComment, getReviewComments, getContentById, getUserById } from '@/lib/db';
+import { getReviewsForContent, submitReview, rateReview, addReviewComment, getReviewComments, getContentById, getUserById, updateReview, deleteReview, updateReviewComment, deleteReviewComment } from '@/lib/db';
 import { addToWishlist, isInWishlist, removeFromWishlist } from '@/lib/wishlist';
 import { getSimilarContent } from '@/lib/recommendations';
 import { defaultBlurDataURL } from '@/lib/image-blur';
@@ -34,6 +34,17 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
   const [newCommentText, setNewCommentText] = useState('');
   const [loadingComments, setLoadingComments] = useState(false);
   const [replyTarget, setReplyTarget] = useState<ReviewComment | null>(null);
+
+  // Review edit/menu state
+  const [openMenuReviewId, setOpenMenuReviewId] = useState<string | null>(null);
+  const [editingReviewId, setEditingReviewId] = useState<string | null>(null);
+  const [editReviewText, setEditReviewText] = useState('');
+  const [editReviewRating, setEditReviewRating] = useState(0);
+  const [savingEdit, setSavingEdit] = useState(false);
+
+  // Comment edit state
+  const [editingCommentId, setEditingCommentId] = useState<string | null>(null);
+  const [editCommentText, setEditCommentText] = useState('');
 
   // Wishlist state
   const [wishlisted, setWishlisted] = useState(false);
@@ -129,6 +140,78 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
     const comments = await getReviewComments(reviewId);
     setReviewComments(comments);
     setLoadingComments(false);
+  };
+
+  const startEditReview = (review: Review) => {
+    setEditingReviewId(review.id);
+    setEditReviewText(review.text);
+    setEditReviewRating(review.rating || 0);
+    setOpenMenuReviewId(null);
+  };
+
+  const cancelEditReview = () => {
+    setEditingReviewId(null);
+    setEditReviewText('');
+    setEditReviewRating(0);
+  };
+
+  const handleSaveEditReview = async (reviewId: string) => {
+    if (!user || !content || !editReviewText.trim()) return;
+    setSavingEdit(true);
+    try {
+      await updateReview(reviewId, user.id, editReviewText, editReviewRating);
+      const revs = await getReviewsForContent(content.id, user.id);
+      setReviews(revs);
+      const fresh = await getContentById(content.id);
+      if (fresh) setContent(fresh);
+      cancelEditReview();
+    } catch (e) {
+      console.error(e);
+      alert('Не удалось сохранить отзыв');
+    }
+    setSavingEdit(false);
+  };
+
+  const handleDeleteReview = async (reviewId: string) => {
+    if (!user || !content) return;
+    if (!confirm('Удалить отзыв? Это действие нельзя отменить.')) return;
+    try {
+      await deleteReview(reviewId, user.id);
+      const revs = await getReviewsForContent(content.id, user.id);
+      setReviews(revs);
+      const fresh = await getContentById(content.id);
+      if (fresh) setContent(fresh);
+      setOpenMenuReviewId(null);
+    } catch (e) {
+      console.error(e);
+      alert('Не удалось удалить отзыв');
+    }
+  };
+
+  const handleSaveEditComment = async (reviewId: string, commentId: string) => {
+    if (!user || !editCommentText.trim()) return;
+    try {
+      await updateReviewComment(commentId, user.id, editCommentText);
+      const comments = await getReviewComments(reviewId);
+      setReviewComments(comments);
+      setEditingCommentId(null);
+      setEditCommentText('');
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const handleDeleteComment = async (reviewId: string, commentId: string) => {
+    if (!user) return;
+    if (!confirm('Удалить комментарий?')) return;
+    try {
+      await deleteReviewComment(commentId, user.id);
+      const comments = await getReviewComments(reviewId);
+      setReviewComments(comments);
+      setReviews(reviews.map(r => r.id === reviewId ? { ...r, commentCount: Math.max(0, (r.commentCount || 1) - 1) } : r));
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   const handleSubmitComment = async (reviewId: string) => {
@@ -375,55 +458,165 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
               </div>
            ) : (
              <div className="space-y-6">
-               {reviews.map(review => (
+               {reviews.map(review => {
+                 const isOwn = user?.id === review.userId;
+                 const isEditing = editingReviewId === review.id;
+                 return (
                  <div key={review.id} className="bg-surface rounded-2xl p-5 border border-on-surface/5">
-                   <div className="flex items-start justify-between mb-4">
-                     <div className="flex items-center gap-3">
-                       <div className="relative w-9 h-9 rounded-full bg-surface-container flex items-center justify-center text-on-surface-muted font-semibold overflow-hidden border border-on-surface/5">
+                   <div className="flex items-start justify-between mb-4 gap-3">
+                     <div className="flex items-center gap-3 min-w-0">
+                       <div className="relative w-9 h-9 rounded-full bg-surface-container flex items-center justify-center text-on-surface-muted font-semibold overflow-hidden border border-on-surface/5 shrink-0">
                          {review.user?.avatarUrl ? (
                            <Image src={review.user.avatarUrl} alt={review.user.name || ''} fill sizes="36px" className="object-cover" />
                          ) : review.user?.name.charAt(0) || 'U'}
                        </div>
-                       <div>
-                         <p className="font-semibold text-sm text-on-surface">{review.user?.name || 'Пользователь'}</p>
-                         <p className="text-xs font-medium text-on-surface-muted">
-                           {new Date(review.createdAt).toLocaleDateString('ru-RU')}
-                         </p>
+                       <div className="min-w-0">
+                         <p className="font-semibold text-sm text-on-surface truncate">{review.user?.name || 'Пользователь'}</p>
+                         <div className="flex items-center gap-2 mt-0.5">
+                           {review.rating ? (
+                             <div className="flex items-center gap-0.5" aria-label={`Оценка ${review.rating} из 5`}>
+                               {[1, 2, 3, 4, 5].map(star => (
+                                 <span
+                                   key={star}
+                                   className={`material-symbols-outlined text-[13px] ${star <= (review.rating || 0) ? 'text-amber-500' : 'text-on-surface-variant/20'}`}
+                                   style={{ fontVariationSettings: star <= (review.rating || 0) ? "'FILL' 1" : "'FILL' 0" }}
+                                 >
+                                   star
+                                 </span>
+                               ))}
+                             </div>
+                           ) : null}
+                           <span className="text-xs font-medium text-on-surface-muted">
+                             {new Date(review.createdAt).toLocaleDateString('ru-RU')}
+                           </span>
+                         </div>
                        </div>
                      </div>
+
+                     {isOwn && !isEditing && (
+                       <div className="relative shrink-0">
+                         <button
+                           type="button"
+                           onClick={() => setOpenMenuReviewId(openMenuReviewId === review.id ? null : review.id)}
+                           className="w-8 h-8 rounded-lg flex items-center justify-center text-on-surface-muted hover:bg-surface-container transition-colors"
+                           aria-label="Действия с отзывом"
+                         >
+                           <span className="material-symbols-outlined text-[20px]">more_vert</span>
+                         </button>
+                         {openMenuReviewId === review.id && (
+                           <>
+                             <div className="fixed inset-0 z-10" onClick={() => setOpenMenuReviewId(null)} />
+                             <div className="absolute right-0 top-9 z-20 min-w-[160px] bg-surface border border-on-surface/10 rounded-xl shadow-lg overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+                               <button
+                                 onClick={() => startEditReview(review)}
+                                 className="w-full flex items-center gap-2 px-3 py-2.5 text-sm font-medium text-on-surface hover:bg-surface-container transition-colors"
+                               >
+                                 <span className="material-symbols-outlined text-[18px]">edit</span>
+                                 Редактировать
+                               </button>
+                               <button
+                                 onClick={() => handleDeleteReview(review.id)}
+                                 className="w-full flex items-center gap-2 px-3 py-2.5 text-sm font-medium text-red-600 hover:bg-red-50 transition-colors"
+                               >
+                                 <span className="material-symbols-outlined text-[18px]">delete</span>
+                                 Удалить
+                               </button>
+                             </div>
+                           </>
+                         )}
+                       </div>
+                     )}
                    </div>
 
-                   <p className="text-sm text-on-surface leading-relaxed mb-6 whitespace-pre-wrap">
-                     {review.text}
-                   </p>
+                   {isEditing ? (
+                     <div className="mb-4">
+                       <div className="flex items-center gap-1.5 mb-3">
+                         <span className="text-xs font-medium text-on-surface-muted mr-1">Оценка:</span>
+                         {[1, 2, 3, 4, 5].map(star => (
+                           <button
+                             key={star}
+                             type="button"
+                             onClick={() => setEditReviewRating(star)}
+                             className="transition-transform hover:scale-110"
+                           >
+                             <span
+                               className={`material-symbols-outlined text-xl ${star <= editReviewRating ? 'text-amber-500' : 'text-on-surface-variant/20'}`}
+                               style={{ fontVariationSettings: star <= editReviewRating ? "'FILL' 1" : "'FILL' 0" }}
+                             >
+                               star
+                             </span>
+                           </button>
+                         ))}
+                       </div>
+                       <textarea
+                         value={editReviewText}
+                         onChange={e => setEditReviewText(e.target.value)}
+                         className="w-full bg-surface-container-lowest border border-on-surface/10 rounded-xl p-3 text-sm font-medium text-on-surface focus:outline-none focus:border-on-surface/40 min-h-[100px] resize-none"
+                       />
+                       <div className="flex justify-end gap-2 mt-3">
+                         <button
+                           onClick={cancelEditReview}
+                           className="px-4 py-1.5 rounded-lg font-semibold text-on-surface-variant text-sm hover:bg-surface-container transition-colors"
+                         >
+                           Отмена
+                         </button>
+                         <button
+                           onClick={() => handleSaveEditReview(review.id)}
+                           disabled={savingEdit || !editReviewText.trim()}
+                           className="bg-on-surface text-surface px-4 py-1.5 rounded-lg font-semibold text-sm disabled:opacity-50 transition-colors"
+                         >
+                           {savingEdit ? 'Сохранение...' : 'Сохранить'}
+                         </button>
+                       </div>
+                     </div>
+                   ) : (
+                     <p className="text-sm text-on-surface leading-relaxed mb-6 whitespace-pre-wrap">
+                       {review.text}
+                     </p>
+                   )}
 
+                   {!isEditing && (
                    <div className="flex items-center justify-between border-t border-on-surface/5 pt-4 gap-2">
                        <div className="flex items-center gap-2">
-                          <button 
-                            disabled={review.userId === user?.id}
-                            onClick={() => handleRateReview(review.id, 5)} 
-                            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border transition-all ${
-                              review.myVote === 5 
-                                ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-600' 
-                                : 'bg-surface-container-lowest border-on-surface/5 text-on-surface-muted hover:text-emerald-500 hover:border-emerald-500/20'
-                            } ${review.userId === user?.id ? 'opacity-50 cursor-default' : ''}`}
-                          >
-                            <span className="material-symbols-outlined text-[18px]" style={{ fontVariationSettings: review.myVote === 5 ? "'FILL' 1" : "'FILL' 0" }}>thumb_up</span>
-                            <span className="text-xs font-bold">{review.likesCount || 0}</span>
-                          </button>
-                          
-                          <button 
-                            disabled={review.userId === user?.id}
-                            onClick={() => handleRateReview(review.id, 1)} 
-                            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border transition-all ${
-                              review.myVote === 1 
-                                ? 'bg-red-500/10 border-red-500/20 text-red-600' 
-                                : 'bg-surface-container-lowest border-on-surface/5 text-on-surface-muted hover:text-red-500 hover:border-red-500/20'
-                            } ${review.userId === user?.id ? 'opacity-50 cursor-default' : ''}`}
-                          >
-                            <span className="material-symbols-outlined text-[18px]" style={{ fontVariationSettings: review.myVote === 1 ? "'FILL' 1" : "'FILL' 0" }}>thumb_down</span>
-                            <span className="text-xs font-bold">{review.dislikesCount || 0}</span>
-                          </button>
+                          {!isOwn && (
+                            <>
+                              <button
+                                onClick={() => handleRateReview(review.id, 5)}
+                                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border transition-all ${
+                                  review.myVote === 5
+                                    ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-600'
+                                    : 'bg-surface-container-lowest border-on-surface/5 text-on-surface-muted hover:text-emerald-500 hover:border-emerald-500/20'
+                                }`}
+                              >
+                                <span className="material-symbols-outlined text-[18px]" style={{ fontVariationSettings: review.myVote === 5 ? "'FILL' 1" : "'FILL' 0" }}>thumb_up</span>
+                                <span className="text-xs font-semibold">{review.likesCount || 0}</span>
+                              </button>
+
+                              <button
+                                onClick={() => handleRateReview(review.id, 1)}
+                                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border transition-all ${
+                                  review.myVote === 1
+                                    ? 'bg-red-500/10 border-red-500/20 text-red-600'
+                                    : 'bg-surface-container-lowest border-on-surface/5 text-on-surface-muted hover:text-red-500 hover:border-red-500/20'
+                                }`}
+                              >
+                                <span className="material-symbols-outlined text-[18px]" style={{ fontVariationSettings: review.myVote === 1 ? "'FILL' 1" : "'FILL' 0" }}>thumb_down</span>
+                                <span className="text-xs font-semibold">{review.dislikesCount || 0}</span>
+                              </button>
+                            </>
+                          )}
+                          {isOwn && (
+                            <div className="flex items-center gap-3 text-xs font-medium text-on-surface-muted">
+                              <span className="flex items-center gap-1">
+                                <span className="material-symbols-outlined text-[16px]">thumb_up</span>
+                                {review.likesCount || 0}
+                              </span>
+                              <span className="flex items-center gap-1">
+                                <span className="material-symbols-outlined text-[16px]">thumb_down</span>
+                                {review.dislikesCount || 0}
+                              </span>
+                            </div>
+                          )}
                        </div>
 
                      {/* Comments Toggle */}
@@ -439,6 +632,7 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
                        <span className="text-xs font-semibold">{review.commentCount || 0}</span>
                      </button>
                   </div>
+                  )}
 
                   {/* Comments Section */}
                   {expandedReviewId === review.id && (
@@ -492,46 +686,87 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
                           {reviewComments.length === 0 ? (
                             <p className="text-center text-xs text-on-surface-variant opacity-60">Пока нет комментариев. Будьте первым!</p>
                           ) : (
-                            reviewComments.map(comment => (
-                              <div key={comment.id} className="flex gap-3 bg-surface-container-lowest p-4 rounded-xl border border-on-surface/5">
-                                <div className="relative w-8 h-8 rounded-full bg-surface overflow-hidden flex-shrink-0 border border-on-surface/5 flex items-center justify-center font-semibold text-on-surface text-xs">
+                            reviewComments.map(comment => {
+                              const isOwnComment = user?.id === comment.userId;
+                              const isEditingThis = editingCommentId === comment.id;
+                              const mentionMatch = comment.text.match(/^(@[^,]+),\s*([\s\S]*)$/);
+                              return (
+                              <div key={comment.id} className="flex gap-3 group">
+                                <div className="relative w-8 h-8 rounded-full bg-surface-container overflow-hidden flex-shrink-0 border border-on-surface/5 flex items-center justify-center font-semibold text-on-surface text-xs">
                                   {comment.user?.avatarUrl ? (
                                     <Image src={comment.user.avatarUrl} alt={comment.user.name || ''} fill sizes="32px" className="object-cover" />
                                   ) : comment.user?.name.charAt(0) || 'U'}
                                 </div>
-                                <div>
-                                  <div className="flex items-baseline gap-2 mb-1">
-                                    <span className="font-semibold text-xs text-on-surface">{comment.user?.name}</span>
-                                    <span className="text-[11px] text-on-surface-variant font-medium">
-                                      {new Date(comment.createdAt).toLocaleDateString('ru-RU')}
-                                    </span>
-                                    {user && (
-                                       <button 
-                                         onClick={() => {
-                                           setReplyTarget(comment);
-                                           // scroll to input would be nice here
-                                         }}
-                                         className="text-[11px] font-black uppercase tracking-wider text-on-surface-variant hover:text-on-surface transition-colors"
-                                       >
-                                         Ответить
-                                       </button>
-                                    )}
-                                  </div>
-                                  <p className="text-sm text-on-surface-variant leading-relaxed">
-                                    {comment.text.startsWith('@') ? (
-                                      <>
-                                        <span className="inline-block px-1.5 py-0.5 rounded bg-on-surface/5 text-on-surface font-black text-[10px] uppercase tracking-tight mr-1.5 align-middle">
-                                          {comment.text.split(',')[0]}
-                                        </span>
-                                        {comment.text.split(',').slice(1).join(',')}
-                                      </>
-                                    ) : (
-                                      comment.text
-                                    )}
-                                  </p>
+                                <div className="flex-1 min-w-0">
+                                  {isEditingThis ? (
+                                    <div>
+                                      <textarea
+                                        value={editCommentText}
+                                        onChange={e => setEditCommentText(e.target.value)}
+                                        className="w-full bg-surface-container-lowest border border-on-surface/10 rounded-lg p-2 text-sm font-medium text-on-surface focus:outline-none focus:border-on-surface/40 min-h-[60px] resize-none"
+                                      />
+                                      <div className="flex justify-end gap-2 mt-2">
+                                        <button
+                                          onClick={() => { setEditingCommentId(null); setEditCommentText(''); }}
+                                          className="text-xs font-semibold text-on-surface-muted hover:text-on-surface px-2 py-1"
+                                        >
+                                          Отмена
+                                        </button>
+                                        <button
+                                          onClick={() => handleSaveEditComment(review.id, comment.id)}
+                                          disabled={!editCommentText.trim()}
+                                          className="bg-on-surface text-surface px-3 py-1 rounded-lg text-xs font-semibold disabled:opacity-50"
+                                        >
+                                          Сохранить
+                                        </button>
+                                      </div>
+                                    </div>
+                                  ) : (
+                                    <>
+                                      <p className="text-sm text-on-surface leading-relaxed">
+                                        <span className="font-semibold mr-1.5">{comment.user?.name}</span>
+                                        {mentionMatch ? (
+                                          <>
+                                            <span className="text-primary font-medium">{mentionMatch[1]}</span>
+                                            <span>{mentionMatch[2] ? ` ${mentionMatch[2]}` : ''}</span>
+                                          </>
+                                        ) : (
+                                          comment.text
+                                        )}
+                                      </p>
+                                      <div className="flex items-center gap-3 mt-1 text-[11px] font-medium text-on-surface-muted">
+                                        <span>{new Date(comment.createdAt).toLocaleDateString('ru-RU')}</span>
+                                        {user && !isOwnComment && (
+                                          <button
+                                            onClick={() => setReplyTarget(comment)}
+                                            className="hover:text-on-surface transition-colors"
+                                          >
+                                            Ответить
+                                          </button>
+                                        )}
+                                        {isOwnComment && (
+                                          <>
+                                            <button
+                                              onClick={() => { setEditingCommentId(comment.id); setEditCommentText(comment.text); }}
+                                              className="hover:text-on-surface transition-colors"
+                                            >
+                                              Изменить
+                                            </button>
+                                            <button
+                                              onClick={() => handleDeleteComment(review.id, comment.id)}
+                                              className="hover:text-red-600 transition-colors"
+                                            >
+                                              Удалить
+                                            </button>
+                                          </>
+                                        )}
+                                      </div>
+                                    </>
+                                  )}
                                 </div>
                               </div>
-                            ))
+                              );
+                            })
                           )}
                         </div>
                       )}
@@ -539,7 +774,8 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
                   )}
 
                 </div>
-               ))}
+                 );
+               })}
              </div>
            )}
         </div>

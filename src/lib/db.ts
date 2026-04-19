@@ -478,6 +478,39 @@ export async function submitReview(contentId: string, userId: string, text: stri
   return data;
 }
 
+export async function updateReview(reviewId: string, userId: string, text: string, rating: number) {
+  const { data, error } = await supabase
+    .from('reviews')
+    .update({ text, rating })
+    .eq('id', reviewId)
+    .eq('user_id', userId)
+    .select()
+    .single();
+
+  if (error) {
+    console.error('Error updating review:', error);
+    throw error;
+  }
+
+  syncUserStats(userId).catch(console.error);
+  return data;
+}
+
+export async function deleteReview(reviewId: string, userId: string) {
+  const { error } = await supabase
+    .from('reviews')
+    .delete()
+    .eq('id', reviewId)
+    .eq('user_id', userId);
+
+  if (error) {
+    console.error('Error deleting review:', error);
+    throw error;
+  }
+
+  syncUserStats(userId).catch(console.error);
+}
+
 export async function rateReview(reviewId: string, userId: string, rating: number) {
   const { data, error } = await supabase
     .from('review_ratings')
@@ -510,6 +543,35 @@ export async function addReviewComment(reviewId: string, userId: string, text: s
     throw error;
   }
   return data;
+}
+
+export async function updateReviewComment(commentId: string, userId: string, text: string) {
+  const { data, error } = await supabase
+    .from('review_comments')
+    .update({ text })
+    .eq('id', commentId)
+    .eq('user_id', userId)
+    .select('*, profiles:user_id(name, avatar_url)')
+    .single();
+
+  if (error) {
+    console.error('Error updating review comment:', error);
+    throw error;
+  }
+  return data;
+}
+
+export async function deleteReviewComment(commentId: string, userId: string) {
+  const { error } = await supabase
+    .from('review_comments')
+    .delete()
+    .eq('id', commentId)
+    .eq('user_id', userId);
+
+  if (error) {
+    console.error('Error deleting review comment:', error);
+    throw error;
+  }
 }
 
 export async function getReviewComments(reviewId: string) {
