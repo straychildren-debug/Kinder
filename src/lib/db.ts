@@ -51,13 +51,13 @@ export async function unpinFavoriteContent(userId: string): Promise<void> {
   }
 }
 
-export async function getUsersRanked(): Promise<User[]> {
+export async function getUsersRanked(period: 'all' | 'month' = 'all'): Promise<User[]> {
   const { data, error } = await supabase
     .from('profiles')
     .select(`
       *,
-      content:content!created_by(id, status),
-      reviews:reviews(id, rating)
+      content:content!created_by(id, status, created_at),
+      reviews:reviews(id, rating, created_at)
     `);
 
   if (error || !data) {
@@ -65,11 +65,23 @@ export async function getUsersRanked(): Promise<User[]> {
     return [];
   }
 
+  const now = new Date();
+  const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+
   const users: User[] = data.map(d => {
-    const approvedPubs = (d.content || []).filter((c: any) => c.status === 'approved').length;
-    const revsCount = (d.reviews || []).length;
+    let userContent = d.content || [];
+    let userReviews = d.reviews || [];
+
+    // Filter by period if needed
+    if (period === 'month') {
+      userContent = userContent.filter((c: any) => new Date(c.created_at) >= thirtyDaysAgo);
+      userReviews = userReviews.filter((r: any) => new Date(r.created_at) >= thirtyDaysAgo);
+    }
+
+    const approvedPubs = userContent.filter((c: any) => c.status === 'approved').length;
+    const revsCount = userReviews.length;
     const avgRating = revsCount > 0 
-      ? (d.reviews || []).reduce((acc: number, curr: any) => acc + (curr.rating || 0), 0) / revsCount 
+      ? userReviews.reduce((acc: number, curr: any) => acc + (curr.rating || 0), 0) / revsCount 
       : 0;
 
     return {
@@ -90,12 +102,14 @@ export async function getUsersRanked(): Promise<User[]> {
     };
   });
 
-  return users.sort((a, b) => {
-    // Score formula: (Pubs * 10) + (Reviews * 2) + (Rating * 5)
-    const scoreA = (a.stats?.publications || 0) * 10 + (a.stats?.reviews || 0) * 2 + (a.stats?.avgRating || 0) * 5;
-    const scoreB = (b.stats?.publications || 0) * 10 + (b.stats?.reviews || 0) * 2 + (b.stats?.avgRating || 0) * 5;
-    return scoreB - scoreA;
-  });
+  return users
+    .filter(u => u.stats.publications > 0 || u.stats.reviews > 0) // Only show active users in leaderboard
+    .sort((a, b) => {
+      // Score formula: (Pubs * 10) + (Reviews * 2) + (Rating * 5)
+      const scoreA = (a.stats?.publications || 0) * 10 + (a.stats?.reviews || 0) * 2 + (a.stats?.avgRating || 0) * 5;
+      const scoreB = (b.stats?.publications || 0) * 10 + (b.stats?.reviews || 0) * 2 + (b.stats?.avgRating || 0) * 5;
+      return scoreB - scoreA;
+    });
 }
 
 export async function searchProfiles(query: string): Promise<User[]> {

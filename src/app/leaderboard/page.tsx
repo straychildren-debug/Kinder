@@ -10,6 +10,7 @@ import PublicProfileModal from "@/components/PublicProfileModal";
 import ContentDetailsModal from "@/components/ContentDetailsModal";
 
 export default function Leaderboard() {
+  const [period, setPeriod] = useState<'all' | 'month'>('all');
   const [rankedUsers, setRankedUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
@@ -17,12 +18,13 @@ export default function Leaderboard() {
 
   useEffect(() => {
     async function load() {
-      const topUsers = await getUsersRanked();
+      setLoading(true);
+      const topUsers = await getUsersRanked(period);
       setRankedUsers(topUsers);
       setLoading(false);
     }
     load();
-  }, []);
+  }, [period]);
 
   const top3 = rankedUsers.slice(0, 3);
   const restUsers = rankedUsers.slice(3);
@@ -39,10 +41,24 @@ export default function Leaderboard() {
               <h2 className="text-2xl font-bold tracking-tight text-on-surface leading-tight">Рейтинг пользователей</h2>
             </div>
             <div className="flex gap-2 mb-4">
-              <button className="px-4 py-2 rounded-xl text-[8px] font-black uppercase tracking-widest transition-all whitespace-nowrap bg-surface-container-low text-on-surface-muted hover:bg-surface-container">
+              <button 
+                onClick={() => setPeriod('month')}
+                className={`px-4 py-2 rounded-xl text-[8px] font-black uppercase tracking-widest transition-all whitespace-nowrap ${
+                  period === 'month' 
+                    ? 'bg-on-surface text-surface shadow-md' 
+                    : 'bg-surface-container-low text-on-surface-muted hover:bg-surface-container'
+                }`}
+              >
                 За месяц
               </button>
-              <button className="px-4 py-2 rounded-xl text-[8px] font-black uppercase tracking-widest transition-all whitespace-nowrap bg-on-surface text-surface shadow-md">
+              <button 
+                onClick={() => setPeriod('all')}
+                className={`px-4 py-2 rounded-xl text-[8px] font-black uppercase tracking-widest transition-all whitespace-nowrap ${
+                  period === 'all' 
+                    ? 'bg-on-surface text-surface shadow-md' 
+                    : 'bg-surface-container-low text-on-surface-muted hover:bg-surface-container'
+                }`}
+              >
                 За всё время
               </button>
             </div>
