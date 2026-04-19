@@ -96,15 +96,15 @@ export default function PublicProfileModal({ user, onClose, onOpenContent }: Pub
             {/* Quick Stats Grid */}
             <div className="grid grid-cols-3 gap-8 mt-6 w-full max-w-[280px]">
               <div className="flex flex-col items-center">
-                <span className="text-base font-black text-on-surface leading-none mb-1">{user.stats?.publications || 0}</span>
-                <span className="text-[8px] font-bold uppercase tracking-widest text-on-surface-variant/40">Работы</span>
+                <span className="text-base font-black text-on-surface leading-none mb-1">{publications.length}</span>
+                <span className="text-[8px] font-bold uppercase tracking-widest text-on-surface-variant/40">Публикации</span>
               </div>
               <div className="flex flex-col items-center">
-                <span className="text-base font-black text-on-surface leading-none mb-1">{user.stats?.reviews || 0}</span>
+                <span className="text-base font-black text-on-surface leading-none mb-1">{reviews.length}</span>
                 <span className="text-[8px] font-bold uppercase tracking-widest text-on-surface-variant/40">Отзывы</span>
               </div>
               <div className="flex flex-col items-center">
-                <span className="text-base font-black text-on-surface leading-none mb-1">{(user.stats?.avgRating || 0).toFixed(1)}</span>
+                <span className="text-base font-black text-on-surface leading-none mb-1">{reviews.length > 0 ? (reviews.reduce((s, r) => s + (r.rating || 0), 0) / reviews.length).toFixed(1) : '0.0'}</span>
                 <span className="text-[8px] font-bold uppercase tracking-widest text-on-surface-variant/40">Рейтинг</span>
               </div>
             </div>
@@ -113,7 +113,7 @@ export default function PublicProfileModal({ user, onClose, onOpenContent }: Pub
           {/* Tabs Navigation */}
           <div className="px-6 mt-4 flex border-b border-on-surface/[0.03]">
             {[
-              { id: 'publications', label: 'Работы', count: publications.length },
+              { id: 'publications', label: 'Публикации', count: publications.length },
               { id: 'bookmarks', label: 'Закладки', count: bookmarks.length },
               { id: 'reviews', label: 'Отзывы', count: reviews.length }
             ].map((tab) => (
