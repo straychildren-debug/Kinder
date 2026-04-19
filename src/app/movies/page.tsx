@@ -101,46 +101,42 @@ export default function Movies() {
              )}
           </div>
         ) : (
-          <div className="grid grid-cols-3 gap-x-1 gap-y-4 sm:gap-x-3 sm:gap-y-6">
+          <div className="grid grid-cols-3 gap-x-3 gap-y-6">
             {displayMovies.map((movie, index) => (
               <MotionListItem key={movie.id} index={index}>
                 <button
-                  className="w-full flex flex-col group text-left outline-none"
+                  className="group w-full flex flex-col text-left outline-none"
                   onClick={() => setSelectedContent(movie)}
                 >
-                  {/* Card with Backing */}
-                  <div className="w-full bg-white p-1 pb-2.5 rounded-[12px] border border-on-surface/[0.03] shadow-[0_2px_8px_rgba(0,0,0,0.02)] group-hover:shadow-[0_4px_16px_rgba(0,0,0,0.05)] transition-all duration-500">
-                    {/* Compact Poster */}
-                    <div className="relative aspect-[2/3] w-full rounded-[8px] overflow-hidden bg-surface-container-low/50 border border-on-surface/[0.03]">
-                      {movie.rating && (
-                        <div className="absolute top-1 right-1 px-1 py-0.5 rounded-md bg-black/60 backdrop-blur-md border border-white/10 flex items-center gap-1 z-10">
-                          <span className="material-symbols-outlined text-white" style={{ fontVariationSettings: "'FILL' 1", fontSize: '8px' }}>star</span>
-                          <span className="text-[8px] font-black text-white">{movie.rating.toFixed(1)}</span>
-                        </div>
-                      )}
-                      {movie.imageUrl ? (
-                        <Image
-                          src={movie.imageUrl}
-                          alt={movie.title}
-                          fill
-                          sizes="(max-width: 768px) 50vw, 33vw"
-                          placeholder="blur"
-                          blurDataURL={defaultBlurDataURL}
-                          className="object-cover transition-transform duration-700 group-hover:scale-105"
-                        />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center text-[10px] font-black opacity-20 uppercase">No Poster</div>
-                      )}
+                  <div className="relative aspect-[2/3] w-full rounded-xl overflow-hidden bg-surface-container border border-on-surface/5">
+                    {movie.imageUrl ? (
+                      <Image
+                        src={movie.imageUrl}
+                        alt={movie.title}
+                        fill
+                        sizes="(max-width: 768px) 33vw, 25vw"
+                        placeholder="blur"
+                        blurDataURL={defaultBlurDataURL}
+                        className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-xs font-medium text-on-surface-muted">Нет обложки</div>
+                    )}
+                    <div className="absolute top-2 left-2 px-1.5 py-0.5 rounded-md bg-black/55 backdrop-blur-sm flex items-center gap-1 z-10">
+                      <span className="material-symbols-outlined text-white" style={{ fontSize: '11px' }}>movie</span>
+                      <span className="text-[10px] font-semibold text-white leading-none">Кино</span>
                     </div>
-
-                    {/* Simple Metadata */}
-                    <div className="mt-2 px-1 flex flex-col">
-                      <h3 className="text-[10px] font-bold text-on-surface leading-tight line-clamp-2 tracking-tight mb-0.5 group-hover:text-primary transition-colors min-h-[2.4em]">
-                        {movie.title}
-                      </h3>
-                      <p className="text-[9px] font-medium text-on-surface-variant/80 truncate tracking-tight">
-                        {formatAuthor(movie.director || 'Неизвестный')}
+                  </div>
+                  <div className="mt-3">
+                    <h3 className="text-sm font-semibold leading-snug tracking-tight line-clamp-2 text-on-surface">{movie.title}</h3>
+                    <div className="flex items-center justify-between gap-2 mt-1">
+                      <p className="text-xs font-medium text-on-surface-muted truncate">
+                        {formatAuthor(movie.director || 'Неизвестный')}{movie.year ? ` · ${movie.year}` : ''}
                       </p>
+                      <div className="flex items-center gap-0.5 shrink-0 text-on-surface-muted">
+                        <span className="material-symbols-outlined" style={{ fontSize: '12px', fontVariationSettings: "'FILL' 1" }}>star</span>
+                        <span className="text-xs font-semibold text-on-surface">{movie.rating ? movie.rating.toFixed(1) : '—'}</span>
+                      </div>
                     </div>
                   </div>
                 </button>

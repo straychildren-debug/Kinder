@@ -188,14 +188,14 @@ export default function Home() {
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-5">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-4 gap-y-6">
               {visibleContent.slice(0, 6).map((item, index) => (
                 <MotionListItem key={item.id} index={index} className="h-full">
                 <button
                   onClick={() => setSelectedContent(item)}
-                  className="w-full h-full flex flex-col group text-left outline-none bg-white p-3 rounded-2xl border border-on-surface/5 shadow-sm hover:shadow-xl transition-all duration-500"
+                  className="group w-full flex flex-col text-left outline-none"
                 >
-                  <div className="relative aspect-[2/3] w-full rounded-xl overflow-hidden bg-surface-container border border-on-surface/5 shadow-sm group-hover:scale-[1.02] transition-transform duration-500 mb-4 ring-1 ring-on-surface/5">
+                  <div className="relative aspect-[2/3] w-full rounded-xl overflow-hidden bg-surface-container border border-on-surface/5">
                     {item.imageUrl && (
                       <Image
                         src={item.imageUrl}
@@ -204,29 +204,25 @@ export default function Home() {
                         sizes="(min-width: 1024px) 20rem, 50vw"
                         placeholder="blur"
                         blurDataURL={defaultBlurDataURL}
-                        className="object-cover transition-transform duration-700 group-hover:scale-110"
+                        className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
                       />
                     )}
-                    {/* Floating Rating Badge */}
-                    <div className="absolute top-2 right-2 px-1.5 py-0.5 rounded-lg bg-black/60 backdrop-blur-md border border-white/10 flex items-center gap-1 z-10">
-                      <span className="material-symbols-outlined text-white" style={{ fontVariationSettings: "'FILL' 1", fontSize: '10px' }}>star</span>
-                      <span className="text-[10px] font-black text-white leading-none">{item.rating ? item.rating.toFixed(1) : '—'}</span>
+                    <div className="absolute top-2 left-2 px-1.5 py-0.5 rounded-md bg-black/55 backdrop-blur-sm flex items-center gap-1 z-10">
+                      <span className="material-symbols-outlined text-white" style={{ fontSize: '11px' }}>{item.type === 'movie' ? 'movie' : 'menu_book'}</span>
+                      <span className="text-[10px] font-semibold text-white leading-none">{item.type === 'movie' ? 'Кино' : 'Книга'}</span>
                     </div>
                   </div>
-
-                  <div className="px-1 flex flex-col flex-1">
-                    <h3 className="text-[11px] font-black text-on-surface leading-tight line-clamp-2 uppercase tracking-tight group-hover:text-amber-600 transition-colors mb-1">
-                      {item.title}
-                    </h3>
-                    <span className="text-[10px] font-bold text-on-surface-variant/40 truncate leading-none mb-3 block">
-                      {item.author || item.director || 'Автор'}
-                    </span>
-                    
-                    {item.description && (
-                      <p className="text-[10px] font-medium text-on-surface-variant/60 leading-normal line-clamp-3 mt-auto">
-                        {item.description}
+                  <div className="mt-3">
+                    <h3 className="text-sm font-semibold leading-snug tracking-tight line-clamp-2 text-on-surface">{item.title}</h3>
+                    <div className="flex items-center justify-between gap-2 mt-1">
+                      <p className="text-xs font-medium text-on-surface-muted truncate">
+                        {(item.author || item.director || 'Автор')}{item.year ? ` · ${item.year}` : ''}
                       </p>
-                    )}
+                      <div className="flex items-center gap-0.5 shrink-0 text-on-surface-muted">
+                        <span className="material-symbols-outlined" style={{ fontSize: '12px', fontVariationSettings: "'FILL' 1" }}>star</span>
+                        <span className="text-xs font-semibold text-on-surface">{item.rating ? item.rating.toFixed(1) : '—'}</span>
+                      </div>
+                    </div>
                   </div>
                 </button>
                 </MotionListItem>
