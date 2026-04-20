@@ -35,6 +35,7 @@ export default function Home() {
   const [activeDuels, setActiveDuels] = useState<Duel[]>([]);
   const [recommendations, setRecommendations] = useState<ContentItem[]>([]);
   const [popularPlaylists, setPopularPlaylists] = useState<Playlist[]>([]);
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [activeFilter, setActiveFilter] = useState<'all' | 'movie' | 'book'>('all');
 
   const visibleContent = activeFilter === 'all' 
