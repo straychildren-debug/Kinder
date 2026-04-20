@@ -10,7 +10,7 @@ import {
   markAllNotificationsRead, 
   subscribeToNotifications 
 } from '@/lib/notifications';
-import { getPendingContent, syncUserStats } from '@/lib/db';
+import { getPendingContent, syncUserStats, getContentByUser, getReviewsByUser } from '@/lib/db';
 import { Notification } from '@/lib/types';
 
 interface ProfileSidebarProps {
@@ -22,25 +22,36 @@ export default function ProfileSidebar({ isOpen, onClose }: ProfileSidebarProps)
   const { user, logout, refreshUser } = useAuth();
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [pendingCount, setPendingCount] = useState(0);
+  const [counts, setCounts] = useState<{ publications: number; reviews: number; avgRating: number } | null>(null);
 
   useEffect(() => {
     if (!user || !isOpen) return;
 
     let alive = true;
     const load = async () => {
-      // Sync stats and fetch notifications/pending count
-      const [notifsData, pendingData] = await Promise.all([
+      const [notifsData, pendingData, contentData, reviewsData] = await Promise.all([
         getNotifications(user.id, 10),
         getPendingContent(),
-        syncUserStats(user.id) // Background sync on open
+        getContentByUser(user.id),
+        getReviewsByUser(user.id),
+        syncUserStats(user.id),
       ]);
-      
-      if (alive) {
-        setNotifications(notifsData);
-        setPendingCount(pendingData.length);
-        // Refresh local auth user skip calling if nothing changed? No, just call it to be safe
-        refreshUser();
-      }
+
+      if (!alive) return;
+      setNotifications(notifsData);
+      setPendingCount(pendingData.length);
+
+      const approved = contentData.filter((i) => i.status === 'approved');
+      const avgRating =
+        approved.length > 0
+          ? approved.reduce((acc, c) => acc + (c.rating || 0), 0) / approved.length
+          : 0;
+      setCounts({
+        publications: approved.length,
+        reviews: reviewsData.length,
+        avgRating: Number(avgRating.toFixed(1)),
+      });
+      refreshUser();
     };
 
     load();
@@ -137,15 +148,21 @@ export default function ProfileSidebar({ isOpen, onClose }: ProfileSidebarProps)
             {/* Статистика */}
             <div className="grid grid-cols-3 gap-3 py-6">
               <div className="bg-surface-container-low rounded-xl p-3 text-center">
-                <span className="block text-lg font-bold">{user.stats.publications}</span>
+                <span className="block text-lg font-bold">
+                  {counts ? counts.publications : user.stats?.publications ?? 0}
+                </span>
                 <span className="text-[9px] uppercase tracking-widest text-on-surface-variant font-semibold">Публикации</span>
               </div>
               <div className="bg-surface-container-low rounded-xl p-3 text-center">
-                <span className="block text-lg font-bold">{user.stats.reviews}</span>
+                <span className="block text-lg font-bold">
+                  {counts ? counts.reviews : user.stats?.reviews ?? 0}
+                </span>
                 <span className="text-[9px] uppercase tracking-widest text-on-surface-variant font-semibold">Отзывы</span>
               </div>
               <div className="bg-surface-container-low rounded-xl p-3 text-center">
-                <span className="block text-lg font-bold">{user.stats.avgRating}</span>
+                <span className="block text-lg font-bold">
+                  {counts ? counts.avgRating : user.stats?.avgRating ?? 0}
+                </span>
                 <span className="text-[9px] uppercase tracking-widest text-on-surface-variant font-semibold">Рейтинг</span>
               </div>
             </div>
