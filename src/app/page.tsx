@@ -14,6 +14,8 @@ import { FeedSkeletonList } from "@/components/Skeleton";
 import { MotionListItem } from "@/components/Motion";
 import ActivityFeed from "@/components/ActivityFeed";
 import { omnisearch, type OmnisearchResult } from "@/lib/search";
+import { getActiveDuels } from "@/lib/duels";
+import type { Duel } from "@/lib/types";
 
 const EMPTY_RESULTS: OmnisearchResult = { content: [], clubs: [], users: [] };
 
@@ -28,6 +30,7 @@ export default function Home() {
   const [topAuthors, setTopAuthors] = useState<LeaderboardUser[]>([]);
   const [topCommenters, setTopCommenters] = useState<LeaderboardUser[]>([]);
   const [topPublicists, setTopPublicists] = useState<LeaderboardUser[]>([]);
+  const [activeDuels, setActiveDuels] = useState<Duel[]>([]);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const visibleContent = approvedContent;
@@ -49,16 +52,18 @@ export default function Home() {
   useEffect(() => {
     async function load() {
       try {
-        const [contentData, authors, commenters, publicists] = await Promise.all([
+        const [contentData, authors, commenters, publicists, duels] = await Promise.all([
           getApprovedContent(),
           getTopAuthorsByLikes(5),
           getTopCommenters(5),
-          getTopPublicists(5)
+          getTopPublicists(5),
+          getActiveDuels(user?.id, 3)
         ]);
         setApprovedContent(contentData);
         setTopAuthors(authors);
         setTopCommenters(commenters);
         setTopPublicists(publicists);
+        setActiveDuels(duels);
       } catch (err) {
         console.error('Initial load failed:', err);
       } finally {
@@ -66,7 +71,7 @@ export default function Home() {
       }
     }
     load();
-  }, []);
+  }, [user?.id]);
 
   return (
     <>
@@ -194,6 +199,81 @@ export default function Home() {
                 arrow_forward
               </span>
             </Link>
+          </section>
+        )}
+
+        {/* Arena of Opinions */}
+        {activeDuels.length > 0 && (
+          <section className="mb-12 px-2">
+            <div className="flex items-center justify-between mb-5">
+              <div>
+                <span className="text-xs font-medium text-on-surface-muted mb-1.5 block">Дебаты критиков</span>
+                <h2 className="text-2xl font-bold tracking-tight text-on-surface leading-tight">Арена мнений</h2>
+              </div>
+              <Link
+                href="/duels"
+                className="text-xs font-semibold text-on-surface-muted hover:text-on-surface transition-colors"
+              >
+                Все
+              </Link>
+            </div>
+            <div className="space-y-3">
+              {activeDuels.map((duel) => {
+                const c = duel.challengerVotes || 0;
+                const d = duel.defenderVotes || 0;
+                const total = c + d;
+                const cPct = total ? Math.round((c / total) * 100) : 50;
+                return (
+                  <Link
+                    key={duel.id}
+                    href={`/duels/${duel.id}`}
+                    className="block bg-surface rounded-2xl p-4 border border-on-surface/5 hover:border-on-surface/10 transition-all active:scale-[0.995]"
+                  >
+                    <div className="flex items-start gap-3 mb-3">
+                      <div className="relative w-10 h-14 rounded-lg overflow-hidden bg-surface-container border border-on-surface/5 shrink-0">
+                        {duel.content?.imageUrl ? (
+                          <Image
+                            src={duel.content.imageUrl}
+                            alt={duel.content.title}
+                            fill
+                            sizes="40px"
+                            placeholder="blur"
+                            blurDataURL={defaultBlurDataURL}
+                            className="object-cover"
+                          />
+                        ) : null}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-[10px] font-medium text-on-surface-muted uppercase tracking-wider mb-0.5">
+                          {duel.content?.type === 'movie' ? 'Кино' : 'Книга'}
+                        </p>
+                        <p className="text-sm font-semibold text-on-surface leading-snug line-clamp-2">
+                          {duel.content?.title || 'Публикация'}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between text-[11px] font-semibold mb-1.5">
+                      <span className="text-emerald-600 truncate max-w-[40%]">
+                        {duel.challengerReview?.user?.name || 'Критик 1'}
+                      </span>
+                      <span className="text-rose-600 truncate max-w-[40%] text-right">
+                        {duel.defenderReview?.user?.name || 'Критик 2'}
+                      </span>
+                    </div>
+                    <div className="relative h-2 rounded-full bg-surface-container-low overflow-hidden">
+                      <div
+                        className="absolute top-0 left-0 h-full bg-emerald-400/80"
+                        style={{ width: `${cPct}%` }}
+                      />
+                      <div
+                        className="absolute top-0 right-0 h-full bg-rose-400/80"
+                        style={{ width: `${100 - cPct}%` }}
+                      />
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
           </section>
         )}
 

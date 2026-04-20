@@ -475,6 +475,20 @@ export async function submitReview(contentId: string, userId: string, text: stri
   // Sync reviewer stats
   syncUserStats(userId).catch(console.error);
 
+  // Fire-and-forget: auto-create a duel if the new review is polar (1 or 5) and lengthy.
+  if (data && text && text.length >= 200 && (rating === 1 || rating === 5)) {
+    import('./duels')
+      .then((m) =>
+        m.maybeCreateAutoDuel(contentId, {
+          id: data.id,
+          rating,
+          text,
+          userId,
+        })
+      )
+      .catch(console.error);
+  }
+
   return data;
 }
 

@@ -88,6 +88,44 @@ export interface ReviewComment {
   user?: User;
 }
 
+// ===== Duels (Дуэли критиков) =====
+
+export type DuelStatus = 'active' | 'finished' | 'cancelled';
+export type DuelSource = 'auto' | 'nomination' | 'admin';
+export type DuelSide = 'challenger' | 'defender';
+
+export interface Duel {
+  id: string;
+  contentId: string;
+  challengerReviewId: string;
+  defenderReviewId: string;
+  status: DuelStatus;
+  source: DuelSource;
+  winnerReviewId?: string | null;
+  createdBy?: string | null;
+  startedAt: string;
+  endsAt: string;
+  createdAt: string;
+
+  // Joined
+  content?: ContentItem;
+  challengerReview?: Review;
+  defenderReview?: Review;
+  challengerVotes?: number;
+  defenderVotes?: number;
+  mySide?: DuelSide | null;
+  commentCount?: number;
+}
+
+export interface DuelComment {
+  id: string;
+  duelId: string;
+  userId: string;
+  text: string;
+  createdAt: string;
+  user?: User;
+}
+
 // ===== Клубы =====
 
 export type ClubCategory = 'кино' | 'книги';

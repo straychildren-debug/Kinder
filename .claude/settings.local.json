@@ -8,7 +8,9 @@
       "Bash(git commit:*)",
       "Bash(git push:*)",
       "Bash(ls -la *.sql)",
-      "Bash(npm run:*)"
+      "Bash(npm run:*)",
+      "Bash(ls -la .env*)",
+      "Bash(node -e \":*)"
     ]
   }
 }

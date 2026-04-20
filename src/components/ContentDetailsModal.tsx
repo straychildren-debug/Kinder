@@ -3,6 +3,9 @@
 import React, { useEffect, useState } from 'react';
 import { ContentItem, Review, User, ReviewComment } from '@/lib/types';
 import { getReviewsForContent, submitReview, rateReview, addReviewComment, getReviewComments, getContentById, getUserById, updateReview, deleteReview, updateReviewComment, deleteReviewComment } from '@/lib/db';
+import { nominateDuel, getDuelsForContent } from '@/lib/duels';
+import type { Duel } from '@/lib/types';
+import { useRouter } from 'next/navigation';
 import { addToWishlist, isInWishlist, removeFromWishlist } from '@/lib/wishlist';
 import { getSimilarContent } from '@/lib/recommendations';
 import { defaultBlurDataURL } from '@/lib/image-blur';
@@ -53,15 +56,20 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
   // Similar content
   const [similar, setSimilar] = useState<ContentItem[]>([]);
 
+  // Duels active on this content
+  const [contentDuels, setContentDuels] = useState<Duel[]>([]);
+  const [challengingId, setChallengingId] = useState<string | null>(null);
+  const router = useRouter();
+
   useEffect(() => {
     if (!initialContent) return;
-    
+
     async function load() {
       setLoading(true);
       // Fetch fresh content in case rating/reviews count updated
       const freshContent = await getContentById(initialContent!.id);
       if (freshContent) setContent(freshContent);
-      
+
       const revs = await getReviewsForContent(initialContent!.id, user?.id);
       setReviews(revs);
       setLoading(false);
@@ -76,9 +84,58 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
       // Подгружаем похожее
       const rec = await getSimilarContent(initialContent!.id, 6);
       setSimilar(rec);
+
+      // Дуэли по этой публикации
+      const ds = await getDuelsForContent(initialContent!.id, user?.id);
+      setContentDuels(ds);
     }
     load();
   }, [initialContent?.id, user]);
+
+  // Reviews that are already locked in active duels — cannot be challenged again
+  const lockedReviewIds = React.useMemo(() => {
+    const ids = new Set<string>();
+    contentDuels.filter(d => d.status === 'active').forEach(d => {
+      ids.add(d.challengerReviewId);
+      ids.add(d.defenderReviewId);
+    });
+    return ids;
+  }, [contentDuels]);
+
+  const myReview = user ? reviews.find(r => r.userId === user.id) : undefined;
+
+  const canChallenge = (target: Review): boolean => {
+    if (!user || !myReview) return false;
+    if (target.userId === user.id) return false;
+    if (!target.text || target.text.length < 200) return false;
+    if (!myReview.text || myReview.text.length < 200) return false;
+    if (target.rating !== 1 && target.rating !== 5) return false;
+    if (myReview.rating !== 1 && myReview.rating !== 5) return false;
+    if (target.rating === myReview.rating) return false;
+    if (lockedReviewIds.has(target.id) || lockedReviewIds.has(myReview.id)) return false;
+    return true;
+  };
+
+  const handleChallenge = async (target: Review) => {
+    if (!user || !content || !myReview) return;
+    setChallengingId(target.id);
+    try {
+      const duel = await nominateDuel({
+        contentId: content.id,
+        challengerReviewId: myReview.id,
+        defenderReviewId: target.id,
+        createdBy: user.id,
+        source: 'nomination',
+      });
+      if (duel) {
+        router.push(`/duels/${duel.id}`);
+      }
+    } catch (e) {
+      console.error(e);
+      alert('Не удалось создать дуэль. Возможно, она уже существует.');
+    }
+    setChallengingId(null);
+  };
 
 
   const handleToggleWishlist = async () => {
@@ -619,18 +676,57 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
                           )}
                        </div>
 
-                     {/* Comments Toggle */}
-                     <button
-                       type="button"
-                       onClick={(e) => {
-                         e.stopPropagation();
-                         toggleComments(review.id);
-                       }}
-                       className="flex items-center gap-1.5 text-on-surface-variant hover:text-on-surface transition-colors bg-surface-container px-3 py-1.5 rounded-lg shrink-0 cursor-pointer relative z-10"
-                     >
-                       <span className="material-symbols-outlined text-[16px]">chat_bubble</span>
-                       <span className="text-xs font-semibold">{review.commentCount || 0}</span>
-                     </button>
+                     <div className="flex items-center gap-1.5 shrink-0">
+                       {/* Challenge to duel */}
+                       {canChallenge(review) && (
+                         <button
+                           type="button"
+                           onClick={(e) => {
+                             e.stopPropagation();
+                             handleChallenge(review);
+                           }}
+                           disabled={challengingId === review.id}
+                           className="flex items-center gap-1 text-on-surface hover:bg-on-surface hover:text-surface transition-colors bg-surface-container-low border border-on-surface/10 px-2.5 py-1.5 rounded-lg cursor-pointer disabled:opacity-60"
+                           title="Вызвать на дуэль"
+                         >
+                           <span className="material-symbols-outlined text-[16px]">swords</span>
+                           <span className="text-xs font-semibold hidden sm:inline">
+                             {challengingId === review.id ? '...' : 'Дуэль'}
+                           </span>
+                         </button>
+                       )}
+
+                       {/* Locked in active duel */}
+                       {lockedReviewIds.has(review.id) && (() => {
+                         const d = contentDuels.find(x =>
+                           x.status === 'active' &&
+                           (x.challengerReviewId === review.id || x.defenderReviewId === review.id)
+                         );
+                         return d ? (
+                           <Link
+                             href={`/duels/${d.id}`}
+                             className="flex items-center gap-1 text-amber-700 bg-amber-50 border border-amber-200 px-2.5 py-1.5 rounded-lg"
+                             title="В дуэли"
+                           >
+                             <span className="material-symbols-outlined text-[16px]">swords</span>
+                             <span className="text-xs font-semibold">На арене</span>
+                           </Link>
+                         ) : null;
+                       })()}
+
+                       {/* Comments Toggle */}
+                       <button
+                         type="button"
+                         onClick={(e) => {
+                           e.stopPropagation();
+                           toggleComments(review.id);
+                         }}
+                         className="flex items-center gap-1.5 text-on-surface-variant hover:text-on-surface transition-colors bg-surface-container px-3 py-1.5 rounded-lg cursor-pointer relative z-10"
+                       >
+                         <span className="material-symbols-outlined text-[16px]">chat_bubble</span>
+                         <span className="text-xs font-semibold">{review.commentCount || 0}</span>
+                       </button>
+                     </div>
                   </div>
                   )}
 
