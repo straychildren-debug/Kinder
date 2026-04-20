@@ -110,13 +110,27 @@ export default function ClubLobbyModal({
           {/* Body Content */}
           <div className="p-8 sm:p-10 space-y-8">
             {/* Main Action */}
-            <div className="flex justify-center -mt-12 relative z-30">
-              <button 
-                onClick={() => onJoin(club.id)}
-                className="px-12 py-4 bg-on-surface text-surface rounded-2xl font-black text-xs uppercase tracking-[0.2em] shadow-2xl hover:scale-[1.02] active:scale-95 transition-all"
-              >
-                {isMember ? 'Войти в чат' : 'Вступить в клуб'}
-              </button>
+            <div className="flex flex-col items-center justify-center -mt-12 relative z-30 gap-4">
+              {isMember ? (
+                <>
+                  <div className="px-6 py-2 bg-on-surface/5 text-on-surface/40 rounded-full font-black text-[9px] uppercase tracking-[0.2em] border border-on-surface/5 backdrop-blur-sm">
+                    Вы уже участник клуба
+                  </div>
+                  <button 
+                    onClick={() => onJoin(club.id)}
+                    className="px-12 py-4 bg-on-surface text-surface rounded-2xl font-black text-xs uppercase tracking-[0.2em] shadow-2xl hover:scale-[1.02] active:scale-95 transition-all"
+                  >
+                    Войти в чат
+                  </button>
+                </>
+              ) : (
+                <button 
+                  onClick={() => onJoin(club.id)}
+                  className="px-12 py-4 bg-on-surface text-surface rounded-2xl font-black text-xs uppercase tracking-[0.2em] shadow-2xl hover:scale-[1.02] active:scale-95 transition-all"
+                >
+                  Вступить в клуб
+                </button>
+              )}
             </div>
 
             {/* Info Section */}
@@ -185,31 +199,39 @@ export default function ClubLobbyModal({
         {/* Members Overlay */}
         {showMembersList && (
           <div className="absolute inset-0 z-[100] bg-surface/80 backdrop-blur-xl animate-in fade-in slide-in-from-bottom-10 duration-300 p-8 flex flex-col">
-            <div className="flex items-center justify-between mb-8">
+            <div className="flex items-center justify-between mb-8 px-2">
               <h3 className="text-xl font-black tracking-tighter uppercase tracking-[0.2em]">Участники</h3>
               <button 
                 onClick={() => setShowMembersList(false)}
-                className="w-8 h-8 rounded-full bg-on-surface/5 flex items-center justify-center hover:bg-on-surface/10"
+                className="w-10 h-10 rounded-full bg-on-surface/5 flex items-center justify-center hover:bg-on-surface/10 transition-colors"
               >
                 <span className="material-symbols-outlined text-[20px]">close</span>
               </button>
             </div>
-            <div className="flex-1 overflow-y-auto grid grid-cols-2 gap-4 pb-8">
+            
+            <div className="flex-1 overflow-y-auto space-y-3 px-2 pb-8 scrollbar-hide">
                {members.map((m) => (
-                 <div key={m.id} className="flex items-center gap-3 p-3 rounded-2xl bg-white/50 border border-on-surface/5 shadow-sm">
-                   <div className="relative w-10 h-10 rounded-xl overflow-hidden shrink-0 bg-surface-container">
-                     {m.userAvatar ? (
-                       <Image src={m.userAvatar} alt={m.userName || ''} fill sizes="40px" className="object-cover" unoptimized />
-                     ) : (
-                       <div className="w-full h-full flex items-center justify-center text-xs font-bold opacity-30">
-                         {(m.userName || '?')[0]}
-                       </div>
-                     )}
+                 <div key={m.id} className="flex items-center justify-between p-4 rounded-2xl bg-white/40 border border-on-surface/5 shadow-sm">
+                   <div className="flex items-center gap-4">
+                     <div className="relative w-12 h-12 rounded-xl overflow-hidden shrink-0 bg-surface-container">
+                       {m.userAvatar ? (
+                         <Image src={m.userAvatar} alt={m.userName || ''} fill sizes="48px" className="object-cover" unoptimized />
+                       ) : (
+                         <div className="w-full h-full flex items-center justify-center text-sm font-bold opacity-30">
+                           {(m.userName || '?')[0]}
+                         </div>
+                       )}
+                     </div>
+                     <div className="min-w-0">
+                       <span className="text-sm font-bold truncate block">{m.userName}</span>
+                       <span className="text-[9px] font-black text-on-surface/30 uppercase tracking-widest leading-none block mt-0.5">
+                         {m.role === 'owner' ? 'Основатель' : 'Участник'}
+                       </span>
+                     </div>
                    </div>
-                   <div className="min-w-0">
-                     <span className="text-[11px] font-bold truncate block">{m.userName}</span>
-                     <span className="text-[8px] font-black text-on-surface/30 uppercase tracking-widest">{m.role === 'owner' ? 'Основатель' : 'Участник'}</span>
-                   </div>
+                   {m.role === 'owner' && (
+                     <span className="material-symbols-rounded text-amber-500 text-[20px] shrink-0" style={{ fontVariationSettings: "'FILL' 1" }}>verified</span>
+                   )}
                  </div>
                ))}
             </div>
