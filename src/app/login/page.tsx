@@ -68,15 +68,15 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen flex items-center justify-center px-6 bg-surface overflow-hidden relative">
       <div className="absolute top-0 left-0 w-full h-1 bg-on-surface opacity-5"></div>
-      <div className="w-full max-w-md space-y-12">
+      <div className="w-full max-w-sm space-y-8 py-10 md:py-20">
         {/* Logo Section */}
-        <div className="text-center space-y-4">
-          <div className="inline-flex items-center justify-center w-20 h-20 bg-on-surface text-surface rounded-[24px] shadow-2xl mb-2">
-            <span className="text-4xl font-black italic">K</span>
+        <div className="text-center space-y-3">
+          <div className="inline-flex items-center justify-center w-14 h-14 bg-on-surface text-surface rounded-2xl shadow-xl mb-1">
+            <span className="text-2xl font-black italic">K</span>
           </div>
-          <h1 className="text-5xl font-black tracking-tighter text-on-surface leading-tight uppercase">Киндер</h1>
-          <p className="text-on-surface-variant text-[10px] font-black uppercase tracking-[0.3em] opacity-40">
-            Сообщество ценителей <br/> кино и литературы
+          <h1 className="text-3xl md:text-4xl font-black tracking-tight text-on-surface leading-tight uppercase">Киндер</h1>
+          <p className="text-on-surface-variant text-[9px] font-black uppercase tracking-[0.4em] opacity-40">
+            Сообщество ценителей кино и литературы
           </p>
         </div>
 
@@ -173,15 +173,17 @@ export default function LoginPage() {
             </button>
           </form>
 
-          <p className="text-center text-[10px] font-black uppercase tracking-widest text-on-surface-variant opacity-60">
-            {mode === 'login' ? 'Нет аккаунта? ' : 'Уже есть аккаунт? '}
-            <button
-              onClick={() => { setMode(mode === 'login' ? 'register' : 'login'); setError(''); setInfo(''); }}
-              className="text-on-surface font-black hover:underline ml-1"
-            >
-              {mode === 'login' ? 'Зарегистрироваться' : 'Войти'}
-            </button>
-          </p>
+          <div className="text-center pt-2">
+            <p className="text-sm font-medium text-on-surface-variant">
+              {mode === 'login' ? 'Нет аккаунта?' : 'Уже есть аккаунт?'}
+              <button
+                onClick={() => { setMode(mode === 'login' ? 'register' : 'login'); setError(''); setInfo(''); }}
+                className="ml-2 text-on-surface font-black hover:underline decoration-2 underline-offset-4"
+              >
+                {mode === 'login' ? 'Зарегистрироваться' : 'Войти в систему'}
+              </button>
+            </p>
+          </div>
         </div>
       </div>
     </div>
