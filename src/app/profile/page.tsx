@@ -142,6 +142,7 @@ export default function Profile() {
             {[
               { id: 'pubs', label: 'Мои публикации', path: '/my-publications', icon: 'library_books', count: counts.publications },
               { id: 'reviews', label: 'Мои отзывы', path: '/my-reviews', icon: 'rate_review', count: counts.reviews },
+              { id: 'wrapped', label: 'Год в Kinder', path: '/wrapped', icon: 'insights', count: 0 },
               { id: 'feed', label: 'Моя лента', path: '/feed', icon: 'dynamic_feed', count: 0 },
               { id: 'playlists', label: 'Мои подборки', path: '/playlists', icon: 'playlist_play', count: 0 },
               { id: 'twin', label: 'Двойник по вкусу', path: '/taste-twin', icon: 'diversity_2', count: 0 },
