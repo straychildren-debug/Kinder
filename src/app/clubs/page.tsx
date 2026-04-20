@@ -349,21 +349,18 @@ export default function Clubs() {
               </div>
             </div>
 
-              <div className="space-y-8">
-                {/* Main spotlight - Electric Mesh Concept */}
+              <div className="space-y-6">
+                {/* Main spotlight - Premium Light Horizontal Concept */}
                 {heroClubs[0] && (
                   <div
                     onClick={() => handleJoin(heroClubs[0].id)}
-                    className="relative group cursor-pointer animate-in fade-in zoom-in-95 duration-1000"
+                    className="relative group cursor-pointer animate-in fade-in slide-in-from-bottom-4 duration-1000"
                   >
-                    {/* Electric Mesh Glow Effect */}
-                    <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 via-pink-600 to-amber-500 rounded-[36px] blur-xl opacity-20 group-hover:opacity-40 transition duration-1000 group-hover:duration-200"></div>
-                    
-                    <div className="relative flex flex-col md:flex-row items-center justify-between gap-6 bg-[#0F0F0F] border border-white/5 rounded-[32px] p-6 md:p-8 shadow-2xl transition-all duration-500 group-hover:bg-[#151515]">
+                    <div className="relative flex items-center justify-between gap-4 bg-white border border-on-surface/5 rounded-[24px] p-4 md:p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-all duration-500 hover:shadow-[0_20px_40px_rgb(0,0,0,0.08)] hover:-translate-y-1">
                       
-                      <div className="flex items-center gap-6 min-w-0 flex-1">
-                        {/* Premium Avatar */}
-                        <div className="relative w-16 h-16 md:w-20 md:h-20 rounded-3xl overflow-hidden border border-white/10 shrink-0 shadow-2xl transition-transform duration-500 group-hover:scale-105">
+                      <div className="flex items-center gap-4 md:gap-6 min-w-0 flex-1">
+                        {/* Compact Avatar */}
+                        <div className="relative w-14 h-14 md:w-20 md:h-20 rounded-xl overflow-hidden border border-on-surface/5 shrink-0 shadow-sm transition-transform duration-500 group-hover:scale-105">
                           {heroClubs[0].imageUrl ? (
                             <Image
                               src={heroClubs[0].imageUrl}
@@ -373,34 +370,34 @@ export default function Clubs() {
                               className="object-cover"
                             />
                           ) : (
-                            <div className="w-full h-full bg-white/5 flex items-center justify-center">
-                              <span className="material-symbols-rounded text-white/20 text-3xl">groups</span>
+                            <div className="w-full h-full bg-surface-container flex items-center justify-center">
+                              <span className="material-symbols-rounded text-on-surface/20 text-3xl">groups</span>
                             </div>
                           )}
                         </div>
 
                         <div className="min-w-0 flex-1">
-                          <div className="flex items-center gap-3 mb-2">
-                            <span className="px-2 py-0.5 bg-white/5 text-white/40 border border-white/10 rounded-md text-[8px] font-black uppercase tracking-[0.2em]">Популярное</span>
-                            <div className="flex items-center gap-1.5 text-white/30">
+                          <div className="flex items-center gap-2 mb-1.5">
+                            <span className="px-2 py-0.5 bg-amber-400/10 text-amber-600 border border-amber-400/20 rounded-md text-[8px] font-black uppercase tracking-widest">Популярное</span>
+                            <div className="flex items-center gap-1 text-on-surface/30">
                               <span className="material-symbols-rounded text-[14px]" style={{ fontVariationSettings: "'FILL' 1" }}>groups</span>
                               <span className="text-[10px] font-black tracking-tight">{heroClubs[0].memberCount}</span>
                             </div>
                           </div>
-                          <h2 className="text-2xl md:text-3xl font-black text-white tracking-tighter leading-none mb-2 line-clamp-2 transition-colors duration-300 group-hover:text-white/90">
+                          <h2 className="text-xl md:text-2xl font-black text-on-surface tracking-tighter leading-tight mb-1 truncate group-hover:text-primary transition-colors">
                             {heroClubs[0].name}
                           </h2>
-                          <p className="text-white/40 text-[11px] font-medium italic tracking-wide line-clamp-1 opacity-60 group-hover:opacity-100 transition-opacity">
+                          <p className="text-on-surface-muted text-[11px] font-medium tracking-wide line-clamp-1 opacity-70 group-hover:opacity-100 transition-opacity">
                             {heroClubs[0].description}
                           </p>
                         </div>
                       </div>
 
-                      {/* Compact Plus Button */}
+                      {/* Premium Join Button */}
                       <div className="shrink-0">
-                        <div className="w-12 h-12 md:w-16 md:h-16 bg-white text-black rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(255,255,255,0.2)] transition-all duration-300 group-hover:scale-110 group-hover:bg-amber-400 group-hover:shadow-[0_0_40px_rgba(251,191,36,0.4)] active:scale-90">
-                          <span className="material-symbols-rounded text-3xl md:text-4xl font-black">add</span>
-                        </div>
+                        <button className="px-6 py-2.5 bg-white text-on-surface border border-on-surface/10 rounded-xl font-black text-[11px] uppercase tracking-widest shadow-lg hover:bg-on-surface hover:text-white hover:border-on-surface transition-all duration-300 active:scale-95 whitespace-nowrap">
+                          Вступить
+                        </button>
                       </div>
                     </div>
                   </div>
