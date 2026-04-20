@@ -444,13 +444,13 @@ export default function Home() {
                 key={f.id}
                 onClick={() => setActiveFilter(f.id as any)}
                 className={`
-                  flex items-center gap-2.5 px-5 py-3 rounded-2xl whitespace-nowrap text-xs font-bold transition-all duration-300 border
+                  flex items-center gap-2 px-4 py-2 rounded-xl whitespace-nowrap text-xs font-bold transition-all duration-300 border
                   ${activeFilter === f.id 
-                    ? 'bg-on-surface text-surface border-on-surface shadow-xl shadow-black/10 scale-[1.02]' 
-                    : 'bg-white text-on-surface/40 border-on-surface/5 hover:border-on-surface/10 hover:text-on-surface/60'}
+                    ? 'bg-on-surface text-surface border-on-surface shadow-lg shadow-black/5 scale-[1.02]' 
+                    : 'bg-surface-container/40 text-on-surface/30 border-transparent hover:border-on-surface/10 hover:text-on-surface/50'}
                 `}
               >
-                <span className="material-symbols-rounded" style={{ fontSize: '18px', fontVariationSettings: activeFilter === f.id ? "'FILL' 1" : "'FILL' 0" }}>{f.icon}</span>
+                <span className="material-symbols-rounded" style={{ fontSize: '16px', fontVariationSettings: activeFilter === f.id ? "'FILL' 1" : "'FILL' 0" }}>{f.icon}</span>
                 {f.label}
               </button>
             ))}
