@@ -15,6 +15,7 @@ import { MotionListItem } from "@/components/Motion";
 import ActivityFeed from "@/components/ActivityFeed";
 import { omnisearch, type OmnisearchResult } from "@/lib/search";
 import { getActiveDuels } from "@/lib/duels";
+import { getPersonalizedRecommendations } from "@/lib/recommendations";
 import type { Duel } from "@/lib/types";
 
 const EMPTY_RESULTS: OmnisearchResult = { content: [], clubs: [], users: [] };
@@ -31,6 +32,7 @@ export default function Home() {
   const [topCommenters, setTopCommenters] = useState<LeaderboardUser[]>([]);
   const [topPublicists, setTopPublicists] = useState<LeaderboardUser[]>([]);
   const [activeDuels, setActiveDuels] = useState<Duel[]>([]);
+  const [recommendations, setRecommendations] = useState<ContentItem[]>([]);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const visibleContent = approvedContent;
@@ -71,6 +73,25 @@ export default function Home() {
       }
     }
     load();
+  }, [user?.id]);
+
+  useEffect(() => {
+    if (!user?.id) {
+      setRecommendations([]);
+      return;
+    }
+    let cancelled = false;
+    (async () => {
+      try {
+        const recs = await getPersonalizedRecommendations(user.id, 12);
+        if (!cancelled) setRecommendations(recs);
+      } catch (err) {
+        console.error('Recommendations load failed:', err);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
   }, [user?.id]);
 
   return (
@@ -273,6 +294,60 @@ export default function Home() {
                   </Link>
                 );
               })}
+            </div>
+          </section>
+        )}
+
+        {/* Personalized Recommendations */}
+        {user && recommendations.length > 0 && (
+          <section className="mb-12">
+            <div className="flex items-end justify-between mb-5 px-2">
+              <div>
+                <span className="text-xs font-medium text-on-surface-muted mb-1.5 block">По вашему вкусу</span>
+                <h2 className="text-2xl font-bold tracking-tight text-on-surface leading-tight">Для вас</h2>
+              </div>
+            </div>
+            <div className="-mx-4 overflow-x-auto scrollbar-none">
+              <div className="flex gap-3 px-4 pb-2 snap-x snap-mandatory">
+                {recommendations.map((item) => (
+                  <button
+                    key={item.id}
+                    onClick={() => setSelectedContent(item)}
+                    className="group shrink-0 w-36 snap-start text-left outline-none"
+                  >
+                    <div className="relative aspect-[2/3] w-full rounded-xl overflow-hidden bg-surface-container border border-on-surface/5">
+                      {item.imageUrl && (
+                        <Image
+                          src={item.imageUrl}
+                          alt={item.title}
+                          fill
+                          sizes="144px"
+                          placeholder="blur"
+                          blurDataURL={defaultBlurDataURL}
+                          className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                        />
+                      )}
+                      <div className="absolute top-2 left-2 px-1.5 py-0.5 rounded-md bg-black/55 backdrop-blur-sm flex items-center gap-1 z-10">
+                        <span className="material-symbols-outlined text-white" style={{ fontSize: '11px' }}>
+                          {item.type === 'movie' ? 'movie' : 'menu_book'}
+                        </span>
+                        <span className="text-[10px] font-semibold text-white leading-none">
+                          {item.type === 'movie' ? 'Кино' : 'Книга'}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="mt-2.5">
+                      <h3 className="text-xs font-semibold leading-snug tracking-tight line-clamp-2 text-on-surface">
+                        {item.title}
+                      </h3>
+                      <p className="text-[11px] font-medium text-on-surface-muted truncate mt-0.5">
+                        {item.author || item.director || ''}
+                        {item.year ? ` · ${item.year}` : ''}
+                      </p>
+                    </div>
+                  </button>
+                ))}
+              </div>
             </div>
           </section>
         )}
