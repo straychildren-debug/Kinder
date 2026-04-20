@@ -84,7 +84,7 @@ export default function ClubLobbyModal({
             
             {/* Club Info in Header */}
             <div className="absolute inset-0 flex flex-col items-center justify-end pb-8 px-8 text-center z-20 pt-16">
-              <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-xl overflow-hidden border-2 border-white/30 shadow-2xl mb-4 bg-white/10 backdrop-blur-sm">
+              <div className="relative w-24 h-24 sm:w-28 sm:h-28 aspect-square rounded-xl overflow-hidden border-2 border-white/30 shadow-2xl mb-4 bg-white/10 backdrop-blur-sm shrink-0">
                 {club.imageUrl ? (
                   <Image src={club.imageUrl} alt={club.name} fill sizes="120px" className="object-cover" unoptimized />
                 ) : (
@@ -94,11 +94,11 @@ export default function ClubLobbyModal({
                 )}
               </div>
               <h2 className="text-2xl sm:text-3xl font-black tracking-tighter leading-tight mb-2 text-on-surface">{club.name}</h2>
-              <div className="flex items-center gap-2">
-                <span className="px-3 py-1 bg-amber-400 text-black rounded-full text-[10px] font-black uppercase tracking-widest shadow-lg">Популярное</span>
+              <div className="flex items-center gap-5">
+                <span className="px-3 py-1 bg-amber-400 text-black rounded-full text-[10px] font-black uppercase tracking-widest shadow-lg shrink-0">Популярное</span>
                 <button 
                   onClick={() => setShowMembersList(true)}
-                  className="text-xs font-bold text-on-surface/60 flex items-center gap-1 hover:text-on-surface transition-colors"
+                  className="text-xs font-bold text-on-surface/60 flex items-center gap-1.5 hover:text-on-surface transition-colors whitespace-nowrap shrink-0"
                 >
                   <span className="material-symbols-rounded text-[14px]">groups</span>
                   {club.memberCount} участников
