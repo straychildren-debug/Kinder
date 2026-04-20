@@ -163,7 +163,8 @@ export default function MyReviewsPage() {
                           <span className="material-symbols-outlined text-xl">
                             {content?.type === 'movie' ? 'movie' : 'menu_book'}
                           </span>
-                      </div>
+                        </div>
+                      )}
                       
                       {/* Rating Badge Overlay */}
                       {review.rating && (
