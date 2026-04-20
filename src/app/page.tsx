@@ -475,7 +475,7 @@ export default function Home() {
                       )}
                     </div>
                     <div className="mt-3">
-                      <h3 className="text-sm font-semibold leading-snug tracking-tight line-clamp-2 text-on-surface">{item.title}</h3>
+                      <h3 className="text-sm font-semibold leading-snug tracking-tight line-clamp-2 text-on-surface h-10">{item.title}</h3>
                       <div className="flex items-center gap-2 mt-1">
                         <p className="text-xs font-medium text-on-surface-muted truncate">
                           {(item.author || item.director || 'Автор')}{item.year ? ` · ${item.year}` : ''}

@@ -97,7 +97,7 @@ export default function WishlistShelf({
 
               {/* Simple Metadata (Library Style) */}
               <div className="mt-2 px-1 flex flex-col">
-                <h4 className="text-[10px] font-bold text-on-surface leading-tight line-clamp-2 tracking-tight mb-0.5 group-hover:text-primary transition-colors min-h-[2.4em]">
+                <h4 className="text-[10px] font-bold text-on-surface leading-tight line-clamp-2 tracking-tight mb-0.5 group-hover:text-primary transition-colors h-7">
                   {c.title}
                 </h4>
                 <p className="text-[9px] font-medium text-on-surface-variant/80 truncate tracking-tight">

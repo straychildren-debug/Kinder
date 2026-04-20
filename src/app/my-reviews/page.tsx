@@ -179,7 +179,7 @@ export default function MyReviewsPage() {
                         {content?.type === 'movie' ? 'Кино' : 'Книга'}
                         {content?.year ? ` · ${content.year}` : ''}
                       </p>
-                      <h3 className="text-sm font-semibold text-on-surface leading-snug line-clamp-2 group-hover:text-primary transition-colors">
+                      <h3 className="text-sm font-semibold text-on-surface leading-snug line-clamp-2 group-hover:text-primary transition-colors h-10">
                         {content?.title || 'Публикация'}
                       </h3>
                       <div className="flex items-center gap-1 mt-1">

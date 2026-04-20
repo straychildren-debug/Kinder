@@ -136,7 +136,7 @@ export default function Movies() {
                     )}
                   </div>
                   <div className="mt-3">
-                    <h3 className="text-sm font-semibold leading-snug tracking-tight line-clamp-2 text-on-surface">{movie.title}</h3>
+                    <h3 className="text-sm font-semibold leading-snug tracking-tight line-clamp-2 text-on-surface h-10">{movie.title}</h3>
                     <div className="flex items-center gap-2 mt-1">
                       <p className="text-xs font-medium text-on-surface-muted truncate">
                         {formatAuthor(movie.director || 'Неизвестный')}{movie.year ? ` · ${movie.year}` : ''}

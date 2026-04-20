@@ -294,7 +294,7 @@ export default function ModerationPage() {
 
                           {/* Metadata Block */}
                           <div className="px-1 flex flex-col flex-1">
-                            <h3 className="text-[11px] font-black text-[#1a1c1e] leading-tight line-clamp-2 uppercase tracking-tight group-hover:text-amber-600 transition-colors mb-1">
+                            <h3 className="text-[11px] font-black text-[#1a1c1e] leading-tight line-clamp-2 uppercase tracking-tight group-hover:text-amber-600 transition-colors mb-1 h-8">
                               {item.title}
                             </h3>
                             <span className="text-[10px] font-bold text-on-surface-variant/40 truncate leading-none mb-3 block">
