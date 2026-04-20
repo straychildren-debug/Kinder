@@ -447,35 +447,41 @@ export default function Home() {
                   onClick={() => setSelectedContent(item)}
                   className="group w-full flex flex-col text-left outline-none"
                 >
-                  <div className="relative aspect-[2/3] w-full rounded-xl overflow-hidden bg-surface-container border border-on-surface/5">
-                    {item.imageUrl && (
-                      <Image
-                        src={item.imageUrl}
-                        alt={item.title}
-                        fill
-                        sizes="(min-width: 1024px) 20rem, 50vw"
-                        placeholder="blur"
-                        blurDataURL={defaultBlurDataURL}
-                        className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
-                      />
-                    )}
-                    <div className="absolute top-2 left-2 px-1.5 py-0.5 rounded-md bg-black/55 backdrop-blur-sm flex items-center gap-1 z-10">
-                      <span className="material-symbols-outlined text-white" style={{ fontSize: '11px' }}>{item.type === 'movie' ? 'movie' : 'menu_book'}</span>
-                      <span className="text-[10px] font-semibold text-white leading-none">{item.type === 'movie' ? 'Кино' : 'Книга'}</span>
+                    <div className="relative aspect-[2/3] w-full rounded-xl overflow-hidden bg-surface-container border border-on-surface/5">
+                      {item.imageUrl && (
+                        <Image
+                          src={item.imageUrl}
+                          alt={item.title}
+                          fill
+                          sizes="(min-width: 1024px) 20rem, 50vw"
+                          placeholder="blur"
+                          blurDataURL={defaultBlurDataURL}
+                          className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                        />
+                      )}
+                      
+                      {/* Type Badge */}
+                      <div className="absolute top-2 left-2 px-1.5 py-0.5 rounded-md bg-black/60 backdrop-blur-md flex items-center gap-1 z-10 border border-white/10">
+                        <span className="material-symbols-rounded text-white" style={{ fontSize: '11px', fontVariationSettings: "'FILL' 1" }}>{item.type === 'movie' ? 'movie' : 'menu_book'}</span>
+                        <span className="text-[10px] font-bold text-white leading-none uppercase tracking-wider">{item.type === 'movie' ? 'Кино' : 'Книга'}</span>
+                      </div>
+
+                      {/* Rating Badge */}
+                      {item.rating && (
+                        <div className="absolute bottom-2 right-2 px-1.5 py-0.5 rounded-lg bg-black/60 backdrop-blur-md flex items-center gap-1 z-10 border border-white/10">
+                          <span className="material-symbols-rounded text-amber-400" style={{ fontSize: '12px', fontVariationSettings: "'FILL' 1" }}>star</span>
+                          <span className="text-[11px] font-black text-white leading-none">{item.rating.toFixed(1)}</span>
+                        </div>
+                      )}
                     </div>
-                  </div>
-                  <div className="mt-3">
-                    <h3 className="text-sm font-semibold leading-snug tracking-tight line-clamp-2 text-on-surface">{item.title}</h3>
-                    <div className="flex items-center justify-between gap-2 mt-1">
-                      <p className="text-xs font-medium text-on-surface-muted truncate">
-                        {(item.author || item.director || 'Автор')}{item.year ? ` · ${item.year}` : ''}
-                      </p>
-                      <div className="flex items-center gap-0.5 shrink-0 text-on-surface-muted">
-                        <span className="material-symbols-outlined" style={{ fontSize: '12px', fontVariationSettings: "'FILL' 1" }}>star</span>
-                        <span className="text-xs font-semibold text-on-surface">{item.rating ? item.rating.toFixed(1) : '—'}</span>
+                    <div className="mt-3">
+                      <h3 className="text-sm font-semibold leading-snug tracking-tight line-clamp-2 text-on-surface">{item.title}</h3>
+                      <div className="flex items-center gap-2 mt-1">
+                        <p className="text-xs font-medium text-on-surface-muted truncate">
+                          {(item.author || item.director || 'Автор')}{item.year ? ` · ${item.year}` : ''}
+                        </p>
                       </div>
                     </div>
-                  </div>
                 </button>
                 </MotionListItem>
               ))}

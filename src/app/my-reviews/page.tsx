@@ -163,6 +163,13 @@ export default function MyReviewsPage() {
                           <span className="material-symbols-outlined text-xl">
                             {content?.type === 'movie' ? 'movie' : 'menu_book'}
                           </span>
+                      </div>
+                      
+                      {/* Rating Badge Overlay */}
+                      {review.rating && (
+                        <div className="absolute bottom-1 right-1 px-1 py-0.5 rounded-md bg-black/60 backdrop-blur-md border border-white/10 flex items-center gap-0.5 z-10">
+                          <span className="material-symbols-rounded text-amber-400" style={{ fontVariationSettings: "'FILL' 1", fontSize: '10px' }}>star</span>
+                          <span className="text-[10px] font-bold text-white">{review.rating}</span>
                         </div>
                       )}
                     </div>
@@ -174,17 +181,8 @@ export default function MyReviewsPage() {
                       <h3 className="text-sm font-semibold text-on-surface leading-snug line-clamp-2 group-hover:text-primary transition-colors">
                         {content?.title || 'Публикация'}
                       </h3>
-                      <div className="flex items-center gap-1 mt-1" aria-label={`Ваша оценка ${review.rating || 0}`}>
-                        {[1, 2, 3, 4, 5].map((star) => (
-                          <span
-                            key={star}
-                            className={`material-symbols-outlined text-[13px] ${star <= (review.rating || 0) ? 'text-amber-500' : 'text-on-surface-variant/20'}`}
-                            style={{ fontVariationSettings: star <= (review.rating || 0) ? "'FILL' 1" : "'FILL' 0" }}
-                          >
-                            star
-                          </span>
-                        ))}
-                        <span className="text-xs font-medium text-on-surface-muted ml-2">
+                      <div className="flex items-center gap-1 mt-1">
+                        <span className="text-xs font-medium text-on-surface-muted">
                           {new Date(review.createdAt).toLocaleDateString('ru-RU')}
                         </span>
                       </div>

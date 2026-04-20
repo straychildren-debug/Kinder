@@ -115,6 +115,16 @@ function StackCard({ item, onSwipe, onInfo, isTop, depth }: StackCardProps) {
             </button>
           )}
 
+          {/* Rating Badge */}
+          {item.rating && (
+            <div 
+              className={`absolute right-4 px-2 py-1 rounded-xl bg-black/60 backdrop-blur-md flex items-center gap-1.5 z-10 border border-white/10 shadow-lg ${isTop ? 'top-[60px]' : 'top-4'}`}
+            >
+              <span className="material-symbols-rounded text-amber-400" style={{ fontSize: '14px', fontVariationSettings: "'FILL' 1" }}>star</span>
+              <span className="text-sm font-black text-white leading-none">{item.rating.toFixed(1)}</span>
+            </div>
+          )}
+
           {/* Swipe labels */}
           {isTop && (
             <>
@@ -142,17 +152,7 @@ function StackCard({ item, onSwipe, onInfo, isTop, depth }: StackCardProps) {
               {formatAuthor(item.author || item.director || 'Автор не указан')}
               {item.year ? ` · ${item.year}` : ''}
             </p>
-            {item.rating ? (
-              <div className="flex items-center gap-1 mt-2 text-white/80">
-                <span
-                  className="material-symbols-outlined text-amber-400 text-[14px]"
-                  style={{ fontVariationSettings: "'FILL' 1" }}
-                >
-                  star
-                </span>
-                <span className="text-xs font-semibold">{item.rating.toFixed(1)}</span>
-              </div>
-            ) : null}
+
           </div>
         </div>
       </div>
