@@ -24,6 +24,7 @@ export default function ClubLobbyModal({
   const [marathon, setMarathon] = useState<ClubMarathon | null>(null);
   const [ownerName, setOwnerName] = useState<string>('...');
   const [loading, setLoading] = useState(true);
+  const [showMembersList, setShowMembersList] = useState(false);
 
   useEffect(() => {
     if (isOpen && club) {
@@ -54,26 +55,34 @@ export default function ClubLobbyModal({
   return (
     <div className="fixed inset-0 z-[150] flex items-center justify-center p-4 sm:p-6 glass-modal-overlay animate-in fade-in duration-300" onClick={onClose}>
       <div 
-        className="glass-modal rounded-[40px] w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col shadow-2xl animate-in zoom-in-95 duration-300"
+        className="glass-modal rounded-[40px] w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col shadow-2xl animate-in zoom-in-95 duration-300 relative"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Header with Glass Gradient */}
-        <div className="relative h-48 sm:h-64 shrink-0 overflow-hidden">
-          {/* Abstract Glass Background */}
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-surface to-surface-container" />
-          <div className="absolute inset-0 backdrop-blur-[100px]" />
+        {/* Header with Cinematic Background */}
+        <div className="relative h-56 sm:h-72 shrink-0 overflow-hidden">
+          {/* Cinematic Background Image */}
+          <div className="absolute inset-0">
+            <Image 
+              src="/images/cinematic_bg.png" 
+              alt="Background" 
+              fill 
+              className="object-cover opacity-60 grayscale-[0.2]" 
+              priority
+            />
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-surface/40 to-surface" />
+          </div>
           
           {/* Close Button */}
           <button 
             onClick={onClose}
-            className="absolute top-6 right-6 z-20 w-10 h-10 rounded-full bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center hover:bg-white/40 transition-all active:scale-90"
+            className="absolute top-6 right-6 z-30 w-10 h-10 rounded-full bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center hover:bg-white/40 transition-all active:scale-90"
           >
             <span className="material-symbols-outlined text-on-surface text-[20px]">close</span>
           </button>
 
           {/* Club Info in Header */}
-          <div className="absolute inset-0 flex flex-col items-center justify-center p-8 text-center z-10">
-            <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-3xl overflow-hidden border-4 border-white/50 shadow-2xl mb-4 bg-white/10 backdrop-blur-sm">
+          <div className="absolute inset-0 flex flex-col items-center justify-end pb-8 px-8 text-center z-20">
+            <div className="relative aspect-[2/3] w-20 sm:w-24 rounded-xl overflow-hidden border-2 border-white/30 shadow-2xl mb-4 bg-white/10 backdrop-blur-sm">
               {club.imageUrl ? (
                 <Image src={club.imageUrl} alt={club.name} fill sizes="100px" className="object-cover" unoptimized />
               ) : (
@@ -82,101 +91,62 @@ export default function ClubLobbyModal({
                 </div>
               )}
             </div>
-            <h2 className="text-2xl sm:text-3xl font-black tracking-tighter leading-tight mb-2">{club.name}</h2>
+            <h2 className="text-2xl sm:text-3xl font-black tracking-tighter leading-tight mb-2 text-on-surface">{club.name}</h2>
             <div className="flex items-center gap-2">
               <span className="px-3 py-1 bg-amber-400 text-black rounded-full text-[10px] font-black uppercase tracking-widest shadow-lg">Популярное</span>
-              <span className="text-xs font-bold text-on-surface/40 flex items-center gap-1">
+              <button 
+                onClick={() => setShowMembersList(true)}
+                className="text-xs font-bold text-on-surface/60 flex items-center gap-1 hover:text-on-surface transition-colors"
+              >
                 <span className="material-symbols-rounded text-[14px]">groups</span>
                 {club.memberCount} участников
-              </span>
+              </button>
             </div>
           </div>
         </div>
 
         {/* Scrollable Content */}
-        <div className="flex-1 overflow-y-auto p-8 sm:p-10 space-y-10 scrollbar-hide">
+        <div className="flex-1 overflow-y-auto p-8 sm:p-10 space-y-8 scrollbar-hide">
           {/* Main Action */}
-          <div className="flex justify-center">
-            {isMember ? (
-              <button 
-                onClick={() => onJoin(club.id)}
-                className="px-12 py-4 bg-on-surface text-surface rounded-2xl font-black text-xs uppercase tracking-[0.2em] shadow-2xl hover:scale-[1.02] active:scale-95 transition-all"
-              >
-                Войти в чат
-              </button>
-            ) : (
-              <button 
-                onClick={() => onJoin(club.id)}
-                className="px-12 py-4 bg-on-surface text-surface rounded-2xl font-black text-xs uppercase tracking-[0.2em] shadow-2xl hover:scale-[1.02] active:scale-95 transition-all"
-              >
-                Вступить в клуб
-              </button>
-            )}
+          <div className="flex justify-center -mt-4">
+            <button 
+              onClick={() => onJoin(club.id)}
+              className="px-12 py-4 bg-on-surface text-surface rounded-2xl font-black text-xs uppercase tracking-[0.2em] shadow-2xl hover:scale-[1.02] active:scale-95 transition-all"
+            >
+              {isMember ? 'Войти в чат' : 'Вступить в клуб'}
+            </button>
           </div>
 
-          {/* Grid of Info */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {/* Info Section */}
+          <div className="space-y-6">
             {/* Description */}
-            <div className="p-6 rounded-[32px] bg-white/40 border border-on-surface/5 backdrop-blur-sm">
+            <div className="p-6 rounded-[32px] bg-surface-container-low/50 border border-on-surface/5">
                <span className="text-[10px] font-black text-on-surface/30 uppercase tracking-[0.2em] block mb-3">О клубе</span>
-               <p className="text-sm font-medium leading-relaxed opacity-70">
+               <p className="text-sm font-medium leading-relaxed opacity-80">
                  {club.description || 'В этом клубе еще нет описания, но здесь точно происходит что-то интересное.'}
                </p>
             </div>
 
-            {/* Stats / Meta */}
-            <div className="space-y-4">
-              <div className="p-5 rounded-[24px] bg-white/40 border border-on-surface/5 flex items-center gap-4">
-                <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
-                  <span className="material-symbols-rounded text-[20px]">person_edit</span>
+            {/* Compact Meta Row */}
+            <div className="grid grid-cols-2 gap-4">
+              <div className="p-4 rounded-[24px] bg-surface-container-low/50 border border-on-surface/5 flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+                  <span className="material-symbols-rounded text-[18px]">person_edit</span>
                 </div>
-                <div>
-                  <span className="text-[9px] font-black text-on-surface/30 uppercase tracking-widest block">Создатель</span>
-                  <span className="text-sm font-bold">{ownerName}</span>
-                </div>
-              </div>
-              <div className="p-5 rounded-[24px] bg-white/40 border border-on-surface/5 flex items-center gap-4">
-                <div className="w-10 h-10 rounded-xl bg-amber-400/10 flex items-center justify-center text-amber-600">
-                  <span className="material-symbols-rounded text-[20px]">calendar_today</span>
-                </div>
-                <div>
-                  <span className="text-[9px] font-black text-on-surface/30 uppercase tracking-widest block">Основан</span>
-                  <span className="text-sm font-bold">{new Date(club.createdAt).toLocaleDateString('ru-RU')}</span>
+                <div className="min-w-0">
+                  <span className="text-[8px] font-black text-on-surface/30 uppercase tracking-widest block">Создатель</span>
+                  <span className="text-xs font-bold truncate block">{ownerName}</span>
                 </div>
               </div>
-            </div>
-          </div>
-
-          {/* Members List */}
-          <div>
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-[10px] font-black text-on-surface/30 uppercase tracking-[0.3em]">Участники</h3>
-              <span className="text-[10px] font-bold opacity-30">{members.length} в сети</span>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {members.slice(0, 12).map((m) => (
-                <div key={m.id} className="relative group">
-                  {m.userAvatar ? (
-                    <Image 
-                      src={m.userAvatar} 
-                      alt={m.userName || ''} 
-                      width={36} 
-                      height={36} 
-                      unoptimized 
-                      className="w-9 h-9 rounded-xl object-cover border border-on-surface/5 grayscale group-hover:grayscale-0 transition-all"
-                    />
-                  ) : (
-                    <div className="w-9 h-9 rounded-xl bg-surface-container flex items-center justify-center text-[10px] font-bold">
-                      {(m.userName || '?')[0]}
-                    </div>
-                  )}
+              <div className="p-4 rounded-[24px] bg-surface-container-low/50 border border-on-surface/5 flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-amber-400/10 flex items-center justify-center text-amber-600">
+                  <span className="material-symbols-rounded text-[18px]">calendar_today</span>
                 </div>
-              ))}
-              {members.length > 12 && (
-                <div className="w-9 h-9 rounded-xl bg-surface-container flex items-center justify-center text-[10px] font-black opacity-30 border border-dashed border-on-surface/20">
-                  +{members.length - 12}
+                <div className="min-w-0">
+                  <span className="text-[8px] font-black text-on-surface/30 uppercase tracking-widest block">Основан</span>
+                  <span className="text-xs font-bold truncate block">{new Date(club.createdAt).toLocaleDateString('ru-RU')}</span>
                 </div>
-              )}
+              </div>
             </div>
           </div>
 
@@ -189,8 +159,7 @@ export default function ClubLobbyModal({
               <div className="relative z-10">
                 <span className="text-[9px] font-black uppercase tracking-[0.3em] opacity-60 block mb-2">Текущий марафон</span>
                 <h4 className="text-xl font-black tracking-tight mb-1">{marathon.title}</h4>
-                <p className="text-xs opacity-70 mb-4 font-medium">Присоединяйтесь к общему обсуждению!</p>
-                <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-surface/20 rounded-full text-[10px] font-bold">
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-surface/20 rounded-full text-[10px] font-bold mt-2">
                   <span className="material-symbols-rounded text-[14px]">timer</span>
                   Осталось {Math.max(0, Math.ceil((new Date(marathon.endsAt).getTime() - Date.now()) / (1000 * 60 * 60 * 24)))} дней
                 </div>
@@ -198,7 +167,7 @@ export default function ClubLobbyModal({
             </div>
           )}
 
-          {/* Rules / Description footer */}
+          {/* Rules footer */}
           <div className="pt-6 border-t border-on-surface/5">
              <span className="text-[10px] font-black text-on-surface/20 uppercase tracking-[0.2em] block mb-4">Правила сообщества</span>
              <ul className="space-y-2 text-[11px] font-bold text-on-surface/40 leading-relaxed list-disc pl-4">
@@ -209,6 +178,40 @@ export default function ClubLobbyModal({
              </ul>
           </div>
         </div>
+
+        {/* Members Overlay */}
+        {showMembersList && (
+          <div className="absolute inset-0 z-40 bg-surface/80 backdrop-blur-xl animate-in fade-in slide-in-from-bottom-10 duration-300 p-8 flex flex-col">
+            <div className="flex items-center justify-between mb-8">
+              <h3 className="text-xl font-black tracking-tighter uppercase tracking-[0.2em]">Участники</h3>
+              <button 
+                onClick={() => setShowMembersList(false)}
+                className="w-8 h-8 rounded-full bg-on-surface/5 flex items-center justify-center hover:bg-on-surface/10"
+              >
+                <span className="material-symbols-outlined text-[20px]">close</span>
+              </button>
+            </div>
+            <div className="flex-1 overflow-y-auto grid grid-cols-2 gap-4 pb-8">
+               {members.map((m) => (
+                 <div key={m.id} className="flex items-center gap-3 p-3 rounded-2xl bg-white/50 border border-on-surface/5 shadow-sm">
+                   <div className="relative w-10 h-10 rounded-xl overflow-hidden shrink-0 bg-surface-container">
+                     {m.userAvatar ? (
+                       <Image src={m.userAvatar} alt={m.userName || ''} fill sizes="40px" className="object-cover" unoptimized />
+                     ) : (
+                       <div className="w-full h-full flex items-center justify-center text-xs font-bold opacity-30">
+                         {(m.userName || '?')[0]}
+                       </div>
+                     )}
+                   </div>
+                   <div className="min-w-0">
+                     <span className="text-[11px] font-bold truncate block">{m.userName}</span>
+                     <span className="text-[8px] font-black text-on-surface/30 uppercase tracking-widest">{m.role === 'owner' ? 'Основатель' : 'Участник'}</span>
+                   </div>
+                 </div>
+               ))}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
