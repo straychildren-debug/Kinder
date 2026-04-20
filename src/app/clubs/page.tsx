@@ -351,69 +351,63 @@ export default function Clubs() {
 
             <div className="space-y-8">
               {/* Main spotlight - Glassmorphism Design v2 */}
+              {/* Main spotlight - Elegant Bottom Bar Concept */}
               {heroClubs[0] && (
                 <div
                   onClick={() => handleJoin(heroClubs[0].id)}
-                  className="relative aspect-[16/9] md:aspect-[21/9] w-full rounded-3xl overflow-hidden group cursor-pointer border border-on-surface/5 shadow-2xl animate-in fade-in duration-1000"
+                  className="relative aspect-[16/9] md:aspect-[21/9] w-full rounded-[32px] overflow-hidden group cursor-pointer border border-on-surface/5 shadow-2xl animate-in fade-in zoom-in-95 duration-1000"
                 >
-                  {/* Background Image (Blurred) */}
-                  {heroClubs[0].imageUrl ? (
-                    <div className="absolute inset-0 scale-110 blur-xl opacity-60">
-                      <Image
-                        src={heroClubs[0].imageUrl}
-                        alt=""
-                        fill
-                        sizes="100vw"
-                        className="object-cover"
-                      />
-                    </div>
-                  ) : (
-                    <div className="absolute inset-0 bg-surface-container" />
-                  )}
+                  {/* Premium Generated Background */}
+                  <div className="absolute inset-0 bg-surface-container">
+                    <Image
+                      src="/images/premium_club_bg.png"
+                      alt=""
+                      fill
+                      sizes="100vw"
+                      className="object-cover transition-transform duration-10000 group-hover:scale-110"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                  </div>
 
-                  {/* Deep Gradient Overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent z-10" />
-
-                  {/* Glass Content Overlay (Centered/Inset) */}
-                  <div className="absolute inset-0 flex items-center justify-center p-4 md:p-12 z-20">
-                    <div className="relative w-full max-w-2xl bg-black/40 backdrop-blur-xl border border-white/10 p-6 md:p-10 rounded-[32px] shadow-2xl transition-all duration-500 group-hover:scale-[1.01] group-hover:bg-black/50">
+                  {/* Bottom Glass Bar */}
+                  <div className="absolute bottom-0 left-0 right-0 p-4 md:p-6 z-20">
+                    <div className="bg-black/30 backdrop-blur-2xl border border-white/10 rounded-2xl p-4 md:p-5 flex items-center justify-between gap-4 transition-all duration-500 group-hover:bg-black/40 group-hover:border-white/20">
                       
-                      {/* Miniature Clear Avatar (Top Right of glass) */}
-                      {heroClubs[0].imageUrl && (
-                        <div className="absolute top-6 right-6 w-12 h-12 md:w-20 md:h-20 rounded-2xl overflow-hidden border-2 border-white/20 shadow-2xl hidden sm:block">
-                          <Image
-                            src={heroClubs[0].imageUrl}
-                            alt={heroClubs[0].name}
-                            fill
-                            sizes="80px"
-                            className="object-cover"
-                          />
+                      <div className="flex items-center gap-4 min-w-0">
+                        {/* Club Avatar */}
+                        <div className="relative w-12 h-12 md:w-14 md:h-14 rounded-xl overflow-hidden border border-white/20 shrink-0 shadow-lg">
+                          {heroClubs[0].imageUrl ? (
+                            <Image
+                              src={heroClubs[0].imageUrl}
+                              alt={heroClubs[0].name}
+                              fill
+                              sizes="60px"
+                              className="object-cover"
+                            />
+                          ) : (
+                            <div className="w-full h-full bg-white/5 flex items-center justify-center">
+                              <span className="material-symbols-rounded text-white/20">groups</span>
+                            </div>
+                          )}
                         </div>
-                      )}
 
-                      <div className="flex flex-col h-full">
-                        <div className="flex items-center gap-3 mb-6">
-                          <span className="px-3 py-1 bg-amber-500 text-amber-950 rounded-lg text-[10px] md:text-xs font-black uppercase tracking-wider shadow-lg shadow-amber-500/20">Популярное</span>
-                          <div className="flex items-center gap-1.5 text-white/90">
-                            <span className="material-symbols-rounded text-white text-[16px] md:text-[20px]" style={{ fontVariationSettings: "'FILL' 1" }}>groups</span>
-                            <span className="text-xs md:text-sm font-bold leading-none">{heroClubs[0].memberCount}</span>
+                        <div className="min-w-0">
+                          <div className="flex items-center gap-2 mb-1">
+                            <span className="px-2 py-0.5 bg-amber-500/20 text-amber-400 border border-amber-500/30 rounded-md text-[9px] font-black uppercase tracking-wider">Популярное</span>
+                            <div className="flex items-center gap-1 text-white/60">
+                              <span className="material-symbols-rounded text-[14px]" style={{ fontVariationSettings: "'FILL' 1" }}>groups</span>
+                              <span className="text-[10px] font-bold">{heroClubs[0].memberCount}</span>
+                            </div>
                           </div>
-                        </div>
-
-                        <h2 className="text-2xl md:text-4xl font-black text-white mb-4 tracking-tight leading-tight uppercase max-w-[80%]">
-                          {heroClubs[0].name}
-                        </h2>
-
-                        <p className="text-white/70 text-sm md:text-base font-medium leading-relaxed mb-8 line-clamp-2 md:line-clamp-3 max-w-[85%]">
-                          {heroClubs[0].description}
-                        </p>
-
-                        <div className="mt-auto">
-                          <button className="w-full md:w-auto px-10 py-4 bg-white text-black rounded-2xl font-black text-sm hover:bg-amber-400 transition-all duration-300 shadow-xl active:scale-95">
-                            Вступить в клуб
-                          </button>
+                          <h2 className="text-lg md:text-xl font-bold text-white tracking-tight leading-tight truncate">
+                            {heroClubs[0].name}
+                          </h2>
                         </div>
                       </div>
+
+                      <button className="shrink-0 px-6 py-2.5 bg-white text-black rounded-xl font-black text-xs hover:bg-amber-400 transition-all duration-300 shadow-xl active:scale-95 whitespace-nowrap">
+                        Вступить
+                      </button>
                     </div>
                   </div>
                 </div>
