@@ -12,6 +12,7 @@ import { ClubSkeletonList } from '@/components/Skeleton';
 import { MotionListItem } from '@/components/Motion';
 import Image from 'next/image';
 import { defaultBlurDataURL } from '@/lib/image-blur';
+import ClubLobbyModal from '@/components/ClubLobbyModal';
 
 const CATEGORY_LABELS: Record<string, string> = {
   'кино': 'КИНО',
@@ -37,6 +38,7 @@ export default function Clubs() {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
   const [approvedCount, setApprovedCount] = useState<number | null>(null);
+  const [selectedClubForLobby, setSelectedClubForLobby] = useState<Club | null>(null);
   const tooltipTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
@@ -99,6 +101,11 @@ export default function Clubs() {
   const handleJoin = async (clubId: string) => {
     if (!user) {
       router.push('/login');
+      return;
+    }
+    const club = clubs.find(c => c.id === clubId);
+    if (club?.userRole) {
+      router.push(`/clubs/${clubId}`);
       return;
     }
     try {
@@ -265,7 +272,7 @@ export default function Clubs() {
                 {filteredClubs.map((club, index) => (
                   <MotionListItem key={club.id} index={index}>
                     <div
-                      onClick={() => handleJoin(club.id)}
+                      onClick={() => setSelectedClubForLobby(club)}
                       className="bg-surface rounded-2xl p-4 flex gap-4 hover:bg-surface-container-low transition-all duration-300 border border-on-surface/5 cursor-pointer group h-auto relative"
                     >
                       {/* Thumbnail with deep shadow */}
@@ -353,7 +360,7 @@ export default function Clubs() {
                 {/* Main spotlight - Premium Light Horizontal Concept */}
                 {heroClubs[0] && (
                   <div
-                    onClick={() => handleJoin(heroClubs[0].id)}
+                    onClick={() => setSelectedClubForLobby(heroClubs[0])}
                     className="relative group cursor-pointer animate-in fade-in slide-in-from-bottom-4 duration-1000"
                   >
                     <div className="relative flex items-center justify-between gap-4 bg-white border border-on-surface/5 rounded-[24px] p-4 md:p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-all duration-500 hover:shadow-[0_20px_40px_rgb(0,0,0,0.08)] hover:-translate-y-1">
@@ -393,11 +400,11 @@ export default function Clubs() {
                         </div>
                       </div>
 
-                      {/* Premium Join Button */}
+                      {/* Premium Arrow Button */}
                       <div className="shrink-0">
-                        <button className="px-6 py-2.5 bg-white text-on-surface border border-on-surface/10 rounded-xl font-black text-[11px] uppercase tracking-widest shadow-lg hover:bg-on-surface hover:text-white hover:border-on-surface transition-all duration-300 active:scale-95 whitespace-nowrap">
-                          Вступить
-                        </button>
+                        <div className="w-12 h-12 rounded-full bg-white text-on-surface border border-on-surface/10 shadow-lg flex items-center justify-center group-hover:bg-on-surface group-hover:text-white transition-all duration-300 active:scale-90">
+                           <span className="material-symbols-rounded text-2xl">arrow_forward</span>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -430,6 +437,17 @@ export default function Clubs() {
             router.push(`/clubs/${club.id}`);
           }}
           userId={user!.id}
+        />
+      )}
+
+      {/* Club Lobby Modal */}
+      {selectedClubForLobby && (
+        <ClubLobbyModal
+          isOpen={!!selectedClubForLobby}
+          onClose={() => setSelectedClubForLobby(null)}
+          club={selectedClubForLobby}
+          onJoin={handleJoin}
+          isMember={!!selectedClubForLobby.userRole}
         />
       )}
     </>
