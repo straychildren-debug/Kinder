@@ -112,7 +112,8 @@ export default function Library() {
 
                     {/* Year Badge */}
                     {book.year && (
-                      <div className="absolute top-2 right-2 px-1.5 py-0.5 rounded-md bg-black/60 backdrop-blur-md z-10 border border-white/10">
+                      <div className="absolute top-2 right-2 px-1.5 py-0.5 rounded-md bg-black/60 backdrop-blur-md flex items-center gap-1 z-10 border border-white/10">
+                        <span className="material-symbols-rounded text-white" style={{ fontSize: '11px', fontVariationSettings: "'FILL' 1" }}>event</span>
                         <span className="text-[10px] font-bold text-white leading-none">{book.year}</span>
                       </div>
                     )}

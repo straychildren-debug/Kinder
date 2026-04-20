@@ -70,8 +70,9 @@ export default function WishlistShelf({
               <div className="relative aspect-[2/3] rounded-[8px] overflow-hidden bg-surface-container-low/50 border border-on-surface/[0.03]">
                 {/* Year Badge */}
                 {c.year && (
-                  <div className="absolute top-1 right-1 px-1.5 py-0.5 rounded-md bg-black/60 backdrop-blur-md border border-white/10 z-10">
-                    <span className="text-[9px] font-bold text-white leading-none">{c.year}</span>
+                  <div className="absolute top-1 right-1 px-1.5 py-0.5 rounded-md bg-black/60 backdrop-blur-md flex items-center gap-1 z-10 border border-white/10">
+                    <span className="material-symbols-rounded text-white" style={{ fontSize: '11px', fontVariationSettings: "'FILL' 1" }}>event</span>
+                    <span className="text-[10px] font-bold text-white leading-none">{c.year}</span>
                   </div>
                 )}
 

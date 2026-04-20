@@ -168,7 +168,8 @@ export default function MyReviewsPage() {
 
                       {/* Year Badge Overlay */}
                       {content?.year && (
-                        <div className="absolute top-1 right-1 px-1 py-0.5 rounded-md bg-black/60 backdrop-blur-md border border-white/10 z-10 animate-in fade-in zoom-in duration-500">
+                        <div className="absolute top-1 right-1 px-1 py-0.5 rounded-md bg-black/60 backdrop-blur-md border border-white/10 flex items-center gap-0.5 z-10 animate-in fade-in zoom-in duration-500">
+                          <span className="material-symbols-rounded text-white" style={{ fontSize: '9px', fontVariationSettings: "'FILL' 1" }}>event</span>
                           <span className="text-[9px] font-bold text-white leading-none">{content.year}</span>
                         </div>
                       )}
