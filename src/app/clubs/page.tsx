@@ -350,56 +350,70 @@ export default function Clubs() {
             </div>
 
             <div className="space-y-8">
-              {/* Main spotlight - Glassmorphism Design */}
+              {/* Main spotlight - Glassmorphism Design v2 */}
               {heroClubs[0] && (
                 <div
                   onClick={() => handleJoin(heroClubs[0].id)}
-                  className="relative aspect-[16/9] md:aspect-[21/9] w-full rounded-2xl overflow-hidden group cursor-pointer border border-on-surface/5 shadow-xl animate-in fade-in duration-700"
+                  className="relative aspect-[16/9] md:aspect-[21/9] w-full rounded-3xl overflow-hidden group cursor-pointer border border-on-surface/5 shadow-2xl animate-in fade-in duration-1000"
                 >
-                  {/* Background Image */}
+                  {/* Background Image (Blurred) */}
                   {heroClubs[0].imageUrl ? (
-                    <Image
-                      src={heroClubs[0].imageUrl}
-                      alt={heroClubs[0].name}
-                      fill
-                      sizes="100vw"
-                      placeholder="blur"
-                      blurDataURL={defaultBlurDataURL}
-                      className="object-cover group-hover:scale-[1.03] transition-transform duration-[3000ms] ease-out"
-                    />
-                  ) : (
-                    <div className="w-full h-full bg-surface-container flex items-center justify-center">
-                      <span className="material-symbols-outlined text-6xl text-on-surface/5">
-                        {CATEGORY_ICONS[heroClubs[0].category] || 'groups'}
-                      </span>
+                    <div className="absolute inset-0 scale-110 blur-xl opacity-60">
+                      <Image
+                        src={heroClubs[0].imageUrl}
+                        alt=""
+                        fill
+                        sizes="100vw"
+                        className="object-cover"
+                      />
                     </div>
+                  ) : (
+                    <div className="absolute inset-0 bg-surface-container" />
                   )}
 
-                  {/* Gradient Overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-10" />
+                  {/* Deep Gradient Overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent z-10" />
 
-                  {/* Glass Content Overlay */}
-                  <div className="absolute bottom-4 left-4 right-4 md:bottom-8 md:left-8 md:right-auto z-20">
-                    <div className="bg-black/40 backdrop-blur-md border border-white/10 p-5 md:p-6 rounded-2xl md:max-w-md shadow-2xl transition-transform duration-500 group-hover:-translate-y-1">
-                      <div className="flex items-center gap-2.5 mb-3">
-                        <span className="px-2 py-0.5 bg-amber-500 text-amber-950 rounded-md text-[10px] font-black uppercase tracking-wider">Популярное</span>
-                        <div className="flex items-center gap-1 text-white/80">
-                          <span className="material-symbols-rounded text-white" style={{ fontSize: '14px', fontVariationSettings: "'FILL' 1" }}>groups</span>
-                          <span className="text-xs font-bold leading-none">{heroClubs[0].memberCount}</span>
+                  {/* Glass Content Overlay (Centered/Inset) */}
+                  <div className="absolute inset-0 flex items-center justify-center p-4 md:p-12 z-20">
+                    <div className="relative w-full max-w-2xl bg-black/40 backdrop-blur-xl border border-white/10 p-6 md:p-10 rounded-[32px] shadow-2xl transition-all duration-500 group-hover:scale-[1.01] group-hover:bg-black/50">
+                      
+                      {/* Miniature Clear Avatar (Top Right of glass) */}
+                      {heroClubs[0].imageUrl && (
+                        <div className="absolute top-6 right-6 w-12 h-12 md:w-20 md:h-20 rounded-2xl overflow-hidden border-2 border-white/20 shadow-2xl hidden sm:block">
+                          <Image
+                            src={heroClubs[0].imageUrl}
+                            alt={heroClubs[0].name}
+                            fill
+                            sizes="80px"
+                            className="object-cover"
+                          />
+                        </div>
+                      )}
+
+                      <div className="flex flex-col h-full">
+                        <div className="flex items-center gap-3 mb-6">
+                          <span className="px-3 py-1 bg-amber-500 text-amber-950 rounded-lg text-[10px] md:text-xs font-black uppercase tracking-wider shadow-lg shadow-amber-500/20">Популярное</span>
+                          <div className="flex items-center gap-1.5 text-white/90">
+                            <span className="material-symbols-rounded text-white text-[16px] md:text-[20px]" style={{ fontVariationSettings: "'FILL' 1" }}>groups</span>
+                            <span className="text-xs md:text-sm font-bold leading-none">{heroClubs[0].memberCount}</span>
+                          </div>
+                        </div>
+
+                        <h2 className="text-2xl md:text-4xl font-black text-white mb-4 tracking-tight leading-tight uppercase max-w-[80%]">
+                          {heroClubs[0].name}
+                        </h2>
+
+                        <p className="text-white/70 text-sm md:text-base font-medium leading-relaxed mb-8 line-clamp-2 md:line-clamp-3 max-w-[85%]">
+                          {heroClubs[0].description}
+                        </p>
+
+                        <div className="mt-auto">
+                          <button className="w-full md:w-auto px-10 py-4 bg-white text-black rounded-2xl font-black text-sm hover:bg-amber-400 transition-all duration-300 shadow-xl active:scale-95">
+                            Вступить в клуб
+                          </button>
                         </div>
                       </div>
-
-                      <h2 className="text-xl md:text-2xl font-black text-white mb-2 tracking-tight leading-tight uppercase">
-                        {heroClubs[0].name}
-                      </h2>
-
-                      <p className="text-white/70 text-xs md:text-sm font-medium leading-relaxed mb-5 line-clamp-2 md:line-clamp-3">
-                        {heroClubs[0].description}
-                      </p>
-
-                      <button className="w-full md:w-auto px-6 py-2.5 bg-white text-black rounded-xl font-bold text-xs hover:bg-white/90 active:scale-95 transition-all leading-none shadow-lg">
-                        Вступить в клуб
-                      </button>
                     </div>
                   </div>
                 </div>
