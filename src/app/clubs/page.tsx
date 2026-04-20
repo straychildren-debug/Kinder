@@ -350,57 +350,57 @@ export default function Clubs() {
             </div>
 
             <div className="space-y-8">
-              {/* Main spotlight - Split Design */}
+              {/* Main spotlight - Glassmorphism Design */}
               {heroClubs[0] && (
                 <div
                   onClick={() => handleJoin(heroClubs[0].id)}
-                  className="bg-surface rounded-2xl p-6 md:p-10 flex flex-col md:flex-row items-center gap-10 group transition-all duration-500 hover:bg-surface-container-low border border-on-surface/5 cursor-pointer relative overflow-hidden"
+                  className="relative aspect-[16/9] md:aspect-[21/9] w-full rounded-2xl overflow-hidden group cursor-pointer border border-on-surface/5 shadow-xl animate-in fade-in duration-700"
                 >
-                  {/* Subtle background accent */}
-                  <div className="absolute top-0 right-0 w-96 h-96 bg-on-surface/[0.01] rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
-
-                  {/* Featured Image Section */}
-                  <div className="w-full md:w-[240px] aspect-[2/3] relative rounded-xl overflow-hidden shadow-md flex-shrink-0 z-10">
-                    {heroClubs[0].imageUrl ? (
-                      <Image
-                        src={heroClubs[0].imageUrl}
-                        alt={heroClubs[0].name}
-                        fill
-                        sizes="(min-width: 768px) 280px, 100vw"
-                        placeholder="blur"
-                        blurDataURL={defaultBlurDataURL}
-                        className="object-cover group-hover:scale-105 transition-transform duration-[2000ms] ease-out"
-                      />
-                    ) : (
-                      <div className="w-full h-full bg-surface-container flex items-center justify-center">
-                        <span className="material-symbols-outlined text-6xl text-on-surface/5">
-                          {CATEGORY_ICONS[heroClubs[0].category] || 'groups'}
-                        </span>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Editorial Content Section */}
-                  <div className="flex-1 z-10">
-                    <div className="flex items-center gap-3 mb-5">
-                      <span className="px-2.5 py-1 bg-on-surface text-surface rounded-md text-[11px] font-semibold leading-none">Популярное</span>
-                      <div className="flex items-center gap-1.5 text-on-surface-muted leading-none">
-                        <span className="material-symbols-outlined text-[16px]">groups</span>
-                        <span className="text-xs font-medium">{heroClubs[0].memberCount} участников</span>
-                      </div>
+                  {/* Background Image */}
+                  {heroClubs[0].imageUrl ? (
+                    <Image
+                      src={heroClubs[0].imageUrl}
+                      alt={heroClubs[0].name}
+                      fill
+                      sizes="100vw"
+                      placeholder="blur"
+                      blurDataURL={defaultBlurDataURL}
+                      className="object-cover group-hover:scale-[1.03] transition-transform duration-[3000ms] ease-out"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-surface-container flex items-center justify-center">
+                      <span className="material-symbols-outlined text-6xl text-on-surface/5">
+                        {CATEGORY_ICONS[heroClubs[0].category] || 'groups'}
+                      </span>
                     </div>
+                  )}
 
-                    <h2 className="text-3xl md:text-4xl font-bold text-on-surface mb-4 tracking-tight leading-tight">
-                      {heroClubs[0].name}
-                    </h2>
+                  {/* Gradient Overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-10" />
 
-                    <p className="text-on-surface-muted text-sm md:text-base max-w-xl font-medium leading-relaxed mb-8 line-clamp-3">
-                      {heroClubs[0].description}
-                    </p>
+                  {/* Glass Content Overlay */}
+                  <div className="absolute bottom-4 left-4 right-4 md:bottom-8 md:left-8 md:right-auto z-20">
+                    <div className="bg-black/40 backdrop-blur-md border border-white/10 p-5 md:p-6 rounded-2xl md:max-w-md shadow-2xl transition-transform duration-500 group-hover:-translate-y-1">
+                      <div className="flex items-center gap-2.5 mb-3">
+                        <span className="px-2 py-0.5 bg-amber-500 text-amber-950 rounded-md text-[10px] font-black uppercase tracking-wider">Популярное</span>
+                        <div className="flex items-center gap-1 text-white/80">
+                          <span className="material-symbols-rounded text-white" style={{ fontSize: '14px', fontVariationSettings: "'FILL' 1" }}>groups</span>
+                          <span className="text-xs font-bold leading-none">{heroClubs[0].memberCount}</span>
+                        </div>
+                      </div>
 
-                    <button className="bg-on-surface text-surface px-6 py-3 rounded-xl font-semibold text-sm active:scale-95 transition-all leading-none">
-                      Вступить в клуб
-                    </button>
+                      <h2 className="text-xl md:text-2xl font-black text-white mb-2 tracking-tight leading-tight uppercase">
+                        {heroClubs[0].name}
+                      </h2>
+
+                      <p className="text-white/70 text-xs md:text-sm font-medium leading-relaxed mb-5 line-clamp-2 md:line-clamp-3">
+                        {heroClubs[0].description}
+                      </p>
+
+                      <button className="w-full md:w-auto px-6 py-2.5 bg-white text-black rounded-xl font-bold text-xs hover:bg-white/90 active:scale-95 transition-all leading-none shadow-lg">
+                        Вступить в клуб
+                      </button>
+                    </div>
                   </div>
                 </div>
               )}
