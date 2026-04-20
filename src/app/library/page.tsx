@@ -105,21 +105,25 @@ export default function Library() {
                     ) : (
                       <div className="w-full h-full flex items-center justify-center text-xs font-medium text-on-surface-muted">Нет обложки</div>
                     )}
-                    <div className="absolute top-2 left-2 px-1.5 py-0.5 rounded-md bg-black/55 backdrop-blur-sm flex items-center gap-1 z-10">
-                      <span className="material-symbols-outlined text-white" style={{ fontSize: '11px' }}>menu_book</span>
-                      <span className="text-[10px] font-semibold text-white leading-none">Книга</span>
+                    <div className="absolute top-2 left-2 px-1.5 py-0.5 rounded-md bg-black/60 backdrop-blur-md flex items-center gap-1 z-10 border border-white/10">
+                      <span className="material-symbols-rounded text-white" style={{ fontSize: '11px', fontVariationSettings: "'FILL' 1" }}>menu_book</span>
+                      <span className="text-[10px] font-bold text-white leading-none uppercase tracking-wider">Книга</span>
                     </div>
+
+                    {/* Rating Badge */}
+                    {book.rating && (
+                      <div className="absolute bottom-2 right-2 px-1.5 py-0.5 rounded-lg bg-black/60 backdrop-blur-md flex items-center gap-1 z-10 border border-white/10">
+                        <span className="material-symbols-rounded text-amber-400" style={{ fontSize: '12px', fontVariationSettings: "'FILL' 1" }}>star</span>
+                        <span className="text-[11px] font-black text-white leading-none">{book.rating.toFixed(1)}</span>
+                      </div>
+                    )}
                   </div>
                   <div className="mt-3">
                     <h3 className="text-sm font-semibold leading-snug tracking-tight line-clamp-2 text-on-surface">{book.title}</h3>
-                    <div className="flex items-center justify-between gap-2 mt-1">
+                    <div className="flex items-center gap-2 mt-1">
                       <p className="text-xs font-medium text-on-surface-muted truncate">
                         {formatAuthor(book.author || '')}{book.year ? ` · ${book.year}` : ''}
                       </p>
-                      <div className="flex items-center gap-0.5 shrink-0 text-on-surface-muted">
-                        <span className="material-symbols-outlined" style={{ fontSize: '12px', fontVariationSettings: "'FILL' 1" }}>star</span>
-                        <span className="text-xs font-semibold text-on-surface">{book.rating ? book.rating.toFixed(1) : '—'}</span>
-                      </div>
                     </div>
                   </div>
                 </button>
