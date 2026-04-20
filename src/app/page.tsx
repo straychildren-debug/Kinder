@@ -35,9 +35,11 @@ export default function Home() {
   const [activeDuels, setActiveDuels] = useState<Duel[]>([]);
   const [recommendations, setRecommendations] = useState<ContentItem[]>([]);
   const [popularPlaylists, setPopularPlaylists] = useState<Playlist[]>([]);
-  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [activeFilter, setActiveFilter] = useState<'all' | 'movie' | 'book'>('all');
 
-  const visibleContent = approvedContent;
+  const visibleContent = activeFilter === 'all' 
+    ? approvedContent 
+    : approvedContent.filter(item => item.type === activeFilter);
 
   const handleQuery = (val: string) => {
     setQuery(val);
@@ -428,6 +430,29 @@ export default function Home() {
               <span className="text-xs font-medium text-on-surface-muted mb-1.5 block">Рекомендации</span>
               <h2 className="text-2xl font-bold tracking-tight text-on-surface leading-tight">Новые публикации</h2>
             </div>
+          </div>
+
+          {/* Category Filters */}
+          <div className="flex gap-2 overflow-x-auto scrollbar-none px-2 mb-8 -mt-2">
+            {[
+              { id: 'all', label: 'Все', icon: 'apps' },
+              { id: 'movie', label: 'Кино', icon: 'movie' },
+              { id: 'book', label: 'Книги', icon: 'menu_book' }
+            ].map((f) => (
+              <button
+                key={f.id}
+                onClick={() => setActiveFilter(f.id as any)}
+                className={`
+                  flex items-center gap-2.5 px-5 py-3 rounded-2xl whitespace-nowrap text-xs font-bold transition-all duration-300 border
+                  ${activeFilter === f.id 
+                    ? 'bg-on-surface text-surface border-on-surface shadow-xl shadow-black/10 scale-[1.02]' 
+                    : 'bg-white text-on-surface/40 border-on-surface/5 hover:border-on-surface/10 hover:text-on-surface/60'}
+                `}
+              >
+                <span className="material-symbols-rounded" style={{ fontSize: '18px', fontVariationSettings: activeFilter === f.id ? "'FILL' 1" : "'FILL' 0" }}>{f.icon}</span>
+                {f.label}
+              </button>
+            ))}
           </div>
 
           {loading ? (
