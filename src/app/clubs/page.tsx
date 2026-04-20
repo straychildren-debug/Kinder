@@ -363,11 +363,14 @@ export default function Clubs() {
                     onClick={() => setSelectedClubForLobby(heroClubs[0])}
                     className="relative group cursor-pointer animate-in fade-in slide-in-from-bottom-4 duration-1000"
                   >
-                    <div className="relative flex items-center justify-between gap-4 bg-white border border-on-surface/5 rounded-[24px] p-4 md:p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-all duration-500 hover:shadow-[0_20px_40px_rgb(0,0,0,0.08)] hover:-translate-y-1">
+                    <div className="relative flex items-center justify-between gap-4 bg-[#0F172A]/80 backdrop-blur-2xl border border-white/10 rounded-[28px] p-4 md:p-6 shadow-[0_20px_50px_rgba(0,0,0,0.3)] transition-all duration-500 hover:shadow-[0_25px_60px_rgba(0,0,0,0.4)] hover:-translate-y-1.5 overflow-hidden">
                       
-                      <div className="flex items-center gap-4 md:gap-6 min-w-0 flex-1">
+                      {/* Decorative Light Leak */}
+                      <div className="absolute -top-24 -left-24 w-48 h-48 bg-primary/20 rounded-full blur-[80px] pointer-events-none" />
+                      
+                      <div className="flex items-center gap-4 md:gap-6 min-w-0 flex-1 relative z-10">
                         {/* Compact Avatar */}
-                        <div className="relative w-14 h-14 md:w-20 md:h-20 rounded-xl overflow-hidden border border-on-surface/5 shrink-0 shadow-sm transition-transform duration-500 group-hover:scale-105">
+                        <div className="relative w-14 h-14 md:w-20 md:h-20 aspect-square rounded-xl overflow-hidden border border-white/10 shrink-0 shadow-2xl transition-transform duration-500 group-hover:scale-105">
                           {heroClubs[0].imageUrl ? (
                             <Image
                               src={heroClubs[0].imageUrl}
@@ -377,32 +380,32 @@ export default function Clubs() {
                               className="object-cover"
                             />
                           ) : (
-                            <div className="w-full h-full bg-surface-container flex items-center justify-center">
-                              <span className="material-symbols-rounded text-on-surface/20 text-3xl">groups</span>
+                            <div className="w-full h-full bg-white/5 flex items-center justify-center">
+                              <span className="material-symbols-rounded text-white/20 text-3xl">groups</span>
                             </div>
                           )}
                         </div>
-
+ 
                         <div className="min-w-0 flex-1">
-                          <div className="flex items-center gap-2 mb-1.5">
-                            <span className="px-2 py-0.5 bg-amber-400/10 text-amber-600 border border-amber-400/20 rounded-md text-[8px] font-black uppercase tracking-widest">Популярное</span>
-                            <div className="flex items-center gap-1 text-on-surface/30">
+                          <div className="flex items-center gap-3 mb-2">
+                            <span className="px-2 py-0.5 bg-amber-400 text-black rounded-md text-[8px] font-black uppercase tracking-widest shadow-[0_0_15px_rgba(251,191,36,0.3)]">Популярное</span>
+                            <div className="flex items-center gap-1 text-white/40">
                               <span className="material-symbols-rounded text-[14px]" style={{ fontVariationSettings: "'FILL' 1" }}>groups</span>
-                              <span className="text-[10px] font-black tracking-tight">{heroClubs[0].memberCount}</span>
+                              <span className="text-[10px] font-bold tracking-tight">{heroClubs[0].memberCount}</span>
                             </div>
                           </div>
-                          <h2 className="text-xl md:text-2xl font-black text-on-surface tracking-tighter leading-tight mb-1 truncate group-hover:text-primary transition-colors">
+                          <h2 className="text-lg md:text-xl font-black text-white tracking-tight leading-tight mb-1 truncate group-hover:text-amber-400 transition-colors">
                             {heroClubs[0].name}
                           </h2>
-                          <p className="text-on-surface-muted text-[11px] font-medium tracking-wide line-clamp-1 opacity-70 group-hover:opacity-100 transition-opacity">
+                          <p className="text-white/50 text-[11px] font-medium tracking-wide line-clamp-1 opacity-70 group-hover:opacity-100 transition-opacity">
                             {heroClubs[0].description}
                           </p>
                         </div>
                       </div>
-
+ 
                       {/* Premium Arrow Button */}
-                      <div className="shrink-0">
-                        <div className="w-12 h-12 rounded-full bg-white text-on-surface border border-on-surface/10 shadow-lg flex items-center justify-center group-hover:bg-on-surface group-hover:text-white transition-all duration-300 active:scale-90">
+                      <div className="shrink-0 relative z-10">
+                        <div className="w-12 h-12 rounded-full bg-white/10 text-white border border-white/20 shadow-2xl flex items-center justify-center group-hover:bg-white group-hover:text-[#0F172A] transition-all duration-300 active:scale-90">
                            <span className="material-symbols-rounded text-2xl">arrow_forward</span>
                         </div>
                       </div>
