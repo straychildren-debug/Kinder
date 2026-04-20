@@ -349,70 +349,63 @@ export default function Clubs() {
               </div>
             </div>
 
-            <div className="space-y-8">
-              {/* Main spotlight - Glassmorphism Design v2 */}
-              {/* Main spotlight - Elegant Bottom Bar Concept */}
-              {heroClubs[0] && (
-                <div
-                  onClick={() => handleJoin(heroClubs[0].id)}
-                  className="relative aspect-[16/9] md:aspect-[21/9] w-full rounded-[32px] overflow-hidden group cursor-pointer border border-on-surface/5 shadow-2xl animate-in fade-in zoom-in-95 duration-1000"
-                >
-                  {/* Premium Generated Background */}
-                  <div className="absolute inset-0 bg-surface-container">
-                    <Image
-                      src="/images/premium_club_bg.png"
-                      alt=""
-                      fill
-                      sizes="100vw"
-                      className="object-cover transition-transform duration-10000 group-hover:scale-110"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                  </div>
-
-                  {/* Bottom Glass Bar */}
-                  <div className="absolute bottom-0 left-0 right-0 p-4 md:p-6 z-20">
-                    <div className="bg-black/30 backdrop-blur-2xl border border-white/10 rounded-2xl p-4 md:p-5 flex items-center justify-between gap-4 transition-all duration-500 group-hover:bg-black/40 group-hover:border-white/20">
+              <div className="space-y-8">
+                {/* Main spotlight - Electric Mesh Concept */}
+                {heroClubs[0] && (
+                  <div
+                    onClick={() => handleJoin(heroClubs[0].id)}
+                    className="relative group cursor-pointer animate-in fade-in zoom-in-95 duration-1000"
+                  >
+                    {/* Electric Mesh Glow Effect */}
+                    <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 via-pink-600 to-amber-500 rounded-[36px] blur-xl opacity-20 group-hover:opacity-40 transition duration-1000 group-hover:duration-200"></div>
+                    
+                    <div className="relative flex flex-col md:flex-row items-center justify-between gap-6 bg-[#0F0F0F] border border-white/5 rounded-[32px] p-6 md:p-8 shadow-2xl transition-all duration-500 group-hover:bg-[#151515]">
                       
-                      <div className="flex items-center gap-4 min-w-0">
-                        {/* Club Avatar */}
-                        <div className="relative w-12 h-12 md:w-14 md:h-14 rounded-xl overflow-hidden border border-white/20 shrink-0 shadow-lg">
+                      <div className="flex items-center gap-6 min-w-0 flex-1">
+                        {/* Premium Avatar */}
+                        <div className="relative w-16 h-16 md:w-20 md:h-20 rounded-3xl overflow-hidden border border-white/10 shrink-0 shadow-2xl transition-transform duration-500 group-hover:scale-105">
                           {heroClubs[0].imageUrl ? (
                             <Image
                               src={heroClubs[0].imageUrl}
                               alt={heroClubs[0].name}
                               fill
-                              sizes="60px"
+                              sizes="80px"
                               className="object-cover"
                             />
                           ) : (
                             <div className="w-full h-full bg-white/5 flex items-center justify-center">
-                              <span className="material-symbols-rounded text-white/20">groups</span>
+                              <span className="material-symbols-rounded text-white/20 text-3xl">groups</span>
                             </div>
                           )}
                         </div>
 
-                        <div className="min-w-0">
-                          <div className="flex items-center gap-2 mb-1">
-                            <span className="px-2 py-0.5 bg-amber-500/20 text-amber-400 border border-amber-500/30 rounded-md text-[9px] font-black uppercase tracking-wider">Популярное</span>
-                            <div className="flex items-center gap-1 text-white/60">
+                        <div className="min-w-0 flex-1">
+                          <div className="flex items-center gap-3 mb-2">
+                            <span className="px-2 py-0.5 bg-white/5 text-white/40 border border-white/10 rounded-md text-[8px] font-black uppercase tracking-[0.2em]">Популярное</span>
+                            <div className="flex items-center gap-1.5 text-white/30">
                               <span className="material-symbols-rounded text-[14px]" style={{ fontVariationSettings: "'FILL' 1" }}>groups</span>
-                              <span className="text-[10px] font-bold">{heroClubs[0].memberCount}</span>
+                              <span className="text-[10px] font-black tracking-tight">{heroClubs[0].memberCount}</span>
                             </div>
                           </div>
-                          <h2 className="text-lg md:text-xl font-bold text-white tracking-tight leading-tight truncate">
+                          <h2 className="text-2xl md:text-3xl font-black text-white tracking-tighter leading-none mb-2 line-clamp-2 transition-colors duration-300 group-hover:text-white/90">
                             {heroClubs[0].name}
                           </h2>
+                          <p className="text-white/40 text-[11px] font-medium italic tracking-wide line-clamp-1 opacity-60 group-hover:opacity-100 transition-opacity">
+                            {heroClubs[0].description}
+                          </p>
                         </div>
                       </div>
 
-                      <button className="shrink-0 px-6 py-2.5 bg-white text-black rounded-xl font-black text-xs hover:bg-amber-400 transition-all duration-300 shadow-xl active:scale-95 whitespace-nowrap">
-                        Вступить
-                      </button>
+                      {/* Compact Plus Button */}
+                      <div className="shrink-0">
+                        <div className="w-12 h-12 md:w-16 md:h-16 bg-white text-black rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(255,255,255,0.2)] transition-all duration-300 group-hover:scale-110 group-hover:bg-amber-400 group-hover:shadow-[0_0_40px_rgba(251,191,36,0.4)] active:scale-90">
+                          <span className="material-symbols-rounded text-3xl md:text-4xl font-black">add</span>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </div>
-              )}
-            </div>
+                )}
+              </div>
           </section>
         )}
 
