@@ -84,7 +84,7 @@ export default function ClubLobbyModal({
             
             {/* Club Info in Header */}
             <div className="absolute inset-0 flex flex-col items-center justify-end pb-8 px-8 text-center z-20 pt-16">
-              <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-[32px] overflow-hidden border-2 border-white/30 shadow-2xl mb-4 bg-white/10 backdrop-blur-sm">
+              <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-xl overflow-hidden border-2 border-white/30 shadow-2xl mb-4 bg-white/10 backdrop-blur-sm">
                 {club.imageUrl ? (
                   <Image src={club.imageUrl} alt={club.name} fill sizes="120px" className="object-cover" unoptimized />
                 ) : (
