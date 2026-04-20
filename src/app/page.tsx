@@ -16,6 +16,7 @@ import ActivityFeed from "@/components/ActivityFeed";
 import { omnisearch, type OmnisearchResult } from "@/lib/search";
 import { getActiveDuels } from "@/lib/duels";
 import { getPersonalizedRecommendations } from "@/lib/recommendations";
+import { getPublicPlaylists, type Playlist } from "@/lib/playlists";
 import type { Duel } from "@/lib/types";
 
 const EMPTY_RESULTS: OmnisearchResult = { content: [], clubs: [], users: [] };
@@ -33,6 +34,7 @@ export default function Home() {
   const [topPublicists, setTopPublicists] = useState<LeaderboardUser[]>([]);
   const [activeDuels, setActiveDuels] = useState<Duel[]>([]);
   const [recommendations, setRecommendations] = useState<ContentItem[]>([]);
+  const [popularPlaylists, setPopularPlaylists] = useState<Playlist[]>([]);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const visibleContent = approvedContent;
@@ -54,18 +56,20 @@ export default function Home() {
   useEffect(() => {
     async function load() {
       try {
-        const [contentData, authors, commenters, publicists, duels] = await Promise.all([
+        const [contentData, authors, commenters, publicists, duels, playlists] = await Promise.all([
           getApprovedContent(),
           getTopAuthorsByLikes(5),
           getTopCommenters(5),
           getTopPublicists(5),
-          getActiveDuels(user?.id, 3)
+          getActiveDuels(user?.id, 3),
+          getPublicPlaylists(6)
         ]);
         setApprovedContent(contentData);
         setTopAuthors(authors);
         setTopCommenters(commenters);
         setTopPublicists(publicists);
         setActiveDuels(duels);
+        setPopularPlaylists(playlists);
       } catch (err) {
         console.error('Initial load failed:', err);
       } finally {
@@ -362,6 +366,55 @@ export default function Home() {
                       </p>
                     </div>
                   </button>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* Community Playlists */}
+        {popularPlaylists.length > 0 && (
+          <section className="mb-12">
+            <div className="flex items-end justify-between mb-5 px-2">
+              <div>
+                <span className="text-xs font-medium text-on-surface-muted mb-1.5 block">Подборки читателей</span>
+                <h2 className="text-2xl font-bold tracking-tight text-on-surface leading-tight">Коллекции</h2>
+              </div>
+              <Link
+                href="/playlists"
+                className="text-xs font-semibold text-on-surface-muted hover:text-on-surface transition-colors"
+              >
+                Все
+              </Link>
+            </div>
+            <div className="-mx-4 overflow-x-auto scrollbar-none">
+              <div className="flex gap-3 px-4 pb-2 snap-x snap-mandatory">
+                {popularPlaylists.map((pl) => (
+                  <Link
+                    key={pl.id}
+                    href={`/playlists/${pl.id}`}
+                    className="group shrink-0 w-56 snap-start bg-surface rounded-2xl p-4 border border-on-surface/5 hover:border-on-surface/10 transition-all active:scale-[0.99]"
+                  >
+                    <div className="w-11 h-11 rounded-xl bg-on-surface/5 flex items-center justify-center mb-3">
+                      <span
+                        className="material-symbols-outlined text-[22px] text-on-surface"
+                        style={{ fontVariationSettings: "'FILL' 1" }}
+                      >
+                        playlist_play
+                      </span>
+                    </div>
+                    <h3 className="text-sm font-semibold text-on-surface leading-snug line-clamp-2 mb-1">
+                      {pl.title}
+                    </h3>
+                    <p className="text-[11px] font-medium text-on-surface-muted leading-snug line-clamp-2">
+                      {pl.description || `${pl.itemCount || 0} ${(pl.itemCount || 0) === 1 ? 'элемент' : 'элементов'}`}
+                    </p>
+                    {pl.author && (
+                      <p className="mt-2.5 text-[11px] font-semibold text-on-surface-muted truncate">
+                        @{pl.author.name}
+                      </p>
+                    )}
+                  </Link>
                 ))}
               </div>
             </div>

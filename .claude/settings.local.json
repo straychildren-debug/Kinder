@@ -10,7 +10,13 @@
       "Bash(ls -la *.sql)",
       "Bash(npm run:*)",
       "Bash(ls -la .env*)",
-      "Bash(node -e \":*)"
+      "Bash(node -e \":*)",
+      "Bash(curl -s \"https://rreomovpzlbzxmxkmebr.supabase.co/rest/v1/playlists?select=*&limit=1\" -H \"apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJyZW9tb3ZwemxienhteGttZWJyIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NjE1MjgxMCwiZXhwIjoyMDkxNzI4ODEwfQ.QAwEby1UDHAyisQO9mFwqJOSQfxu3uHr0k51an31adU\" -H \"Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJyZW9tb3ZwemxienhteGttZWJyIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NjE1MjgxMCwiZXhwIjoyMDkxNzI4ODEwfQ.QAwEby1UDHAyisQO9mFwqJOSQfxu3uHr0k51an31adU\")",
+      "Bash(curl -s \"https://rreomovpzlbzxmxkmebr.supabase.co/rest/v1/playlist_items?select=*&limit=1\" -H \"apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJyZW9tb3ZwemxienhteGttZWJyIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NjE1MjgxMCwiZXhwIjoyMDkxNzI4ODEwfQ.QAwEby1UDHAyisQO9mFwqJOSQfxu3uHr0k51an31adU\" -H \"Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJyZW9tb3ZwemxienhteGttZWJyIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NjE1MjgxMCwiZXhwIjoyMDkxNzI4ODEwfQ.QAwEby1UDHAyisQO9mFwqJOSQfxu3uHr0k51an31adU\")",
+      "Bash(curl -s -w \"\\\\nHTTP: %{http_code}\\\\n\" \"https://rreomovpzlbzxmxkmebr.supabase.co/rest/v1/playlists?select=*&limit=1\" -H \"apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJyZW9tb3ZwemxienhteGttZWJyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYxNTI4MTAsImV4cCI6MjA5MTcyODgxMH0.Z0OJYUIymat-ST6sUgeuhCHCmnSfb5DENOVYtUr98jw\")",
+      "Bash(__NEW_LINE_9ea7229f8d3eb548__ echo:*)",
+      "Bash(curl -s -w \"\\\\nHTTP: %{http_code}\\\\n\" \"https://rreomovpzlbzxmxkmebr.supabase.co/rest/v1/playlist_items?select=*&limit=1\" -H \"apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJyZW9tb3ZwemxienhteGttZWJyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYxNTI4MTAsImV4cCI6MjA5MTcyODgxMH0.Z0OJYUIymat-ST6sUgeuhCHCmnSfb5DENOVYtUr98jw\")",
+      "Bash(curl -s -w \"\\\\nHTTP: %{http_code}\\\\n\" -X POST \"https://rreomovpzlbzxmxkmebr.supabase.co/rest/v1/playlists\" -H \"apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJyZW9tb3ZwemxienhteGttZWJyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYxNTI4MTAsImV4cCI6MjA5MTcyODgxMH0.Z0OJYUIymat-ST6sUgeuhCHCmnSfb5DENOVYtUr98jw\" -H \"Content-Type: application/json\" -H \"Prefer: return=representation\" -d '{\"\"user_id\"\":\"\"00000000-0000-0000-0000-000000000000\"\",\"\"title\"\":\"\"probe\"\"}')"
     ]
   }
 }

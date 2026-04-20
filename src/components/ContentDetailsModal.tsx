@@ -7,6 +7,7 @@ import { nominateDuel, getDuelsForContent } from '@/lib/duels';
 import type { Duel } from '@/lib/types';
 import { useRouter } from 'next/navigation';
 import { addToWishlist, isInWishlist, removeFromWishlist } from '@/lib/wishlist';
+import AddToPlaylistButton from '@/components/AddToPlaylistButton';
 import { getSimilarContent } from '@/lib/recommendations';
 import { defaultBlurDataURL } from '@/lib/image-blur';
 import { useAuth } from './AuthProvider';
@@ -441,6 +442,9 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
                   </motion.span>
                   {wishlisted ? 'В закладках' : 'Добавить в закладки'}
                 </motion.button>
+                <div className="mt-2.5">
+                  <AddToPlaylistButton contentId={content.id} />
+                </div>
               </div>
             )}
 
