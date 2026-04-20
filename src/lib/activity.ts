@@ -42,6 +42,40 @@ export async function getGlobalActivity(limit = 30): Promise<ActivityEvent[]> {
   return ((data ?? []) as unknown as Row[]).map(mapRow);
 }
 
+/** Лента подписок — события от пользователей, на которых подписан. */
+export async function getFollowedActivity(
+  userId: string,
+  limit = 30
+): Promise<ActivityEvent[]> {
+  const { data: follows, error: fe } = await supabase
+    .from('follows')
+    .select('following_id')
+    .eq('follower_id', userId);
+  if (fe) {
+    console.error('getFollowedActivity/follows:', fe);
+    return [];
+  }
+  const ids = ((follows as { following_id: string }[] | null) || []).map(
+    (r) => r.following_id
+  );
+  if (ids.length === 0) return [];
+
+  const { data, error } = await supabase
+    .from('activity_events')
+    .select(
+      `id, user_id, type, ref_id, ref_type, payload, created_at,
+       user:profiles!activity_events_user_id_fkey(name, avatar_url)`
+    )
+    .in('user_id', ids)
+    .order('created_at', { ascending: false })
+    .limit(limit);
+  if (error) {
+    console.error('getFollowedActivity:', error);
+    return [];
+  }
+  return ((data ?? []) as unknown as Row[]).map(mapRow);
+}
+
 export async function getUserActivity(
   userId: string,
   limit = 30

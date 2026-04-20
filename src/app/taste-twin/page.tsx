@@ -8,6 +8,7 @@ import { useAuth } from '@/components/AuthProvider';
 import { getTasteTwins, type TasteTwin } from '@/lib/tasteTwins';
 import { defaultBlurDataURL } from '@/lib/image-blur';
 import ContentDetailsModal from '@/components/ContentDetailsModal';
+import FollowButton from '@/components/FollowButton';
 import type { ContentItem } from '@/lib/types';
 
 export default function TasteTwinPage() {
@@ -124,6 +125,10 @@ function TwinCard({
             совпадение
           </p>
         </div>
+      </div>
+
+      <div className="mb-4">
+        <FollowButton targetUserId={twin.user.id} size="md" />
       </div>
 
       {twin.sharedContent.length > 0 && (

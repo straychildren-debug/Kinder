@@ -195,30 +195,46 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Discover CTA */}
+        {/* Discover + Feed CTAs */}
         {user && (
-          <section className="mb-10 px-2">
+          <section className="mb-10 px-2 grid grid-cols-2 gap-3">
             <Link
               href="/discover"
-              className="group flex items-center gap-4 bg-surface rounded-2xl p-4 border border-on-surface/5 hover:border-on-surface/10 transition-all active:scale-[0.99]"
+              className="group flex flex-col gap-2 bg-surface rounded-2xl p-4 border border-on-surface/5 hover:border-on-surface/10 transition-all active:scale-[0.99]"
             >
-              <div className="w-11 h-11 rounded-xl bg-on-surface/5 flex items-center justify-center shrink-0">
+              <div className="w-10 h-10 rounded-xl bg-on-surface/5 flex items-center justify-center">
                 <span
-                  className="material-symbols-outlined text-[22px] text-on-surface"
+                  className="material-symbols-outlined text-[20px] text-on-surface"
                   style={{ fontVariationSettings: "'FILL' 1" }}
                 >
                   swipe
                 </span>
               </div>
-              <div className="flex-1 min-w-0">
+              <div>
                 <p className="text-sm font-semibold text-on-surface leading-tight">Откройте для себя</p>
-                <p className="text-xs font-medium text-on-surface-muted mt-0.5 leading-snug">
-                  Свайпните карточки и соберите свою подборку
+                <p className="text-[11px] font-medium text-on-surface-muted mt-0.5 leading-snug">
+                  Свайпните карточки
                 </p>
               </div>
-              <span className="material-symbols-outlined text-[18px] text-on-surface-muted group-hover:translate-x-0.5 transition-transform shrink-0">
-                arrow_forward
-              </span>
+            </Link>
+            <Link
+              href="/feed"
+              className="group flex flex-col gap-2 bg-surface rounded-2xl p-4 border border-on-surface/5 hover:border-on-surface/10 transition-all active:scale-[0.99]"
+            >
+              <div className="w-10 h-10 rounded-xl bg-on-surface/5 flex items-center justify-center">
+                <span
+                  className="material-symbols-outlined text-[20px] text-on-surface"
+                  style={{ fontVariationSettings: "'FILL' 1" }}
+                >
+                  dynamic_feed
+                </span>
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-on-surface leading-tight">Моя лента</p>
+                <p className="text-[11px] font-medium text-on-surface-muted mt-0.5 leading-snug">
+                  От ваших подписок
+                </p>
+              </div>
             </Link>
           </section>
         )}
