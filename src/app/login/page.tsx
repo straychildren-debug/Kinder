@@ -71,10 +71,10 @@ export default function LoginPage() {
       <div className="w-full max-w-md space-y-12">
         {/* Logo Section */}
         <div className="text-center space-y-4">
-          <div className="inline-flex items-center justify-center w-20 h-20 bg-on-surface rounded-[24px] shadow-2xl mb-2">
-            <span className="material-symbols-outlined text-surface text-4xl">movie_filter</span>
+          <div className="inline-flex items-center justify-center w-20 h-20 bg-on-surface text-surface rounded-[24px] shadow-2xl mb-2">
+            <span className="text-4xl font-black italic">K</span>
           </div>
-          <h1 className="text-5xl font-black tracking-tighter text-on-surface leading-tight uppercase">Кинотека</h1>
+          <h1 className="text-5xl font-black tracking-tighter text-on-surface leading-tight uppercase">Киндер</h1>
           <p className="text-on-surface-variant text-[10px] font-black uppercase tracking-[0.3em] opacity-40">
             Сообщество ценителей <br/> кино и литературы
           </p>
