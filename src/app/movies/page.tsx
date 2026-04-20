@@ -127,6 +127,13 @@ export default function Movies() {
                       <span className="text-[10px] font-bold text-white leading-none uppercase tracking-wider">Кино</span>
                     </div>
 
+                    {/* Year Badge */}
+                    {movie.year && (
+                      <div className="absolute top-2 right-2 px-1.5 py-0.5 rounded-md bg-black/60 backdrop-blur-md z-10 border border-white/10">
+                        <span className="text-[10px] font-bold text-white leading-none">{movie.year}</span>
+                      </div>
+                    )}
+
                     {/* Rating Badge */}
                     {movie.rating && (
                       <div className="absolute bottom-2 right-2 px-1.5 py-0.5 rounded-lg bg-black/60 backdrop-blur-md flex items-center gap-1 z-10 border border-white/10">
@@ -139,7 +146,7 @@ export default function Movies() {
                     <h3 className="text-sm font-semibold leading-snug tracking-tight line-clamp-2 text-on-surface h-10">{movie.title}</h3>
                     <div className="flex items-center gap-2 mt-1">
                       <p className="text-xs font-medium text-on-surface-muted truncate">
-                        {formatAuthor(movie.director || 'Неизвестный')}{movie.year ? ` · ${movie.year}` : ''}
+                        {formatAuthor(movie.director || 'Неизвестный')}
                       </p>
                     </div>
                   </div>

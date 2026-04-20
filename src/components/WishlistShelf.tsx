@@ -68,6 +68,13 @@ export default function WishlistShelf({
             <div className="w-full bg-white p-1 pb-2.5 rounded-[12px] border border-on-surface/[0.03] shadow-[0_2px_8px_rgba(0,0,0,0.02)] group-hover:shadow-[0_4px_16px_rgba(0,0,0,0.05)] transition-all duration-500">
               {/* Poster Container with 2/3 Aspect Ratio */}
               <div className="relative aspect-[2/3] rounded-[8px] overflow-hidden bg-surface-container-low/50 border border-on-surface/[0.03]">
+                {/* Year Badge */}
+                {c.year && (
+                  <div className="absolute top-1 right-1 px-1.5 py-0.5 rounded-md bg-black/60 backdrop-blur-md border border-white/10 z-10">
+                    <span className="text-[9px] font-bold text-white leading-none">{c.year}</span>
+                  </div>
+                )}
+
                 {/* Rating Label (Bottom Right) */}
                 {c.rating && (
                   <div className="absolute bottom-1 right-1 px-1.5 py-0.5 rounded-lg bg-black/60 backdrop-blur-md border border-white/10 flex items-center gap-1 z-10">

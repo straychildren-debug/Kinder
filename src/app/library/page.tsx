@@ -110,6 +110,13 @@ export default function Library() {
                       <span className="text-[10px] font-bold text-white leading-none uppercase tracking-wider">Книга</span>
                     </div>
 
+                    {/* Year Badge */}
+                    {book.year && (
+                      <div className="absolute top-2 right-2 px-1.5 py-0.5 rounded-md bg-black/60 backdrop-blur-md z-10 border border-white/10">
+                        <span className="text-[10px] font-bold text-white leading-none">{book.year}</span>
+                      </div>
+                    )}
+
                     {/* Rating Badge */}
                     {book.rating && (
                       <div className="absolute bottom-2 right-2 px-1.5 py-0.5 rounded-lg bg-black/60 backdrop-blur-md flex items-center gap-1 z-10 border border-white/10">
@@ -122,7 +129,7 @@ export default function Library() {
                     <h3 className="text-sm font-semibold leading-snug tracking-tight line-clamp-2 text-on-surface h-10">{book.title}</h3>
                     <div className="flex items-center gap-2 mt-1">
                       <p className="text-xs font-medium text-on-surface-muted truncate">
-                        {formatAuthor(book.author || '')}{book.year ? ` · ${book.year}` : ''}
+                        {formatAuthor(book.author || '')}
                       </p>
                     </div>
                   </div>

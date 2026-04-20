@@ -258,6 +258,13 @@ export default function ModerationPage() {
                         >
                           {/* Poster Column */}
                           <div className="relative aspect-[2/3] rounded-xl overflow-hidden bg-surface-container border border-on-surface/5 shadow-sm group-hover:scale-[1.02] transition-transform duration-500 mb-4 ring-1 ring-on-surface/5">
+                            {/* Year Badge */}
+                            {item.year && (
+                              <div className="absolute top-2 right-2 px-1.5 py-0.5 rounded-md bg-black/60 backdrop-blur-md z-10 border border-white/10 animate-in fade-in zoom-in duration-500">
+                                <span className="text-[10px] font-bold text-white leading-none">{item.year}</span>
+                              </div>
+                            )}
+
                             {item.rating && (
                               <div className="absolute bottom-2 right-2 px-1.5 py-0.5 rounded-lg bg-black/60 backdrop-blur-md border border-white/10 flex items-center gap-1 z-10 animate-in fade-in zoom-in duration-500 shadow-xl">
                                 <span className="material-symbols-rounded text-amber-400" style={{ fontVariationSettings: "'FILL' 1", fontSize: '11px' }}>star</span>

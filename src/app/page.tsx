@@ -466,6 +466,13 @@ export default function Home() {
                         <span className="text-[10px] font-bold text-white leading-none uppercase tracking-wider">{item.type === 'movie' ? 'Кино' : 'Книга'}</span>
                       </div>
 
+                      {/* Year Badge */}
+                      {item.year && (
+                        <div className="absolute top-2 right-2 px-1.5 py-0.5 rounded-md bg-black/60 backdrop-blur-md z-10 border border-white/10">
+                          <span className="text-[10px] font-bold text-white leading-none">{item.year}</span>
+                        </div>
+                      )}
+
                       {/* Rating Badge */}
                       {item.rating && (
                         <div className="absolute bottom-2 right-2 px-1.5 py-0.5 rounded-lg bg-black/60 backdrop-blur-md flex items-center gap-1 z-10 border border-white/10">
@@ -478,7 +485,7 @@ export default function Home() {
                       <h3 className="text-sm font-semibold leading-snug tracking-tight line-clamp-2 text-on-surface h-10">{item.title}</h3>
                       <div className="flex items-center gap-2 mt-1">
                         <p className="text-xs font-medium text-on-surface-muted truncate">
-                          {(item.author || item.director || 'Автор')}{item.year ? ` · ${item.year}` : ''}
+                          {(item.author || item.director || 'Автор')}
                         </p>
                       </div>
                     </div>

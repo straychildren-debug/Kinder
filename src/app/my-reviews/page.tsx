@@ -165,7 +165,14 @@ export default function MyReviewsPage() {
                           </span>
                         </div>
                       )}
-                      
+
+                      {/* Year Badge Overlay */}
+                      {content?.year && (
+                        <div className="absolute top-1 right-1 px-1 py-0.5 rounded-md bg-black/60 backdrop-blur-md border border-white/10 z-10 animate-in fade-in zoom-in duration-500">
+                          <span className="text-[9px] font-bold text-white leading-none">{content.year}</span>
+                        </div>
+                      )}
+
                       {/* Rating Badge Overlay */}
                       {review.rating && (
                         <div className="absolute bottom-1 right-1 px-1 py-0.5 rounded-md bg-black/60 backdrop-blur-md border border-white/10 flex items-center gap-0.5 z-10">
@@ -177,7 +184,6 @@ export default function MyReviewsPage() {
                     <div className="flex-1 min-w-0">
                       <p className="text-[10px] font-medium text-on-surface-muted uppercase tracking-wider mb-0.5">
                         {content?.type === 'movie' ? 'Кино' : 'Книга'}
-                        {content?.year ? ` · ${content.year}` : ''}
                       </p>
                       <h3 className="text-sm font-semibold text-on-surface leading-snug line-clamp-2 group-hover:text-primary transition-colors h-10">
                         {content?.title || 'Публикация'}
