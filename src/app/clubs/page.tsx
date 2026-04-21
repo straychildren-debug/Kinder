@@ -401,7 +401,7 @@ export default function Clubs() {
                       /* New 'Join Card' Layout */
                       <div
                         onClick={() => setSelectedClubForLobby(club)}
-                        className={`relative rounded-[32px] p-5 transition-all duration-700 border border-on-surface/5 cursor-pointer group overflow-hidden flex flex-col gap-3 ${
+                        className={`relative rounded-2xl p-4 transition-all duration-700 border border-on-surface/5 cursor-pointer group overflow-hidden flex items-center justify-between gap-4 ${
                           heroClubs.some(hc => hc.id === club.id) ? 'bg-transparent shadow-none' : 'bg-surface/40 backdrop-blur-xl shadow-lg hover:shadow-xl'
                         }`}
                       >
@@ -412,9 +412,9 @@ export default function Clubs() {
                           </div>
                         )}
                         
-                        {/* Main Info Row */}
-                        <div className="relative z-10 flex items-center gap-4">
-                          <div className="relative w-16 h-16 rounded-[20px] overflow-hidden border border-on-surface/5 shrink-0 shadow-lg group-hover:scale-105 transition-transform duration-700">
+                        <div className="relative z-10 flex items-center gap-4 min-w-0 flex-1">
+                          {/* Avatar Container */}
+                          <div className="relative w-14 h-14 md:w-16 md:h-16 rounded-xl overflow-hidden border border-on-surface/5 shrink-0 shadow-lg group-hover:scale-105 transition-transform duration-700">
                             {club.imageUrl ? (
                               <Image src={club.imageUrl} alt={club.name} fill sizes="64px" className="object-cover" />
                             ) : (
@@ -424,36 +424,35 @@ export default function Clubs() {
                             )}
                           </div>
                           
-                          <div className="flex-1 flex flex-col gap-1.5">
-                            <div className="flex items-center justify-between">
-                              <h4 className="text-lg font-black text-on-surface tracking-tight line-clamp-1 group-hover:text-primary transition-colors">
-                                {club.name}
-                              </h4>
-                              {club.userRole ? (
-                                <div className="w-8 h-8 rounded-full bg-on-surface/5 backdrop-blur-sm flex items-center justify-center text-on-surface/10 border border-on-surface/5">
-                                  <span className="material-symbols-rounded text-[16px]">check</span>
-                                </div>
-                              ) : (
-                                <div className="w-8 h-8 rounded-full bg-on-surface text-surface flex items-center justify-center shadow-lg group-hover:scale-110 transition-all duration-500">
-                                  <span className="material-symbols-rounded text-[16px]">arrow_forward</span>
-                                </div>
-                              )}
-                            </div>
+                          {/* Text Content */}
+                          <div className="flex-1 flex flex-col gap-1 min-w-0">
+                            <h4 className="text-[16px] font-bold text-on-surface tracking-tight line-clamp-1 group-hover:text-primary transition-colors">
+                              {club.name}
+                            </h4>
                             <div className="flex items-center gap-2 text-on-surface/30">
                               <span className="material-symbols-rounded text-[14px]" style={{ fontVariationSettings: "'FILL' 1" }}>groups</span>
                               <span className="text-[11px] font-black tracking-tight">{club.memberCount}</span>
                             </div>
+                            {club.description && (
+                              <p className="text-on-surface-muted text-[10px] font-medium line-clamp-1 leading-tight opacity-60 mt-0.5">
+                                {club.description}
+                              </p>
+                            )}
                           </div>
                         </div>
 
-                        {/* Description Section */}
-                        {club.description && (
-                          <div className="relative z-10">
-                            <p className="text-on-surface-muted text-[11px] font-medium line-clamp-2 leading-tight opacity-60">
-                              {club.description}
-                            </p>
-                          </div>
-                        )}
+                        {/* Subtle Centered Arrow/Status */}
+                        <div className="relative z-10 shrink-0">
+                          {club.userRole ? (
+                            <div className="w-10 h-10 rounded-full bg-on-surface/5 backdrop-blur-sm flex items-center justify-center text-on-surface/10 border border-on-surface/5">
+                              <span className="material-symbols-rounded text-[18px]">check</span>
+                            </div>
+                          ) : (
+                            <div className="w-10 h-10 rounded-full bg-on-surface/5 text-on-surface/20 flex items-center justify-center transition-all duration-300 group-hover:bg-on-surface group-hover:text-surface shadow-sm group-hover:shadow-lg group-hover:scale-105">
+                              <span className="material-symbols-rounded text-[20px]">arrow_forward</span>
+                            </div>
+                          )}
+                        </div>
                       </div>
                     )}
                   </MotionListItem>
