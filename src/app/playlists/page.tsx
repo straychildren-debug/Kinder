@@ -201,6 +201,7 @@ export default function PlaylistsPage() {
 }
 
 function PlaylistCard({ playlist }: { playlist: Playlist }) {
+  const cover = playlist.coverUrl || playlist.firstItemImage;
   return (
     <Link
       href={`/playlists/${playlist.id}`}
@@ -208,9 +209,9 @@ function PlaylistCard({ playlist }: { playlist: Playlist }) {
     >
       <div className="flex items-start gap-4">
         <div className="relative w-16 h-16 rounded-xl overflow-hidden bg-surface-container border border-on-surface/5 shrink-0 flex items-center justify-center">
-          {playlist.coverUrl ? (
+          {cover ? (
             <Image
-              src={playlist.coverUrl}
+              src={cover}
               alt={playlist.title}
               fill
               sizes="64px"

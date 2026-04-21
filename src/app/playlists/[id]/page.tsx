@@ -11,8 +11,10 @@ import {
   updatePlaylist,
   deletePlaylist,
   removeFromPlaylist,
+  addToPlaylist,
   type Playlist,
 } from '@/lib/playlists';
+import { searchContent } from '@/lib/search';
 import { defaultBlurDataURL } from '@/lib/image-blur';
 import ContentDetailsModal from '@/components/ContentDetailsModal';
 import type { ContentItem } from '@/lib/types';
@@ -29,6 +31,10 @@ export default function PlaylistDetailPage() {
   const [description, setDescription] = useState('');
   const [isPublic, setIsPublic] = useState(true);
   const [busy, setBusy] = useState(false);
+  const [query, setQuery] = useState('');
+  const [results, setResults] = useState<ContentItem[]>([]);
+  const [searching, setSearching] = useState(false);
+  const [addingId, setAddingId] = useState<string | null>(null);
 
   const load = async () => {
     if (!params?.id) return;
@@ -48,6 +54,43 @@ export default function PlaylistDetailPage() {
   }, [params?.id]);
 
   const isOwner = !!user && !!playlist && playlist.userId === user.id;
+
+  // Дебаунс поиска контента для добавления.
+  useEffect(() => {
+    const q = query.trim();
+    if (!q) {
+      setResults([]);
+      setSearching(false);
+      return;
+    }
+    setSearching(true);
+    const t = setTimeout(async () => {
+      const r = await searchContent(q, 10);
+      setResults(r);
+      setSearching(false);
+    }, 250);
+    return () => clearTimeout(t);
+  }, [query]);
+
+  const existingIds = new Set((playlist?.items || []).map((c) => c.id));
+
+  const handleAdd = async (contentId: string) => {
+    if (!playlist || addingId) return;
+    setAddingId(contentId);
+    const ok = await addToPlaylist(playlist.id, contentId);
+    setAddingId(null);
+    if (ok) {
+      const added = results.find((r) => r.id === contentId);
+      if (added) {
+        setPlaylist({
+          ...playlist,
+          items: [...(playlist.items || []), added],
+          itemCount: (playlist.itemCount || 0) + 1,
+          firstItemImage: playlist.firstItemImage || added.imageUrl || undefined,
+        });
+      }
+    }
+  };
 
   const handleSave = async () => {
     if (!playlist || busy) return;
@@ -126,6 +169,21 @@ export default function PlaylistDetailPage() {
       <main className="pt-24 pb-32 px-6 max-w-lg mx-auto">
         {!editing ? (
           <section className="pb-6">
+            {(() => {
+              const cover = playlist.coverUrl || playlist.firstItemImage;
+              return cover ? (
+                <div className="relative w-full h-44 rounded-2xl overflow-hidden bg-surface-container border border-on-surface/5 mb-4 shadow-sm">
+                  <Image
+                    src={cover}
+                    alt={playlist.title}
+                    fill
+                    sizes="(max-width: 512px) 100vw, 512px"
+                    className="object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent" />
+                </div>
+              ) : null;
+            })()}
             <div className="flex items-start gap-2">
               <div className="flex-1 min-w-0">
                 <span className="text-xs font-medium text-on-surface-muted mb-1.5 block">
@@ -232,6 +290,100 @@ export default function PlaylistDetailPage() {
           </section>
         )}
 
+        {isOwner && (
+          <section className="mb-5 bg-surface rounded-2xl border border-on-surface/5 overflow-hidden">
+            <div className="relative">
+              <span className="material-symbols-outlined text-[18px] text-on-surface-muted absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none">
+                search
+              </span>
+              <input
+                type="text"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Найти книгу или фильм…"
+                className="w-full bg-surface pl-10 pr-10 py-3 text-sm font-medium focus:outline-none placeholder:text-on-surface-muted/70"
+              />
+              {query && (
+                <button
+                  onClick={() => setQuery('')}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-surface-container text-on-surface-muted flex items-center justify-center hover:bg-surface-container-high"
+                  title="Очистить"
+                >
+                  <span className="material-symbols-outlined text-[14px]">close</span>
+                </button>
+              )}
+            </div>
+            {query.trim() && (
+              <div className="border-t border-on-surface/5 max-h-80 overflow-y-auto">
+                {searching ? (
+                  <div className="py-6 text-center text-xs font-medium text-on-surface-muted">
+                    Ищем…
+                  </div>
+                ) : results.length === 0 ? (
+                  <div className="py-6 text-center text-xs font-medium text-on-surface-muted">
+                    Ничего не нашли
+                  </div>
+                ) : (
+                  <ul className="divide-y divide-on-surface/5">
+                    {results.map((c) => {
+                      const already = existingIds.has(c.id);
+                      const isAdding = addingId === c.id;
+                      return (
+                        <li key={c.id} className="flex items-center gap-3 px-3 py-2.5">
+                          <div className="relative w-10 h-14 rounded-md overflow-hidden bg-surface-container border border-on-surface/5 shrink-0">
+                            {c.imageUrl ? (
+                              <Image
+                                src={c.imageUrl}
+                                alt={c.title}
+                                fill
+                                sizes="40px"
+                                className="object-cover"
+                              />
+                            ) : (
+                              <div className="w-full h-full flex items-center justify-center">
+                                <span className="material-symbols-outlined text-[16px] text-on-surface-muted">
+                                  {c.type === 'movie' ? 'movie' : 'menu_book'}
+                                </span>
+                              </div>
+                            )}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-semibold text-on-surface leading-snug line-clamp-1">
+                              {c.title}
+                            </p>
+                            <p className="text-[11px] font-medium text-on-surface-muted mt-0.5 line-clamp-1">
+                              {c.type === 'movie' ? 'Фильм' : 'Книга'}
+                              {c.author ? ` · ${c.author}` : ''}
+                              {c.director ? ` · ${c.director}` : ''}
+                            </p>
+                          </div>
+                          {already ? (
+                            <span className="text-[11px] font-semibold text-on-surface-muted px-2.5 py-1.5 bg-surface-container rounded-lg flex items-center gap-1">
+                              <span className="material-symbols-outlined text-[14px]">check</span>
+                              В подборке
+                            </span>
+                          ) : (
+                            <button
+                              onClick={() => handleAdd(c.id)}
+                              disabled={isAdding}
+                              className="text-[11px] font-semibold text-surface bg-on-surface px-3 py-1.5 rounded-lg transition-transform active:scale-95 disabled:opacity-50 flex items-center gap-1"
+                            >
+                              <span className="material-symbols-outlined text-[14px]">
+                                {isAdding ? 'hourglass_empty' : 'add'}
+                              </span>
+                              {isAdding ? '…' : 'Добавить'}
+                            </button>
+                          )}
+                        </li>
+                      );
+                    })}
+                  </ul>
+                )}
+              </div>
+            )}
+          </section>
+        )}
+
         {!playlist.items || playlist.items.length === 0 ? (
           <div className="text-center py-16 px-6 bg-surface rounded-3xl border border-on-surface/5">
             <div className="w-14 h-14 rounded-2xl bg-surface-container flex items-center justify-center mx-auto mb-5">
@@ -242,9 +394,18 @@ export default function PlaylistDetailPage() {
             <p className="text-on-surface font-semibold text-base mb-1">Подборка пуста</p>
             <p className="text-on-surface-muted text-sm font-medium leading-relaxed max-w-xs mx-auto">
               {isOwner
-                ? 'Откройте любую публикацию и добавьте её в эту подборку'
+                ? 'Откройте любую публикацию и нажмите «Добавить в подборку»'
                 : 'Автор пока ничего не добавил'}
             </p>
+            {isOwner && (
+              <button
+                onClick={() => router.push('/')}
+                className="mt-5 inline-flex items-center gap-2 px-4 py-2.5 bg-on-surface text-surface rounded-xl font-semibold text-xs transition-transform active:scale-95"
+              >
+                <span className="material-symbols-outlined text-[16px]">search</span>
+                Найти публикацию
+              </button>
+            )}
           </div>
         ) : (
           <div className="grid grid-cols-3 gap-3">
