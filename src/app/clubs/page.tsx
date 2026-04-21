@@ -479,14 +479,14 @@ export default function Clubs() {
                     onClick={() => setSelectedClubForLobby(heroClubs[0])}
                     className="relative group cursor-pointer animate-in fade-in slide-in-from-bottom-4 duration-1000"
                   >
-                    <div className="relative flex items-center justify-between gap-4 bg-[#0F172A]/80 backdrop-blur-2xl border border-white/10 rounded-2xl p-4 md:p-6 shadow-[0_20px_50px_rgba(0,0,0,0.3)] transition-all duration-500 hover:shadow-[0_25px_60px_rgba(0,0,0,0.4)] hover:-translate-y-1.5 overflow-hidden">
+                    <div className="relative flex items-center justify-between gap-4 bg-[#0F172A]/80 backdrop-blur-2xl border border-white/10 rounded-xl p-4 md:p-6 shadow-[0_20px_50px_rgba(0,0,0,0.3)] transition-all duration-500 hover:shadow-[0_25px_60px_rgba(0,0,0,0.4)] hover:-translate-y-1.5 overflow-hidden">
                       
                       {/* Decorative Light Leak */}
                       <div className="absolute -top-24 -left-24 w-48 h-48 bg-primary/20 rounded-full blur-[80px] pointer-events-none" />
                       
                       <div className="flex items-center gap-4 md:gap-6 min-w-0 flex-1 relative z-10">
                         {/* Compact Avatar */}
-                        <div className="relative w-14 h-14 md:w-20 md:h-20 aspect-square rounded-xl overflow-hidden border border-white/10 shrink-0 shadow-2xl transition-transform duration-500 group-hover:scale-105">
+                        <div className="relative w-14 h-14 md:w-20 md:h-20 aspect-square rounded-lg overflow-hidden border border-white/10 shrink-0 shadow-2xl transition-transform duration-500 group-hover:scale-105">
                           {heroClubs[0].imageUrl ? (
                             <Image
                               src={heroClubs[0].imageUrl}
