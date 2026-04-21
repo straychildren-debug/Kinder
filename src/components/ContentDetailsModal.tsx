@@ -382,48 +382,13 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
                </p>
 
                {/* Overall Publication Rating (Interactive Stars) */}
-               <div className="flex flex-col items-center gap-3 bg-surface-container-high/40 backdrop-blur-sm rounded-2xl py-6 px-8 border border-on-surface/5 mb-6">
-                 <div className="flex items-center gap-2">
-                   <span className="material-symbols-outlined text-[18px] text-amber-500" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
-                   <span className="text-2xl font-black tracking-tighter text-on-surface">{content.rating?.toFixed(1) || '0.0'}</span>
-                   <span className="text-[10px] font-bold uppercase tracking-widest opacity-40 ml-1">{content.reviewCount || 0} оценок</span>
+               <div className="flex flex-col items-center justify-center bg-surface-container-high/40 backdrop-blur-sm rounded-2xl py-6 px-8 border border-on-surface/5 mb-6">
+                 <div className="flex items-center gap-3">
+                   <span className="material-symbols-outlined text-[24px] text-amber-500" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+                   <span className="text-3xl font-black tracking-tighter text-on-surface">{content.rating?.toFixed(1) || '0.0'}</span>
+                   <div className="w-px h-6 bg-on-surface/10 mx-1"></div>
+                   <span className="text-[10px] font-bold uppercase tracking-widest opacity-40">{content.reviewCount || 0} оценок</span>
                  </div>
-                 
-                 {user && (
-                   <div className="flex flex-col items-center gap-2">
-                     <p className="text-[10px] font-black uppercase tracking-[0.15em] text-on-surface-muted">Оцените {content.type === 'movie' ? 'фильм' : 'книгу'}</p>
-                     <div className="flex gap-1.5">
-                       {[1, 2, 3, 4, 5].map(star => {
-                         const isRated = (reviews.find(r => r.userId === user.id)?.rating || 0) >= star;
-                         return (
-                           <button 
-                             key={star} 
-                             onClick={async () => {
-                               const existing = reviews.find(r => r.userId === user.id);
-                               if (existing) {
-                                 await submitReview(content.id, user.id, existing.text, star);
-                               } else {
-                                 await submitReview(content.id, user.id, '', star);
-                               }
-                               const fresh = await getContentById(content.id);
-                               if (fresh) setContent(fresh);
-                               const revs = await getReviewsForContent(content.id, user.id);
-                               setReviews(revs);
-                             }}
-                             className="transition-all hover:scale-110 active:scale-90"
-                           >
-                             <span
-                               className={`material-symbols-outlined text-2xl ${isRated ? 'text-amber-500' : 'text-on-surface-variant/20'}`}
-                               style={{ fontVariationSettings: isRated ? "'FILL' 1" : "'FILL' 0" }}
-                             >
-                               star
-                             </span>
-                           </button>
-                         );
-                       })}
-                     </div>
-                   </div>
-                 )}
                </div>
             </div>
 
@@ -494,6 +459,31 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
                 <p className="text-xs text-on-surface-muted font-medium mb-6">
                   Расскажите, что вы думаете о произведении. Отзывы оцениваются лайками сообщества.
                 </p>
+
+                <div className="flex flex-col items-center gap-3 bg-surface p-6 rounded-xl border border-on-surface/5 mb-4 shadow-sm">
+                   <p className="text-[10px] font-black uppercase tracking-[0.15em] text-on-surface-muted">Ваша оценка</p>
+                   <div className="flex gap-2">
+                     {[1, 2, 3, 4, 5].map(star => (
+                       <button
+                         key={star}
+                         onClick={() => setNewReviewRating(star)}
+                         className="transition-all hover:scale-125 active:scale-90"
+                       >
+                         <span
+                           className={`material-symbols-outlined text-3xl ${star <= newReviewRating ? 'text-amber-500' : 'text-on-surface-variant/20'}`}
+                           style={{ fontVariationSettings: star <= newReviewRating ? "'FILL' 1" : "'FILL' 0" }}
+                         >
+                           star
+                         </span>
+                       </button>
+                     ))}
+                   </div>
+                   {newReviewRating > 0 && (
+                     <p className="text-xs font-bold text-amber-600 animate-in fade-in zoom-in-95 duration-300">
+                       {newReviewRating === 5 ? 'Великолепно!' : newReviewRating === 4 ? 'Очень хорошо' : newReviewRating === 3 ? 'Нормально' : newReviewRating === 2 ? 'Не очень' : 'Ужасно'}
+                     </p>
+                   )}
+                </div>
 
                 <textarea
                   value={newReviewText}
