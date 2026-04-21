@@ -189,22 +189,12 @@ export default function Clubs() {
               onClick={() => setSelectedClubForLobby(heroClubs[0])}
               className="relative aspect-[16/10] md:aspect-[21/9] w-full rounded-[32px] overflow-hidden group cursor-pointer border border-white/5 shadow-2xl animate-in fade-in zoom-in-95 duration-1000"
             >
-              {/* Cinematic Background */}
-              <div className="absolute inset-0 bg-surface-container">
-                {heroClubs[0].imageUrl ? (
-                  <div className="absolute inset-0">
-                    <Image
-                      src={heroClubs[0].imageUrl}
-                      alt=""
-                      fill
-                      sizes="100vw"
-                      className="object-cover transition-transform duration-10000 group-hover:scale-110"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#0F172A] via-[#0F172A]/40 to-transparent" />
-                  </div>
-                ) : (
-                  <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-secondary/20" />
-                )}
+              {/* Dynamic Mesh Gradient Background */}
+              <div className="absolute inset-0 bg-[#0F172A] overflow-hidden">
+                <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-primary/20 rounded-full blur-[120px] animate-pulse" />
+                <div className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] bg-secondary/10 rounded-full blur-[100px] animate-pulse delay-700" />
+                <div className="absolute top-[20%] right-[10%] w-[30%] h-[30%] bg-amber-400/5 rounded-full blur-[80px]" />
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#0F172A]/80" />
               </div>
 
               {/* Glass Info Panel */}
