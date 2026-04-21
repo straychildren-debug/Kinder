@@ -74,7 +74,7 @@ function StackCard({
       className={`absolute inset-0 ${isTop ? 'cursor-grab active:cursor-grabbing' : 'pointer-events-none'}`}
       onClick={() => isTop && onInfo(item)}
     >
-      <div className="relative w-full h-full rounded-[2.5rem] overflow-hidden bg-[#0A0A0A] border border-white/5 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.6)] select-none">
+      <div className="relative w-full h-full rounded-[2.5rem] overflow-hidden bg-[#0A0A0A] border border-white/5 shadow-[0_20px_40px_-12px_rgba(0,0,0,0.4)] select-none">
         {/* Poster */}
         <div className="relative w-full h-full">
           {item.imageUrl ? (
@@ -100,9 +100,9 @@ function StackCard({
           {/* Cinematic Gradient Overlay */}
           <div className="absolute inset-0 bg-gradient-to-t from-black via-black/10 to-transparent opacity-90 pointer-events-none" />
 
-          {/* Top Actions & Metadata */}
+          {/* Top Actions & Metadata (Aligned with bottom grid: 32px/8px) */}
           {isTop && (
-            <div className="absolute top-6 inset-x-6 flex justify-between items-start z-20 pointer-events-none">
+            <div className="absolute top-8 inset-x-8 flex justify-between items-start z-20 pointer-events-none">
               {/* Left Group: Undo + Badge */}
               <div className="flex items-center gap-2 pointer-events-auto">
                 {/* Rewind (Back) Button */}
@@ -113,18 +113,18 @@ function StackCard({
                   }}
                   disabled={!canRewind}
                   onPointerDown={(e) => e.stopPropagation()}
-                  className="w-10 h-10 rounded-xl bg-white/10 backdrop-blur-2xl border border-white/10 text-white flex items-center justify-center shadow-lg active:scale-90 transition-all disabled:opacity-0 disabled:pointer-events-none hover:bg-white/20"
+                  className="w-10 h-10 rounded-xl bg-white/10 backdrop-blur-3xl border border-white/10 text-white flex items-center justify-center shadow-lg active:scale-90 transition-all disabled:opacity-0 disabled:pointer-events-none hover:bg-white/20"
                   aria-label="Вернуть назад"
                 >
                   <span className="material-symbols-rounded text-[20px]">undo</span>
                 </button>
 
                 {/* Type Chip (Sleek Inline) */}
-                <div className="h-10 px-3 rounded-xl bg-white/10 backdrop-blur-2xl border border-white/10 flex items-center gap-1.5 shadow-sm">
+                <div className="h-10 px-3 rounded-xl bg-white/10 backdrop-blur-3xl border border-white/10 flex items-center gap-1.5 shadow-sm">
                   <span className="material-symbols-rounded text-white/80 text-[14px]" style={{ fontVariationSettings: "'FILL' 1" }}>
                     {item.type === 'movie' ? 'movie' : 'menu_book'}
                   </span>
-                  <span className="text-[10px] font-black text-white uppercase tracking-widest">
+                  <span className="text-[10px] font-black text-white uppercase tracking-widest leading-none">
                     {item.type === 'movie' ? 'Кино' : 'Книга'}
                   </span>
                 </div>
@@ -137,7 +137,7 @@ function StackCard({
                   onBookmark(item);
                 }}
                 onPointerDown={(e) => e.stopPropagation()}
-                className="w-10 h-10 rounded-xl bg-white/10 backdrop-blur-2xl border border-white/10 text-white flex items-center justify-center shadow-xl active:scale-90 transition-all hover:bg-white/20 group/bookmark pointer-events-auto"
+                className="w-10 h-10 rounded-xl bg-white/10 backdrop-blur-3xl border border-white/10 text-white flex items-center justify-center shadow-xl active:scale-90 transition-all hover:bg-white/20 group/bookmark pointer-events-auto"
                 aria-label="Хочу прочитать"
               >
                 <span className="material-symbols-rounded text-[20px] group-hover/bookmark:scale-110 transition-transform" style={{ fontVariationSettings: "'FILL' 1" }}>bookmark</span>
@@ -145,9 +145,9 @@ function StackCard({
             </div>
           )}
 
-          {/* Rating Badge (Repositioned slightly) */}
+          {/* Rating Badge (Repositioned to match 32px block) */}
           {isTop && item.rating && (
-            <div className="absolute top-20 right-6 px-2.5 py-1.5 rounded-xl bg-white/10 backdrop-blur-2xl border border-white/10 flex items-center gap-1.5 shadow-sm z-10">
+            <div className="absolute top-[88px] right-8 px-2.5 py-1.5 rounded-xl bg-white/15 backdrop-blur-3xl border border-white/10 flex items-center gap-1.5 shadow-sm z-10">
               <span className="material-symbols-rounded text-amber-400 text-[14px]" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
               <span className="text-[11px] font-black text-white leading-none">{item.rating.toFixed(1)}</span>
             </div>
@@ -384,11 +384,11 @@ export default function DiscoverPage() {
 
         {/* Bottom Action Bar */}
         {!exhausted && queue.length > 0 && (
-          <section className="mt-8 mb-4 h-20 flex items-center justify-center gap-6 relative max-w-sm mx-auto w-full px-4">
+          <section className="mt-8 mb-4 h-20 flex items-center justify-center gap-6 relative max-w-sm mx-auto w-full px-8">
             {/* Neutral Skip (Left, glass) */}
             <button
               onClick={handleNeutralSkip}
-              className="absolute left-4 w-12 h-12 rounded-2xl bg-white/5 backdrop-blur-2xl border border-white/10 flex items-center justify-center text-white/60 active:scale-90 transition-all hover:bg-white/10 group"
+              className="absolute left-8 w-12 h-12 rounded-2xl bg-white/5 backdrop-blur-3xl border border-white/10 flex items-center justify-center text-white/40 active:scale-90 transition-all hover:bg-white/10 group"
               aria-label="Пропустить"
             >
               <span className="material-symbols-rounded text-[24px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
@@ -398,18 +398,18 @@ export default function DiscoverPage() {
             <div className="flex items-center gap-5">
               <button
                 onClick={() => handleSwipe('skip')}
-                className="w-16 h-16 rounded-[1.5rem] bg-white/10 backdrop-blur-2xl border border-white/20 text-rose-400 flex items-center justify-center active:scale-90 transition-all shadow-[0_20px_40px_rgba(225,29,72,0.1)] hover:bg-white/20 group"
+                className="w-16 h-16 rounded-[1.8rem] bg-white/15 backdrop-blur-3xl border border-white/20 text-rose-500 flex items-center justify-center active:scale-90 transition-all shadow-[0_15px_30px_rgba(225,29,72,0.15)] hover:bg-white/20 group"
                 aria-label="Не нравится"
               >
-                <span className="material-symbols-rounded text-[32px] group-hover:scale-110 transition-transform">close</span>
+                <span className="material-symbols-rounded text-[34px] group-hover:scale-110 transition-transform">close</span>
               </button>
 
               <button
                 onClick={() => handleSwipe('like')}
-                className="w-16 h-16 rounded-[1.5rem] bg-white/10 backdrop-blur-2xl border border-white/20 text-emerald-400 flex items-center justify-center active:scale-90 transition-all shadow-[0_20px_40px_rgba(16,185,129,0.1)] hover:bg-white/20 group"
+                className="w-16 h-16 rounded-[1.8rem] bg-white/15 backdrop-blur-3xl border border-white/20 text-emerald-500 flex items-center justify-center active:scale-90 transition-all shadow-[0_15px_30px_rgba(16,185,129,0.15)] hover:bg-white/20 group"
                 aria-label="Нравится"
               >
-                <span className="material-symbols-rounded text-[32px] group-hover:scale-110 transition-transform" style={{ fontVariationSettings: "'FILL' 1" }}>favorite</span>
+                <span className="material-symbols-rounded text-[34px] group-hover:scale-110 transition-transform" style={{ fontVariationSettings: "'FILL' 1" }}>favorite</span>
               </button>
             </div>
           </section>
