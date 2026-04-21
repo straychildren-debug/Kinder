@@ -187,7 +187,7 @@ export default function Clubs() {
           <section className="mb-12">
             <div
               onClick={() => setSelectedClubForLobby(heroClubs[0])}
-              className="relative w-full rounded-[32px] p-8 md:p-10 transition-all duration-500 cursor-pointer group"
+              className="relative w-full rounded-[32px] p-8 md:p-10 transition-all duration-500 cursor-pointer group bg-[#0F172A] shadow-2xl"
             >
               {/* Main Row: Avatar and Action Column */}
               <div className="flex items-start gap-6 md:gap-10 mb-6">
@@ -216,22 +216,16 @@ export default function Clubs() {
                   
                   <div className="flex items-center gap-4">
                     <span className="px-4 py-1.5 bg-amber-400 text-black rounded-lg text-[10px] font-black uppercase tracking-widest shadow-lg">Популярное</span>
-                    <div className="flex items-center gap-2 text-on-surface/60">
+                    <div className="flex items-center gap-2 text-white/60">
                       <span className="material-symbols-rounded text-[18px]" style={{ fontVariationSettings: "'FILL' 1" }}>groups</span>
-                      <span className="text-[13px] font-bold tracking-tight">{heroClubs[0].memberCount} участников</span>
+                      <span className="text-[14px] font-black tracking-tight">{heroClubs[0].memberCount}</span>
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* Bottom Row: Category and Title */}
               <div className="space-y-4">
-                <div className="inline-block px-4 py-1.5 rounded-full border border-on-surface/20">
-                  <span className="text-[11px] font-black text-on-surface/40 uppercase tracking-[0.1em]">
-                    {CATEGORY_LABELS[heroClubs[0].category] || heroClubs[0].category}
-                  </span>
-                </div>
-                <h2 className="text-3xl md:text-5xl font-black text-on-surface tracking-tighter leading-none line-clamp-1">
+                <h2 className="text-3xl md:text-5xl font-black text-white tracking-tighter leading-none line-clamp-1">
                   {heroClubs[0].name}
                 </h2>
               </div>
@@ -410,18 +404,13 @@ export default function Clubs() {
                             </button>
                             <div className="flex items-center gap-3 text-on-surface/40">
                               <span className="material-symbols-rounded text-[16px]" style={{ fontVariationSettings: "'FILL' 1" }}>groups</span>
-                              <span className="text-[11px] font-bold tracking-tight">{club.memberCount} участников</span>
+                              <span className="text-[12px] font-black tracking-tight">{club.memberCount}</span>
                             </div>
                           </div>
                         </div>
 
                         {/* Bottom Row */}
                         <div className="space-y-3">
-                          <div className="inline-block px-3 py-1 rounded-full border border-on-surface/10">
-                            <span className="text-[9px] font-black text-on-surface/30 uppercase tracking-widest">
-                              {CATEGORY_LABELS[club.category] || club.category}
-                            </span>
-                          </div>
                           <h4 className="text-xl md:text-2xl font-black text-on-surface tracking-tighter leading-tight line-clamp-1">
                             {club.name}
                           </h4>
