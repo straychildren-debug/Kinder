@@ -105,23 +105,8 @@ function StackCard({
           {/* Top Actions & Metadata (Aligned with bottom grid: 32px/8px) */}
           {isTop && (
             <div className="absolute top-8 inset-x-8 flex justify-between items-start z-20 pointer-events-none">
-              {/* Left Group: Undo + Badge */}
+              {/* Left Group: Badge (Rewind button removed as per user request) */}
               <div className="flex items-center gap-2 pointer-events-auto">
-                {/* Rewind (Back) Button - Only rendered if history exists to avoid layout shift */}
-                {canRewind && (
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onRewind();
-                    }}
-                    onPointerDown={(e) => e.stopPropagation()}
-                    className="w-10 h-10 rounded-xl bg-white/10 backdrop-blur-3xl border border-white/10 text-white flex items-center justify-center shadow-lg active:scale-90 transition-all hover:bg-white/20"
-                    aria-label="Вернуть назад"
-                  >
-                    <span className="material-symbols-rounded text-[20px]">undo</span>
-                  </button>
-                )}
-
                 {/* Type Chip (Sleek Inline) */}
                 <div className="h-10 px-3 rounded-xl bg-white/10 backdrop-blur-3xl border border-white/10 flex items-center gap-1.5 shadow-sm">
                   <span className="material-symbols-rounded text-white/80 text-[14px]" style={{ fontVariationSettings: "'FILL' 1" }}>
@@ -148,9 +133,9 @@ function StackCard({
             </div>
           )}
 
-          {/* Rating Badge (Repositioned to match 32px block) */}
+          {/* Rating Badge (Moved to left side, below Type Badge) */}
           {isTop && item.rating && (
-            <div className="absolute top-[88px] right-8 px-2.5 py-1.5 rounded-xl bg-white/15 backdrop-blur-3xl border border-white/10 flex items-center gap-1.5 shadow-sm z-10">
+            <div className="absolute top-[88px] left-8 px-2.5 py-1.5 rounded-xl bg-white/15 backdrop-blur-3xl border border-white/10 flex items-center gap-1.5 shadow-sm z-10 w-fit">
               <span className="material-symbols-rounded text-amber-400 text-[14px]" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
               <span className="text-[11px] font-black text-white leading-none">{item.rating.toFixed(1)}</span>
             </div>
