@@ -98,8 +98,7 @@ function mapContent(r: ContentRow): ContentItem {
   };
 }
 
-const PLAYLIST_SELECT =
-  `id, user_id, title, description, cover_url, is_public, created_at, updated_at`;
+const PLAYLIST_SELECT = 'id, user_id, title, description, cover_url, is_public, created_at, updated_at';
 
 /** Публичные плейлисты сообщества (+ count items в каждом). */
 export async function getPublicPlaylists(limit = 30): Promise<Playlist[]> {
