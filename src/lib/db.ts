@@ -456,6 +456,9 @@ export async function getReviewsByUser(userId: string): Promise<Review[]> {
 }
 
 export async function submitReview(contentId: string, userId: string, text: string, rating: number) {
+  if (!Number.isFinite(rating) || rating < 1 || rating > 10) {
+    throw Object.assign(new Error('Rating must be between 1 and 10'), { code: '23514' });
+  }
   const { data, error } = await supabase
     .from('reviews')
     .insert([{

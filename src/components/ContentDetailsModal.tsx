@@ -157,7 +157,11 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
 
   const handleSubmitReview = async () => {
     if (!user || !content || !newReviewText.trim()) return;
-    
+    if (!newReviewRating || newReviewRating < 1) {
+      alert('Поставьте оценку — выберите от 1 до 5 звёзд.');
+      return;
+    }
+
     setSubmittingReview(true);
     try {
       await submitReview(content.id, user.id, newReviewText, newReviewRating);
@@ -166,13 +170,22 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
       setReviews(revs);
       setShowReviewForm(false);
       setNewReviewText('');
-      
+
       // refresh content to update main rating
       const freshContent = await getContentById(content.id);
       if (freshContent) setContent(freshContent);
     } catch (e) {
       console.error(e);
-      alert('Ошибка при отправке отзыва. Возможно, вы уже оставляли отзыв.');
+      const err = e as { code?: string; message?: string };
+      if (err?.code === '23505') {
+        alert('Вы уже оставляли отзыв на эту публикацию. Один автор — один отзыв.');
+      } else if (err?.code === '23514') {
+        alert('Неверная оценка. Выберите от 1 до 5 звёзд.');
+      } else if (err?.code === '42501' || /row-level security/i.test(err?.message || '')) {
+        alert('Нет доступа. Попробуйте перезайти в аккаунт.');
+      } else {
+        alert(`Не удалось отправить отзыв: ${err?.message || 'неизвестная ошибка'}`);
+      }
     }
     setSubmittingReview(false);
   };
