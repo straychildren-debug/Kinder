@@ -363,7 +363,7 @@ export default function Clubs() {
                     onClick={() => setSelectedClubForLobby(heroClubs[0])}
                     className="relative group cursor-pointer animate-in fade-in slide-in-from-bottom-4 duration-1000"
                   >
-                    <div className="relative flex items-center justify-between gap-4 bg-[#0F172A]/80 backdrop-blur-2xl border border-white/10 rounded-[28px] p-4 md:p-6 shadow-[0_20px_50px_rgba(0,0,0,0.3)] transition-all duration-500 hover:shadow-[0_25px_60px_rgba(0,0,0,0.4)] hover:-translate-y-1.5 overflow-hidden">
+                    <div className="relative flex items-center justify-between gap-4 bg-[#0F172A]/80 backdrop-blur-2xl border border-white/10 rounded-2xl p-4 md:p-6 shadow-[0_20px_50px_rgba(0,0,0,0.3)] transition-all duration-500 hover:shadow-[0_25px_60px_rgba(0,0,0,0.4)] hover:-translate-y-1.5 overflow-hidden">
                       
                       {/* Decorative Light Leak */}
                       <div className="absolute -top-24 -left-24 w-48 h-48 bg-primary/20 rounded-full blur-[80px] pointer-events-none" />
