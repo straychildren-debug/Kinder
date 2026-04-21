@@ -28,6 +28,7 @@ interface StackCardProps {
   onSwipe: (direction: SwipeDirection) => void;
   onBookmark: (item: ContentItem) => void;
   onRewind: () => void;
+  onNeutralSkip: () => void;
   canRewind: boolean;
   onInfo: (item: ContentItem) => void;
   isTop: boolean;
@@ -39,6 +40,7 @@ function StackCard({
   onSwipe, 
   onBookmark, 
   onRewind,
+  onNeutralSkip,
   canRewind,
   onInfo, 
   isTop, 
@@ -50,8 +52,8 @@ function StackCard({
   const skipOpacity = useTransform(x, [-120, 0], [1, 0]);
 
   const handleDragEnd = (_: unknown, info: PanInfo) => {
-    if (info.offset.x > SWIPE_THRESHOLD) onSwipe('like');
-    else if (info.offset.x < -SWIPE_THRESHOLD) onSwipe('skip');
+    if (info.offset.x > SWIPE_THRESHOLD) onNeutralSkip();
+    else if (info.offset.x < -SWIPE_THRESHOLD) onRewind();
   };
 
   const stackedStyle = useMemo(() => {
@@ -159,15 +161,15 @@ function StackCard({
              <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-30">
               <motion.div
                 style={{ opacity: likeOpacity, scale: useTransform(x, [0, 150], [0.8, 1]) }}
-                className="px-8 py-4 rounded-3xl border-4 border-emerald-400 bg-emerald-500/10 backdrop-blur-md -rotate-12 shadow-[0_0_40px_rgba(52,211,153,0.2)]"
+                className="px-8 py-4 rounded-3xl border-4 border-gray-400 bg-gray-500/10 backdrop-blur-md -rotate-12 shadow-[0_0_40px_rgba(156,163,175,0.2)]"
               >
-                <span className="text-emerald-400 text-3xl font-black uppercase tracking-[0.2em]">КЛАСС!</span>
+                <span className="text-gray-400 text-3xl font-black uppercase tracking-[0.2em]">ПРОПУСТИТЬ</span>
               </motion.div>
               <motion.div
                 style={{ opacity: skipOpacity, scale: useTransform(x, [0, -150], [0.8, 1]) }}
-                className="absolute px-8 py-4 rounded-3xl border-4 border-rose-400 bg-rose-500/10 backdrop-blur-md rotate-12 shadow-[0_0_40px_rgba(251,113,133,0.2)]"
+                className="absolute px-8 py-4 rounded-3xl border-4 border-sky-400 bg-sky-500/10 backdrop-blur-md rotate-12 shadow-[0_0_40px_rgba(56,189,248,0.2)]"
               >
-                <span className="text-rose-400 text-3xl font-black uppercase tracking-[0.2em]">НЕ МОЁ</span>
+                <span className="text-sky-400 text-3xl font-black uppercase tracking-[0.2em]">НАЗАД</span>
               </motion.div>
             </div>
           )}
@@ -322,7 +324,7 @@ export default function DiscoverPage() {
           <h1 className="text-3xl font-black tracking-tight leading-tight text-on-surface mb-6">
             Для вас
           </h1>
-          <div className="flex items-center gap-2 bg-on-surface/[0.03] backdrop-blur-3xl border border-on-surface/[0.05] rounded-full p-1.5 w-fit">
+          <div className="flex items-center gap-2 bg-on-surface/[0.03] backdrop-blur-3xl border border-on-surface/[0.05] rounded-full p-1.5 w-fit mx-auto">
             {[
               { label: 'Нравится', value: counts.like, icon: 'favorite', color: 'text-emerald-500', bg: 'bg-emerald-500/10' },
               { label: 'Не моё', value: counts.skip, icon: 'close', color: 'text-rose-500', bg: 'bg-rose-500/10' },
@@ -380,6 +382,7 @@ export default function DiscoverPage() {
                   onSwipe={handleSwipe}
                   onBookmark={handleBookmarkAction}
                   onRewind={handleRewind}
+                  onNeutralSkip={handleNeutralSkip}
                   canRewind={history.length > 0}
                   onInfo={setOpenedInfo}
                 />
@@ -394,7 +397,7 @@ export default function DiscoverPage() {
             {/* Neutral Skip (Left, glass) */}
             <button
               onClick={handleNeutralSkip}
-              className="absolute left-8 w-12 h-12 rounded-2xl bg-white/5 backdrop-blur-3xl border border-white/10 flex items-center justify-center text-white/40 active:scale-90 transition-all hover:bg-white/10 group"
+              className="absolute left-8 w-12 h-12 rounded-full bg-white/5 backdrop-blur-3xl border border-white/10 flex items-center justify-center text-white/40 active:scale-90 transition-all hover:bg-white/10 group"
               aria-label="Пропустить"
             >
               <span className="material-symbols-rounded text-[24px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
@@ -404,7 +407,7 @@ export default function DiscoverPage() {
             <div className="flex items-center gap-5">
               <button
                 onClick={() => handleSwipe('skip')}
-                className="w-16 h-16 rounded-[1.8rem] bg-white/15 backdrop-blur-3xl border border-white/20 text-rose-500 flex items-center justify-center active:scale-90 transition-all shadow-[0_15px_30px_rgba(225,29,72,0.15)] hover:bg-white/20 group"
+                className="w-16 h-16 rounded-full bg-white/15 backdrop-blur-3xl border border-white/20 text-rose-500 flex items-center justify-center active:scale-90 transition-all shadow-[0_15px_30px_rgba(225,29,72,0.15)] hover:bg-white/20 group"
                 aria-label="Не нравится"
               >
                 <span className="material-symbols-rounded text-[34px] group-hover:scale-110 transition-transform">close</span>
@@ -412,7 +415,7 @@ export default function DiscoverPage() {
 
               <button
                 onClick={() => handleSwipe('like')}
-                className="w-16 h-16 rounded-[1.8rem] bg-white/15 backdrop-blur-3xl border border-white/20 text-emerald-500 flex items-center justify-center active:scale-90 transition-all shadow-[0_15px_30px_rgba(16,185,129,0.15)] hover:bg-white/20 group"
+                className="w-16 h-16 rounded-full bg-white/15 backdrop-blur-3xl border border-white/20 text-emerald-500 flex items-center justify-center active:scale-90 transition-all shadow-[0_15px_30px_rgba(16,185,129,0.15)] hover:bg-white/20 group"
                 aria-label="Нравится"
               >
                 <span className="material-symbols-rounded text-[34px] group-hover:scale-110 transition-transform" style={{ fontVariationSettings: "'FILL' 1" }}>favorite</span>
