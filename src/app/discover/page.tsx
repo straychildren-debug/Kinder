@@ -74,7 +74,7 @@ function StackCard({
       className={`absolute inset-0 ${isTop ? 'cursor-grab active:cursor-grabbing' : 'pointer-events-none'}`}
       onClick={() => isTop && onInfo(item)}
     >
-      <div className="relative w-full h-full rounded-[2.5rem] overflow-hidden bg-black border border-white/5 shadow-[0_20px_50px_rgba(0,0,0,0.4)] select-none">
+      <div className="relative w-full h-full rounded-[2.5rem] overflow-hidden bg-[#0A0A0A] border border-white/5 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.6)] select-none">
         {/* Poster */}
         <div className="relative w-full h-full">
           {item.imageUrl ? (
@@ -85,7 +85,7 @@ function StackCard({
               sizes="(max-width: 768px) 100vw, 480px"
               placeholder="blur"
               blurDataURL={defaultBlurDataURL}
-              className={`object-cover transition-transform duration-700 ${isTop ? 'group-hover:scale-110' : ''}`}
+              className={`object-cover transition-transform duration-1000 ${isTop ? 'group-hover:scale-105' : ''}`}
               priority={isTop}
               draggable={false}
             />
@@ -98,91 +98,91 @@ function StackCard({
           )}
 
           {/* Cinematic Gradient Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent opacity-90 pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/10 to-transparent opacity-90 pointer-events-none" />
 
-          {/* Top Actions (Floating on card) */}
+          {/* Top Actions & Metadata */}
           {isTop && (
-            <div className="absolute top-6 inset-x-6 flex justify-between items-center z-20">
-              {/* Rewind (Back) Button */}
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onRewind();
-                }}
-                disabled={!canRewind}
-                onPointerDown={(e) => e.stopPropagation()}
-                className="w-11 h-11 rounded-2xl bg-black/40 backdrop-blur-xl border border-white/10 text-white flex items-center justify-center shadow-xl active:scale-90 transition-all disabled:opacity-0"
-                aria-label="Вернуть назад"
-              >
-                <span className="material-symbols-rounded text-[24px]">undo</span>
-              </button>
+            <div className="absolute top-6 inset-x-6 flex justify-between items-start z-20 pointer-events-none">
+              {/* Left Group: Undo + Badge */}
+              <div className="flex items-center gap-2 pointer-events-auto">
+                {/* Rewind (Back) Button */}
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onRewind();
+                  }}
+                  disabled={!canRewind}
+                  onPointerDown={(e) => e.stopPropagation()}
+                  className="w-10 h-10 rounded-xl bg-white/10 backdrop-blur-2xl border border-white/10 text-white flex items-center justify-center shadow-lg active:scale-90 transition-all disabled:opacity-0 disabled:pointer-events-none hover:bg-white/20"
+                  aria-label="Вернуть назад"
+                >
+                  <span className="material-symbols-rounded text-[20px]">undo</span>
+                </button>
 
-              {/* Bookmark Button */}
+                {/* Type Chip (Sleek Inline) */}
+                <div className="h-10 px-3 rounded-xl bg-white/10 backdrop-blur-2xl border border-white/10 flex items-center gap-1.5 shadow-sm">
+                  <span className="material-symbols-rounded text-white/80 text-[14px]" style={{ fontVariationSettings: "'FILL' 1" }}>
+                    {item.type === 'movie' ? 'movie' : 'menu_book'}
+                  </span>
+                  <span className="text-[10px] font-black text-white uppercase tracking-widest">
+                    {item.type === 'movie' ? 'Кино' : 'Книга'}
+                  </span>
+                </div>
+              </div>
+
+              {/* Right Group: Bookmark */}
               <button
                 onClick={(e) => {
                   e.stopPropagation();
                   onBookmark(item);
                 }}
                 onPointerDown={(e) => e.stopPropagation()}
-                className="w-11 h-11 rounded-2xl bg-white text-black flex items-center justify-center shadow-2xl active:scale-90 transition-all hover:bg-white/90 group/bookmark"
+                className="w-10 h-10 rounded-xl bg-white/10 backdrop-blur-2xl border border-white/10 text-white flex items-center justify-center shadow-xl active:scale-90 transition-all hover:bg-white/20 group/bookmark pointer-events-auto"
                 aria-label="Хочу прочитать"
               >
-                <span className="material-symbols-rounded text-[24px] group-hover/bookmark:scale-110 transition-transform" style={{ fontVariationSettings: "'FILL' 1" }}>bookmark</span>
+                <span className="material-symbols-rounded text-[20px] group-hover/bookmark:scale-110 transition-transform" style={{ fontVariationSettings: "'FILL' 1" }}>bookmark</span>
               </button>
             </div>
           )}
 
-          {/* Badge Column (Moved below buttons) */}
-          <div className="absolute top-20 left-6 flex flex-col gap-2 z-10 transition-opacity duration-300 pointer-events-none" style={{ opacity: isTop ? 1 : 0 }}>
-            {/* Type Chip */}
-            <div className="px-2.5 py-1 rounded-full bg-black/40 backdrop-blur-md border border-white/10 flex items-center gap-1.5 self-start shadow-sm">
-              <span className="material-symbols-rounded text-white text-[14px]" style={{ fontVariationSettings: "'FILL' 1" }}>
-                {item.type === 'movie' ? 'movie' : 'menu_book'}
-              </span>
-              <span className="text-[10px] font-bold text-white uppercase tracking-wider">
-                {item.type === 'movie' ? 'Кино' : 'Книга'}
-              </span>
+          {/* Rating Badge (Repositioned slightly) */}
+          {isTop && item.rating && (
+            <div className="absolute top-20 right-6 px-2.5 py-1.5 rounded-xl bg-white/10 backdrop-blur-2xl border border-white/10 flex items-center gap-1.5 shadow-sm z-10">
+              <span className="material-symbols-rounded text-amber-400 text-[14px]" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+              <span className="text-[11px] font-black text-white leading-none">{item.rating.toFixed(1)}</span>
             </div>
+          )}
 
-            {/* Rating Badge */}
-            {item.rating && (
-              <div className="px-2.5 py-1 rounded-full bg-black/40 backdrop-blur-md border border-white/10 flex items-center gap-1.5 self-start shadow-sm">
-                <span className="material-symbols-rounded text-amber-400 text-[14px]" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
-                <span className="text-[11px] font-black text-white leading-none">{item.rating.toFixed(1)}</span>
-              </div>
-            )}
-          </div>
-
-          {/* Swipe Labels (Visual Feedback) */}
+          {/* Swipe Labels (STAMPS style in center) */}
           {isTop && (
-            <>
+             <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-30">
               <motion.div
-                style={{ opacity: likeOpacity }}
-                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 px-8 py-4 rounded-3xl border-4 border-emerald-400 bg-emerald-500/20 backdrop-blur-md -rotate-12 pointer-events-none shadow-2xl z-30"
+                style={{ opacity: likeOpacity, scale: useTransform(x, [0, 150], [0.8, 1]) }}
+                className="px-8 py-4 rounded-3xl border-4 border-emerald-400 bg-emerald-500/10 backdrop-blur-md -rotate-12 shadow-[0_0_40px_rgba(52,211,153,0.2)]"
               >
                 <span className="text-emerald-400 text-3xl font-black uppercase tracking-[0.2em]">КЛАСС!</span>
               </motion.div>
               <motion.div
-                style={{ opacity: skipOpacity }}
-                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 px-8 py-4 rounded-3xl border-4 border-rose-400 bg-rose-500/20 backdrop-blur-md rotate-12 pointer-events-none shadow-2xl z-30"
+                style={{ opacity: skipOpacity, scale: useTransform(x, [0, -150], [0.8, 1]) }}
+                className="absolute px-8 py-4 rounded-3xl border-4 border-rose-400 bg-rose-500/10 backdrop-blur-md rotate-12 shadow-[0_0_40px_rgba(251,113,133,0.2)]"
               >
                 <span className="text-rose-400 text-3xl font-black uppercase tracking-[0.2em]">НЕ МОЁ</span>
               </motion.div>
-            </>
+            </div>
           )}
 
           {/* Integrated Text Content */}
-          <div className="absolute inset-x-0 bottom-0 p-8 pt-24 text-white z-10 transition-transform duration-500" style={{ transform: isTop ? 'translateY(0)' : 'translateY(10px)' }}>
-            <p className="text-[10px] font-black text-white/50 uppercase tracking-[0.2em] mb-2 leading-none">
+          <div className="absolute inset-x-0 bottom-0 p-8 pt-24 text-white z-10 transition-transform duration-700" style={{ transform: isTop ? 'translateY(0)' : 'translateY(10px)' }}>
+            <p className="text-[10px] font-black text-white/50 uppercase tracking-[0.3em] mb-2 leading-none">
               {formatAuthor(item.author || item.director || 'Автор не указан')}
               {item.year ? ` · ${item.year}` : ''}
             </p>
-            <h3 className="text-2xl font-black leading-[1.1] tracking-tight line-clamp-2 max-w-[85%] mb-2">
+            <h3 className="text-2xl font-black leading-tight tracking-tight line-clamp-2 max-w-[90%] mb-3">
               {item.title}
             </h3>
-            <div className="flex items-center gap-2 text-white/40 group cursor-pointer" onClick={(e) => { e.stopPropagation(); onInfo(item); }}>
-              <span className="text-[10px] font-bold uppercase tracking-wider group-hover:text-white transition-colors">Смотреть подробнее</span>
-              <span className="material-symbols-rounded text-[14px]">arrow_forward</span>
+            <div className="flex items-center gap-2 text-white/30 group cursor-pointer" onClick={(e) => { e.stopPropagation(); onInfo(item); }}>
+              <span className="text-[10px] font-bold uppercase tracking-widest group-hover:text-white transition-colors">Об издании</span>
+              <span className="material-symbols-rounded text-[14px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
             </div>
           </div>
         </div>
@@ -384,32 +384,32 @@ export default function DiscoverPage() {
 
         {/* Bottom Action Bar */}
         {!exhausted && queue.length > 0 && (
-          <section className="mt-8 mb-4 flex items-center justify-center gap-8 relative">
-            {/* Neutral Skip (Leftmots, small) */}
+          <section className="mt-8 mb-4 h-20 flex items-center justify-center gap-6 relative max-w-sm mx-auto w-full px-4">
+            {/* Neutral Skip (Left, glass) */}
             <button
               onClick={handleNeutralSkip}
-              className="absolute left-0 w-11 h-11 rounded-2xl bg-surface-container border border-white/5 flex items-center justify-center text-on-surface-muted active:scale-90 transition-all shadow-sm hover:scale-105 group"
+              className="absolute left-4 w-12 h-12 rounded-2xl bg-white/5 backdrop-blur-2xl border border-white/10 flex items-center justify-center text-white/60 active:scale-90 transition-all hover:bg-white/10 group"
               aria-label="Пропустить"
             >
-              <span className="material-symbols-rounded text-[22px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
+              <span className="material-symbols-rounded text-[24px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
             </button>
 
             {/* Center Pair (Dislike/Like) */}
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-5">
               <button
                 onClick={() => handleSwipe('skip')}
-                className="w-20 h-20 rounded-[2rem] bg-white text-rose-500 flex items-center justify-center active:scale-90 transition-all shadow-[0_12px_30px_rgba(244,63,94,0.15)] hover:scale-105 group border border-rose-50"
+                className="w-16 h-16 rounded-[1.5rem] bg-white/10 backdrop-blur-2xl border border-white/20 text-rose-400 flex items-center justify-center active:scale-90 transition-all shadow-[0_20px_40px_rgba(225,29,72,0.1)] hover:bg-white/20 group"
                 aria-label="Не нравится"
               >
-                <span className="material-symbols-rounded text-[36px] group-hover:scale-110 transition-transform">close</span>
+                <span className="material-symbols-rounded text-[32px] group-hover:scale-110 transition-transform">close</span>
               </button>
 
               <button
                 onClick={() => handleSwipe('like')}
-                className="w-20 h-20 rounded-[2rem] bg-black text-emerald-400 flex items-center justify-center active:scale-90 transition-all shadow-[0_15px_35px_rgba(0,0,0,0.4)] hover:scale-105 group"
+                className="w-16 h-16 rounded-[1.5rem] bg-white/10 backdrop-blur-2xl border border-white/20 text-emerald-400 flex items-center justify-center active:scale-90 transition-all shadow-[0_20px_40px_rgba(16,185,129,0.1)] hover:bg-white/20 group"
                 aria-label="Нравится"
               >
-                <span className="material-symbols-rounded text-[36px] group-hover:scale-110 transition-transform" style={{ fontVariationSettings: "'FILL' 1" }}>favorite</span>
+                <span className="material-symbols-rounded text-[32px] group-hover:scale-110 transition-transform" style={{ fontVariationSettings: "'FILL' 1" }}>favorite</span>
               </button>
             </div>
           </section>
