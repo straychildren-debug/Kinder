@@ -14,6 +14,7 @@ export default function DuelsPage() {
   const { user } = useAuth();
   const [duels, setDuels] = useState<Duel[]>([]);
   const [loading, setLoading] = useState(true);
+  const canCreate = !!user && (user.role === 'admin' || user.role === 'superadmin' || user.role === 'moderator');
 
   useEffect(() => {
     (async () => {
@@ -28,11 +29,25 @@ export default function DuelsPage() {
       <TopNavBar title="Арена мнений" showBack={true} backPath="/" />
       <main className="pt-24 pb-32 px-6 max-w-lg mx-auto">
         <section className="pb-8">
-          <span className="text-xs font-medium text-on-surface-muted mb-1.5 block">Дебаты критиков</span>
-          <h1 className="text-2xl font-bold tracking-tight leading-tight text-on-surface">Арена мнений</h1>
-          <p className="mt-2 text-sm font-medium text-on-surface-muted leading-relaxed">
-            Два критика — одна публикация. Присоединитесь к стороне, чьи аргументы убедительнее.
-          </p>
+          <div className="flex items-start justify-between gap-3">
+            <div className="flex-1 min-w-0">
+              <span className="text-xs font-medium text-on-surface-muted mb-1.5 block">Дебаты критиков</span>
+              <h1 className="text-2xl font-bold tracking-tight leading-tight text-on-surface">Арена мнений</h1>
+              <p className="mt-2 text-sm font-medium text-on-surface-muted leading-relaxed">
+                Два критика — одна публикация. Присоединитесь к стороне, чьи аргументы убедительнее.
+              </p>
+            </div>
+            {canCreate && (
+              <Link
+                href="/duels/create"
+                className="shrink-0 mt-1 inline-flex items-center gap-1.5 px-3 py-2 bg-on-surface text-surface rounded-xl font-semibold text-xs transition-transform active:scale-95"
+                title="Создать дуэль"
+              >
+                <span className="material-symbols-outlined text-[16px]">add</span>
+                Создать
+              </Link>
+            )}
+          </div>
         </section>
 
         {loading ? (

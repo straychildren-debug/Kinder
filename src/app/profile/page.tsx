@@ -146,6 +146,7 @@ export default function Profile() {
               { id: 'feed', label: 'Моя лента', path: '/feed', icon: 'dynamic_feed', count: 0 },
               { id: 'playlists', label: 'Мои подборки', path: '/playlists', icon: 'playlist_play', count: 0 },
               { id: 'twin', label: 'Двойник по вкусу', path: '/taste-twin', icon: 'diversity_2', count: 0 },
+              { id: 'duels', label: 'Арена мнений', path: '/duels', icon: 'forum', count: 0 },
               { id: 'bookmarks', label: 'Закладки', path: '/bookmarks', icon: 'bookmark', count: counts.bookmarks },
               { id: 'drafts', label: 'Черновики', path: '/drafts', icon: 'edit_note', count: counts.drafts }
             ].map((item, i, arr) => (
