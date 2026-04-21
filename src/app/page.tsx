@@ -631,7 +631,7 @@ function LeaderboardColumn({
         ) : users.map((u, i) => (
           <div key={u.id} className="flex items-center gap-3 group">
             <div className="relative w-10 h-10 flex-shrink-0">
-              <div className="w-full h-full rounded-full bg-surface-container overflow-hidden border border-on-surface/5">
+              <div className="relative w-full h-full rounded-full bg-surface-container overflow-hidden border border-on-surface/5">
                 {u.avatarUrl ? (
                   <Image src={u.avatarUrl} alt={u.name} fill className="object-cover" />
                 ) : (
