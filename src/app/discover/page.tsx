@@ -105,19 +105,20 @@ function StackCard({
             <div className="absolute top-8 inset-x-8 flex justify-between items-start z-20 pointer-events-none">
               {/* Left Group: Undo + Badge */}
               <div className="flex items-center gap-2 pointer-events-auto">
-                {/* Rewind (Back) Button */}
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onRewind();
-                  }}
-                  disabled={!canRewind}
-                  onPointerDown={(e) => e.stopPropagation()}
-                  className="w-10 h-10 rounded-xl bg-white/10 backdrop-blur-3xl border border-white/10 text-white flex items-center justify-center shadow-lg active:scale-90 transition-all disabled:opacity-0 disabled:pointer-events-none hover:bg-white/20"
-                  aria-label="Вернуть назад"
-                >
-                  <span className="material-symbols-rounded text-[20px]">undo</span>
-                </button>
+                {/* Rewind (Back) Button - Only rendered if history exists to avoid layout shift */}
+                {canRewind && (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onRewind();
+                    }}
+                    onPointerDown={(e) => e.stopPropagation()}
+                    className="w-10 h-10 rounded-xl bg-white/10 backdrop-blur-3xl border border-white/10 text-white flex items-center justify-center shadow-lg active:scale-90 transition-all hover:bg-white/20"
+                    aria-label="Вернуть назад"
+                  >
+                    <span className="material-symbols-rounded text-[20px]">undo</span>
+                  </button>
+                )}
 
                 {/* Type Chip (Sleek Inline) */}
                 <div className="h-10 px-3 rounded-xl bg-white/10 backdrop-blur-3xl border border-white/10 flex items-center gap-1.5 shadow-sm">
@@ -321,21 +322,26 @@ export default function DiscoverPage() {
           <h1 className="text-3xl font-black tracking-tight leading-tight text-on-surface mb-6">
             Для вас
           </h1>
-          <div className="grid grid-cols-3 gap-3">
+          <div className="flex items-center gap-2 bg-on-surface/[0.03] backdrop-blur-3xl border border-on-surface/[0.05] rounded-full p-1.5 w-fit">
             {[
-              { label: 'Нравится', value: counts.like, icon: 'favorite', color: 'text-emerald-500' },
-              { label: 'Не моё', value: counts.skip, icon: 'close', color: 'text-rose-500' },
-              { label: 'Виш-лист', value: counts.seen, icon: 'bookmark', color: 'text-amber-500' },
+              { label: 'Нравится', value: counts.like, icon: 'favorite', color: 'text-emerald-500', bg: 'bg-emerald-500/10' },
+              { label: 'Не моё', value: counts.skip, icon: 'close', color: 'text-rose-500', bg: 'bg-rose-500/10' },
+              { label: 'Виш-лист', value: counts.seen, icon: 'bookmark', color: 'text-amber-500', bg: 'bg-amber-500/10' },
             ].map((s) => (
               <div
                 key={s.label}
-                className="flex flex-col items-center gap-1 bg-surface-container-low rounded-[1.5rem] p-3 border border-white/5 shadow-sm"
+                className="flex items-center gap-2 px-4 py-2 rounded-full hover:bg-on-surface/[0.03] transition-colors group"
+                title={s.label}
               >
-                <span className={`material-symbols-rounded text-[20px] ${s.color}`} style={{ fontVariationSettings: "'FILL' 1" }}>
-                  {s.icon}
-                </span>
-                <p className="text-sm font-black text-on-surface leading-tight">{s.value}</p>
-                <p className="text-[9px] font-bold text-on-surface-muted/60 uppercase tracking-wider leading-none mt-0.5">{s.label}</p>
+                <div className={`w-8 h-8 rounded-full ${s.bg} flex items-center justify-center shadow-sm`}>
+                  <span className={`material-symbols-rounded text-[18px] ${s.color}`} style={{ fontVariationSettings: "'FILL' 1" }}>
+                    {s.icon}
+                  </span>
+                </div>
+                <div className="flex flex-col">
+                  <p className="text-sm font-black text-on-surface leading-none">{s.value}</p>
+                  <p className="text-[8px] font-bold text-on-surface-muted/40 uppercase tracking-tighter leading-none mt-0.5">{s.label}</p>
+                </div>
               </div>
             ))}
           </div>
