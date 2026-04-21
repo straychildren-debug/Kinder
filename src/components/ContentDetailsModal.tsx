@@ -893,7 +893,23 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
                   onClick={() => setContent(s)}
                   className="group text-left"
                 >
-                  <div className="relative aspect-[2/3] w-full rounded-xl overflow-hidden bg-surface-container border border-on-surface/5 transition-all">
+                  <div className="relative aspect-[2/3] w-full rounded-xl overflow-hidden bg-surface-container border border-on-surface/5 shadow-sm">
+                    {/* Upper Badges */}
+                    <div className="absolute top-1.5 left-1.5 z-20">
+                      <div className="px-1.5 py-0.5 rounded-md bg-black/40 backdrop-blur-md flex items-center gap-1 shadow-lg border border-white/10">
+                        <span className="material-symbols-rounded text-white" style={{ fontSize: '9px', fontVariationSettings: "'FILL' 1" }}>{s.type === 'movie' ? 'movie' : 'menu_book'}</span>
+                        <span className="text-[7px] font-black text-white leading-none uppercase tracking-widest">{s.type === 'movie' ? 'Кино' : 'Книга'}</span>
+                      </div>
+                    </div>
+                    
+                    {s.year && (
+                      <div className="absolute top-1.5 right-1.5 z-20">
+                        <div className="px-1.5 py-0.5 rounded-md bg-black/40 backdrop-blur-md flex items-center gap-1 shadow-lg border border-white/10">
+                          <span className="text-[9px] font-bold text-white tracking-tight">{s.year}</span>
+                        </div>
+                      </div>
+                    )}
+
                     {s.imageUrl && (
                       <Image
                         src={s.imageUrl}
@@ -902,17 +918,20 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
                         sizes="(min-width: 1024px) 180px, 45vw"
                         placeholder="blur"
                         blurDataURL={defaultBlurDataURL}
-                        className="object-cover group-hover:scale-[1.03] transition-transform duration-500"
+                        className="object-cover group-hover:scale-110 transition-transform duration-700"
                       />
                     )}
+
+                    {/* Content Overlay */}
+                    <div className="absolute inset-x-0 bottom-0 pt-10 pb-2 px-2 bg-gradient-to-t from-black via-black/40 to-transparent z-10 transition-transform duration-500 group-hover:translate-y-[-2px]">
+                      <p className="text-[8px] font-black text-white/50 uppercase tracking-[0.15em] mb-0.5 truncate leading-none">
+                        {s.author || s.director || 'Автор'}
+                      </p>
+                      <h3 className="text-[10px] font-bold text-white leading-tight line-clamp-2 tracking-tight">
+                        {s.title}
+                      </h3>
+                    </div>
                   </div>
-                  <p className="mt-3 text-sm font-semibold text-on-surface line-clamp-2 leading-snug">
-                    {s.title}
-                  </p>
-                  <p className="mt-1 text-xs font-medium text-on-surface-muted">
-                    {s.type === 'movie' ? 'Кино' : 'Книга'}
-                    {s.year ? ` · ${s.year}` : ''}
-                  </p>
                 </button>
               ))}
             </div>

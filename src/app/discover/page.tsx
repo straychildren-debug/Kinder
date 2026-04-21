@@ -26,12 +26,13 @@ const ROTATION_LIMIT = 14;
 interface StackCardProps {
   item: ContentItem;
   onSwipe: (direction: SwipeDirection) => void;
+  onBookmark: (item: ContentItem) => void;
   onInfo: (item: ContentItem) => void;
   isTop: boolean;
   depth: number;
 }
 
-function StackCard({ item, onSwipe, onInfo, isTop, depth }: StackCardProps) {
+function StackCard({ item, onSwipe, onBookmark, onInfo, isTop, depth }: StackCardProps) {
   const x = useMotionValue(0);
   const rotate = useTransform(x, [-300, 0, 300], [-ROTATION_LIMIT, 0, ROTATION_LIMIT]);
   const likeOpacity = useTransform(x, [0, 120], [0, 1]);
@@ -44,8 +45,8 @@ function StackCard({ item, onSwipe, onInfo, isTop, depth }: StackCardProps) {
 
   const stackedStyle = useMemo(() => {
     if (depth === 0) return { scale: 1, translateY: 0, opacity: 1 };
-    if (depth === 1) return { scale: 0.96, translateY: 12, opacity: 0.75 };
-    return { scale: 0.92, translateY: 24, opacity: 0.4 };
+    if (depth === 1) return { scale: 0.96, translateY: 10, opacity: 0.9 };
+    return { scale: 0.92, translateY: 20, opacity: 0.6 };
   }, [depth]);
 
   return (
@@ -54,16 +55,17 @@ function StackCard({ item, onSwipe, onInfo, isTop, depth }: StackCardProps) {
       dragConstraints={{ left: 0, right: 0, top: 0, bottom: 0 }}
       dragElastic={0.6}
       onDragEnd={handleDragEnd}
-      style={isTop ? { x, rotate } : undefined}
+      style={isTop ? { x, rotate, zIndex: 10 - depth } : { zIndex: 10 - depth }}
       initial={{ scale: stackedStyle.scale, y: stackedStyle.translateY, opacity: 0 }}
       animate={{ scale: stackedStyle.scale, y: stackedStyle.translateY, opacity: stackedStyle.opacity }}
       exit={{ x: x.get() > 0 ? 500 : -500, opacity: 0, transition: { duration: 0.3 } }}
       transition={{ type: 'spring', stiffness: 260, damping: 26 }}
       className={`absolute inset-0 ${isTop ? 'cursor-grab active:cursor-grabbing' : 'pointer-events-none'}`}
+      onClick={() => isTop && onInfo(item)}
     >
-      <div className="relative w-full h-full rounded-3xl overflow-hidden bg-surface border border-on-surface/5 shadow-[0_12px_40px_rgba(0,0,0,0.08)] select-none">
+      <div className="relative w-full h-full rounded-[2.5rem] overflow-hidden bg-black border border-white/5 shadow-[0_20px_50px_rgba(0,0,0,0.3)] select-none">
         {/* Poster */}
-        <div className="relative w-full h-full bg-surface-container">
+        <div className="relative w-full h-full">
           {item.imageUrl ? (
             <Image
               src={item.imageUrl}
@@ -72,87 +74,88 @@ function StackCard({ item, onSwipe, onInfo, isTop, depth }: StackCardProps) {
               sizes="(max-width: 768px) 100vw, 480px"
               placeholder="blur"
               blurDataURL={defaultBlurDataURL}
-              className="object-cover pointer-events-none"
+              className={`object-cover transition-transform duration-700 ${isTop ? 'group-hover:scale-110' : ''}`}
               priority={isTop}
               draggable={false}
             />
           ) : (
-            <div className="w-full h-full flex items-center justify-center">
+            <div className="w-full h-full flex items-center justify-center bg-surface-container">
               <span className="material-symbols-outlined text-6xl text-on-surface-muted/30">
                 {item.type === 'movie' ? 'movie' : 'menu_book'}
               </span>
             </div>
           )}
 
-          {/* Dark gradient at bottom */}
-          <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/85 via-black/35 to-transparent pointer-events-none" />
+          {/* Cinematic Gradient Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent opacity-90 pointer-events-none" />
 
-          {/* Type chip */}
-          <div className="absolute top-4 left-4 px-2.5 py-1 rounded-lg bg-black/55 backdrop-blur-md flex items-center gap-1.5">
-            <span
-              className="material-symbols-outlined text-white text-[13px]"
-              style={{ fontVariationSettings: "'FILL' 1" }}
-            >
-              {item.type === 'movie' ? 'movie' : 'menu_book'}
-            </span>
-            <span className="text-[11px] font-semibold text-white leading-none tracking-tight">
-              {item.type === 'movie' ? 'Кино' : 'Книга'}
-            </span>
+          {/* Badges Column (Top Left) */}
+          <div className="absolute top-6 left-6 flex flex-col gap-2 z-10 transition-opacity duration-300" style={{ opacity: isTop ? 1 : 0 }}>
+            {/* Type Chip */}
+            <div className="px-2.5 py-1 rounded-full bg-black/40 backdrop-blur-md border border-white/10 flex items-center gap-1.5 self-start shadow-sm">
+              <span className="material-symbols-rounded text-white text-[14px]" style={{ fontVariationSettings: "'FILL' 1" }}>
+                {item.type === 'movie' ? 'movie' : 'menu_book'}
+              </span>
+              <span className="text-[10px] font-bold text-white uppercase tracking-wider">
+                {item.type === 'movie' ? 'Кино' : 'Книга'}
+              </span>
+            </div>
+
+            {/* Rating Badge */}
+            {item.rating && (
+              <div className="px-2.5 py-1 rounded-full bg-black/40 backdrop-blur-md border border-white/10 flex items-center gap-1.5 self-start shadow-sm">
+                <span className="material-symbols-rounded text-amber-400 text-[14px]" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+                <span className="text-[11px] font-black text-white leading-none">{item.rating.toFixed(1)}</span>
+              </div>
+            )}
           </div>
 
-          {/* Info button */}
+          {/* Bookmark Button (Floating on card) */}
           {isTop && (
             <button
               onClick={(e) => {
                 e.stopPropagation();
-                onInfo(item);
+                onBookmark(item);
               }}
               onPointerDown={(e) => e.stopPropagation()}
-              className="absolute top-4 right-4 w-9 h-9 rounded-full bg-black/40 backdrop-blur-md flex items-center justify-center text-white active:scale-90 transition-transform"
-              aria-label="Подробнее"
+              className="absolute top-6 right-6 w-11 h-11 rounded-2xl bg-white text-black flex items-center justify-center shadow-2xl active:scale-90 transition-all hover:bg-white/90 group/bookmark"
+              aria-label="Хочу прочитать"
             >
-              <span className="material-symbols-outlined text-[18px]">info</span>
+              <span className="material-symbols-rounded text-[24px] group-hover/bookmark:scale-110 transition-transform">bookmark</span>
             </button>
           )}
 
-          {/* Rating Badge */}
-          {item.rating && (
-            <div 
-              className={`absolute right-4 px-2 py-1 rounded-xl bg-black/60 backdrop-blur-md flex items-center gap-1.5 z-10 border border-white/10 shadow-lg ${isTop ? 'top-[60px]' : 'top-4'}`}
-            >
-              <span className="material-symbols-rounded text-amber-400" style={{ fontSize: '14px', fontVariationSettings: "'FILL' 1" }}>star</span>
-              <span className="text-sm font-black text-white leading-none">{item.rating.toFixed(1)}</span>
-            </div>
-          )}
-
-          {/* Swipe labels */}
+          {/* Swipe Labels (Visual Feedback) */}
           {isTop && (
             <>
               <motion.div
                 style={{ opacity: likeOpacity }}
-                className="absolute top-10 left-6 px-3 py-1.5 rounded-lg border-2 border-emerald-400 bg-emerald-500/10 backdrop-blur-sm -rotate-12"
+                className="absolute top-20 left-12 px-5 py-2 rounded-2xl border-4 border-emerald-400 bg-emerald-500/20 backdrop-blur-md -rotate-12 pointer-events-none shadow-2xl"
               >
-                <span className="text-emerald-400 text-sm font-bold tracking-wide">ИНТЕРЕСНО</span>
+                <span className="text-emerald-400 text-xl font-black uppercase tracking-widest">КЛАСС!</span>
               </motion.div>
               <motion.div
                 style={{ opacity: skipOpacity }}
-                className="absolute top-10 right-6 px-3 py-1.5 rounded-lg border-2 border-rose-400 bg-rose-500/10 backdrop-blur-sm rotate-12"
+                className="absolute top-20 right-12 px-5 py-2 rounded-2xl border-4 border-rose-400 bg-rose-500/20 backdrop-blur-md rotate-12 pointer-events-none shadow-2xl"
               >
-                <span className="text-rose-400 text-sm font-bold tracking-wide">НЕ МОЁ</span>
+                <span className="text-rose-400 text-xl font-black uppercase tracking-widest">НЕ МОЁ</span>
               </motion.div>
             </>
           )}
 
-          {/* Metadata */}
-          <div className="absolute inset-x-0 bottom-0 p-6 text-white">
-            <h3 className="text-xl font-bold leading-tight tracking-tight line-clamp-2 mb-1.5">
-              {item.title}
-            </h3>
-            <p className="text-sm font-medium text-white/80 line-clamp-1">
+          {/* Integrated Text Content */}
+          <div className="absolute inset-x-0 bottom-0 p-8 pt-20 text-white z-10 transition-transform duration-500" style={{ transform: isTop ? 'translateY(0)' : 'translateY(10px)' }}>
+            <p className="text-[9px] font-black text-white/50 uppercase tracking-[0.2em] mb-2 leading-none">
               {formatAuthor(item.author || item.director || 'Автор не указан')}
               {item.year ? ` · ${item.year}` : ''}
             </p>
-
+            <h3 className="text-2xl font-black leading-[1.1] tracking-tight line-clamp-2 max-w-[85%] mb-2">
+              {item.title}
+            </h3>
+            <div className="flex items-center gap-2 text-white/40 group cursor-pointer" onClick={(e) => { e.stopPropagation(); onInfo(item); }}>
+              <span className="text-[10px] font-bold uppercase tracking-wider group-hover:text-white transition-colors">Смотреть подробнее</span>
+              <span className="material-symbols-rounded text-[14px]">arrow_forward</span>
+            </div>
           </div>
         </div>
       </div>
@@ -164,12 +167,11 @@ export default function DiscoverPage() {
   const { user, isLoading } = useAuth();
   const router = useRouter();
   const [queue, setQueue] = useState<ContentItem[]>([]);
-  const [history, setHistory] = useState<Array<{ item: ContentItem; direction: SwipeDirection }>>([]);
+  const [history, setHistory] = useState<Array<{ item: ContentItem; direction: SwipeDirection | 'bookmark' | 'skip_neutral' }>>([]);
   const [counts, setCounts] = useState({ like: 0, skip: 0, seen: 0 });
   const [loading, setLoading] = useState(true);
   const [openedInfo, setOpenedInfo] = useState<ContentItem | null>(null);
   const [exhausted, setExhausted] = useState(false);
-  const [seenModalItem, setSeenModalItem] = useState<ContentItem | null>(null);
 
   const loadQueue = async () => {
     if (!user) return;
@@ -203,39 +205,69 @@ export default function DiscoverPage() {
 
     try {
       await recordSwipe(user.id, current.id, direction);
-      if (direction === 'like') {
-        // Silent add to wishlist; ignore "already exists" noise.
-        addToWishlist(user.id, current.id).catch(() => {});
-      }
+      // No automatic wishlist on simple 'like' anymore, as per user's request:
+      // "Нравится - не обязательно хочу прочитать"
     } catch (e) {
       console.error(e);
     }
 
     if (rest.length === 0) {
-      // Try to fetch more; if still empty we mark exhausted.
       const more = await getSwipeableContent(user.id, 30);
       if (more.length > 0) setQueue(more);
       else setExhausted(true);
     }
   };
 
-  const handleSeen = () => {
+  const handleBookmarkAction = async (item: ContentItem) => {
+    if (!user || !item) return;
+    
+    // Optimistic UI
+    setQueue(prev => prev.filter(it => it.id !== item.id));
+    setHistory((h) => [...h, { item, direction: 'bookmark' }]);
+    setCounts((c) => ({ ...c, seen: c.seen + 1 })); // Use 'seen' counter for Wishlist UI label
+
+    try {
+      await addToWishlist(user.id, item.id);
+      await recordSwipe(user.id, item.id, 'like');
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const handleNeutralSkip = () => {
     if (queue.length === 0) return;
-    setSeenModalItem(queue[0]);
+    const [current, ...rest] = queue;
+    setQueue(rest);
+    setHistory((h) => [...h, { item: current, direction: 'skip_neutral' }]);
   };
 
   const handleRewind = async () => {
     if (!user || history.length === 0) return;
     const last = history[history.length - 1];
-    try {
-      await undoLastSwipe(user.id, last.item.id);
-    } catch (e) {
-      console.error(e);
-      return;
+    
+    if (last.direction !== 'skip_neutral') {
+      try {
+        await undoLastSwipe(user.id, last.item.id);
+        if (last.direction === 'bookmark') {
+          const { removeFromWishlist } = await import('@/lib/wishlist');
+          await removeFromWishlist(user.id, last.item.id);
+        }
+      } catch (e) {
+        console.error(e);
+        return;
+      }
     }
+
     setHistory((h) => h.slice(0, -1));
     setQueue((q) => [last.item, ...q]);
-    setCounts((c) => ({ ...c, [last.direction]: Math.max(0, c[last.direction] - 1) }));
+    
+    // Update counters
+    if (last.direction === 'bookmark') {
+      setCounts((c) => ({ ...c, seen: Math.max(0, c.seen - 1) }));
+    } else if (last.direction !== 'skip_neutral') {
+      const dir = last.direction as SwipeDirection;
+      setCounts((c) => ({ ...c, [dir]: Math.max(0, c[dir] - 1) }));
+    }
     setExhausted(false);
   };
 
@@ -254,54 +286,51 @@ export default function DiscoverPage() {
   return (
     <>
       <TopNavBar title="Откройте для себя" showBack={true} backPath="/" />
-      <main className="pt-20 pb-32 px-6 max-w-lg mx-auto">
+      <main className="pt-20 pb-20 px-6 max-w-lg mx-auto flex flex-col min-h-screen">
         {/* Header with counters */}
         <section className="pt-4 pb-6">
-          <span className="text-xs font-medium text-on-surface-muted mb-1.5 block">Свайпните, чтобы найти своё</span>
-          <h1 className="text-2xl font-bold tracking-tight leading-tight text-on-surface">
-            Откройте для себя
+          <span className="text-[10px] font-black text-on-surface-muted/50 mb-2 block uppercase tracking-[0.2em]">Личные рекомендации</span>
+          <h1 className="text-3xl font-black tracking-tight leading-tight text-on-surface mb-6">
+            Для вас
           </h1>
-          <div className="mt-5 grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-3 gap-3">
             {[
-              { label: 'Интересно', value: counts.like, icon: 'favorite' },
-              { label: 'Не моё', value: counts.skip, icon: 'close' },
-              { label: 'Уже знаю', value: counts.seen, icon: 'check' },
+              { label: 'Нравится', value: counts.like, icon: 'favorite', color: 'text-emerald-500' },
+              { label: 'Не моё', value: counts.skip, icon: 'close', color: 'text-rose-500' },
+              { label: 'Виш-лист', value: counts.seen, icon: 'bookmark', color: 'text-amber-500' },
             ].map((s) => (
               <div
                 key={s.label}
-                className="flex items-center gap-2 bg-surface-container-low rounded-xl px-3 py-2 border border-on-surface/5"
+                className="flex flex-col items-center gap-1 bg-surface-container-low rounded-[1.5rem] p-3 border border-white/5 shadow-sm"
               >
-                <span className="material-symbols-outlined text-[16px] text-on-surface-muted">{s.icon}</span>
-                <div className="min-w-0">
-                  <p className="text-[10px] font-medium text-on-surface-muted leading-tight truncate">{s.label}</p>
-                  <p className="text-sm font-semibold text-on-surface leading-tight">{s.value}</p>
-                </div>
+                <span className={`material-symbols-rounded text-[20px] ${s.color}`} style={{ fontVariationSettings: "'FILL' 1" }}>
+                  {s.icon}
+                </span>
+                <p className="text-sm font-black text-on-surface leading-tight">{s.value}</p>
+                <p className="text-[9px] font-bold text-on-surface-muted/60 uppercase tracking-wider leading-none mt-0.5">{s.label}</p>
               </div>
             ))}
           </div>
         </section>
 
         {/* Card stack */}
-        <section className="relative mx-auto w-full aspect-[3/4] max-w-sm">
+        <section className="relative flex-1 w-full mx-auto max-w-sm max-h-[520px] aspect-[2/3] pt-2">
           {loading ? (
-            <div className="absolute inset-0 rounded-3xl bg-surface-container-low animate-pulse" />
+            <div className="absolute inset-0 rounded-[2.5rem] bg-surface-container-low animate-pulse" />
           ) : exhausted || queue.length === 0 ? (
-            <div className="absolute inset-0 rounded-3xl bg-surface border border-on-surface/5 flex flex-col items-center justify-center text-center px-8">
-              <div className="w-16 h-16 rounded-2xl bg-surface-container flex items-center justify-center mb-5">
-                <span
-                  className="material-symbols-outlined text-[28px] text-on-surface-muted"
-                  style={{ fontVariationSettings: "'FILL' 1" }}
-                >
+            <div className="absolute inset-0 rounded-[2.5rem] bg-surface-container-low border border-on-surface/5 flex flex-col items-center justify-center text-center px-10">
+              <div className="w-20 h-20 rounded-[2rem] bg-surface-container flex items-center justify-center mb-6 shadow-xl">
+                <span className="material-symbols-rounded text-4xl text-on-surface-muted/40" style={{ fontVariationSettings: "'FILL' 1" }}>
                   auto_awesome
                 </span>
               </div>
-              <h2 className="text-lg font-semibold text-on-surface mb-2">Вы всё пересмотрели</h2>
-              <p className="text-sm text-on-surface-muted font-medium leading-relaxed mb-6 max-w-xs">
-                Новые публикации появляются регулярно. Загляните позже или обновите колоду.
+              <h2 className="text-xl font-black text-on-surface mb-3">Колода пуста</h2>
+              <p className="text-sm text-on-surface-muted/80 font-medium leading-relaxed mb-8">
+                Мы скоро найдем для вас что-нибудь новенькое. Загляните позже!
               </p>
               <button
                 onClick={loadQueue}
-                className="bg-on-surface text-surface px-5 py-2.5 rounded-xl font-semibold text-sm active:scale-95 transition-transform"
+                className="bg-on-surface text-surface px-8 py-3.5 rounded-2xl font-black text-sm active:scale-95 transition-all shadow-lg"
               >
                 Обновить
               </button>
@@ -315,6 +344,7 @@ export default function DiscoverPage() {
                   isTop={i === 0}
                   depth={i}
                   onSwipe={handleSwipe}
+                  onBookmark={handleBookmarkAction}
                   onInfo={setOpenedInfo}
                 />
               ))}
@@ -322,56 +352,42 @@ export default function DiscoverPage() {
           )}
         </section>
 
-        {/* Action buttons */}
+        {/* Bottom Action Bar */}
         {!exhausted && queue.length > 0 && (
-          <section className="mt-8 flex items-center justify-center gap-5">
+          <section className="mt-8 mb-4 flex items-center justify-center gap-6">
             <button
               onClick={handleRewind}
               disabled={history.length === 0}
-              className="w-12 h-12 rounded-full bg-surface border border-on-surface/10 flex items-center justify-center text-on-surface-muted active:scale-90 transition-transform disabled:opacity-30 disabled:active:scale-100 shadow-sm"
-              aria-label="Вернуть последнюю карточку"
+              className="w-12 h-12 rounded-2xl bg-surface-container border border-white/5 flex items-center justify-center text-on-surface-muted active:scale-90 transition-all disabled:opacity-20 shadow-sm"
+              aria-label="Назад"
             >
-              <span className="material-symbols-outlined text-[22px]">undo</span>
+              <span className="material-symbols-rounded text-[22px]">undo</span>
             </button>
+            
             <button
               onClick={() => handleSwipe('skip')}
-              className="w-14 h-14 rounded-full bg-surface border border-on-surface/10 flex items-center justify-center text-rose-500 active:scale-90 transition-transform shadow-sm hover:border-rose-200"
-              aria-label="Не моё"
+              className="w-16 h-16 rounded-[1.5rem] bg-white text-rose-500 flex items-center justify-center active:scale-90 transition-all shadow-[0_12px_30px_rgba(244,63,94,0.1)] hover:scale-105 group"
+              aria-label="Не нравится"
             >
-              <span className="material-symbols-outlined text-[26px]">close</span>
+              <span className="material-symbols-rounded text-[32px] group-hover:scale-110 transition-transform">close</span>
             </button>
+
             <button
-              onClick={handleSeen}
-              className="w-12 h-12 rounded-full bg-surface border border-on-surface/10 flex items-center justify-center text-on-surface active:scale-90 transition-transform shadow-sm"
-              aria-label="Уже знаю"
+              onClick={handleNeutralSkip}
+              className="w-14 h-14 rounded-2xl bg-surface-container border border-white/5 flex items-center justify-center text-on-surface-muted active:scale-90 transition-all shadow-sm hover:scale-105 group"
+              aria-label="Пропустить"
             >
-              <span
-                className="material-symbols-outlined text-[22px]"
-                style={{ fontVariationSettings: "'FILL' 1" }}
-              >
-                check
-              </span>
+              <span className="material-symbols-rounded text-[26px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
             </button>
+
             <button
               onClick={() => handleSwipe('like')}
-              className="w-14 h-14 rounded-full bg-on-surface text-surface flex items-center justify-center active:scale-90 transition-transform shadow-[0_8px_20px_rgba(0,0,0,0.12)]"
-              aria-label="Интересно"
+              className="w-16 h-16 rounded-[1.5rem] bg-black text-emerald-400 flex items-center justify-center active:scale-90 transition-all shadow-[0_15px_35px_rgba(0,0,0,0.3)] hover:scale-105 group"
+              aria-label="Нравится"
             >
-              <span
-                className="material-symbols-outlined text-[26px]"
-                style={{ fontVariationSettings: "'FILL' 1" }}
-              >
-                favorite
-              </span>
+              <span className="material-symbols-rounded text-[32px] group-hover:scale-110 transition-transform" style={{ fontVariationSettings: "'FILL' 1" }}>favorite</span>
             </button>
           </section>
-        )}
-
-        {/* Hint */}
-        {!exhausted && queue.length > 0 && (
-          <p className="mt-5 text-center text-xs font-medium text-on-surface-muted">
-            Свайпните вправо, если интересно, или влево — если не ваше
-          </p>
         )}
       </main>
 
@@ -379,83 +395,7 @@ export default function DiscoverPage() {
         <ContentDetailsModal content={openedInfo} onClose={() => setOpenedInfo(null)} />
       )}
 
-      {/* Seen modal: pick a rating and remove from queue */}
-      {seenModalItem && (
-        <SeenRatingModal
-          item={seenModalItem}
-          onCancel={() => setSeenModalItem(null)}
-          onConfirm={async (rating) => {
-            if (!user) return;
-            try {
-              await recordSwipe(user.id, seenModalItem.id, 'seen');
-              if (rating > 0) {
-                const { submitReview } = await import('@/lib/db');
-                await submitReview(seenModalItem.id, user.id, '', rating);
-              }
-            } catch (e) {
-              console.error(e);
-            }
-            const current = seenModalItem;
-            setSeenModalItem(null);
-            setQueue((q) => q.filter((it) => it.id !== current.id));
-            setCounts((c) => ({ ...c, seen: c.seen + 1 }));
-            setHistory((h) => [...h, { item: current, direction: 'seen' }]);
-          }}
-        />
-      )}
-
       <BottomNavBar activeTab="home" />
     </>
-  );
-}
-
-function SeenRatingModal({
-  item,
-  onCancel,
-  onConfirm,
-}: {
-  item: ContentItem;
-  onCancel: () => void;
-  onConfirm: (rating: number) => void;
-}) {
-  const [rating, setRating] = useState(0);
-  return (
-    <div className="fixed inset-0 z-[100] flex items-end md:items-center justify-center bg-black/40 backdrop-blur-sm px-4 animate-in fade-in">
-      <div className="w-full max-w-sm bg-surface rounded-3xl p-6 border border-on-surface/5 animate-in slide-in-from-bottom-4 duration-300">
-        <h3 className="text-base font-semibold text-on-surface mb-1">Уже знакомо?</h3>
-        <p className="text-sm text-on-surface-muted font-medium mb-5 line-clamp-2">{item.title}</p>
-        <p className="text-xs font-medium text-on-surface-muted mb-2">Оцените (необязательно)</p>
-        <div className="flex gap-2 mb-6">
-          {[1, 2, 3, 4, 5].map((star) => (
-            <button
-              key={star}
-              onClick={() => setRating(star === rating ? 0 : star)}
-              className="transition-transform hover:scale-110"
-            >
-              <span
-                className={`material-symbols-outlined text-2xl ${star <= rating ? 'text-amber-500' : 'text-on-surface-variant/20'}`}
-                style={{ fontVariationSettings: star <= rating ? "'FILL' 1" : "'FILL' 0" }}
-              >
-                star
-              </span>
-            </button>
-          ))}
-        </div>
-        <div className="flex gap-2">
-          <button
-            onClick={onCancel}
-            className="flex-1 py-2.5 rounded-xl font-semibold text-sm text-on-surface-variant hover:bg-surface-container transition-colors"
-          >
-            Отмена
-          </button>
-          <button
-            onClick={() => onConfirm(rating)}
-            className="flex-1 py-2.5 rounded-xl font-semibold text-sm bg-on-surface text-surface active:scale-95 transition-transform"
-          >
-            Отметить
-          </button>
-        </div>
-      </div>
-    </div>
   );
 }

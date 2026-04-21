@@ -108,7 +108,7 @@ export default function Movies() {
                   className="group w-full flex flex-col text-left outline-none"
                   onClick={() => setSelectedContent(movie)}
                 >
-                  <div className="relative aspect-[2/3] w-full rounded-xl overflow-hidden bg-surface-container border border-on-surface/5">
+                  <div className="relative aspect-[2/3] w-full rounded-2xl overflow-hidden bg-surface-container border border-on-surface/5 shadow-sm group">
                     {movie.imageUrl ? (
                       <Image
                         src={movie.imageUrl}
@@ -117,38 +117,40 @@ export default function Movies() {
                         sizes="(max-width: 768px) 33vw, 25vw"
                         placeholder="blur"
                         blurDataURL={defaultBlurDataURL}
-                        className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                        className="object-cover transition-transform duration-700 group-hover:scale-110"
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center text-xs font-medium text-on-surface-muted">Нет обложки</div>
                     )}
-                    <div className="absolute top-2 left-2 px-1.5 py-0.5 rounded-md bg-black/60 backdrop-blur-md flex items-center gap-1 z-10 border border-white/10">
+                    <div className="absolute top-2.5 left-2.5 px-2 py-1 rounded-lg bg-black/60 backdrop-blur-md flex items-center gap-1.5 z-20 border border-white/10">
                       <span className="material-symbols-rounded text-white" style={{ fontSize: '11px', fontVariationSettings: "'FILL' 1" }}>movie</span>
-                      <span className="text-[10px] font-bold text-white leading-none uppercase tracking-wider">Кино</span>
+                      <span className="text-[10px] font-black text-white leading-none uppercase tracking-widest">Кино</span>
                     </div>
 
-                    {/* Year Badge */}
-                    {movie.year && (
-                      <div className="absolute top-2 right-2 px-1.5 py-0.5 rounded-md bg-black/60 backdrop-blur-md flex items-center gap-1 z-10 border border-white/10">
-                        <span className="material-symbols-rounded text-white" style={{ fontSize: '11px', fontVariationSettings: "'FILL' 1" }}>event</span>
-                        <span className="text-[10px] font-bold text-white leading-none">{movie.year}</span>
-                      </div>
-                    )}
+                    <div className="absolute top-2.5 right-2.5 flex flex-col gap-1.5 z-20">
+                      {/* Year Badge */}
+                      {movie.year && (
+                        <div className="px-2 py-1 rounded-lg bg-black/60 backdrop-blur-md flex items-center justify-center border border-white/10">
+                          <span className="text-[10px] font-black text-white leading-none">{movie.year}</span>
+                        </div>
+                      )}
+                      {/* Rating Badge */}
+                      {movie.rating && (
+                        <div className="px-2 py-1 rounded-lg bg-amber-400 backdrop-blur-md flex items-center justify-center gap-1 border border-amber-500/20 shadow-lg shadow-amber-500/20">
+                          <span className="material-symbols-rounded text-amber-950" style={{ fontSize: '10px', fontVariationSettings: "'FILL' 1" }}>star</span>
+                          <span className="text-[10px] font-black text-amber-950 leading-none">{movie.rating.toFixed(1)}</span>
+                        </div>
+                      )}
+                    </div>
 
-                    {/* Rating Badge */}
-                    {movie.rating && (
-                      <div className="absolute bottom-2 right-2 px-1.5 py-0.5 rounded-lg bg-black/60 backdrop-blur-md flex items-center gap-1 z-10 border border-white/10">
-                        <span className="material-symbols-rounded text-amber-400" style={{ fontSize: '12px', fontVariationSettings: "'FILL' 1" }}>star</span>
-                        <span className="text-[11px] font-black text-white leading-none">{movie.rating.toFixed(1)}</span>
-                      </div>
-                    )}
-                  </div>
-                  <div className="mt-3">
-                    <h3 className="text-sm font-semibold leading-snug tracking-tight line-clamp-2 text-on-surface h-10">{movie.title}</h3>
-                    <div className="flex items-center gap-2 mt-1">
-                      <p className="text-xs font-medium text-on-surface-muted truncate">
+                    {/* Content Overlay */}
+                    <div className="absolute inset-x-0 bottom-0 pt-20 pb-4 px-4 bg-gradient-to-t from-black via-black/40 to-transparent z-10">
+                      <p className="text-[10px] font-black text-white/50 uppercase tracking-[0.2em] mb-1 truncate leading-none">
                         {formatAuthor(movie.director || 'Неизвестный')}
                       </p>
+                      <h3 className="text-sm md:text-base font-bold text-white leading-tight line-clamp-2 tracking-tight">
+                        {movie.title}
+                      </h3>
                     </div>
                   </div>
                 </button>
