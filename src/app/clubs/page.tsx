@@ -273,10 +273,10 @@ export default function Clubs() {
               <button
                 id="create-club-btn"
                 onClick={handleCreateClick}
-                className="bg-on-surface text-surface px-4 py-2.5 rounded-xl flex items-center justify-center gap-2 hover:opacity-90 active:scale-95 transition-all w-full sm:w-auto"
+                className="bg-on-surface text-surface px-4 py-2 rounded-xl flex items-center justify-center gap-2 hover:opacity-90 active:scale-95 transition-all w-full sm:w-auto"
               >
-                <span className="material-symbols-outlined text-[18px]">add</span>
-                <span className="font-semibold text-sm leading-none">Создать клуб</span>
+                <span className="material-symbols-outlined text-[16px]">add</span>
+                <span className="font-bold text-xs leading-none">Создать клуб</span>
               </button>
               {showTooltip && (
                 <div className="absolute right-0 top-full mt-2 z-50 bg-on-surface text-surface px-3 py-2 rounded-lg whitespace-nowrap">
@@ -308,17 +308,17 @@ export default function Clubs() {
         </div>
 
         {/* Sub-Filters Chips with Icons */}
-        <div className="flex gap-2.5 mb-10 overflow-x-auto scrollbar-hide py-1">
+        <div className="flex gap-2 mb-10 overflow-x-auto scrollbar-hide py-1">
           {SUB_FILTERS.map(filter => (
             <button
               key={filter.id}
               onClick={() => setSubFilter(filter.id as SubFilter)}
-              className={`px-5 py-2.5 rounded-xl text-[11px] font-black uppercase tracking-wider flex items-center gap-2 transition-all whitespace-nowrap ${subFilter === filter.id
-                  ? 'bg-on-surface text-surface shadow-lg shadow-on-surface/10'
-                  : 'bg-surface-container-low text-on-surface-muted hover:bg-surface-container border border-on-surface/5'
+              className={`px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition-all whitespace-nowrap border ${subFilter === filter.id
+                  ? 'bg-on-surface text-surface border-on-surface shadow-lg shadow-on-surface/10'
+                  : 'bg-surface-container/40 text-on-surface-muted hover:bg-surface-container border-transparent hover:border-on-surface/10 hover:text-on-surface/50'
                 }`}
             >
-              <span className="material-symbols-rounded text-[18px]">
+              <span className="material-symbols-rounded" style={{ fontSize: '16px', fontVariationSettings: subFilter === filter.id ? "'FILL' 1" : "'FILL' 0" }}>
                 {filter.id === 'all' ? 'dashboard' : (filter.id === 'movie' ? 'movie' : (filter.id === 'book' ? 'menu_book' : (filter.id === 'owner' ? 'shield_person' : 'person')))}
               </span>
               {filter.label}
