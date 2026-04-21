@@ -296,29 +296,31 @@ function ContentCard({ item, onClick }: { item: ContentItem; onClick: () => void
       onClick={onClick}
       className="group flex flex-col text-left outline-none"
     >
-      <div className="bg-white p-1 pb-2 rounded-[12px] border border-on-surface/[0.03] shadow-sm hover:shadow-md transition-all h-full">
-        <div className="relative aspect-[2/3] w-full rounded-[8px] overflow-hidden bg-surface-container-low border border-on-surface/[0.03]">
-          {item.imageUrl ? (
-            <Image
-              src={item.imageUrl}
-              alt={item.title}
-              fill
-              sizes="150px"
-              placeholder="blur"
-              blurDataURL={defaultBlurDataURL}
-              className="object-cover group-hover:scale-105 transition-transform duration-500"
-            />
-          ) : (
-             <div className="w-full h-full flex items-center justify-center opacity-20">
-               <span className="material-symbols-outlined">{item.type === 'movie' ? 'movie' : 'menu_book'}</span>
-             </div>
-          )}
-        </div>
-        <div className="mt-1.5 px-0.5">
-          <h4 className="text-[9px] font-bold text-on-surface leading-tight line-clamp-2 min-h-[2.2em]">{item.title}</h4>
-          <p className="text-[8px] font-medium text-on-surface-variant/60 truncate mt-0.5">
-            {formatAuthor(item.author || item.director || '')}
+      <div className="relative aspect-[2/3] w-full rounded-xl overflow-hidden bg-surface-container border border-on-surface/5 shadow-sm group">
+        {item.imageUrl ? (
+          <Image
+            src={item.imageUrl}
+            alt={item.title}
+            fill
+            sizes="150px"
+            placeholder="blur"
+            blurDataURL={defaultBlurDataURL}
+            className="object-cover transition-transform duration-700 group-hover:scale-110"
+          />
+        ) : (
+           <div className="w-full h-full flex items-center justify-center opacity-20">
+             <span className="material-symbols-outlined">{item.type === 'movie' ? 'movie' : 'menu_book'}</span>
+           </div>
+        )}
+
+        {/* Content Overlay */}
+        <div className="absolute inset-x-0 bottom-0 pt-10 pb-2 px-2 bg-gradient-to-t from-black via-black/40 to-transparent z-10 transition-transform">
+          <p className="text-[7px] font-black text-white/50 uppercase tracking-[0.15em] mb-0.5 truncate leading-none">
+            {formatAuthor(item.author || item.director || '') || 'Автор'}
           </p>
+          <h4 className="text-[10px] font-bold text-white leading-tight line-clamp-2 tracking-tight">
+            {item.title}
+          </h4>
         </div>
       </div>
     </button>

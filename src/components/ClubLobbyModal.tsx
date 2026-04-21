@@ -108,29 +108,28 @@ export default function ClubLobbyModal({
           </div>
 
           {/* Body Content */}
-          <div className="p-8 sm:p-10 space-y-8">
-            {/* Main Action */}
-            <div className="flex flex-col items-center justify-center -mt-12 relative z-30 gap-4">
-              {isMember ? (
-                <>
-                  <div className="px-6 py-2 bg-on-surface/5 text-on-surface/40 rounded-full font-black text-[9px] uppercase tracking-[0.2em] border border-on-surface/5 backdrop-blur-sm">
-                    Вы уже участник клуба
-                  </div>
-                  <button 
-                    onClick={() => onJoin(club.id)}
-                    className="px-12 py-4 bg-on-surface text-surface rounded-2xl font-black text-xs uppercase tracking-[0.2em] shadow-2xl hover:scale-[1.02] active:scale-95 transition-all"
-                  >
-                    Войти в чат
-                  </button>
-                </>
-              ) : (
-                <button 
-                  onClick={() => onJoin(club.id)}
-                  className="px-12 py-4 bg-on-surface text-surface rounded-2xl font-black text-xs uppercase tracking-[0.2em] shadow-2xl hover:scale-[1.02] active:scale-95 transition-all"
-                >
-                  Вступить в клуб
-                </button>
-              )}
+          <div className="p-8 sm:p-10 space-y-8 flex flex-col">
+            
+            {/* Meta Row - Moved Up */}
+            <div className="grid grid-cols-2 gap-4 -mt-12 relative z-30">
+              <div className="p-4 rounded-[24px] bg-white/80 backdrop-blur-xl shadow-xl border border-on-surface/5 flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+                  <span className="material-symbols-rounded text-[18px]">person_edit</span>
+                </div>
+                <div className="min-w-0">
+                  <span className="text-[8px] font-black text-on-surface/30 uppercase tracking-widest block">Создатель</span>
+                  <span className="text-xs font-bold truncate block">{ownerName}</span>
+                </div>
+              </div>
+              <div className="p-4 rounded-[24px] bg-white/80 backdrop-blur-xl shadow-xl border border-on-surface/5 flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-amber-400/10 flex items-center justify-center text-amber-600">
+                  <span className="material-symbols-rounded text-[18px]">calendar_today</span>
+                </div>
+                <div className="min-w-0">
+                  <span className="text-[8px] font-black text-on-surface/30 uppercase tracking-widest block">Основан</span>
+                  <span className="text-xs font-bold truncate block">{new Date(club.createdAt).toLocaleDateString('ru-RU')}</span>
+                </div>
+              </div>
             </div>
 
             {/* Info Section */}
@@ -142,28 +141,6 @@ export default function ClubLobbyModal({
                    {club.description || 'В этом клубе еще нет описания, но здесь точно происходит что-то интересное.'}
                  </p>
               </div>
-
-              {/* Compact Meta Row */}
-              <div className="grid grid-cols-2 gap-4">
-                <div className="p-4 rounded-[24px] bg-surface-container-low/50 border border-on-surface/5 flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
-                    <span className="material-symbols-rounded text-[18px]">person_edit</span>
-                  </div>
-                  <div className="min-w-0">
-                    <span className="text-[8px] font-black text-on-surface/30 uppercase tracking-widest block">Создатель</span>
-                    <span className="text-xs font-bold truncate block">{ownerName}</span>
-                  </div>
-                </div>
-                <div className="p-4 rounded-[24px] bg-surface-container-low/50 border border-on-surface/5 flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-amber-400/10 flex items-center justify-center text-amber-600">
-                    <span className="material-symbols-rounded text-[18px]">calendar_today</span>
-                  </div>
-                  <div className="min-w-0">
-                    <span className="text-[8px] font-black text-on-surface/30 uppercase tracking-widest block">Основан</span>
-                    <span className="text-xs font-bold truncate block">{new Date(club.createdAt).toLocaleDateString('ru-RU')}</span>
-                  </div>
-                </div>
-              </div>
             </div>
 
             {/* Marathon / Event (if exists) */}
@@ -173,12 +150,12 @@ export default function ClubLobbyModal({
                    <span className="material-symbols-rounded text-6xl" style={{ fontVariationSettings: "'FILL' 1" }}>bolt</span>
                 </div>
                 <div className="relative z-10">
-                  <span className="text-[9px] font-black uppercase tracking-[0.3em] opacity-60 block mb-2">Текущий марафон</span>
-                  <h4 className="text-xl font-black tracking-tight mb-1">{marathon.title}</h4>
-                  <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-surface/20 rounded-full text-[10px] font-bold mt-2">
-                    <span className="material-symbols-rounded text-[14px]">timer</span>
-                    Осталось {Math.max(0, Math.ceil((new Date(marathon.endsAt).getTime() - Date.now()) / (1000 * 60 * 60 * 24)))} дней
-                  </div>
+                   <span className="text-[9px] font-black uppercase tracking-[0.3em] opacity-60 block mb-2">Текущий марафон</span>
+                   <h4 className="text-xl font-black tracking-tight mb-1">{marathon.title}</h4>
+                   <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-surface/20 rounded-full text-[10px] font-bold mt-2">
+                     <span className="material-symbols-rounded text-[14px]">timer</span>
+                     Осталось {Math.max(0, Math.ceil((new Date(marathon.endsAt).getTime() - Date.now()) / (1000 * 60 * 60 * 24)))} дней
+                   </div>
                 </div>
               </div>
             )}
@@ -192,6 +169,30 @@ export default function ClubLobbyModal({
                  <li>Никакого спама и рекламы</li>
                  <li>Уважайте мнение каждого критика</li>
                </ul>
+            </div>
+
+            {/* Main Action - Moved to Bottom */}
+            <div className="flex flex-col items-center justify-center pt-8 gap-4">
+              {isMember ? (
+                <>
+                  <div className="px-6 py-2 bg-on-surface/5 text-on-surface/40 rounded-full font-black text-[9px] uppercase tracking-[0.2em] border border-on-surface/5">
+                    Вы уже участник клуба
+                  </div>
+                  <button 
+                    onClick={() => onJoin(club.id)}
+                    className="w-full py-5 bg-on-surface text-surface rounded-2xl font-black text-sm uppercase tracking-[0.2em] shadow-2xl hover:scale-[1.01] active:scale-95 transition-all"
+                  >
+                    Войти в чат
+                  </button>
+                </>
+              ) : (
+                <button 
+                  onClick={() => onJoin(club.id)}
+                  className="w-full py-5 bg-on-surface text-surface rounded-2xl font-black text-sm uppercase tracking-[0.2em] shadow-2xl hover:scale-[1.01] active:scale-95 transition-all"
+                >
+                  Вступить в клуб
+                </button>
+              )}
             </div>
           </div>
         </div>

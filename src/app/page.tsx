@@ -338,7 +338,7 @@ export default function Home() {
                     onClick={() => setSelectedContent(item)}
                     className="group shrink-0 w-36 snap-start text-left outline-none"
                   >
-                    <div className="relative aspect-[2/3] w-full rounded-xl overflow-hidden bg-surface-container border border-on-surface/5">
+                    <div className="relative aspect-[2/3] w-full rounded-2xl overflow-hidden bg-surface-container border border-on-surface/5 shadow-sm group">
                       {item.imageUrl && (
                         <Image
                           src={item.imageUrl}
@@ -347,26 +347,28 @@ export default function Home() {
                           sizes="144px"
                           placeholder="blur"
                           blurDataURL={defaultBlurDataURL}
-                          className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                          className="object-cover transition-transform duration-700 group-hover:scale-110"
                         />
                       )}
-                      <div className="absolute top-2 left-2 px-1.5 py-0.5 rounded-md bg-black/55 backdrop-blur-sm flex items-center gap-1 z-10">
-                        <span className="material-symbols-outlined text-white" style={{ fontSize: '11px' }}>
+                      
+                      <div className="absolute top-2 left-2 px-1.5 py-0.5 rounded-lg bg-black/60 backdrop-blur-md flex items-center gap-1 z-20 border border-white/10">
+                        <span className="material-symbols-outlined text-white" style={{ fontSize: '10px' }}>
                           {item.type === 'movie' ? 'movie' : 'menu_book'}
                         </span>
-                        <span className="text-[10px] font-semibold text-white leading-none">
+                        <span className="text-[9px] font-black text-white leading-none uppercase tracking-widest">
                           {item.type === 'movie' ? 'Кино' : 'Книга'}
                         </span>
                       </div>
-                    </div>
-                    <div className="mt-2.5">
-                      <h3 className="text-xs font-semibold leading-snug tracking-tight line-clamp-2 text-on-surface">
-                        {item.title}
-                      </h3>
-                      <p className="text-[11px] font-medium text-on-surface-muted truncate mt-0.5">
-                        {item.author || item.director || ''}
-                        {item.year ? ` · ${item.year}` : ''}
-                      </p>
+
+                      {/* Content Overlay */}
+                      <div className="absolute inset-x-0 bottom-0 pt-10 pb-2 px-2 bg-gradient-to-t from-black via-black/40 to-transparent z-10 transition-transform">
+                        <p className="text-[8px] font-black text-white/50 uppercase tracking-[0.15em] mb-0.5 truncate leading-none">
+                          {item.author || item.director || 'Автор'}
+                        </p>
+                        <h3 className="text-[10px] font-bold text-white leading-tight line-clamp-2 tracking-tight">
+                          {item.title}
+                        </h3>
+                      </div>
                     </div>
                   </button>
                 ))}
@@ -473,7 +475,7 @@ export default function Home() {
                   onClick={() => setSelectedContent(item)}
                   className="group w-full flex flex-col text-left outline-none"
                 >
-                    <div className="relative aspect-[2/3] w-full rounded-xl overflow-hidden bg-surface-container border border-on-surface/5">
+                                  <div className="relative aspect-[2/3] w-full rounded-2xl overflow-hidden bg-surface-container border border-on-surface/5 shadow-sm group">
                       {item.imageUrl && (
                         <Image
                           src={item.imageUrl}
@@ -482,38 +484,40 @@ export default function Home() {
                           sizes="(min-width: 1024px) 20rem, 50vw"
                           placeholder="blur"
                           blurDataURL={defaultBlurDataURL}
-                          className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                          className="object-cover transition-transform duration-700 group-hover:scale-110"
                         />
                       )}
                       
                       {/* Type Badge */}
-                      <div className="absolute top-2 left-2 px-1.5 py-0.5 rounded-md bg-black/60 backdrop-blur-md flex items-center gap-1 z-10 border border-white/10">
+                      <div className="absolute top-2.5 left-2.5 px-2 py-1 rounded-lg bg-black/60 backdrop-blur-md flex items-center gap-1.5 z-20 border border-white/10">
                         <span className="material-symbols-rounded text-white" style={{ fontSize: '11px', fontVariationSettings: "'FILL' 1" }}>{item.type === 'movie' ? 'movie' : 'menu_book'}</span>
-                        <span className="text-[10px] font-bold text-white leading-none uppercase tracking-wider">{item.type === 'movie' ? 'Кино' : 'Книга'}</span>
+                        <span className="text-[10px] font-black text-white leading-none uppercase tracking-widest">{item.type === 'movie' ? 'Кино' : 'Книга'}</span>
+                      </div>
+                      
+                      <div className="absolute top-2.5 right-2.5 flex flex-col gap-1.5 z-20">
+                        {/* Year Badge */}
+                        {item.year && (
+                          <div className="px-2 py-1 rounded-lg bg-black/60 backdrop-blur-md flex items-center justify-center border border-white/10">
+                            <span className="text-[10px] font-black text-white leading-none">{item.year}</span>
+                          </div>
+                        )}
+                        {/* Rating Badge */}
+                        {item.rating && (
+                          <div className="px-2 py-1 rounded-lg bg-amber-400 backdrop-blur-md flex items-center justify-center gap-1 border border-amber-500/20 shadow-lg shadow-amber-500/20">
+                            <span className="material-symbols-rounded text-amber-950" style={{ fontSize: '10px', fontVariationSettings: "'FILL' 1" }}>star</span>
+                            <span className="text-[10px] font-black text-amber-950 leading-none">{item.rating.toFixed(1)}</span>
+                          </div>
+                        )}
                       </div>
 
-                      {/* Year Badge */}
-                      {item.year && (
-                        <div className="absolute top-2 right-2 px-1.5 py-0.5 rounded-md bg-black/60 backdrop-blur-md flex items-center gap-1 z-10 border border-white/10">
-                          <span className="material-symbols-rounded text-white" style={{ fontSize: '11px', fontVariationSettings: "'FILL' 1" }}>event</span>
-                          <span className="text-[10px] font-bold text-white leading-none">{item.year}</span>
-                        </div>
-                      )}
-
-                      {/* Rating Badge */}
-                      {item.rating && (
-                        <div className="absolute bottom-2 right-2 px-1.5 py-0.5 rounded-lg bg-black/60 backdrop-blur-md flex items-center gap-1 z-10 border border-white/10">
-                          <span className="material-symbols-rounded text-amber-400" style={{ fontSize: '12px', fontVariationSettings: "'FILL' 1" }}>star</span>
-                          <span className="text-[11px] font-black text-white leading-none">{item.rating.toFixed(1)}</span>
-                        </div>
-                      )}
-                    </div>
-                    <div className="mt-3">
-                      <h3 className="text-sm font-semibold leading-snug tracking-tight line-clamp-2 text-on-surface h-10">{item.title}</h3>
-                      <div className="flex items-center gap-2 mt-1">
-                        <p className="text-xs font-medium text-on-surface-muted truncate">
+                      {/* Content Overlay */}
+                      <div className="absolute inset-x-0 bottom-0 pt-20 pb-4 px-4 bg-gradient-to-t from-black via-black/40 to-transparent z-10 transition-transform">
+                        <p className="text-[10px] font-black text-white/50 uppercase tracking-[0.2em] mb-1 truncate leading-none">
                           {(item.author || item.director || 'Автор')}
                         </p>
+                        <h3 className="text-sm md:text-base font-bold text-white leading-tight line-clamp-2 tracking-tight">
+                          {item.title}
+                        </h3>
                       </div>
                     </div>
                 </button>
@@ -626,14 +630,16 @@ function LeaderboardColumn({
           <div className="flex flex-col items-center justify-center h-32 opacity-20 italic text-xs">Нет данных</div>
         ) : users.map((u, i) => (
           <div key={u.id} className="flex items-center gap-3 group">
-            <div className="relative w-10 h-10 rounded-full bg-surface-container overflow-hidden border border-on-surface/5 flex-shrink-0">
-              {u.avatarUrl ? (
-                <Image src={u.avatarUrl} alt={u.name} fill className="object-cover" />
-              ) : (
-                <div className="w-full h-full flex items-center justify-center text-[10px] font-black">{u.name.charAt(0)}</div>
-              )}
+            <div className="relative w-10 h-10 flex-shrink-0">
+              <div className="relative w-full h-full rounded-full bg-surface-container overflow-hidden border border-on-surface/5">
+                {u.avatarUrl ? (
+                  <Image src={u.avatarUrl} alt={u.name} fill className="object-cover" />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-[10px] font-black">{u.name.charAt(0)}</div>
+                )}
+              </div>
               {/* Rank Badge */}
-              <div className={`absolute -top-1 -right-1 w-5 h-5 rounded-full flex items-center justify-center text-[9px] font-black border-2 border-surface ${
+              <div className={`absolute -top-1 -right-1 w-5 h-5 rounded-full flex items-center justify-center text-[9px] font-black border-2 border-surface z-10 shadow-sm ${
                 i === 0 ? 'bg-amber-400 text-amber-950' : 
                 i === 1 ? 'bg-slate-300 text-slate-900' : 
                 i === 2 ? 'bg-orange-400 text-orange-950' : 

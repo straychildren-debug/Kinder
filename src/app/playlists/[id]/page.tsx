@@ -252,9 +252,9 @@ export default function PlaylistDetailPage() {
               <div key={c.id} className="relative group">
                 <button
                   onClick={() => setOpened(c)}
-                  className="w-full flex flex-col text-left outline-none"
+                  className="w-full h-full flex flex-col text-left outline-none"
                 >
-                  <div className="relative aspect-[2/3] w-full rounded-xl overflow-hidden bg-surface-container border border-on-surface/5">
+                  <div className="relative aspect-[2/3] w-full rounded-xl overflow-hidden bg-surface-container border border-on-surface/5 shadow-sm">
                     {c.imageUrl ? (
                       <Image
                         src={c.imageUrl}
@@ -263,24 +263,28 @@ export default function PlaylistDetailPage() {
                         sizes="33vw"
                         placeholder="blur"
                         blurDataURL={defaultBlurDataURL}
-                        className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                        className="object-cover transition-transform duration-700 group-hover:scale-110"
                       />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center">
+                      <div className="w-full h-full flex items-center justify-center opacity-20">
                         <span className="material-symbols-outlined text-on-surface-muted">
                           {c.type === 'movie' ? 'movie' : 'menu_book'}
                         </span>
                       </div>
                     )}
+
+                    {/* Content Overlay */}
+                    <div className="absolute inset-x-0 bottom-0 pt-10 pb-2 px-2 bg-gradient-to-t from-black via-black/40 to-transparent z-10">
+                      <h3 className="text-[10px] font-bold text-white leading-tight line-clamp-2 tracking-tight">
+                        {c.title}
+                      </h3>
+                    </div>
                   </div>
-                  <p className="text-[11px] font-semibold text-on-surface leading-snug line-clamp-2 mt-2">
-                    {c.title}
-                  </p>
                 </button>
                 {isOwner && (
                   <button
                     onClick={() => handleRemoveItem(c.id)}
-                    className="absolute top-1.5 right-1.5 w-7 h-7 rounded-full bg-black/60 backdrop-blur-sm text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                    className="absolute top-1.5 right-1.5 w-7 h-7 rounded-full bg-black/60 backdrop-blur-md text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity z-20 hover:bg-red-500 transition-colors"
                     title="Убрать из подборки"
                   >
                     <span className="material-symbols-outlined text-[14px]">close</span>

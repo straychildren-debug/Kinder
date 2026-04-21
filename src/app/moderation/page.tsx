@@ -257,21 +257,7 @@ export default function ModerationPage() {
                           className="w-full h-full flex flex-col group text-left outline-none bg-white p-3 rounded-2xl border border-on-surface/5 shadow-sm hover:shadow-xl transition-all duration-500"
                         >
                           {/* Poster Column */}
-                          <div className="relative aspect-[2/3] rounded-xl overflow-hidden bg-surface-container border border-on-surface/5 shadow-sm group-hover:scale-[1.02] transition-transform duration-500 mb-4 ring-1 ring-on-surface/5">
-                            {/* Year Badge */}
-                            {item.year && (
-                              <div className="absolute top-2 right-2 px-1.5 py-0.5 rounded-md bg-black/60 backdrop-blur-md flex items-center gap-1 z-10 border border-white/10 animate-in fade-in zoom-in duration-500">
-                                <span className="material-symbols-rounded text-white" style={{ fontSize: '11px', fontVariationSettings: "'FILL' 1" }}>event</span>
-                                <span className="text-[10px] font-bold text-white leading-none">{item.year}</span>
-                              </div>
-                            )}
-
-                            {item.rating && (
-                              <div className="absolute bottom-2 right-2 px-1.5 py-0.5 rounded-lg bg-black/60 backdrop-blur-md border border-white/10 flex items-center gap-1 z-10 animate-in fade-in zoom-in duration-500 shadow-xl">
-                                <span className="material-symbols-rounded text-amber-400" style={{ fontVariationSettings: "'FILL' 1", fontSize: '11px' }}>star</span>
-                                <span className="text-[11px] font-black text-white leading-none">{item.rating.toFixed(1)}</span>
-                              </div>
-                            )}
+                          <div className="relative aspect-[2/3] rounded-xl overflow-hidden bg-surface-container border border-on-surface/5 shadow-sm group-hover:scale-105 transition-transform duration-700 ring-1 ring-on-surface/5">
                             {item.imageUrl ? (
                               <Image
                                 src={item.imageUrl}
@@ -286,15 +272,41 @@ export default function ModerationPage() {
                               <div className="w-full h-full flex items-center justify-center text-[10px] font-black opacity-20 uppercase">No Poster</div>
                             )}
 
+                            <div className="absolute top-2.5 right-2.5 flex flex-col gap-1.5 z-20">
+                              {/* Year Badge */}
+                              {item.year && (
+                                <div className="px-2 py-1 rounded-lg bg-black/60 backdrop-blur-md flex items-center justify-center border border-white/10">
+                                  <span className="text-[10px] font-black text-white leading-none">{item.year}</span>
+                                </div>
+                              )}
+                              {/* Rating Badge */}
+                              {item.rating && (
+                                <div className="px-2 py-1 rounded-lg bg-amber-400 backdrop-blur-md flex items-center justify-center gap-1 border border-amber-500/20 shadow-lg shadow-amber-500/20">
+                                  <span className="material-symbols-rounded text-amber-950" style={{ fontSize: '10px', fontVariationSettings: "'FILL' 1" }}>star</span>
+                                  <span className="text-[10px] font-black text-amber-950 leading-none">{item.rating.toFixed(1)}</span>
+                                </div>
+                              )}
+                            </div>
+
+                            {/* Content Overlay */}
+                            <div className="absolute inset-x-0 bottom-0 pt-20 pb-4 px-4 bg-gradient-to-t from-black via-black/40 to-transparent z-10 transition-transform">
+                              <p className="text-[10px] font-black text-white/50 uppercase tracking-[0.2em] mb-1 truncate leading-none">
+                                {(item.author || item.director || 'Автор')}
+                              </p>
+                              <h3 className="text-sm md:text-base font-bold text-white leading-tight line-clamp-2 tracking-tight">
+                                {item.title}
+                              </h3>
+                            </div>
+                            
                             {/* Status Indicator Overlays */}
                             {item.status === 'rejected' && (
-                              <div className="absolute inset-x-0 bottom-0 bg-red-500/90 backdrop-blur-md py-3 px-4 flex items-center justify-between">
+                              <div className="absolute inset-x-0 bottom-0 bg-red-500/90 backdrop-blur-md py-3 px-4 flex items-center justify-between z-20">
                                 <span className="text-[9px] font-black text-white uppercase tracking-widest">Rejected</span>
                                 <span className="material-symbols-outlined text-white text-[14px]">error</span>
                               </div>
                             )}
                             {item.status === 'approved' && (
-                              <div className="absolute top-4 right-4 bg-emerald-500/90 backdrop-blur-md w-8 h-8 rounded-full flex items-center justify-center shadow-lg">
+                              <div className="absolute top-4 right-4 bg-emerald-500/90 backdrop-blur-md w-8 h-8 rounded-full flex items-center justify-center shadow-lg z-20">
                                 <span className="material-symbols-outlined text-white text-[16px]">verified</span>
                               </div>
                             )}

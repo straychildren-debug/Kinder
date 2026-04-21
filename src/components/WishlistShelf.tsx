@@ -70,19 +70,21 @@ export default function WishlistShelf({
               <div className="relative aspect-[2/3] rounded-[8px] overflow-hidden bg-surface-container-low/50 border border-on-surface/[0.03]">
                 {/* Year Badge */}
                 {c.year && (
-                  <div className="absolute top-1 right-1 px-1.5 py-0.5 rounded-md bg-black/60 backdrop-blur-md flex items-center gap-1 z-10 border border-white/10">
+                  <div className="absolute top-1 left-1 px-1.5 py-0.5 rounded-md bg-black/60 backdrop-blur-md flex items-center gap-1 z-20 border border-white/10">
                     <span className="material-symbols-rounded text-white" style={{ fontSize: '11px', fontVariationSettings: "'FILL' 1" }}>event</span>
                     <span className="text-[10px] font-bold text-white leading-none">{c.year}</span>
                   </div>
                 )}
 
-                {/* Rating Label (Bottom Right) */}
-                {c.rating && (
-                  <div className="absolute bottom-1 right-1 px-1.5 py-0.5 rounded-lg bg-black/60 backdrop-blur-md border border-white/10 flex items-center gap-1 z-10">
-                    <span className="material-symbols-rounded text-amber-400" style={{ fontVariationSettings: "'FILL' 1", fontSize: '10px' }}>star</span>
-                    <span className="text-[10px] font-black text-white">{c.rating.toFixed(1)}</span>
-                  </div>
-                )}
+                {/* Badge Overlay */}
+                <div className="absolute top-1.5 right-1.5 z-20">
+                  {c.rating && (
+                    <div className="px-1.5 py-0.5 rounded-md bg-amber-400 backdrop-blur-md flex items-center gap-1 border border-amber-500/20 shadow-lg shadow-amber-500/20 animate-in fade-in zoom-in duration-500">
+                      <span className="material-symbols-rounded text-amber-950" style={{ fontVariationSettings: "'FILL' 1", fontSize: '9px' }}>star</span>
+                      <span className="text-[9px] font-black text-amber-950 leading-none">{c.rating.toFixed(1)}</span>
+                    </div>
+                  )}
+                </div>
 
                 {c.imageUrl ? (
                   <Image
@@ -92,7 +94,7 @@ export default function WishlistShelf({
                     sizes="200px"
                     placeholder="blur"
                     blurDataURL={defaultBlurDataURL}
-                    className="object-cover group-hover:scale-105 transition-transform duration-700"
+                    className="object-cover group-hover:scale-110 transition-transform duration-700"
                   />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center opacity-20 text-on-surface">
@@ -101,16 +103,16 @@ export default function WishlistShelf({
                     </span>
                   </div>
                 )}
-              </div>
 
-              {/* Simple Metadata (Library Style) */}
-              <div className="mt-2 px-1 flex flex-col">
-                <h4 className="text-[10px] font-bold text-on-surface leading-tight line-clamp-2 tracking-tight mb-0.5 group-hover:text-primary transition-colors h-7">
-                  {c.title}
-                </h4>
-                <p className="text-[9px] font-medium text-on-surface-variant/80 truncate tracking-tight">
-                  {formatAuthor((c as any).author || (c as any).director || '')}
-                </p>
+                {/* Content Overlay */}
+                <div className="absolute inset-x-0 bottom-0 pt-10 pb-2 px-2 bg-gradient-to-t from-black via-black/40 to-transparent z-10 transition-transform">
+                  <p className="text-[8px] font-black text-white/50 uppercase tracking-[0.15em] mb-0.5 truncate leading-none">
+                    {formatAuthor((c as any).author || (c as any).director || '') || 'Автор'}
+                  </p>
+                  <h4 className="text-[10px] font-bold text-white leading-tight line-clamp-2 tracking-tight">
+                    {c.title}
+                  </h4>
+                </div>
               </div>
             </div>
           </motion.div>

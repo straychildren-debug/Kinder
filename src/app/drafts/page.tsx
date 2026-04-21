@@ -76,40 +76,47 @@ export default function DraftsPage() {
                     {/* Card with Backing (Library Style) */}
                     <div className="w-full bg-white p-1 pb-2.5 rounded-[12px] border border-on-surface/[0.03] shadow-[0_2px_8px_rgba(0,0,0,0.02)] group-hover:shadow-[0_4px_16px_rgba(0,0,0,0.05)] transition-all duration-500">
                       {/* Compact Poster */}
-                      <div className="relative aspect-[2/3] w-full rounded-[8px] overflow-hidden bg-surface-container-low/50 border border-on-surface/[0.03]">
-                        {item.status === 'rejected' && (
-                          <div className="absolute top-1 left-1 px-1 py-0.5 rounded-sm bg-red-500 text-white text-[7px] font-bold z-10 shadow-lg flex items-center gap-1">
-                            <span className="material-symbols-outlined text-[8px]">block</span>
-                            <span>ОТКАЗ</span>
-                          </div>
-                        )}
-                        
-                        {item.imageUrl ? (
-                          <Image
-                            alt={item.title}
-                            src={item.imageUrl}
-                            fill
-                            sizes="200px"
-                            placeholder="blur"
-                            blurDataURL={defaultBlurDataURL}
-                            className="object-cover group-hover:scale-[1.05] transition-transform duration-700"
-                          />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center opacity-20 text-on-surface">
-                            <span className="material-symbols-outlined text-3xl">{item.type === 'movie' ? 'movie' : 'menu_book'}</span>
-                          </div>
-                        )}
+                    <div className="relative aspect-[2/3] w-full rounded-xl overflow-hidden bg-surface-container border border-on-surface/5 shadow-sm group">
+                      {item.status === 'rejected' && (
+                        <div className="absolute top-1.5 left-1.5 px-1.5 py-0.5 rounded-md bg-red-500 text-white text-[7px] font-black uppercase tracking-widest shadow-lg flex items-center gap-1 border border-white/10 backdrop-blur-md z-20">
+                          <span className="material-symbols-outlined text-[8px]">block</span>
+                          <span>ОТКАЗ</span>
+                        </div>
+                      )}
+                      
+                      <div className="absolute top-1.5 right-1.5 z-20">
+                        <div className="px-1.5 py-0.5 rounded-md bg-black/40 backdrop-blur-md flex items-center gap-1 shadow-lg border border-white/10">
+                          <span className="material-symbols-rounded text-white" style={{ fontSize: '9px', fontVariationSettings: "'FILL' 1" }}>{item.type === 'movie' ? 'movie' : 'menu_book'}</span>
+                          <span className="text-[7px] font-black text-white leading-none uppercase tracking-widest">{item.type === 'movie' ? 'Кино' : 'Книга'}</span>
+                        </div>
                       </div>
 
-                      {/* Simple Metadata (Library Style) */}
-                      <div className="mt-2 px-1 flex flex-col">
-                        <h3 className="text-[10px] font-bold text-on-surface leading-tight line-clamp-2 tracking-tight mb-0.5 group-hover:text-primary transition-colors min-h-[2.4em]">
+                      {item.imageUrl ? (
+                        <Image
+                          alt={item.title}
+                          src={item.imageUrl}
+                          fill
+                          sizes="200px"
+                          placeholder="blur"
+                          blurDataURL={defaultBlurDataURL}
+                          className="object-cover group-hover:scale-110 transition-transform duration-700"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center opacity-20 text-on-surface">
+                          <span className="material-symbols-outlined text-3xl">{item.type === 'movie' ? 'movie' : 'menu_book'}</span>
+                        </div>
+                      )}
+
+                      {/* Content Overlay */}
+                      <div className="absolute inset-x-0 bottom-0 pt-12 pb-2 px-2 bg-gradient-to-t from-black via-black/40 to-transparent z-10">
+                        <p className="text-[8px] font-black text-white/50 uppercase tracking-[0.15em] mb-0.5 truncate leading-none">
+                          {formatAuthor((item as any).author || (item as any).director || '') || 'Автор'}
+                        </p>
+                        <h3 className="text-[10px] font-bold text-white leading-tight line-clamp-2 tracking-tight">
                           {item.title}
                         </h3>
-                        <p className="text-[9px] font-medium text-on-surface-variant/80 truncate tracking-tight">
-                          {formatAuthor((item as any).author || (item as any).director || '')}
-                        </p>
                       </div>
+                    </div>
                     </div>
                   </motion.div>
                 ))}
