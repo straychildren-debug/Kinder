@@ -182,7 +182,80 @@ export default function Clubs() {
     <>
       <TopNavBar />
       <main className="pt-24 px-6 max-w-7xl mx-auto pb-24">
-        {/* Header Section */}
+        {/* Spotlight Section (Option 1: Cinematic Dark) */}
+        {!loading && activeMainTab === 'all' && heroClubs.length > 0 && searchQuery === '' && (
+          <section className="mb-12">
+            <div
+              onClick={() => setSelectedClubForLobby(heroClubs[0])}
+              className="relative aspect-[16/10] md:aspect-[21/9] w-full rounded-[32px] overflow-hidden group cursor-pointer border border-white/5 shadow-2xl animate-in fade-in zoom-in-95 duration-1000"
+            >
+              {/* Cinematic Background */}
+              <div className="absolute inset-0 bg-surface-container">
+                {heroClubs[0].imageUrl ? (
+                  <div className="absolute inset-0">
+                    <Image
+                      src={heroClubs[0].imageUrl}
+                      alt=""
+                      fill
+                      sizes="100vw"
+                      className="object-cover transition-transform duration-10000 group-hover:scale-110"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#0F172A] via-[#0F172A]/40 to-transparent" />
+                  </div>
+                ) : (
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-secondary/20" />
+                )}
+              </div>
+
+              {/* Glass Info Panel */}
+              <div className="absolute bottom-0 left-0 right-0 p-4 md:p-8 z-20">
+                <div className="bg-[#0F172A]/60 backdrop-blur-3xl border border-white/10 rounded-2xl p-6 md:p-8 flex flex-col md:flex-row md:items-center justify-between gap-6 transition-all duration-500 group-hover:bg-[#0F172A]/80">
+                  
+                  <div className="flex items-start md:items-center gap-5 min-w-0">
+                    {/* Club Image/Avatar */}
+                    <div className="relative w-16 h-16 md:w-20 md:h-20 rounded-xl overflow-hidden border border-white/20 shrink-0 shadow-2xl">
+                      {heroClubs[0].imageUrl ? (
+                        <Image
+                          src={heroClubs[0].imageUrl}
+                          alt={heroClubs[0].name}
+                          fill
+                          sizes="80px"
+                          className="object-cover"
+                        />
+                      ) : (
+                        <div className="w-full h-full bg-white/5 flex items-center justify-center">
+                          <span className="material-symbols-rounded text-white/20 text-3xl">groups</span>
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-3 mb-2">
+                        <span className="px-2.5 py-0.5 bg-amber-400 text-black rounded-md text-[9px] font-black uppercase tracking-widest shadow-[0_0_20px_rgba(251,191,36,0.3)]">Популярное</span>
+                        <div className="flex items-center gap-1.5 text-white/60">
+                          <span className="material-symbols-rounded text-[16px]" style={{ fontVariationSettings: "'FILL' 1" }}>groups</span>
+                          <span className="text-[12px] font-bold tracking-tight">{heroClubs[0].memberCount} участников</span>
+                        </div>
+                      </div>
+                      <h2 className="text-2xl md:text-3xl font-black text-white tracking-tight leading-tight mb-2 truncate">
+                        {heroClubs[0].name}
+                      </h2>
+                      <p className="text-white/60 text-sm font-medium line-clamp-1 max-w-xl italic">
+                        {heroClubs[0].description}
+                      </p>
+                    </div>
+                  </div>
+
+                  <button className="shrink-0 px-8 py-3.5 bg-white text-black rounded-xl font-black text-xs uppercase tracking-wider hover:bg-amber-400 transition-all duration-300 shadow-2xl active:scale-95 whitespace-nowrap">
+                    Вступить в клуб
+                  </button>
+                </div>
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* Header & Search Section */}
         <header className="mb-8 flex flex-col md:flex-row md:justify-between md:items-end gap-5">
           <div>
             <span className="text-xs font-medium text-on-surface-muted mb-1.5 block">Сообщество</span>
@@ -193,10 +266,10 @@ export default function Clubs() {
               <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant/50 text-xl">search</span>
               <input
                 type="text"
-                placeholder="Поиск клубов…"
+                placeholder="Поиск сообщества…"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-surface border border-on-surface/5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-on-surface/10 transition-all placeholder:text-on-surface-muted"
+                className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-surface-container-low border border-on-surface/5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-on-surface/10 transition-all placeholder:text-on-surface-muted"
               />
             </div>
             <div className="relative w-full sm:w-auto">
@@ -220,13 +293,13 @@ export default function Clubs() {
           </div>
         </header>
 
-        {/* Main Tabs */}
-        <div className="flex gap-8 mb-4 border-b border-on-surface/5 overflow-x-auto whitespace-nowrap scrollbar-hide">
+        {/* Navigation Tabs */}
+        <div className="flex gap-8 mb-6 border-b border-on-surface/5 overflow-x-auto whitespace-nowrap scrollbar-hide">
           {TABS.map((tab) => (
             <button
               key={tab.id}
               onClick={() => !tab.disabled && setActiveMainTab(tab.id as FilterTab)}
-              className={`pb-3 border-b-2 text-sm font-semibold transition-all ${tab.disabled ? 'opacity-20 cursor-not-allowed' : ''
+              className={`pb-4 border-b-2 text-[13px] font-black uppercase tracking-widest transition-all ${tab.disabled ? 'opacity-20 cursor-not-allowed' : ''
                 } ${activeMainTab === tab.id
                   ? 'border-on-surface text-on-surface'
                   : 'border-transparent text-on-surface-muted hover:text-on-surface'
@@ -237,17 +310,20 @@ export default function Clubs() {
           ))}
         </div>
 
-        {/* Sub-Filters Chips */}
-        <div className="flex gap-2 mb-8 overflow-x-auto scrollbar-hide py-2">
+        {/* Sub-Filters Chips with Icons */}
+        <div className="flex gap-2.5 mb-10 overflow-x-auto scrollbar-hide py-1">
           {SUB_FILTERS.map(filter => (
             <button
               key={filter.id}
               onClick={() => setSubFilter(filter.id as SubFilter)}
-              className={`px-4 py-2 rounded-lg text-[12px] font-semibold transition-all whitespace-nowrap ${subFilter === filter.id
-                  ? 'bg-on-surface text-surface'
-                  : 'bg-surface-container-low text-on-surface-muted hover:bg-surface-container'
+              className={`px-5 py-2.5 rounded-xl text-[11px] font-black uppercase tracking-wider flex items-center gap-2 transition-all whitespace-nowrap ${subFilter === filter.id
+                  ? 'bg-on-surface text-surface shadow-lg shadow-on-surface/10'
+                  : 'bg-surface-container-low text-on-surface-muted hover:bg-surface-container border border-on-surface/5'
                 }`}
             >
+              <span className="material-symbols-rounded text-[18px]">
+                {filter.id === 'all' ? 'dashboard' : (filter.id === 'movie' ? 'movie' : (filter.id === 'book' ? 'menu_book' : (filter.id === 'owner' ? 'shield_person' : 'person')))}
+              </span>
               {filter.label}
             </button>
           ))}
@@ -260,11 +336,11 @@ export default function Clubs() {
         {!loading && (
           <div className="min-h-[200px]">
             {filteredClubs.length === 0 ? (
-              <div className="text-center py-16 bg-surface rounded-2xl border border-on-surface/5">
-                <span className="material-symbols-outlined text-5xl text-on-surface/10 mb-3 block">groups</span>
-                <h3 className="text-lg font-semibold mb-1 text-on-surface tracking-tight">Пока нет клубов</h3>
+              <div className="text-center py-24 bg-surface-container-low rounded-[32px] border border-on-surface/5">
+                <span className="material-symbols-outlined text-6xl text-on-surface/10 mb-4 block">groups</span>
+                <h3 className="text-xl font-bold mb-2 text-on-surface tracking-tight">Сообщества не найдены</h3>
                 <p className="text-on-surface-muted text-sm font-medium">
-                  {activeMainTab === 'my' ? 'Вы еще не вступили ни в один клуб' : 'По вашему запросу ничего не найдено'}
+                  {activeMainTab === 'my' ? 'Вы еще не вступили ни в один клуб' : 'Попробуйте изменить параметры поиска или фильтры'}
                 </p>
               </div>
             ) : (
@@ -273,67 +349,69 @@ export default function Clubs() {
                   <MotionListItem key={club.id} index={index}>
                     <div
                       onClick={() => setSelectedClubForLobby(club)}
-                      className="bg-surface rounded-2xl p-4 flex gap-4 hover:bg-surface-container-low transition-all duration-300 border border-on-surface/5 cursor-pointer group h-auto relative"
+                      className="bg-surface-container-low rounded-3xl p-5 flex gap-5 hover:bg-surface-container transition-all duration-500 border border-on-surface/5 cursor-pointer group h-auto relative overflow-hidden"
                     >
-                      {/* Thumbnail with deep shadow */}
-                      <div className="w-[60px] h-[90px] bg-surface-container relative rounded-lg overflow-hidden flex-shrink-0 shadow-sm border border-on-surface/5">
+                      {/* Avatar/Thumbnail */}
+                      <div className="w-16 h-16 bg-surface-container relative rounded-2xl overflow-hidden flex-shrink-0 shadow-xl border border-white/5">
                         {club.imageUrl ? (
                           <Image
                             src={club.imageUrl}
                             alt={club.name}
                             fill
-                            sizes="60px"
+                            sizes="64px"
                             placeholder="blur"
                             blurDataURL={defaultBlurDataURL}
-                            className="object-cover group-hover:scale-110 transition-transform duration-1000 ease-out"
+                            className="object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
                           />
                         ) : (
                           <div className="w-full h-full bg-surface-container flex items-center justify-center">
-                            <span className="material-symbols-outlined text-2xl text-on-surface/10">
+                            <span className="material-symbols-outlined text-3xl text-on-surface/10">
                               {CATEGORY_ICONS[club.category] || 'groups'}
                             </span>
                           </div>
                         )}
-
-                        {/* Status Tags Overlay on Image */}
+                        
+                        {/* Status Pulse */}
                         {typeof club.unreadCount === 'number' && club.unreadCount > 0 && (
-                          <div className="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-surface shadow-sm animate-pulse" />
+                          <div className="absolute top-2 right-2 w-3 h-3 bg-red-500 rounded-full border-2 border-surface-container shadow-sm animate-pulse" />
                         )}
                       </div>
 
-                      {/* Content Section */}
-                      <div className="flex-1 flex flex-col justify-between h-[90px] min-w-0 z-10">
+                      {/* Info Section */}
+                      <div className="flex-1 flex flex-col justify-between min-w-0 py-0.5">
                         <div className="min-w-0">
-                          <span className="inline-block text-[11px] font-medium text-on-surface-muted mb-0.5">
-                            {CATEGORY_LABELS[club.category] || club.category}
-                          </span>
-                          <h4 className="font-semibold text-on-surface text-[15px] tracking-tight line-clamp-2 leading-tight">
+                          <div className="flex items-center gap-2 mb-1.5">
+                            <span className="text-[10px] font-black text-on-surface-muted uppercase tracking-widest">
+                              {CATEGORY_LABELS[club.category] || club.category}
+                            </span>
+                          </div>
+                          <h4 className="font-bold text-on-surface text-[17px] tracking-tight line-clamp-1 leading-tight group-hover:text-primary transition-colors">
                             {club.name}
                           </h4>
                         </div>
 
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2">
-                            <div className="flex items-center gap-1 text-on-surface-muted">
-                              <span className="material-symbols-outlined text-[14px]">groups</span>
-                              <span className="text-[11px] font-medium leading-none">
+                        <div className="flex items-center justify-between mt-3">
+                          <div className="flex items-center gap-3">
+                            <div className="flex items-center gap-1.5 text-on-surface-muted/60">
+                              <span className="material-symbols-outlined text-[16px]" style={{ fontVariationSettings: "'FILL' 1" }}>groups</span>
+                              <span className="text-[12px] font-bold leading-none">
                                 {club.memberCount}
                               </span>
                             </div>
                             {club.userRole === 'owner' && (
-                              <span className="text-[10px] font-semibold bg-on-surface text-surface px-2 py-0.5 rounded-md leading-none">
+                              <span className="text-[9px] font-black bg-on-surface/10 text-on-surface px-2 py-1 rounded-md uppercase tracking-wider leading-none">
                                 Владелец
                               </span>
                             )}
                             {typeof club.unreadCount === 'number' && club.unreadCount > 0 && (
-                              <span className="text-[10px] font-semibold bg-red-500 text-white px-2 py-0.5 rounded-md leading-none">
-                                +{club.unreadCount}
+                              <span className="text-[9px] font-black bg-red-500 text-white px-2 py-1 rounded-md uppercase tracking-wider leading-none">
+                                {club.unreadCount} новых
                               </span>
                             )}
                           </div>
-                          <div className="text-on-surface-muted/40 group-hover:text-on-surface transition-colors duration-300">
-                            <span className="material-symbols-outlined text-[18px]">
-                              chevron_right
+                          <div className="w-8 h-8 rounded-full bg-on-surface/5 flex items-center justify-center text-on-surface/20 group-hover:bg-on-surface group-hover:text-surface transition-all duration-300">
+                            <span className="material-symbols-outlined text-[20px]">
+                              arrow_forward
                             </span>
                           </div>
                         </div>
@@ -344,77 +422,6 @@ export default function Clubs() {
               </div>
             )}
           </div>
-        )}
-
-        {/* Popular Spotlight Section */}
-        {!loading && activeMainTab === 'all' && heroClubs.length > 0 && (
-          <section className="mt-16 mb-24">
-            <div className="flex items-center justify-between mb-8 px-2">
-              <div>
-                <span className="text-xs font-medium text-on-surface-muted mb-1.5 block">Рекомендации</span>
-                <h2 className="text-2xl font-bold tracking-tight text-on-surface leading-tight">Популярные сообщества</h2>
-              </div>
-            </div>
-
-              <div className="space-y-6">
-                {/* Main spotlight - Premium Light Horizontal Concept */}
-                {heroClubs[0] && (
-                  <div
-                    onClick={() => setSelectedClubForLobby(heroClubs[0])}
-                    className="relative group cursor-pointer animate-in fade-in slide-in-from-bottom-4 duration-1000"
-                  >
-                    <div className="relative flex items-center justify-between gap-4 bg-[#0F172A]/80 backdrop-blur-2xl border border-white/10 rounded-[28px] p-4 md:p-6 shadow-[0_20px_50px_rgba(0,0,0,0.3)] transition-all duration-500 hover:shadow-[0_25px_60px_rgba(0,0,0,0.4)] hover:-translate-y-1.5 overflow-hidden">
-                      
-                      {/* Decorative Light Leak */}
-                      <div className="absolute -top-24 -left-24 w-48 h-48 bg-primary/20 rounded-full blur-[80px] pointer-events-none" />
-                      
-                      <div className="flex items-center gap-4 md:gap-6 min-w-0 flex-1 relative z-10">
-                        {/* Compact Avatar */}
-                        <div className="relative w-14 h-14 md:w-20 md:h-20 aspect-square rounded-xl overflow-hidden border border-white/10 shrink-0 shadow-2xl transition-transform duration-500 group-hover:scale-105">
-                          {heroClubs[0].imageUrl ? (
-                            <Image
-                              src={heroClubs[0].imageUrl}
-                              alt={heroClubs[0].name}
-                              fill
-                              sizes="80px"
-                              className="object-cover"
-                            />
-                          ) : (
-                            <div className="w-full h-full bg-white/5 flex items-center justify-center">
-                              <span className="material-symbols-rounded text-white/20 text-3xl">groups</span>
-                            </div>
-                          )}
-                        </div>
- 
-                        <div className="min-w-0 flex-1">
-                          <div className="flex items-center gap-3 mb-2">
-                            <span className="px-2 py-0.5 bg-amber-400 text-black rounded-md text-[8px] font-black uppercase tracking-widest shadow-[0_0_15px_rgba(251,191,36,0.3)]">Популярное</span>
-                            <div className="flex items-center gap-1 text-white/40">
-                              <span className="material-symbols-rounded text-[14px]" style={{ fontVariationSettings: "'FILL' 1" }}>groups</span>
-                              <span className="text-[10px] font-bold tracking-tight">{heroClubs[0].memberCount}</span>
-                            </div>
-                          </div>
-                          <h2 className="text-lg md:text-xl font-black text-white tracking-tight leading-tight mb-1 truncate group-hover:text-amber-400 transition-colors">
-                            {heroClubs[0].name}
-                          </h2>
-                          <p className="text-white/50 text-[11px] font-medium tracking-wide line-clamp-1 opacity-70 group-hover:opacity-100 transition-opacity">
-                            {heroClubs[0].description}
-                          </p>
-                        </div>
-                      </div>
- 
-                      {/* Premium Arrow Button */}
-                      <div className="shrink-0 relative z-10">
-                        <div className="w-12 h-12 rounded-full bg-white/10 text-white border border-white/20 shadow-2xl flex items-center justify-center group-hover:bg-white group-hover:text-[#0F172A] transition-all duration-300 active:scale-90">
-                           <span className="material-symbols-rounded text-2xl">arrow_forward</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
-          </section>
-        )}
 
         {/* Suggestion Section */}
         <section className="mt-16 p-10 bg-surface rounded-2xl border border-on-surface/5 text-center">
