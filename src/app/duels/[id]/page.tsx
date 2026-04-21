@@ -16,7 +16,9 @@ import {
   finalizeDuelIfExpired,
 } from '@/lib/duels';
 import ContentDetailsModal from '@/components/ContentDetailsModal';
-import type { ContentItem, Duel, DuelComment, DuelSide, Review } from '@/lib/types';
+import PublicProfileModal from '@/components/PublicProfileModal';
+import type { ContentItem, Duel, DuelComment, DuelSide, Review, User } from '@/lib/types';
+import { AnimatePresence } from 'framer-motion';
 
 export default function DuelDetailPage() {
   const params = useParams<{ id: string }>();
@@ -29,6 +31,7 @@ export default function DuelDetailPage() {
   const [commentText, setCommentText] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [openedContent, setOpenedContent] = useState<ContentItem | null>(null);
+  const [selectedUserForProfile, setSelectedUserForProfile] = useState<User | null>(null);
 
   const load = async () => {
     if (!params?.id) return;
@@ -168,7 +171,7 @@ export default function DuelDetailPage() {
         </div>
 
         {/* Arena */}
-        <section className="grid grid-cols-2 gap-3 mb-3">
+        <section className="flex flex-col gap-6 mb-8 relative">
           <SidePanel
             side="challenger"
             review={duel.challengerReview}
@@ -180,7 +183,16 @@ export default function DuelDetailPage() {
             canVote={!!user && duel.status === 'active'}
             voting={voting}
             onVote={() => handleVote('challenger')}
+            onOpenProfile={setSelectedUserForProfile}
           />
+
+          {/* VS Separator */}
+          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-20 pointer-events-none">
+             <div className="w-12 h-12 rounded-full bg-surface border-4 border-background shadow-xl flex items-center justify-center">
+                <span className="text-xs font-black italic tracking-tighter text-on-surface">VS</span>
+             </div>
+          </div>
+
           <SidePanel
             side="defender"
             review={duel.defenderReview}
@@ -192,6 +204,7 @@ export default function DuelDetailPage() {
             canVote={!!user && duel.status === 'active'}
             voting={voting}
             onVote={() => handleVote('defender')}
+            onOpenProfile={setSelectedUserForProfile}
           />
         </section>
 
@@ -280,6 +293,17 @@ export default function DuelDetailPage() {
       {openedContent && (
         <ContentDetailsModal content={openedContent} onClose={() => setOpenedContent(null)} />
       )}
+
+      {selectedUserForProfile && (
+        <PublicProfileModal 
+          user={selectedUserForProfile} 
+          onClose={() => setSelectedUserForProfile(null)}
+          onOpenContent={(c) => {
+            setSelectedUserForProfile(null);
+            setOpenedContent(c);
+          }}
+        />
+      )}
       <BottomNavBar activeTab="home" />
     </>
   );
@@ -296,6 +320,7 @@ function SidePanel({
   canVote,
   voting,
   onVote,
+  onOpenProfile,
 }: {
   side: DuelSide;
   review?: Review;
@@ -307,35 +332,50 @@ function SidePanel({
   canVote: boolean;
   voting: boolean;
   onVote: () => void;
+  onOpenProfile: (u: User) => void;
 }) {
   const isMine = mySide === side;
   const isWinner = winnerReviewId && review?.id === winnerReviewId;
   const isLoser = !!winnerReviewId && review?.id !== winnerReviewId;
-  const accentRing = accent === 'emerald' ? 'border-emerald-400/40' : 'border-rose-400/40';
+  const accentRing = accent === 'emerald' ? 'border-emerald-400/40 shadow-emerald-500/5' : 'border-rose-400/40 shadow-rose-500/5';
   const accentText = accent === 'emerald' ? 'text-emerald-600' : 'text-rose-600';
+  const sideLabel = side === 'challenger' ? 'ЗА' : 'ПРОТИВ';
 
   return (
     <div
-      className={`bg-surface rounded-2xl p-4 border transition-all ${
-        isMine ? accentRing : 'border-on-surface/5'
-      } ${isLoser ? 'opacity-60' : ''}`}
+      className={`relative bg-surface rounded-[28px] p-6 border transition-all duration-500 ${
+        isMine ? `${accentRing} border-2` : 'border-on-surface/5'
+      } ${isLoser ? 'opacity-40 grayscale-[0.5]' : 'shadow-xl shadow-black/5'} overflow-hidden`}
     >
-      <div className="flex items-center gap-2 mb-3">
-        <div className="relative w-8 h-8 rounded-full bg-surface-container overflow-hidden flex-shrink-0 border border-on-surface/5 flex items-center justify-center font-semibold text-on-surface text-xs">
+      {/* Side Indicator Badge */}
+      <div className={`absolute top-0 right-0 px-4 py-1.5 rounded-bl-2xl text-[9px] font-black tracking-[0.2em] text-white ${accent === 'emerald' ? 'bg-emerald-500' : 'bg-rose-500'}`}>
+        {sideLabel}
+      </div>
+
+      <div className="flex items-center gap-4 mb-5">
+        <button 
+          onClick={() => review?.user && onOpenProfile(review.user)}
+          className="relative w-12 h-12 rounded-[18px] bg-surface-container overflow-hidden flex-shrink-0 border-2 border-background shadow-md flex items-center justify-center font-bold text-on-surface text-sm transition-transform active:scale-90"
+        >
           {review?.user?.avatarUrl ? (
-            <Image src={review.user.avatarUrl} alt={review.user.name || ''} fill sizes="32px" className="object-cover" />
+            <Image src={review.user.avatarUrl} alt={review.user.name || ''} fill sizes="48px" className="object-cover" />
           ) : (
             review?.user?.name?.charAt(0) || '?'
           )}
-        </div>
+        </button>
         <div className="min-w-0 flex-1">
-          <p className="font-semibold text-xs text-on-surface truncate">{review?.user?.name || 'Критик'}</p>
-          <div className="flex items-center gap-0.5">
+          <button 
+            onClick={() => review?.user && onOpenProfile(review.user)}
+            className="font-black text-sm text-on-surface truncate block hover:text-accent-lilac transition-colors"
+          >
+            {review?.user?.name || 'Критик'}
+          </button>
+          <div className="flex items-center gap-1 mt-1">
             {[1, 2, 3, 4, 5].map((s) => (
               <span
                 key={s}
-                className={`material-symbols-outlined text-[11px] ${
-                  s <= (review?.rating || 0) ? 'text-amber-500' : 'text-on-surface-variant/20'
+                className={`material-symbols-outlined text-[14px] ${
+                  s <= (review?.rating || 0) ? 'text-amber-500' : 'text-on-surface-variant/10'
                 }`}
                 style={{ fontVariationSettings: s <= (review?.rating || 0) ? "'FILL' 1" : "'FILL' 0" }}
               >
@@ -345,35 +385,46 @@ function SidePanel({
           </div>
         </div>
         {isWinner && (
-          <span
-            className="material-symbols-outlined text-amber-500 text-[18px]"
-            style={{ fontVariationSettings: "'FILL' 1" }}
-            title="Победитель"
-          >
-            workspace_premium
-          </span>
+          <div className="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center shrink-0">
+            <span
+              className="material-symbols-outlined text-amber-600 text-[22px]"
+              style={{ fontVariationSettings: "'FILL' 1" }}
+            >
+              workspace_premium
+            </span>
+          </div>
         )}
       </div>
 
-      <p className="text-xs text-on-surface leading-relaxed line-clamp-6 whitespace-pre-wrap min-h-[72px]">
-        {review?.text || '—'}
-      </p>
+      <div className="relative mb-6">
+        <span className="absolute -top-4 -left-2 text-4xl text-on-surface/[0.03] font-serif select-none">“</span>
+        <p className="text-[13px] font-medium text-on-surface/80 leading-relaxed italic line-clamp-none whitespace-pre-wrap">
+          {review?.text || '—'}
+        </p>
+      </div>
 
-      <button
-        onClick={onVote}
-        disabled={!canVote || voting}
-        className={`mt-4 w-full py-2 rounded-xl text-xs font-semibold transition-all active:scale-95 ${
-          isMine
-            ? 'bg-on-surface text-surface'
-            : 'bg-surface-container-low text-on-surface hover:bg-surface-container border border-on-surface/5'
-        } ${!canVote || voting ? 'opacity-60 active:scale-100' : ''}`}
-      >
-        {isMine ? 'Вы с этим критиком' : 'Поддержать'}
-      </button>
-
-      <p className={`mt-2 text-center text-[11px] font-semibold ${accentText}`}>
-        {votes} {totalVotes ? `(${Math.round((votes / totalVotes) * 100)}%)` : ''}
-      </p>
+      <div className="flex items-center gap-4 mt-auto">
+        <button
+          onClick={onVote}
+          disabled={!canVote || voting}
+          className={`flex-1 py-3.5 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] transition-all active:scale-95 ${
+            isMine
+              ? 'bg-on-surface text-surface shadow-lg shadow-black/10'
+              : `bg-surface border border-on-surface/10 text-on-surface hover:bg-surface-container-low`
+          } ${!canVote || voting ? 'opacity-60 active:scale-100' : ''}`}
+        >
+          {isMine ? 'Ваш выбор' : 'Поддержать'}
+        </button>
+        
+        <div className="shrink-0 text-right">
+           <p className={`text-lg font-black tracking-tighter leading-none ${accentText}`}>
+             {votes}
+           </p>
+           <p className="text-[9px] font-bold text-on-surface-muted uppercase tracking-widest mt-1">
+             {totalVotes ? `${Math.round((votes / totalVotes) * 100)}%` : '0%'}
+           </p>
+        </div>
+      </div>
     </div>
   );
 }
