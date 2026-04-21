@@ -630,14 +630,16 @@ function LeaderboardColumn({
           <div className="flex flex-col items-center justify-center h-32 opacity-20 italic text-xs">Нет данных</div>
         ) : users.map((u, i) => (
           <div key={u.id} className="flex items-center gap-3 group">
-            <div className="relative w-10 h-10 rounded-full bg-surface-container overflow-hidden border border-on-surface/5 flex-shrink-0">
-              {u.avatarUrl ? (
-                <Image src={u.avatarUrl} alt={u.name} fill className="object-cover" />
-              ) : (
-                <div className="w-full h-full flex items-center justify-center text-[10px] font-black">{u.name.charAt(0)}</div>
-              )}
+            <div className="relative w-10 h-10 flex-shrink-0">
+              <div className="w-full h-full rounded-full bg-surface-container overflow-hidden border border-on-surface/5">
+                {u.avatarUrl ? (
+                  <Image src={u.avatarUrl} alt={u.name} fill className="object-cover" />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-[10px] font-black">{u.name.charAt(0)}</div>
+                )}
+              </div>
               {/* Rank Badge */}
-              <div className={`absolute -top-1 -right-1 w-5 h-5 rounded-full flex items-center justify-center text-[9px] font-black border-2 border-surface ${
+              <div className={`absolute -top-1 -right-1 w-5 h-5 rounded-full flex items-center justify-center text-[9px] font-black border-2 border-surface z-10 shadow-sm ${
                 i === 0 ? 'bg-amber-400 text-amber-950' : 
                 i === 1 ? 'bg-slate-300 text-slate-900' : 
                 i === 2 ? 'bg-orange-400 text-orange-950' : 
