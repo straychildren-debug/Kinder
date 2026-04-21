@@ -24,8 +24,9 @@ type PlaylistRow = {
   is_public: boolean;
   created_at: string;
   updated_at: string;
-  author?: { id: string; name: string | null; avatar_url: string | null } | null;
 };
+
+type AuthorProfile = { id: string; name: string; avatarUrl: string };
 
 type ContentRow = {
   id: string;
@@ -42,7 +43,11 @@ type ContentRow = {
   metadata?: Record<string, unknown> | null;
 };
 
-function mapPlaylist(r: PlaylistRow, itemCount?: number): Playlist {
+function mapPlaylist(
+  r: PlaylistRow,
+  itemCount?: number,
+  author?: AuthorProfile
+): Playlist {
   return {
     id: r.id,
     userId: r.user_id,
@@ -53,14 +58,27 @@ function mapPlaylist(r: PlaylistRow, itemCount?: number): Playlist {
     createdAt: r.created_at,
     updatedAt: r.updated_at,
     itemCount,
-    author: r.author
-      ? {
-          id: r.author.id,
-          name: r.author.name || 'Читатель',
-          avatarUrl: r.author.avatar_url || '',
-        }
-      : undefined,
+    author,
   };
+}
+
+async function fetchAuthorMap(userIds: string[]): Promise<Map<string, AuthorProfile>> {
+  const unique = Array.from(new Set(userIds.filter(Boolean)));
+  if (unique.length === 0) return new Map();
+  const { data } = await supabase
+    .from('profiles')
+    .select('id, name, avatar_url')
+    .in('id', unique);
+  const map = new Map<string, AuthorProfile>();
+  ((data as { id: string; name: string | null; avatar_url: string | null }[] | null) || [])
+    .forEach((p) => {
+      map.set(p.id, {
+        id: p.id,
+        name: p.name || 'Читатель',
+        avatarUrl: p.avatar_url || '',
+      });
+    });
+  return map;
 }
 
 function mapContent(r: ContentRow): ContentItem {
@@ -81,8 +99,7 @@ function mapContent(r: ContentRow): ContentItem {
 }
 
 const PLAYLIST_SELECT =
-  `id, user_id, title, description, cover_url, is_public, created_at, updated_at,
-   author:profiles!playlists_user_id_fkey(id, name, avatar_url)`;
+  `id, user_id, title, description, cover_url, is_public, created_at, updated_at`;
 
 /** Публичные плейлисты сообщества (+ count items в каждом). */
 export async function getPublicPlaylists(limit = 30): Promise<Playlist[]> {
@@ -100,16 +117,16 @@ export async function getPublicPlaylists(limit = 30): Promise<Playlist[]> {
   if (rows.length === 0) return [];
 
   const ids = rows.map((r) => r.id);
-  const { data: itemRows } = await supabase
-    .from('playlist_items')
-    .select('playlist_id')
-    .in('playlist_id', ids);
+  const [{ data: itemRows }, authors] = await Promise.all([
+    supabase.from('playlist_items').select('playlist_id').in('playlist_id', ids),
+    fetchAuthorMap(rows.map((r) => r.user_id)),
+  ]);
   const counts = new Map<string, number>();
   ((itemRows as { playlist_id: string }[] | null) || []).forEach((r) => {
     counts.set(r.playlist_id, (counts.get(r.playlist_id) || 0) + 1);
   });
 
-  return rows.map((r) => mapPlaylist(r, counts.get(r.id) || 0));
+  return rows.map((r) => mapPlaylist(r, counts.get(r.id) || 0, authors.get(r.user_id)));
 }
 
 /** Все плейлисты, созданные пользователем (включая приватные). */
@@ -126,15 +143,15 @@ export async function getUserPlaylists(userId: string): Promise<Playlist[]> {
   const rows = (data as unknown as PlaylistRow[] | null) || [];
   if (rows.length === 0) return [];
   const ids = rows.map((r) => r.id);
-  const { data: itemRows } = await supabase
-    .from('playlist_items')
-    .select('playlist_id')
-    .in('playlist_id', ids);
+  const [{ data: itemRows }, authors] = await Promise.all([
+    supabase.from('playlist_items').select('playlist_id').in('playlist_id', ids),
+    fetchAuthorMap([userId]),
+  ]);
   const counts = new Map<string, number>();
   ((itemRows as { playlist_id: string }[] | null) || []).forEach((r) => {
     counts.set(r.playlist_id, (counts.get(r.playlist_id) || 0) + 1);
   });
-  return rows.map((r) => mapPlaylist(r, counts.get(r.id) || 0));
+  return rows.map((r) => mapPlaylist(r, counts.get(r.id) || 0, authors.get(r.user_id)));
 }
 
 export async function getPlaylist(id: string): Promise<Playlist | null> {
@@ -147,23 +164,38 @@ export async function getPlaylist(id: string): Promise<Playlist | null> {
     if (error) console.error('getPlaylist:', error);
     return null;
   }
-  const playlist = mapPlaylist(data as unknown as PlaylistRow);
+  const row = data as unknown as PlaylistRow;
+  const authors = await fetchAuthorMap([row.user_id]);
+  const playlist = mapPlaylist(row, undefined, authors.get(row.user_id));
 
   const { data: items } = await supabase
     .from('playlist_items')
-    .select(
-      `position, added_at,
-       content:content!playlist_items_content_id_fkey(
-         id, type, title, description, image_url, status, created_by, created_at,
-         author, director, year, metadata
-       )`
-    )
+    .select('position, added_at, content_id')
     .eq('playlist_id', id)
     .order('position', { ascending: true });
 
-  playlist.items = ((items as unknown as { content: ContentRow }[] | null) || [])
-    .map((r) => mapContent(r.content))
-    .filter((c) => !!c.id);
+  const itemRows = (items as { position: number; content_id: string }[] | null) || [];
+  if (itemRows.length === 0) {
+    playlist.items = [];
+    playlist.itemCount = 0;
+    return playlist;
+  }
+
+  const { data: contents } = await supabase
+    .from('content')
+    .select(
+      'id, type, title, description, image_url, status, created_by, created_at, author, director, year, metadata'
+    )
+    .in(
+      'id',
+      itemRows.map((r) => r.content_id)
+    );
+  const contentMap = new Map<string, ContentRow>();
+  ((contents as ContentRow[] | null) || []).forEach((c) => contentMap.set(c.id, c));
+  playlist.items = itemRows
+    .map((r) => contentMap.get(r.content_id))
+    .filter((c): c is ContentRow => !!c)
+    .map(mapContent);
   playlist.itemCount = playlist.items.length;
   return playlist;
 }
@@ -189,7 +221,9 @@ export async function createPlaylist(
     console.error('createPlaylist:', error);
     return null;
   }
-  return mapPlaylist(data as unknown as PlaylistRow, 0);
+  const row = data as unknown as PlaylistRow;
+  const authors = await fetchAuthorMap([row.user_id]);
+  return mapPlaylist(row, 0, authors.get(row.user_id));
 }
 
 export async function updatePlaylist(
