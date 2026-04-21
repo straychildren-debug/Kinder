@@ -19,6 +19,11 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "api.dicebear.com",
       },
+      // Placeholder обложки для сид-контента
+      {
+        protocol: "https",
+        hostname: "picsum.photos",
+      },
     ],
   },
 };

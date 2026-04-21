@@ -18,7 +18,8 @@
       "Bash(curl -s -w \"\\\\nHTTP: %{http_code}\\\\n\" \"https://rreomovpzlbzxmxkmebr.supabase.co/rest/v1/playlist_items?select=*&limit=1\" -H \"apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJyZW9tb3ZwemxienhteGttZWJyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYxNTI4MTAsImV4cCI6MjA5MTcyODgxMH0.Z0OJYUIymat-ST6sUgeuhCHCmnSfb5DENOVYtUr98jw\")",
       "Bash(curl -s -w \"\\\\nHTTP: %{http_code}\\\\n\" -X POST \"https://rreomovpzlbzxmxkmebr.supabase.co/rest/v1/playlists\" -H \"apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJyZW9tb3ZwemxienhteGttZWJyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYxNTI4MTAsImV4cCI6MjA5MTcyODgxMH0.Z0OJYUIymat-ST6sUgeuhCHCmnSfb5DENOVYtUr98jw\" -H \"Content-Type: application/json\" -H \"Prefer: return=representation\" -d '{\"\"user_id\"\":\"\"00000000-0000-0000-0000-000000000000\"\",\"\"title\"\":\"\"probe\"\"}')",
       "Bash(npx tsc:*)",
-      "Bash(ls D:/AI_projects/Kinder/*.sql)"
+      "Bash(ls D:/AI_projects/Kinder/*.sql)",
+      "Bash(ls D:/AI_projects/Kinder/next.config*)"
     ]
   }
 }
