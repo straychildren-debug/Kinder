@@ -187,7 +187,7 @@ export default function Clubs() {
           <section className="mb-12">
             <div
               onClick={() => setSelectedClubForLobby(heroClubs[0])}
-              className="relative w-full rounded-[40px] p-8 md:p-10 transition-all duration-700 cursor-pointer group overflow-hidden border border-white/5 min-h-[280px] flex flex-col justify-end"
+              className="relative w-full rounded-[40px] p-6 md:p-8 transition-all duration-700 cursor-pointer group overflow-hidden border border-white/5 flex flex-col justify-end shadow-2xl"
             >
               {/* Immersive Glass & Background Art */}
               <div className="absolute inset-0 bg-slate-950/60 z-0" />
@@ -401,8 +401,8 @@ export default function Clubs() {
                       /* New 'Join Card' Layout */
                       <div
                         onClick={() => setSelectedClubForLobby(club)}
-                        className={`relative rounded-[40px] p-6 transition-all duration-700 border border-on-surface/5 cursor-pointer group overflow-hidden flex flex-col gap-4 ${
-                          heroClubs.some(hc => hc.id === club.id) ? 'bg-transparent shadow-none' : 'bg-surface/40 backdrop-blur-xl shadow-xl hover:shadow-2xl'
+                        className={`relative rounded-[32px] p-5 transition-all duration-700 border border-on-surface/5 cursor-pointer group overflow-hidden flex flex-col gap-3 ${
+                          heroClubs.some(hc => hc.id === club.id) ? 'bg-transparent shadow-none' : 'bg-surface/40 backdrop-blur-xl shadow-lg hover:shadow-xl'
                         }`}
                       >
                         {/* Background Art for grid card */}
@@ -447,11 +447,13 @@ export default function Clubs() {
                         </div>
 
                         {/* Description Section */}
-                        <div className="relative z-10 min-h-[40px]">
-                          <p className="text-on-surface-muted text-xs font-medium line-clamp-2 leading-relaxed opacity-60">
-                            {club.description}
-                          </p>
-                        </div>
+                        {club.description && (
+                          <div className="relative z-10">
+                            <p className="text-on-surface-muted text-[11px] font-medium line-clamp-2 leading-tight opacity-60">
+                              {club.description}
+                            </p>
+                          </div>
+                        )}
                       </div>
                     )}
                   </MotionListItem>
