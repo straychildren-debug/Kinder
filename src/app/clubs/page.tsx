@@ -422,6 +422,7 @@ export default function Clubs() {
               </div>
             )}
           </div>
+        )}
 
         {/* Suggestion Section */}
         <section className="mt-16 p-10 bg-surface rounded-2xl border border-on-surface/5 text-center">
