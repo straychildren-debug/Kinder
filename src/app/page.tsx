@@ -108,7 +108,7 @@ export default function Home() {
         {/* Search Bar */}
         <section className="mb-10">
           <div className="relative max-w-2xl mx-auto">
-            <span className="material-symbols-outlined absolute left-5 top-1/2 -translate-y-1/2 text-on-surface/40 text-[22px] pointer-events-none z-10">
+            <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant/50 text-xl pointer-events-none z-10">
               {searching ? 'hourglass_empty' : 'search'}
             </span>
             <input
@@ -116,7 +116,7 @@ export default function Home() {
               value={query}
               onChange={(e) => handleQuery(e.target.value)}
               placeholder="Поиск"
-              className="w-full bg-surface-container border-2 border-on-surface/5 rounded-2xl pl-14 pr-10 py-4 text-sm font-medium focus:outline-none focus:border-accent-lilac focus:bg-white focus:shadow-xl focus:shadow-accent-lilac/5 transition-all duration-300 placeholder:text-on-surface-muted shadow-sm"
+              className="w-full pl-10 pr-10 py-2.5 rounded-xl bg-surface-container-low border border-on-surface/5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-on-surface/10 transition-all placeholder:text-on-surface-muted"
             />
             {query && (
               <button
