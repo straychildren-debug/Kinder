@@ -210,9 +210,17 @@ export default function Clubs() {
 
                 {/* Right: Action Column */}
                 <div className="flex-1 flex flex-col justify-between h-24 md:h-32 py-1">
-                  <button className="w-full py-4 bg-white text-black rounded-2xl font-black text-xs uppercase tracking-[0.2em] shadow-xl hover:scale-[1.01] transition-all active:scale-95">
-                    Вступить в клуб
-                  </button>
+                  <div className="flex justify-end">
+                    {heroClubs[0].userRole ? (
+                      <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center text-white/40 border border-white/10">
+                        <span className="material-symbols-rounded text-[24px]">check</span>
+                      </div>
+                    ) : (
+                      <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-black shadow-xl group-hover:scale-110 transition-all">
+                        <span className="material-symbols-rounded text-[24px]">arrow_forward</span>
+                      </div>
+                    )}
+                  </div>
                   
                   <div className="flex items-center gap-4">
                     <span className="px-4 py-1.5 bg-amber-400 text-black rounded-lg text-[10px] font-black uppercase tracking-widest shadow-lg">Популярное</span>
@@ -399,9 +407,17 @@ export default function Clubs() {
                           </div>
                           
                           <div className="flex-1 flex flex-col justify-between h-20 md:h-24 py-0.5">
-                            <button className="w-full py-3 bg-on-surface text-surface rounded-xl font-black text-[10px] uppercase tracking-widest">
-                              Вступить в клуб
-                            </button>
+                            <div className="flex justify-end">
+                              {club.userRole ? (
+                                <div className="w-10 h-10 rounded-full bg-on-surface/5 flex items-center justify-center text-on-surface/20 border border-on-surface/5">
+                                  <span className="material-symbols-rounded text-[20px]">check</span>
+                                </div>
+                              ) : (
+                                <div className="w-10 h-10 rounded-full bg-on-surface text-surface flex items-center justify-center shadow-lg group-hover:scale-110 transition-all">
+                                  <span className="material-symbols-rounded text-[20px]">arrow_forward</span>
+                                </div>
+                              )}
+                            </div>
                             <div className="flex items-center gap-3 text-on-surface/40">
                               <span className="material-symbols-rounded text-[16px]" style={{ fontVariationSettings: "'FILL' 1" }}>groups</span>
                               <span className="text-[12px] font-black tracking-tight">{club.memberCount}</span>
