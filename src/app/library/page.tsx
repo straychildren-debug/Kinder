@@ -106,33 +106,23 @@ export default function Library() {
                       <div className="w-full h-full flex items-center justify-center text-xs font-medium text-on-surface-muted">Нет обложки</div>
                     )}
                     
-                    {/* Top Left Badge */}
+                    {/* Top Left: Category */}
                     <div className="absolute top-2 left-2 px-1.5 py-1 rounded-lg bg-black/60 backdrop-blur-md flex items-center gap-1 z-20 border border-white/10">
                       <span className="material-symbols-rounded text-white" style={{ fontSize: '10px', fontVariationSettings: "'FILL' 1" }}>menu_book</span>
                       <span className="text-[9px] font-black text-white leading-none uppercase tracking-widest">Книга</span>
                     </div>
 
-                    {/* Top Right Badges */}
-                    <div className="absolute top-2 right-2 flex flex-col gap-1 z-20 items-end">
-                      {book.rating && (
-                        <div className="px-1.5 py-1 rounded-lg bg-amber-400 flex items-center justify-center gap-1 shadow-lg shadow-amber-500/20">
-                          <span className="material-symbols-rounded text-amber-950" style={{ fontSize: '10px', fontVariationSettings: "'FILL' 1" }}>star</span>
-                          <span className="text-[10px] font-black text-amber-950 leading-none">{book.rating.toFixed(1)}</span>
-                        </div>
-                      )}
-                      {book.year && (
-                        <div className="px-1.5 py-1 rounded-lg bg-black/60 backdrop-blur-md flex items-center justify-center border border-white/10">
-                          <span className="text-[9px] font-black text-white leading-none">{book.year}</span>
-                        </div>
-                      )}
-                    </div>
+                    {/* Bottom Right: Rating */}
+                    {book.rating && (
+                      <div className="absolute bottom-2 right-2 px-1.5 py-1 rounded-lg bg-amber-400 flex items-center justify-center gap-1 shadow-lg shadow-amber-500/20 z-20">
+                        <span className="material-symbols-rounded text-amber-950" style={{ fontSize: '10px', fontVariationSettings: "'FILL' 1" }}>star</span>
+                        <span className="text-[10px] font-black text-amber-950 leading-none">{book.rating.toFixed(1)}</span>
+                      </div>
+                    )}
                   </div>
 
                   {/* Text Content Below Image */}
-                  <div className="pt-3 px-1">
-                    <p className="text-[9px] font-black text-on-surface-muted uppercase tracking-[0.15em] mb-1 truncate leading-none opacity-60">
-                      {formatAuthor(book.author || '') || 'Автор'}
-                    </p>
+                  <div className="pt-3 px-0.5">
                     <h3 className="text-[13px] font-bold text-on-surface leading-tight line-clamp-2 tracking-tight group-hover:text-primary transition-colors">
                       {book.title}
                     </h3>
