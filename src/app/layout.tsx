@@ -4,7 +4,7 @@ import "./globals.css";
 import AuthProvider from "@/components/AuthProvider";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
-  subsets: ["latin", "cyrillic"],
+  subsets: ["latin", "cyrillic-ext"],
   variable: "--font-plus-jakarta",
   display: "swap",
 });
