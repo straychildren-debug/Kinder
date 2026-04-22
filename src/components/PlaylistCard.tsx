@@ -64,11 +64,28 @@ export default function PlaylistCard({ playlist, className = '' }: PlaylistCardP
                 {playlist.title}
               </h3>
               
-              <div className="flex items-center gap-3">
-                <div className="h-0.5 w-6 bg-primary rounded-full" />
-                <p className="text-[11px] font-bold text-white/50 uppercase tracking-[0.2em]">
-                  {playlist.itemCount || 0} ЭЛЕМЕНТОВ
-                </p>
+              <div className="flex items-center gap-4">
+                {/* Micro-covers Stack */}
+                {playlist.previewImages && playlist.previewImages.length > 0 && (
+                  <div className="flex -space-x-3">
+                    {playlist.previewImages.slice(0, 3).map((img, i) => (
+                      <div 
+                        key={i}
+                        className="w-8 h-10 rounded-lg border-2 border-white/20 overflow-hidden shadow-lg transform transition-transform group-hover:translate-x-1"
+                        style={{ zIndex: 3 - i }}
+                      >
+                        <img src={img} alt="" className="w-full h-full object-cover" />
+                      </div>
+                    ))}
+                  </div>
+                )}
+                
+                <div className="flex flex-col">
+                  <div className="h-0.5 w-6 bg-primary rounded-full mb-1" />
+                  <p className="text-[10px] font-black text-white/50 uppercase tracking-[0.2em]">
+                    {playlist.itemCount || 0} ЭЛЕМЕНТОВ
+                  </p>
+                </div>
               </div>
 
               {playlist.author && (

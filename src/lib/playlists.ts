@@ -9,6 +9,8 @@ export interface Playlist {
   coverUrl?: string;
   /** Fallback cover: image of the first item in the playlist, if no explicit coverUrl. */
   firstItemImage?: string;
+  /** Top items' images for the preview stack */
+  previewImages?: string[];
   isPublic: boolean;
   createdAt: string;
   updatedAt: string;
@@ -49,7 +51,8 @@ function mapPlaylist(
   r: PlaylistRow,
   itemCount?: number,
   author?: AuthorProfile,
-  firstItemImage?: string
+  firstItemImage?: string,
+  previewImages?: string[]
 ): Playlist {
   return {
     id: r.id,
@@ -58,6 +61,7 @@ function mapPlaylist(
     description: r.description ?? undefined,
     coverUrl: r.cover_url ?? undefined,
     firstItemImage,
+    previewImages,
     isPublic: r.is_public,
     createdAt: r.created_at,
     updatedAt: r.updated_at,
@@ -76,10 +80,12 @@ function mapPlaylist(
 async function fetchPlaylistCoversAndCounts(playlistIds: string[]): Promise<{
   counts: Map<string, number>;
   firstImageByPlaylist: Map<string, string>;
+  previewsByPlaylist: Map<string, string[]>;
 }> {
   const counts = new Map<string, number>();
   const firstImageByPlaylist = new Map<string, string>();
-  if (playlistIds.length === 0) return { counts, firstImageByPlaylist };
+  const previewsByPlaylist = new Map<string, string[]>();
+  if (playlistIds.length === 0) return { counts, firstImageByPlaylist, previewsByPlaylist };
 
   const { data: itemRows } = await supabase
     .from('playlist_items')
@@ -91,30 +97,47 @@ async function fetchPlaylistCoversAndCounts(playlistIds: string[]): Promise<{
     (itemRows as { playlist_id: string; content_id: string; position: number }[] | null) || [];
 
   const firstContentByPlaylist = new Map<string, string>();
+  const topContentByPlaylist = new Map<string, string[]>();
+  
   items.forEach((r) => {
     counts.set(r.playlist_id, (counts.get(r.playlist_id) || 0) + 1);
+    
     if (!firstContentByPlaylist.has(r.playlist_id)) {
       firstContentByPlaylist.set(r.playlist_id, r.content_id);
     }
+    
+    const existingPreviews = topContentByPlaylist.get(r.playlist_id) || [];
+    if (existingPreviews.length < 3) {
+      topContentByPlaylist.set(r.playlist_id, [...existingPreviews, r.content_id]);
+    }
   });
 
-  const firstContentIds = Array.from(new Set(firstContentByPlaylist.values()));
-  if (firstContentIds.length > 0) {
+  const allTopContentIds = Array.from(new Set(Array.from(topContentByPlaylist.values()).flat()));
+  
+  if (allTopContentIds.length > 0) {
     const { data: contentRows } = await supabase
       .from('content')
       .select('id, image_url')
-      .in('id', firstContentIds);
+      .in('id', allTopContentIds);
+      
     const imageById = new Map<string, string>();
     ((contentRows as { id: string; image_url: string | null }[] | null) || []).forEach((c) => {
       if (c.image_url) imageById.set(c.id, c.image_url);
     });
-    firstContentByPlaylist.forEach((contentId, playlistId) => {
-      const img = imageById.get(contentId);
-      if (img) firstImageByPlaylist.set(playlistId, img);
+
+    topContentByPlaylist.forEach((contentIds, playlistId) => {
+      const imgs = contentIds
+        .map(id => imageById.get(id))
+        .filter((img): img is string => !!img);
+      
+      if (imgs.length > 0) {
+        previewsByPlaylist.set(playlistId, imgs);
+        firstImageByPlaylist.set(playlistId, imgs[0]);
+      }
     });
   }
 
-  return { counts, firstImageByPlaylist };
+  return { counts, firstImageByPlaylist, previewsByPlaylist };
 }
 
 async function fetchAuthorMap(userIds: string[]): Promise<Map<string, AuthorProfile>> {
@@ -175,10 +198,16 @@ export async function getPublicPlaylists(limit = 30): Promise<Playlist[]> {
     fetchPlaylistCoversAndCounts(ids),
     fetchAuthorMap(rows.map((r) => r.user_id)),
   ]);
-  const { counts, firstImageByPlaylist } = coversAndCounts;
+  const { counts, firstImageByPlaylist, previewsByPlaylist } = coversAndCounts;
 
   return rows.map((r) =>
-    mapPlaylist(r, counts.get(r.id) || 0, authors.get(r.user_id), firstImageByPlaylist.get(r.id))
+    mapPlaylist(
+      r, 
+      counts.get(r.id) || 0, 
+      authors.get(r.user_id), 
+      firstImageByPlaylist.get(r.id),
+      previewsByPlaylist.get(r.id)
+    )
   );
 }
 
@@ -200,9 +229,15 @@ export async function getUserPlaylists(userId: string): Promise<Playlist[]> {
     fetchPlaylistCoversAndCounts(ids),
     fetchAuthorMap([userId]),
   ]);
-  const { counts, firstImageByPlaylist } = coversAndCounts;
+  const { counts, firstImageByPlaylist, previewsByPlaylist } = coversAndCounts;
   return rows.map((r) =>
-    mapPlaylist(r, counts.get(r.id) || 0, authors.get(r.user_id), firstImageByPlaylist.get(r.id))
+    mapPlaylist(
+      r, 
+      counts.get(r.id) || 0, 
+      authors.get(r.user_id), 
+      firstImageByPlaylist.get(r.id),
+      previewsByPlaylist.get(r.id)
+    )
   );
 }
 
@@ -248,9 +283,16 @@ export async function getPlaylist(id: string): Promise<Playlist | null> {
     .map((r) => contentMap.get(r.content_id))
     .filter((c): c is ContentRow => !!c)
     .map(mapContent);
+    
+  // Filter for approved items (safety check as requested by user)
+  playlist.items = playlist.items.filter(item => item.status === 'approved');
+  
   playlist.itemCount = playlist.items.length;
-  const firstWithImage = playlist.items.find((c) => c.imageUrl);
-  if (firstWithImage) playlist.firstItemImage = firstWithImage.imageUrl;
+  const topImages = playlist.items.slice(0, 3).map(c => c.imageUrl).filter(Boolean);
+  if (topImages.length > 0) {
+    playlist.firstItemImage = topImages[0];
+    playlist.previewImages = topImages;
+  }
   return playlist;
 }
 

@@ -13,6 +13,7 @@ import {
   type Playlist,
 } from '@/lib/playlists';
 import { useRouter } from 'next/navigation';
+import { motion } from 'framer-motion';
 import PlaylistCard from '@/components/PlaylistCard';
 
 export default function PlaylistsPage() {
@@ -75,23 +76,35 @@ export default function PlaylistsPage() {
         <div className="flex gap-1 p-1 bg-surface-container-low rounded-xl mb-6">
           <button
             onClick={() => setTab('discover')}
-            className={`flex-1 py-2 rounded-lg text-xs font-semibold transition-all ${
+            className={`flex-1 py-1.5 rounded-lg text-xs font-bold transition-all relative ${
               tab === 'discover'
-                ? 'bg-on-surface text-surface shadow-sm'
-                : 'text-on-surface-muted'
+                ? 'bg-on-surface text-surface shadow-[0_0_20px_rgba(168,85,247,0.4)]'
+                : 'text-on-surface-muted hover:text-on-surface'
             }`}
           >
+            {tab === 'discover' && (
+              <motion.div 
+                layoutId="tabGlow"
+                className="absolute inset-0 bg-primary/20 blur-xl rounded-lg -z-10"
+              />
+            )}
             Обзор
           </button>
           <button
             onClick={() => setTab('mine')}
             disabled={!user}
-            className={`flex-1 py-2 rounded-lg text-xs font-semibold transition-all disabled:opacity-40 ${
+            className={`flex-1 py-1.5 rounded-lg text-xs font-bold transition-all relative disabled:opacity-40 ${
               tab === 'mine'
-                ? 'bg-on-surface text-surface shadow-sm'
-                : 'text-on-surface-muted'
+                ? 'bg-on-surface text-surface shadow-[0_0_20px_rgba(168,85,247,0.4)]'
+                : 'text-on-surface-muted hover:text-on-surface'
             }`}
           >
+            {tab === 'mine' && (
+              <motion.div 
+                layoutId="tabGlow"
+                className="absolute inset-0 bg-primary/20 blur-xl rounded-lg -z-10"
+              />
+            )}
             Мои подборки
           </button>
         </div>

@@ -36,16 +36,39 @@ export default function PlaylistDetailPage() {
   const [searching, setSearching] = useState(false);
   const [addingId, setAddingId] = useState<string | null>(null);
 
+  // Пакет градиентов (Mesh Gradients) - такой же как в PlaylistCard
+  const GRADIENTS = [
+    'from-[#0F172A] via-[#1E293B] to-[#34495E]', // Deep Space
+    'from-[#1E1B4B] via-[#312E81] to-[#4338CA]', // Indigo Night
+    'from-[#022C22] via-[#064E3B] to-[#065F46]', // Emerald Deep
+    'from-[#450A0A] via-[#7F1D1D] to-[#991B1B]', // Crimson Rose
+    'from-[#3B0764] via-[#581C87] to-[#701A75]', // Purple Haze
+    'from-[#164E63] via-[#0891B2] to-[#0E7490]', // Oceanic Teal
+  ];
+
+  const gradient = React.useMemo(() => {
+    if (!params?.id) return GRADIENTS[0];
+    const charCodeSum = (params.id as string).split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+    return GRADIENTS[charCodeSum % GRADIENTS.length];
+  }, [params?.id]);
+
   const load = async () => {
     if (!params?.id) return;
-    const pl = await getPlaylist(params.id);
-    setPlaylist(pl);
-    if (pl) {
-      setTitle(pl.title);
-      setDescription(pl.description || '');
-      setIsPublic(pl.isPublic);
+    setLoading(true);
+    try {
+      const pl = await getPlaylist(params.id);
+      console.log('Loaded playlist details:', pl?.id, 'Items:', pl?.items?.length);
+      setPlaylist(pl);
+      if (pl) {
+        setTitle(pl.title);
+        setDescription(pl.description || '');
+        setIsPublic(pl.isPublic);
+      }
+    } catch (err) {
+      console.error('Failed to load playlist:', err);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   useEffect(() => {
@@ -82,11 +105,14 @@ export default function PlaylistDetailPage() {
     if (ok) {
       const added = results.find((r) => r.id === contentId);
       if (added) {
+        const updatedItems = [...(playlist.items || []), added];
+        const updatedPreviews = updatedItems.slice(0, 3).map(c => c.imageUrl).filter((img): img is string => !!img);
         setPlaylist({
           ...playlist,
-          items: [...(playlist.items || []), added],
-          itemCount: (playlist.itemCount || 0) + 1,
-          firstItemImage: playlist.firstItemImage || added.imageUrl || undefined,
+          items: updatedItems,
+          itemCount: updatedItems.length,
+          previewImages: updatedPreviews,
+          firstItemImage: updatedPreviews[0] || undefined,
         });
       }
     }
@@ -118,88 +144,118 @@ export default function PlaylistDetailPage() {
     if (!playlist) return;
     const ok = await removeFromPlaylist(playlist.id, contentId);
     if (ok) {
+      const updatedItems = (playlist.items || []).filter((c) => c.id !== contentId);
+      const updatedPreviews = updatedItems.slice(0, 3).map(c => c.imageUrl).filter((img): img is string => !!img);
       setPlaylist({
         ...playlist,
-        items: (playlist.items || []).filter((c) => c.id !== contentId),
-        itemCount: Math.max(0, (playlist.itemCount || 1) - 1),
+        items: updatedItems,
+        itemCount: updatedItems.length,
+        previewImages: updatedPreviews,
+        firstItemImage: updatedPreviews[0] || undefined,
       });
     }
   };
 
   if (loading) {
     return (
-      <>
-        <TopNavBar title="Подборка" showBack={true} backPath="/playlists" />
-        <main className="pt-24 pb-32 px-6 max-w-lg mx-auto">
-          <div className="h-40 rounded-2xl bg-surface-container-low animate-pulse mb-4" />
-          <div className="grid grid-cols-3 gap-3">
-            {[0, 1, 2, 3, 4, 5].map((i) => (
-              <div
-                key={i}
-                className="aspect-[2/3] rounded-xl bg-surface-container-low animate-pulse"
-              />
-            ))}
+      <div className="min-h-screen bg-surface">
+        <TopNavBar title="Подборка" showBack={true} backPath="/playlists" transparent={true} />
+        <main className="max-w-lg mx-auto">
+          {/* Skeleton Header */}
+          <div className="h-80 bg-surface-container animate-pulse rounded-b-[2.5rem]" />
+          <div className="px-6 pt-10">
+            <div className="grid grid-cols-3 gap-3">
+              {[0, 1, 2, 3, 4, 5].map((i) => (
+                <div
+                  key={i}
+                  className="aspect-[2/3] rounded-xl bg-surface-container animate-pulse"
+                />
+              ))}
+            </div>
           </div>
         </main>
         <BottomNavBar activeTab="home" />
-      </>
+      </div>
     );
   }
 
   if (!playlist) {
     return (
-      <>
+      <div className="min-h-screen bg-surface">
         <TopNavBar title="Подборка" showBack={true} backPath="/playlists" />
-        <main className="pt-24 pb-32 px-6 max-w-lg mx-auto">
-          <div className="text-center py-20 px-6 bg-surface rounded-3xl border border-on-surface/5">
-            <p className="text-on-surface font-semibold text-base mb-1">Подборка не найдена</p>
+        <main className="pt-24 pb-32 px-6 max-w-lg mx-auto text-center">
+          <div className="py-20 px-6 bg-surface-container-low rounded-[2rem] border border-white/5">
+            <p className="text-on-surface font-black text-xl mb-2">Подборка не найдена</p>
             <p className="text-on-surface-muted text-sm font-medium">
               Возможно, она была удалена или скрыта автором.
             </p>
           </div>
         </main>
         <BottomNavBar activeTab="home" />
-      </>
+      </div>
     );
   }
 
   return (
-    <>
-      <TopNavBar title="Подборка" showBack={true} backPath="/playlists" />
-      <main className="pt-24 pb-32 px-6 max-w-lg mx-auto">
+    <div className="min-h-screen bg-surface flex flex-col relative overflow-x-hidden">
+      {/* Dynamic Background elements */}
+      <div className={`fixed inset-x-0 top-0 h-[50vh] bg-gradient-to-br ${gradient} opacity-20 blur-[120px] -z-10`} />
+
+      <TopNavBar title={playlist.title} showBack={true} backPath="/playlists" transparent={true} />
+      
+      <main className="flex-1 pb-32 max-w-lg mx-auto w-full">
         {!editing ? (
-          <section className="pb-6">
-            {(() => {
-              const cover = playlist.coverUrl || playlist.firstItemImage;
-              return cover ? (
-                <div className="relative w-full h-44 rounded-2xl overflow-hidden bg-surface-container border border-on-surface/5 mb-4 shadow-sm">
-                  <Image
-                    src={cover}
-                    alt={playlist.title}
-                    fill
-                    sizes="(max-width: 512px) 100vw, 512px"
-                    className="object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent" />
+          <section className="relative pt-24 px-6 pb-12">
+            {/* Visual Hero Header */}
+            <div className="absolute top-0 inset-x-0 h-80 -z-20 overflow-hidden rounded-b-[3rem]">
+              <div className={`absolute inset-0 bg-gradient-to-br ${gradient} opacity-90`} />
+              <div className="absolute top-[-10%] left-[-10%] w-[60%] h-[60%] rounded-full bg-white/10 blur-[80px] animate-pulse" />
+              <div className="absolute bottom-[10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-primary/20 blur-[60px]" />
+              
+              {playlist.coverUrl && (
+                <div 
+                  className="absolute inset-0 opacity-30 mix-blend-overlay grayscale bg-cover bg-center"
+                  style={{ backgroundImage: `url(${playlist.coverUrl})` }}
+                />
+              )}
+              <div className="absolute inset-0 bg-gradient-to-t from-surface via-transparent to-transparent" />
+            </div>
+
+            {/* Glassmorphism Summary Card */}
+            <div className="glass-panel border-white/10 p-6 rounded-[2.5rem] backdrop-blur-2xl shadow-2xl relative mt-32">
+              <div className="flex justify-between items-start gap-4 mb-4">
+                <div className="space-y-1">
+                  <div className="flex items-center gap-2">
+                    <span className={`w-2 h-2 rounded-full ${playlist.isPublic ? 'bg-emerald-500' : 'bg-amber-500'}`} />
+                    <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/40">
+                      {playlist.isPublic ? 'Публичная' : 'Приватная'}
+                    </span>
+                  </div>
+                  <h1 className="text-2xl font-black text-white leading-tight tracking-tight">
+                    {playlist.title}
+                  </h1>
                 </div>
-              ) : null;
-            })()}
-            <div className="flex items-start gap-2">
-              <div className="flex-1 min-w-0">
-                <span className="text-xs font-medium text-on-surface-muted mb-1.5 block">
-                  {playlist.isPublic ? 'Публичная подборка' : 'Приватная подборка'}
-                </span>
-                <h1 className="text-2xl font-bold tracking-tight leading-tight text-on-surface">
-                  {playlist.title}
-                </h1>
-                {playlist.description && (
-                  <p className="mt-2 text-sm font-medium text-on-surface-muted leading-relaxed">
-                    {playlist.description}
-                  </p>
+
+                {isOwner && (
+                  <button
+                    onClick={() => setEditing(true)}
+                    className="w-10 h-10 rounded-2xl bg-white/10 border border-white/10 flex items-center justify-center text-white hover:bg-white/20 transition-all active:scale-95"
+                  >
+                    <span className="material-symbols-outlined text-[18px]">edit</span>
+                  </button>
                 )}
+              </div>
+
+              {playlist.description && (
+                <p className="text-sm font-semibold text-white/60 mb-6 leading-relaxed bg-white/5 p-3 rounded-2xl border border-white/5">
+                  {playlist.description}
+                </p>
+              )}
+
+              <div className="flex items-center justify-between">
                 {playlist.author && (
-                  <div className="flex items-center gap-2 mt-3">
-                    <div className="relative w-6 h-6 rounded-full overflow-hidden bg-surface-container border border-on-surface/5">
+                  <div className="flex items-center gap-2">
+                    <div className="relative w-6 h-6 rounded-full overflow-hidden border border-white/20">
                       {playlist.author.avatarUrl ? (
                         <Image
                           src={playlist.author.avatarUrl}
@@ -209,30 +265,24 @@ export default function PlaylistDetailPage() {
                           className="object-cover"
                         />
                       ) : (
-                        <div className="w-full h-full flex items-center justify-center text-[10px] font-bold text-on-surface-muted">
+                        <div className="w-full h-full flex items-center justify-center text-[10px] font-bold text-white/50 bg-white/10">
                           {playlist.author.name.charAt(0).toUpperCase()}
                         </div>
                       )}
                     </div>
-                    <span className="text-xs font-semibold text-on-surface">
-                      {playlist.author.name}
-                    </span>
-                    <span className="text-xs font-medium text-on-surface-muted">
-                      · {playlist.itemCount || 0}{' '}
-                      {(playlist.itemCount || 0) === 1 ? 'элемент' : 'элементов'}
+                    <span className="text-xs font-bold text-white/80">
+                      @{playlist.author.name}
                     </span>
                   </div>
                 )}
+
+                <div className="flex items-center gap-3">
+                  <div className="h-0.5 w-6 bg-primary rounded-full" />
+                  <span className="text-[10px] font-black text-white/40 uppercase tracking-[0.2em]">
+                    {playlist.itemCount || 0} элементов
+                  </span>
+                </div>
               </div>
-              {isOwner && (
-                <button
-                  onClick={() => setEditing(true)}
-                  className="w-10 h-10 rounded-xl bg-surface-container hover:bg-surface-container-high flex items-center justify-center text-on-surface-muted transition-all shrink-0"
-                  title="Редактировать"
-                >
-                  <span className="material-symbols-outlined text-[18px]">edit</span>
-                </button>
-              )}
             </div>
           </section>
         ) : (
@@ -385,14 +435,14 @@ export default function PlaylistDetailPage() {
         )}
 
         {!playlist.items || playlist.items.length === 0 ? (
-          <div className="text-center py-16 px-6 bg-surface rounded-3xl border border-on-surface/5">
-            <div className="w-14 h-14 rounded-2xl bg-surface-container flex items-center justify-center mx-auto mb-5">
-              <span className="material-symbols-outlined text-[24px] text-on-surface-muted">
+          <div className="mx-6 text-center py-16 px-6 glass-panel rounded-[2rem] border-white/5">
+            <div className="w-14 h-14 rounded-2xl bg-white/5 flex items-center justify-center mx-auto mb-5 border border-white/10">
+              <span className="material-symbols-outlined text-[24px] text-white/30">
                 collections_bookmark
               </span>
             </div>
-            <p className="text-on-surface font-semibold text-base mb-1">Подборка пуста</p>
-            <p className="text-on-surface-muted text-sm font-medium leading-relaxed max-w-xs mx-auto">
+            <p className="text-white font-black text-lg mb-1">Подборка пуста</p>
+            <p className="text-white/40 text-sm font-semibold leading-relaxed max-w-xs mx-auto">
               {isOwner
                 ? 'Откройте любую публикацию и нажмите «Добавить в подборку»'
                 : 'Автор пока ничего не добавил'}
@@ -400,7 +450,7 @@ export default function PlaylistDetailPage() {
             {isOwner && (
               <button
                 onClick={() => router.push('/')}
-                className="mt-5 inline-flex items-center gap-2 px-4 py-2.5 bg-on-surface text-surface rounded-xl font-semibold text-xs transition-transform active:scale-95"
+                className="mt-6 inline-flex items-center gap-2 px-6 py-3 bg-white text-black rounded-2xl font-black text-xs transition-transform active:scale-95 shadow-xl shadow-white/10"
               >
                 <span className="material-symbols-outlined text-[16px]">search</span>
                 Найти публикацию
@@ -408,56 +458,58 @@ export default function PlaylistDetailPage() {
             )}
           </div>
         ) : (
-          <div className="grid grid-cols-3 gap-3">
-            {playlist.items.map((c) => (
-              <div key={c.id} className="relative group">
-                <button
-                  onClick={() => setOpened(c)}
-                  className="w-full h-full flex flex-col text-left outline-none"
-                >
-                  <div className="relative aspect-[2/3] w-full rounded-xl overflow-hidden bg-surface-container border border-on-surface/5 shadow-sm">
-                    {c.imageUrl ? (
-                      <Image
-                        src={c.imageUrl}
-                        alt={c.title}
-                        fill
-                        sizes="33vw"
-                        placeholder="blur"
-                        blurDataURL={defaultBlurDataURL}
-                        className="object-cover transition-transform duration-700 group-hover:scale-110"
-                      />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center opacity-20">
-                        <span className="material-symbols-outlined text-on-surface-muted">
-                          {c.type === 'movie' ? 'movie' : 'menu_book'}
-                        </span>
-                      </div>
-                    )}
-
-                    {/* Content Overlay */}
-                    <div className="absolute inset-x-0 bottom-0 pt-10 pb-2 px-2 bg-gradient-to-t from-black via-black/40 to-transparent z-10">
-                      <h3 className="text-[10px] font-bold text-white leading-tight line-clamp-2 tracking-tight">
-                        {c.title}
-                      </h3>
-                    </div>
-                  </div>
-                </button>
-                {isOwner && (
+          <div className="px-6">
+            <div className="grid grid-cols-3 gap-4">
+              {playlist.items.map((c) => (
+                <div key={c.id} className="relative group">
                   <button
-                    onClick={() => handleRemoveItem(c.id)}
-                    className="absolute top-1.5 right-1.5 w-7 h-7 rounded-full bg-black/60 backdrop-blur-md text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity z-20 hover:bg-red-500 transition-colors"
-                    title="Убрать из подборки"
+                    onClick={() => setOpened(c)}
+                    className="w-full h-full flex flex-col text-left outline-none"
                   >
-                    <span className="material-symbols-outlined text-[14px]">close</span>
+                    <div className="relative aspect-[2/3] w-full rounded-[1.5rem] overflow-hidden bg-white/5 border border-white/10 shadow-lg group-hover:shadow-primary/20 transition-all duration-500">
+                      {c.imageUrl ? (
+                        <Image
+                          src={c.imageUrl}
+                          alt={c.title}
+                          fill
+                          sizes="33vw"
+                          placeholder="blur"
+                          blurDataURL={defaultBlurDataURL}
+                          className="object-cover transition-transform duration-700 group-hover:scale-110"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center opacity-20">
+                          <span className="material-symbols-outlined text-white">
+                            {c.type === 'movie' ? 'movie' : 'menu_book'}
+                          </span>
+                        </div>
+                      )}
+  
+                      {/* Content Overlay */}
+                      <div className="absolute inset-x-0 bottom-0 pt-10 pb-3 px-3 bg-gradient-to-t from-black via-black/40 to-transparent z-10">
+                        <h3 className="text-[10px] font-black text-white leading-tight line-clamp-2 tracking-tight group-hover:text-primary transition-colors">
+                          {c.title}
+                        </h3>
+                      </div>
+                    </div>
                   </button>
-                )}
-              </div>
-            ))}
+                  {isOwner && (
+                    <button
+                      onClick={() => handleRemoveItem(c.id)}
+                      className="absolute -top-2 -right-2 w-7 h-7 rounded-full bg-black/80 backdrop-blur-md text-white border border-white/10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all z-20 hover:bg-red-500 hover:scale-110"
+                      title="Убрать из подборки"
+                    >
+                      <span className="material-symbols-outlined text-[14px]">close</span>
+                    </button>
+                  )}
+                </div>
+              ))}
+            </div>
           </div>
         )}
       </main>
       {opened && <ContentDetailsModal content={opened} onClose={() => setOpened(null)} />}
       <BottomNavBar activeTab="home" />
-    </>
+    </div>
   );
 }
