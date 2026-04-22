@@ -19,6 +19,7 @@ const TYPE_ICON: Record<string, string> = {
   mention: 'alternate_email',
   club_invite: 'group_add',
   marathon: 'rocket_launch',
+  duel_nomination: 'swords',
 };
 
 function formatWhen(iso: string): string {
@@ -48,6 +49,10 @@ function notificationText(n: Notification): string {
       return `${actor} пригласил(а) вас в клуб${club}`;
     case 'marathon':
       return `Новости марафона${club}`;
+    case 'duel_nomination': {
+      const title = (n.payload?.title as string) || 'публикации';
+      return `Ваш отзыв выбран для Дуэли Критиков по «${title}»!`;
+    }
     default:
       return `${actor}${club}`;
   }
@@ -181,7 +186,10 @@ export default function NotificationsBell() {
                 </div>
               ) : (
                 items.map((n) => {
-                  const href = n.clubId ? `/clubs/${n.clubId}` : '#';
+                  let href = '#';
+                  if (n.clubId) href = `/clubs/${n.clubId}`;
+                  else if (n.payload?.duel_id) href = `/duels/${n.payload.duel_id}`;
+
                   const isUnread = !n.readAt;
                   return (
                     <Link

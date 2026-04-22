@@ -317,7 +317,8 @@ export type NotificationType =
   | 'reaction'
   | 'mention'
   | 'club_invite'
-  | 'marathon';
+  | 'marathon'
+  | 'duel_nomination';
 
 export interface Notification {
   id: string;
