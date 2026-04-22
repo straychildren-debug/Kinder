@@ -228,15 +228,20 @@ export default function ActivityFeed({ limit = 5 }: { limit?: number }) {
                          {p.text as string || (e.type === 'earned_award' ? AWARD_META[p.type as AwardType]?.title : '') || 'Интересное событие в нашем сообществе...'}
                        </p>
 
-                       {/* Stats info label */}
-                       <div className="flex items-center gap-3 mt-1">
-                          <span className="text-[10px] font-black uppercase tracking-widest text-white/20">
-                            {(p.likesCount as number) || Math.floor(Math.random() * 20)} лайков
-                          </span>
-                          <div className="w-1 h-1 rounded-full bg-white/10" />
-                          <span className="text-[10px] font-black uppercase tracking-widest text-white/20">
-                            {(p.commentCount as number) || Math.floor(Math.random() * 5)} комм.
-                          </span>
+                       {/* Stats info label with Icons */}
+                       <div className="flex items-center gap-4 mt-1">
+                          <div className="flex items-center gap-1.5 text-white/20 group-hover:text-white/40 transition-colors">
+                            <span className="material-symbols-rounded text-[14px]" style={{ fontVariationSettings: "'FILL' 1" }}>favorite</span>
+                            <span className="text-[10px] font-black uppercase tracking-widest">
+                              {(p.likesCount as number) || Math.floor(Math.random() * 20)}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-1.5 text-white/20 group-hover:text-white/40 transition-colors">
+                            <span className="material-symbols-rounded text-[14px]">chat_bubble</span>
+                            <span className="text-[10px] font-black uppercase tracking-widest">
+                              {(p.commentCount as number) || Math.floor(Math.random() * 5)}
+                            </span>
+                          </div>
                        </div>
                     </div>
                   </div>
