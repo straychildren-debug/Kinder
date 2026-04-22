@@ -112,7 +112,7 @@ export default function Leaderboard() {
                     <div>
                       <div className="flex items-center gap-2 mb-1">
                          <span className="material-symbols-outlined text-white text-lg" style={{ fontVariationSettings: "'FILL' 1" }}>workspace_premium</span>
-                         <h3 className="text-lg font-black text-white">{top3[0].name}</h3>
+                         <h3 className="text-xl font-black text-white">{top3[0].name}</h3>
                       </div>
                       <div className="flex items-center gap-2 text-white/80">
                         <span className="material-symbols-outlined text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>verified</span>
