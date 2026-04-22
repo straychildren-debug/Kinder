@@ -102,7 +102,7 @@ export default function Leaderboard() {
                 <div className="absolute -top-4 -right-4 text-[120px] font-black text-accent-amber/10 select-none leading-none">1</div>
                 <div className="relative z-10">
                   <div className="flex items-center gap-6 mb-6">
-                    <div className="relative w-20 h-20 rounded-xl overflow-hidden shadow-xl bg-surface-container flex items-center justify-center font-black text-xl text-on-surface">
+                    <div className="relative w-20 h-20 rounded-full overflow-hidden shadow-xl bg-surface-container flex items-center justify-center font-black text-xl text-on-surface shrink-0">
                       {top3[0].avatarUrl ? (
                         <Image alt={top3[0].name} fill sizes="80px" className="object-cover" src={top3[0].avatarUrl} />
                       ) : (
@@ -150,7 +150,7 @@ export default function Leaderboard() {
                 >
                   <div className="flex items-center gap-4">
                     <div className="text-2xl font-black text-slate-300 mr-2">02</div>
-                    <div className="relative w-14 h-14 rounded-xl overflow-hidden bg-surface-container flex items-center justify-center font-black text-lg text-on-surface border border-on-surface/5 shadow-inner">
+                    <div className="relative w-14 h-14 rounded-full overflow-hidden bg-surface-container flex items-center justify-center font-black text-lg text-on-surface border border-on-surface/5 shadow-inner shrink-0">
                       {top3[1].avatarUrl ? (
                         <Image alt={top3[1].name} fill sizes="56px" className="object-cover" src={top3[1].avatarUrl} />
                       ) : (
@@ -177,7 +177,7 @@ export default function Leaderboard() {
                 >
                   <div className="flex items-center gap-4">
                     <div className="text-2xl font-black text-orange-200 mr-2">03</div>
-                    <div className="relative w-14 h-14 rounded-xl overflow-hidden bg-surface-container flex items-center justify-center font-black text-lg text-on-surface border border-on-surface/5 shadow-inner">
+                    <div className="relative w-14 h-14 rounded-full overflow-hidden bg-surface-container flex items-center justify-center font-black text-lg text-on-surface border border-on-surface/5 shadow-inner shrink-0">
                       {top3[2].avatarUrl ? (
                         <Image alt={top3[2].name} fill sizes="56px" className="object-cover" src={top3[2].avatarUrl} />
                       ) : (
@@ -252,7 +252,7 @@ export default function Leaderboard() {
                 >
                   <div className="w-8 text-center text-on-surface-variant font-black text-xs opacity-30 group-hover:opacity-60">{4 + idx}</div>
                   <div className="flex items-center gap-4 flex-1 px-4">
-                    <div className="relative w-11 h-11 rounded-xl bg-surface-container overflow-hidden flex items-center justify-center text-on-surface font-black text-sm border border-on-surface/5">
+                    <div className="relative w-11 h-11 rounded-full bg-surface-container overflow-hidden flex items-center justify-center text-on-surface font-black text-sm border border-on-surface/5 shrink-0">
                       {user.avatarUrl ? (
                         <Image alt={user.name} fill sizes="44px" className="object-cover" src={user.avatarUrl} />
                       ) : (
