@@ -13,9 +13,20 @@ interface PlaylistCardProps {
 // Пакет премиальных градиентов (Mesh Gradients)
 const GRADIENTS = [
   'from-[#2d0006] via-[#590013] to-[#8a0021]', // Deep Ruby (Mockup Exact)
-  'from-[#1a0005] via-[#4d0010] to-[#7d001b]', // Midnight Garnet
-  'from-[#3d000a] via-[#6d0018] to-[#9d0022]', // Royal Burgundy
-  'from-[#220004] via-[#550012] to-[#85001e]', // Velvet Crimson
+  'from-[#0F172A] via-[#1E293B] to-[#34495E]', // Deep Space
+  'from-[#1E1B4B] via-[#312E81] to-[#4338CA]', // Indigo Night
+  'from-[#022C22] via-[#064E3B] to-[#065F46]', // Emerald Deep
+  'from-[#3B0764] via-[#581C87] to-[#701A75]', // Purple Haze
+  'from-[#164E63] via-[#0891B2] to-[#0E7490]', // Oceanic Teal
+];
+
+const ACCENTS = [
+  { border: 'border-[#ff004d]', shadow: 'rgba(255,0,77,0.7)', blur: 'bg-[#ff004d]/20' }, // Ruby
+  { border: 'border-blue-400', shadow: 'rgba(56,189,248,0.5)', blur: 'bg-blue-500/10' }, // Space
+  { border: 'border-indigo-400', shadow: 'rgba(129,140,248,0.5)', blur: 'bg-indigo-500/10' }, // Indigo
+  { border: 'border-emerald-400', shadow: 'rgba(52,211,153,0.5)', blur: 'bg-emerald-500/10' }, // Emerald
+  { border: 'border-purple-400', shadow: 'rgba(192,132,252,0.5)', blur: 'bg-purple-500/10' }, // Purple
+  { border: 'border-teal-400', shadow: 'rgba(45,212,191,0.5)', blur: 'bg-teal-500/10' }, // Teal
 ];
 
 export default function PlaylistCard({ playlist, className = '' }: PlaylistCardProps) {
@@ -28,9 +39,9 @@ export default function PlaylistCard({ playlist, className = '' }: PlaylistCardP
 
   const gradient = GRADIENTS[gradientIndex];
   
-  // Яркий неоновый цвет для рамок (всегда рубиновый для этой темы)
-  const neonBorderColor = 'border-[#ff004d]';
-  const neonShadow = 'shadow-[0_0_15px_rgba(255,0,77,0.7)]';
+  const theme = ACCENTS[gradientIndex] || ACCENTS[0];
+  const neonBorderColor = theme.border;
+  const neonShadow = `shadow-[0_0_15px_${theme.shadow}]`;
 
   return (
     <Link href={`/playlists/${playlist.id}`} className={`block w-full group ${className}`}>
@@ -44,7 +55,7 @@ export default function PlaylistCard({ playlist, className = '' }: PlaylistCardP
         
         {/* Абстрактные световые эффекты */}
         <div className="absolute top-[-30%] left-[-10%] w-[120%] h-[120%] rounded-full bg-white/5 blur-[120px] pointer-events-none" />
-        <div className={`absolute bottom-[-10%] right-[-20%] w-[60%] h-[80%] rounded-full bg-[#ff004d]/20 blur-[80px] pointer-events-none`} />
+        <div className={`absolute bottom-[-10%] right-[-20%] w-[60%] h-[80%] rounded-full ${theme.blur} blur-[80px] pointer-events-none`} />
 
         {/* Content Container */}
         <div className="relative z-20 flex flex-col p-6 sm:p-7 gap-6">
