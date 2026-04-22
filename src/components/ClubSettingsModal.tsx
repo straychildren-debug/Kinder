@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { ClubMember, ClubMarathon } from '@/lib/types';
 import { getClubMembers, updateMemberRole, removeMember } from '@/lib/db';
 import MarathonModal from './MarathonModal';
+import { createPortal } from 'react-dom';
 
 interface ClubSettingsModalProps {
   isOpen: boolean;
@@ -47,6 +48,12 @@ export default function ClubSettingsModal({
   const [loading, setLoading] = useState(true);
   const [showMarathonModal, setShowMarathonModal] = useState(false);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    return () => setMounted(false);
+  }, []);
 
   const isOwnerOrAdmin = userRole === 'owner' || userRole === 'admin';
 
@@ -90,11 +97,11 @@ export default function ClubSettingsModal({
     }
   };
 
-  if (!isOpen) return null;
+  if (!isOpen || !mounted) return null;
 
-  return (
+  return createPortal(
     <>
-      <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 glass-modal-overlay" onClick={onClose}>
+      <div className="fixed inset-0 z-[2000] flex items-center justify-center p-6 glass-modal-overlay" onClick={onClose}>
         <div
           className="glass-modal rounded-[40px] p-10 w-full max-w-xl max-h-[85vh] overflow-y-auto animate-in zoom-in-95 fade-in duration-500"
           onClick={(e) => e.stopPropagation()}
@@ -256,7 +263,8 @@ export default function ClubSettingsModal({
         activeMarathon={activeMarathon}
         onMarathonChange={onMarathonChange}
       />
-    </>
+    </>,
+    document.body
   );
 }
 

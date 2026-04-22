@@ -14,6 +14,7 @@ import { useAuth } from './AuthProvider';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
+import { createPortal } from 'react-dom';
 
 interface ContentDetailsModalProps {
   content: ContentItem | null;
@@ -31,6 +32,12 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
   const [newReviewRating, setNewReviewRating] = useState(0);
   const [newReviewText, setNewReviewText] = useState('');
   const [submittingReview, setSubmittingReview] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    return () => setMounted(false);
+  }, []);
 
   // Expanded comments state
   const [expandedReviewId, setExpandedReviewId] = useState<string | null>(null);
@@ -300,10 +307,10 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
     }
   };
 
-  if (!content) return null;
+  if (!content || !mounted) return null;
 
-  return (
-    <div className="fixed inset-0 z-[100] flex flex-col bg-background animate-in slide-in-from-bottom-8 duration-300">
+  return createPortal(
+    <div className="fixed inset-0 z-[2000] flex flex-col bg-background animate-in slide-in-from-bottom-8 duration-300">
       {/* Header */}
       <div className="sticky top-0 bg-surface/80 backdrop-blur-xl border-b border-on-surface/5 z-10 px-4 py-4 flex items-center gap-4">
         <button onClick={onClose} className="p-2 -ml-2 rounded-full hover:bg-surface-container-high transition-colors text-on-surface flex-shrink-0 flex items-center justify-center">
@@ -938,6 +945,7 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
           </div>
         )}
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

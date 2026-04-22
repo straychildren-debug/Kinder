@@ -7,6 +7,7 @@ import { getWishlist } from '@/lib/wishlist';
 import { formatAuthor } from '@/lib/format';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
+import { createPortal } from 'react-dom';
 
 const defaultBlurDataURL = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg==";
 
@@ -25,6 +26,12 @@ export default function PublicProfileModal({ user, onClose, onOpenContent }: Pub
   const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedReview, setSelectedReview] = useState<Review | null>(null);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    return () => setMounted(false);
+  }, []);
 
   useEffect(() => {
     async function loadAllData() {
@@ -49,9 +56,11 @@ export default function PublicProfileModal({ user, onClose, onOpenContent }: Pub
     loadAllData();
   }, [user.id]);
 
-  return (
+  if (!mounted) return null;
+
+  return createPortal(
     <AnimatePresence>
-      <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center p-0 sm:p-4">
+      <div className="fixed inset-0 z-[2000] flex items-end sm:items-center justify-center p-0 sm:p-4 pb-safe">
         {/* Backdrop */}
         <motion.div
           initial={{ opacity: 0 }}
@@ -209,7 +218,7 @@ export default function PublicProfileModal({ user, onClose, onOpenContent }: Pub
         {/* Full Review Sub-Modal */}
         <AnimatePresence>
           {selectedReview && (
-            <div className="fixed inset-0 z-[110] flex items-center justify-center p-6">
+            <div className="fixed inset-0 z-[2100] flex items-center justify-center p-6">
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -286,7 +295,8 @@ export default function PublicProfileModal({ user, onClose, onOpenContent }: Pub
           )}
         </AnimatePresence>
       </div>
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   );
 }
 
