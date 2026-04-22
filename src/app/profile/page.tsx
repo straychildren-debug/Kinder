@@ -62,7 +62,7 @@ export default function Profile() {
   if (!user) {
     return (
       <>
-        <TopNavBar />
+        <TopNavBar showBack={true} backPath="/" />
         <main className="pt-24 pb-32 px-6 max-w-lg mx-auto flex flex-col items-center justify-center min-h-[60vh] space-y-10">
           <div className="w-24 h-24 rounded-[32px] bg-surface-container flex items-center justify-center border border-on-surface/5 shadow-2xl relative">
              <div className="absolute inset-0 bg-accent-lilac/5 animate-pulse rounded-[32px]" />
@@ -88,7 +88,7 @@ export default function Profile() {
 
   return (
     <>
-      <TopNavBar />
+      <TopNavBar showBack={true} backPath="/" />
       <main className="pt-20 pb-32 max-w-lg mx-auto">
         {/* Premium User Header */}
         <section className="px-6 pb-8 pt-6 flex flex-col items-center border-b border-on-surface/[0.03]">
