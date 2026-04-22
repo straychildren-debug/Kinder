@@ -25,25 +25,25 @@ export default function LeaderboardColumn({
 }: LeaderboardColumnProps) {
   const variants = {
     purple: {
-      bg: 'bg-gradient-to-br from-purple-500/10 via-transparent to-transparent',
-      border: 'border-purple-500/10',
-      iconBg: 'bg-purple-500/10',
+      bg: 'bg-gradient-to-br from-purple-500/25 via-purple-500/5 to-transparent',
+      border: 'border-purple-500/20',
+      iconBg: 'bg-purple-500/20',
       iconText: 'text-purple-400',
-      shadow: 'shadow-[0_0_40px_-15px_rgba(168,85,247,0.1)]'
+      shadow: 'shadow-[0_0_40px_-15px_rgba(168,85,247,0.2)]'
     },
     blue: {
-      bg: 'bg-gradient-to-br from-blue-500/10 via-transparent to-transparent',
-      border: 'border-blue-500/10',
-      iconBg: 'bg-blue-500/10',
+      bg: 'bg-gradient-to-br from-blue-500/25 via-blue-500/5 to-transparent',
+      border: 'border-blue-500/20',
+      iconBg: 'bg-blue-500/20',
       iconText: 'text-blue-400',
-      shadow: 'shadow-[0_0_40px_-15px_rgba(59,130,246,0.1)]'
+      shadow: 'shadow-[0_0_40px_-15px_rgba(59,130,246,0.2)]'
     },
     orange: {
-      bg: 'bg-gradient-to-br from-orange-500/10 via-transparent to-transparent',
-      border: 'border-orange-500/10',
-      iconBg: 'bg-orange-500/10',
+      bg: 'bg-gradient-to-br from-orange-500/25 via-orange-500/5 to-transparent',
+      border: 'border-orange-500/20',
+      iconBg: 'bg-orange-500/20',
       iconText: 'text-orange-400',
-      shadow: 'shadow-[0_0_40px_-15px_rgba(249,115,22,0.1)]'
+      shadow: 'shadow-[0_0_40px_-15px_rgba(249,115,22,0.2)]'
     }
   };
 
