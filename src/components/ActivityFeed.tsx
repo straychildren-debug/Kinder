@@ -165,26 +165,27 @@ export default function ActivityFeed({ limit = 5 }: { limit?: number }) {
                         <div className={`absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-surface dark:border-[#1a1a1a] ${status === 'online' ? 'bg-emerald-500' : 'bg-zinc-500'}`} />
                       </div>
                       
-                      <div className="flex flex-col">
+                      <div className="flex flex-col min-w-0">
                         <div className="flex items-center gap-2">
                           <button 
                             onClick={() => openUser(e.userId)}
-                            className="text-sm font-bold text-white hover:text-primary transition-colors"
+                            className="text-sm font-bold text-white hover:text-primary transition-colors truncate max-w-[100px] sm:max-w-[150px]"
+                            title={e.userName || 'Участник'}
                           >
                             {e.userName || 'Участник'}
                           </button>
-                          <span className="text-[10px] text-white/40 font-medium">
+                          <span className="text-[10px] text-white/40 font-medium shrink-0">
                             {formatWhen(e.createdAt)}
                           </span>
                         </div>
-                        <span className={`text-[10px] font-black uppercase tracking-wider ${config.color}`}>
+                        <span className={`text-[10px] font-black uppercase tracking-wider ${config.color} truncate`}>
                           {config.label} {e.type === 'earned_award' ? '' : '«' + contentTitle + '»'}
                         </span>
                       </div>
                     </div>
 
                     {/* Status Badge */}
-                    <div className={`flex items-center gap-1.5 px-3 py-1 rounded-full border ${status === 'online' ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-500' : 'bg-white/5 border-white/10 text-white/40'}`}>
+                    <div className={`flex items-center gap-1.5 px-3 py-1 rounded-full border shrink-0 ${status === 'online' ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-500' : 'bg-white/5 border-white/10 text-white/40'}`}>
                       <div className={`w-1 h-1 rounded-full ${status === 'online' ? 'bg-emerald-500 shadow-[0_0_5px_#10b981]' : 'bg-white/20'}`} />
                       <span className="text-[9px] font-black uppercase tracking-widest leading-none">
                         {status === 'online' ? 'Онлайн' : 'Оффлайн'}
