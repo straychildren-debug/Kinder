@@ -2,12 +2,13 @@
 
 import React, { useState, useEffect } from 'react';
 import { User, ContentItem, Review, WishlistItem } from '@/lib/types';
-import { getContentByUser, getReviewsByUser } from '@/lib/db';
+import { getContentByUser, getReviewsByUser, rateReview } from '@/lib/db';
 import { getWishlist } from '@/lib/wishlist';
 import { formatAuthor } from '@/lib/format';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { createPortal } from 'react-dom';
+import { useAuth } from './AuthProvider';
 
 const defaultBlurDataURL = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg==";
 
@@ -27,6 +28,7 @@ export default function PublicProfileModal({ user, onClose, onOpenContent }: Pub
   const [loading, setLoading] = useState(true);
   const [selectedReview, setSelectedReview] = useState<Review | null>(null);
   const [mounted, setMounted] = useState(false);
+  const { user: currentUser } = useAuth();
 
   useEffect(() => {
     setMounted(true);
@@ -55,6 +57,38 @@ export default function PublicProfileModal({ user, onClose, onOpenContent }: Pub
     }
     loadAllData();
   }, [user.id]);
+
+  const handleRateReview = async (reviewId: string, rating: number) => {
+    if (!currentUser) return;
+    
+    // Optimistic update
+    if (selectedReview && selectedReview.id === reviewId) {
+      const isRemoving = selectedReview.myVote === rating;
+      const newVote = isRemoving ? 0 : rating;
+      
+      const updated = { ...selectedReview };
+      
+      // Remove old vote
+      if (selectedReview.myVote === 5) updated.likesCount = Math.max(0, (updated.likesCount || 0) - 1);
+      if (selectedReview.myVote === 1) updated.dislikesCount = Math.max(0, (updated.dislikesCount || 0) - 1);
+      
+      // Add new vote
+      if (newVote === 5) updated.likesCount = (updated.likesCount || 0) + 1;
+      if (newVote === 1) updated.dislikesCount = (updated.dislikesCount || 0) + 1;
+      
+      updated.myVote = newVote;
+      setSelectedReview(updated);
+      
+      // Update in main list too
+      setReviews(prev => prev.map(r => r.id === reviewId ? updated : r));
+    }
+
+    try {
+      await rateReview(reviewId, currentUser.id, rating);
+    } catch (err) {
+      console.error('Error rating review:', err);
+    }
+  };
 
   if (!mounted) return null;
 
@@ -271,6 +305,46 @@ export default function PublicProfileModal({ user, onClose, onOpenContent }: Pub
                   <p className="text-[15px] font-medium text-on-surface/90 leading-[1.6] italic">
                     «{selectedReview.text}»
                   </p>
+                </div>
+
+                {/* Interactive Capsule */}
+                <div className="mb-8">
+                  <div className="w-full flex items-center bg-on-surface/[0.03] backdrop-blur-xl rounded-full p-1.5 border border-on-surface/5">
+                    {/* Voting */}
+                    <div className="flex items-center flex-1 justify-around sm:justify-start sm:gap-8 px-4">
+                      <button
+                        onClick={() => handleRateReview(selectedReview.id, 5)}
+                        disabled={!currentUser}
+                        className={`flex items-center gap-2.5 transition-all hover:scale-110 ${
+                          selectedReview.myVote === 5 ? 'text-primary' : 'text-on-surface-variant/40'
+                        } ${!currentUser ? 'opacity-30 cursor-not-allowed' : ''}`}
+                      >
+                        <span className="material-symbols-rounded text-[22px]" style={{ fontVariationSettings: selectedReview.myVote === 5 ? "'FILL' 1" : "'FILL' 0" }}>thumb_up</span>
+                        <span className="text-sm font-black">{selectedReview.likesCount || 0}</span>
+                      </button>
+                      <button
+                        onClick={() => handleRateReview(selectedReview.id, 1)}
+                        disabled={!currentUser}
+                        className={`flex items-center gap-2.5 transition-all hover:scale-110 ${
+                          selectedReview.myVote === 1 ? 'text-red-500' : 'text-on-surface-variant/40'
+                        } ${!currentUser ? 'opacity-30 cursor-not-allowed' : ''}`}
+                      >
+                        <span className="material-symbols-rounded text-[22px]" style={{ fontVariationSettings: selectedReview.myVote === 1 ? "'FILL' 1" : "'FILL' 0" }}>thumb_down</span>
+                        <span className="text-sm font-black">{selectedReview.dislikesCount || 0}</span>
+                      </button>
+                    </div>
+
+                    {/* Divider */}
+                    <div className="w-px h-6 bg-on-surface/5 mx-2" />
+
+                    {/* Comments Info */}
+                    <div className="flex items-center gap-2.5 px-6 py-2.5 text-primary opacity-60">
+                      <span className="material-symbols-rounded text-[20px]">chat_bubble</span>
+                      <span className="text-[10px] font-black uppercase tracking-widest">
+                        {selectedReview.commentCount || 0}
+                      </span>
+                    </div>
+                  </div>
                 </div>
 
                 <div className="flex flex-col gap-3">
