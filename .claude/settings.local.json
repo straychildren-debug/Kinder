@@ -57,7 +57,8 @@
       "Bash(python -c \":*)",
       "Bash(find D:/AI_projects/Kinder/node_modules/next/dist/docs -name *.md)",
       "Bash(find D:/AI_projects/Kinder/node_modules/next/dist -name image-config.*)",
-      "Bash(xargs grep:*)"
+      "Bash(xargs grep:*)",
+      "WebFetch(domain:en.wikipedia.org)"
     ]
   }
 }

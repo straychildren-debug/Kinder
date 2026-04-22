@@ -783,19 +783,19 @@ begin
     from (values
         ('movie'::text, 'Титаник',
          'Пассажир третьего класса Джек Доусон выигрывает билет на «Титаник» и встречает девушку из высшего общества Розу Дьюитт Бьюкейтер. 1912 год, ночь с 14 на 15 апреля — дальше история. Джеймс Кэмерон собирает одиннадцать «Оскаров».',
-         'https://upload.wikimedia.org/wikipedia/en/1/19/Titanic_%281997_film%29.jpg', 'approved',
+         'https://upload.wikimedia.org/wikipedia/en/1/18/Titanic_%281997_film%29_poster.png', 'approved',
          jsonb_build_object('director','Джеймс Кэмерон','year',1997,'duration',194,'genre','Драма, мелодрама','actors','Леонардо ДиКаприо, Кейт Уинслет, Билли Зейн')),
         ('movie'::text, 'Аватар',
          'Парализованный морпех Джейк Салли становится на планете Пандора аватаром — телом в облике местных на’ви — и влюбляется в Нейтири. Революция в 3D-кино от Джеймса Кэмерона.',
-         'https://upload.wikimedia.org/wikipedia/en/b/b0/Avatar-Teaser-Poster.jpg', 'approved',
+         'https://upload.wikimedia.org/wikipedia/en/d/d6/Avatar_%282009_film%29_poster.jpg', 'approved',
          jsonb_build_object('director','Джеймс Кэмерон','year',2009,'duration',162,'genre','Научная фантастика','actors','Сэм Уортингтон, Зои Салдана, Сигурни Уивер')),
         ('movie'::text, 'Властелин колец: Две крепости',
          'Пути членов Братства расходятся: Фродо и Сэм идут к Мордору с проводником Голлумом, Арагорн обороняет Хельмову Падь, Мерри и Пиппин поднимают энтов. Вторая часть трилогии Питера Джексона.',
-         'https://upload.wikimedia.org/wikipedia/en/1/15/The_Lord_of_the_Rings_-_The_Two_Towers_%282002%29.jpg', 'approved',
+         'https://upload.wikimedia.org/wikipedia/en/a/a1/Lord_Rings_Two_Towers.jpg', 'approved',
          jsonb_build_object('director','Питер Джексон','year',2002,'duration',179,'genre','Фэнтези','actors','Элайджа Вуд, Вигго Мортенсен, Иэн Маккеллен')),
         ('movie'::text, 'Властелин колец: Возвращение короля',
          'Арагорн ведёт армии людей к Чёрным Вратам Мордора, а Фродо карабкается к жерлу Ородруина. Одиннадцать «Оскаров» и главный финал фэнтези-эпоса Питера Джексона.',
-         'https://upload.wikimedia.org/wikipedia/en/b/be/The_Lord_of_the_Rings_-_The_Return_of_the_King_%282003%29.jpg', 'approved',
+         'https://upload.wikimedia.org/wikipedia/en/4/48/Lord_Rings_Return_King.jpg', 'approved',
          jsonb_build_object('director','Питер Джексон','year',2003,'duration',201,'genre','Фэнтези','actors','Элайджа Вуд, Вигго Мортенсен, Шон Остин')),
         ('movie'::text, 'Апокалипсис сегодня',
          'Вьетнам, 1969 год. Капитана Уилларда отправляют вверх по реке Нанг, чтобы ликвидировать сошедшего с ума полковника Курца. Галлюциногенный эпос Фрэнсиса Форда Копполы о безумии войны.',
@@ -803,27 +803,27 @@ begin
          jsonb_build_object('director','Фрэнсис Форд Коппола','year',1979,'duration',153,'genre','Военная драма','actors','Мартин Шин, Марлон Брандо, Роберт Дюваль')),
         ('movie'::text, 'Хороший, плохой, злой',
          'Трое стрелков — Блондинчик, Туко и Ангельские Глазки — ищут сундук с двумя сотнями тысяч долларов на просторах Гражданской войны в США. Итоговый спагетти-вестерн Серджо Леоне.',
-         'https://upload.wikimedia.org/wikipedia/en/4/4e/Good_the_bad_and_the_ugly_poster.jpg', 'approved',
+         'https://upload.wikimedia.org/wikipedia/en/4/45/Good_the_bad_and_the_ugly_poster.jpg', 'approved',
          jsonb_build_object('director','Серджо Леоне','year',1966,'duration',178,'genre','Вестерн','actors','Клинт Иствуд, Элай Уоллак, Ли Ван Клиф')),
         ('movie'::text, 'Однажды в Америке',
          'Нью-Йорк, еврейский квартал: банда Лапши и Макса проходит путь от подростковых драк на улицах до большой мафии и предательства. Последний шедевр Серджо Леоне.',
-         'https://upload.wikimedia.org/wikipedia/en/d/db/Once_Upon_a_Time_in_America.jpg', 'approved',
+         'https://upload.wikimedia.org/wikipedia/en/c/c2/Once_Upon_a_Time_in_America.png', 'approved',
          jsonb_build_object('director','Серджо Леоне','year',1984,'duration',229,'genre','Криминальная драма','actors','Роберт Де Ниро, Джеймс Вудс, Элизабет Макговерн')),
         ('movie'::text, 'Большой куш',
          'Лондон, нелегальный бокс и четырёхкаратный бриллиант, который все хотят увести друг у друга. Возвращение Гая Ричи к формуле «Карты, деньги, два ствола».',
-         'https://upload.wikimedia.org/wikipedia/en/f/f3/Snatch_poster.jpg', 'approved',
+         'https://upload.wikimedia.org/wikipedia/en/a/a7/Snatch_ver4.jpg', 'approved',
          jsonb_build_object('director','Гай Ричи','year',2000,'duration',104,'genre','Криминальная комедия','actors','Джейсон Стейтем, Брэд Питт, Бенисио дель Торо')),
         ('movie'::text, '1+1',
          'Парализованный аристократ Филипп нанимает сиделкой уличного парня Дрисса из пригорода — и получает напарника, который разговаривает с ним как с человеком. Хит Оливье Накаша и Эрика Толедано.',
-         'https://upload.wikimedia.org/wikipedia/en/5/5e/Intocable_poster.jpg', 'approved',
+         'https://upload.wikimedia.org/wikipedia/en/9/93/The_Intouchables.jpg', 'approved',
          jsonb_build_object('director','Оливье Накаш, Эрик Толедано','year',2011,'duration',112,'genre','Комедия, драма','actors','Франсуа Клюзе, Омар Си, Анн Ле Ни')),
         ('movie'::text, 'Зелёная книга',
          'Итало-американский вышибала Тони Липа соглашается повозить по Югу США чернокожего пианиста Дона Ширли. История настоящей дружбы на фоне сегрегации. «Оскар» 2019 года.',
-         'https://upload.wikimedia.org/wikipedia/en/b/b7/Green_Book_%28film%29.png', 'approved',
+         'https://upload.wikimedia.org/wikipedia/en/5/5b/Green_Book_%282018_poster%29.png', 'approved',
          jsonb_build_object('director','Питер Фаррелли','year',2018,'duration',130,'genre','Биография, драма','actors','Виго Мортенсен, Махершала Али, Линда Карделлини')),
         ('movie'::text, 'Отель «Гранд Будапешт»',
          'Лобби-бой Зеро и легендарный консьерж мсье Густав попадают в историю с завещанием, ценной картиной и фашистскими властями вымышленной Зубровки. Самый пастельный фильм Уэса Андерсона.',
-         'https://upload.wikimedia.org/wikipedia/en/a/a6/The_Grand_Budapest_Hotel_Poster.jpg', 'approved',
+         'https://upload.wikimedia.org/wikipedia/en/1/1c/The_Grand_Budapest_Hotel.png', 'approved',
          jsonb_build_object('director','Уэс Андерсон','year',2014,'duration',99,'genre','Комедия-драма','actors','Рэйф Файнс, Тони Револори, Сирша Ронан')),
         ('movie'::text, 'Джокер',
          'Одинокий клоун и неудавшийся комик Артур Флек постепенно превращается в символ протеста и хаоса Готэма. Сольная драма Тодда Филлипса с оскароносной ролью Хоакина Феникса.',
@@ -835,23 +835,23 @@ begin
          jsonb_build_object('director','Кристофер Нолан','year',2023,'duration',180,'genre','Биография, драма','actors','Киллиан Мёрфи, Эмили Блант, Роберт Дауни-мл.')),
         ('movie'::text, 'Барби',
          'Идеальная Барби выпадает из Барбиленда в реальный мир и теряет плоскостопие. Грета Гервиг снимает манифест о феминизме, пластике и экзистенциальной тоске.',
-         'https://upload.wikimedia.org/wikipedia/en/4/4a/Barbie_Film_Poster.jpg', 'approved',
+         'https://upload.wikimedia.org/wikipedia/en/0/0b/Barbie_2023_poster.jpg', 'approved',
          jsonb_build_object('director','Грета Гервиг','year',2023,'duration',114,'genre','Комедия, фэнтези','actors','Марго Робби, Райан Гослинг, Америка Феррера')),
         ('movie'::text, 'Терминатор',
          'Из 2029 года в 1984-й присылают киборга Т-800 убить мать будущего лидера сопротивления Сару Коннор. Дебютный блокбастер Джеймса Кэмерона и классика боевика.',
-         'https://upload.wikimedia.org/wikipedia/en/9/94/Terminator1984movieposter.jpg', 'approved',
+         'https://upload.wikimedia.org/wikipedia/en/6/6d/The_Terminator.png', 'approved',
          jsonb_build_object('director','Джеймс Кэмерон','year',1984,'duration',107,'genre','Фантастика, боевик','actors','Арнольд Шварценеггер, Линда Хэмилтон, Майкл Бин')),
         ('movie'::text, 'Реквием по мечте',
          'Четыре героя в Нью-Йорке тонут каждый в своей зависимости — от героина до таблеток для похудения. Дарен Аронофски снимает самое жёсткое кино о саморазрушении.',
-         'https://upload.wikimedia.org/wikipedia/en/f/fb/Requiem_for_a_Dream_%282000%29.jpg', 'approved',
+         'https://upload.wikimedia.org/wikipedia/en/9/92/Requiem_for_a_dream.jpg', 'approved',
          jsonb_build_object('director','Даррен Аронофски','year',2000,'duration',102,'genre','Драма','actors','Эллен Бёрстин, Джаред Лето, Дженнифер Коннелли')),
         ('movie'::text, 'Семь самураев',
          'Японская деревня XVI века нанимает семерых странствующих самураев, чтобы защититься от банды разбойников. Акира Куросава задаёт эталон фильма о команде на все времена.',
-         'https://upload.wikimedia.org/wikipedia/en/5/5d/Seven_Samurai_poster.jpg', 'approved',
+         'https://upload.wikimedia.org/wikipedia/en/c/c8/Seven_Samurai_Poster.png', 'approved',
          jsonb_build_object('director','Акира Куросава','year',1954,'duration',207,'genre','Драма, боевик','actors','Тосиро Мифунэ, Такаси Симура, Ёсио Инаба')),
         ('movie'::text, 'Король говорит!',
          'Будущий король Георг VI борется с заиканием с помощью нестандартного логопеда-австралийца накануне Второй мировой. Байопик Тома Хупера и «Оскар» за лучший фильм 2011 года.',
-         'https://upload.wikimedia.org/wikipedia/en/1/19/King%27s_Speech_ver3.jpg', 'approved',
+         'https://upload.wikimedia.org/wikipedia/en/4/4a/The_King%27s_Speech_poster.jpg', 'approved',
          jsonb_build_object('director','Том Хупер','year',2010,'duration',118,'genre','Биография, драма','actors','Колин Фёрт, Джеффри Раш, Хелена Бонэм Картер')),
         ('movie'::text, 'Звёздные войны. Эпизод IV: Новая надежда',
          'Юный фермер Люк Скайуокер узнаёт о принцессе Лее и Империи, и вместе с Ханом Соло, Чубаккой и парой дроидов включается в галактическую войну. Фильм, с которого Джордж Лукас начал вселенную.',
@@ -859,10 +859,29 @@ begin
          jsonb_build_object('director','Джордж Лукас','year',1977,'duration',121,'genre','Космическая фантастика','actors','Марк Хэмилл, Харрисон Форд, Кэрри Фишер')),
         ('movie'::text, 'Бёрдман',
          'Угасающая звезда супергеройских блокбастеров Риган Томсон пытается вернуться на Бродвей с серьёзной пьесой — и постепенно теряет рассудок. «Оскар» Алехандро Гонсалеса Иньярриту за лучший фильм.',
-         'https://upload.wikimedia.org/wikipedia/en/a/a3/Birdman_poster.jpg', 'approved',
+         'https://upload.wikimedia.org/wikipedia/en/6/63/Birdman_poster.png', 'approved',
          jsonb_build_object('director','Алехандро Гонсалес Иньярриту','year',2014,'duration',119,'genre','Трагикомедия','actors','Майкл Китон, Эдвард Нортон, Эмма Стоун'))
     ) as t(type, title, description, image_url, status, metadata)
     where not exists (select 1 from public.content c where c.title = t.title and c.type = t.type);
 
 end
 $seed_extra$;
+
+-- Fix posters для фильмов, если их уже засеяли с неверными URL (404 на upload.wikimedia.org).
+-- Эти UPDATE безопасно запускать повторно — WHERE ограничивает только строки со старыми URL.
+update public.content set image_url = 'https://upload.wikimedia.org/wikipedia/en/1/18/Titanic_%281997_film%29_poster.png'  where title = 'Титаник'                                 and type = 'movie' and image_url = 'https://upload.wikimedia.org/wikipedia/en/1/19/Titanic_%281997_film%29.jpg';
+update public.content set image_url = 'https://upload.wikimedia.org/wikipedia/en/d/d6/Avatar_%282009_film%29_poster.jpg'   where title = 'Аватар'                                  and type = 'movie' and image_url = 'https://upload.wikimedia.org/wikipedia/en/b/b0/Avatar-Teaser-Poster.jpg';
+update public.content set image_url = 'https://upload.wikimedia.org/wikipedia/en/a/a1/Lord_Rings_Two_Towers.jpg'          where title = 'Властелин колец: Две крепости'           and type = 'movie' and image_url = 'https://upload.wikimedia.org/wikipedia/en/1/15/The_Lord_of_the_Rings_-_The_Two_Towers_%282002%29.jpg';
+update public.content set image_url = 'https://upload.wikimedia.org/wikipedia/en/4/48/Lord_Rings_Return_King.jpg'         where title = 'Властелин колец: Возвращение короля'     and type = 'movie' and image_url = 'https://upload.wikimedia.org/wikipedia/en/b/be/The_Lord_of_the_Rings_-_The_Return_of_the_King_%282003%29.jpg';
+update public.content set image_url = 'https://upload.wikimedia.org/wikipedia/en/4/45/Good_the_bad_and_the_ugly_poster.jpg' where title = 'Хороший, плохой, злой'                 and type = 'movie' and image_url = 'https://upload.wikimedia.org/wikipedia/en/4/4e/Good_the_bad_and_the_ugly_poster.jpg';
+update public.content set image_url = 'https://upload.wikimedia.org/wikipedia/en/c/c2/Once_Upon_a_Time_in_America.png'    where title = 'Однажды в Америке'                       and type = 'movie' and image_url = 'https://upload.wikimedia.org/wikipedia/en/d/db/Once_Upon_a_Time_in_America.jpg';
+update public.content set image_url = 'https://upload.wikimedia.org/wikipedia/en/a/a7/Snatch_ver4.jpg'                    where title = 'Большой куш'                             and type = 'movie' and image_url = 'https://upload.wikimedia.org/wikipedia/en/f/f3/Snatch_poster.jpg';
+update public.content set image_url = 'https://upload.wikimedia.org/wikipedia/en/9/93/The_Intouchables.jpg'               where title = '1+1'                                     and type = 'movie' and image_url = 'https://upload.wikimedia.org/wikipedia/en/5/5e/Intocable_poster.jpg';
+update public.content set image_url = 'https://upload.wikimedia.org/wikipedia/en/5/5b/Green_Book_%282018_poster%29.png'   where title = 'Зелёная книга'                           and type = 'movie' and image_url = 'https://upload.wikimedia.org/wikipedia/en/b/b7/Green_Book_%28film%29.png';
+update public.content set image_url = 'https://upload.wikimedia.org/wikipedia/en/1/1c/The_Grand_Budapest_Hotel.png'       where title = 'Отель «Гранд Будапешт»'                  and type = 'movie' and image_url = 'https://upload.wikimedia.org/wikipedia/en/a/a6/The_Grand_Budapest_Hotel_Poster.jpg';
+update public.content set image_url = 'https://upload.wikimedia.org/wikipedia/en/0/0b/Barbie_2023_poster.jpg'             where title = 'Барби'                                   and type = 'movie' and image_url = 'https://upload.wikimedia.org/wikipedia/en/4/4a/Barbie_Film_Poster.jpg';
+update public.content set image_url = 'https://upload.wikimedia.org/wikipedia/en/6/6d/The_Terminator.png'                 where title = 'Терминатор'                              and type = 'movie' and image_url = 'https://upload.wikimedia.org/wikipedia/en/9/94/Terminator1984movieposter.jpg';
+update public.content set image_url = 'https://upload.wikimedia.org/wikipedia/en/9/92/Requiem_for_a_dream.jpg'            where title = 'Реквием по мечте'                        and type = 'movie' and image_url = 'https://upload.wikimedia.org/wikipedia/en/f/fb/Requiem_for_a_Dream_%282000%29.jpg';
+update public.content set image_url = 'https://upload.wikimedia.org/wikipedia/en/c/c8/Seven_Samurai_Poster.png'           where title = 'Семь самураев'                           and type = 'movie' and image_url = 'https://upload.wikimedia.org/wikipedia/en/5/5d/Seven_Samurai_poster.jpg';
+update public.content set image_url = 'https://upload.wikimedia.org/wikipedia/en/4/4a/The_King%27s_Speech_poster.jpg'     where title = 'Король говорит!'                         and type = 'movie' and image_url = 'https://upload.wikimedia.org/wikipedia/en/1/19/King%27s_Speech_ver3.jpg';
+update public.content set image_url = 'https://upload.wikimedia.org/wikipedia/en/6/63/Birdman_poster.png'                 where title = 'Бёрдман'                                 and type = 'movie' and image_url = 'https://upload.wikimedia.org/wikipedia/en/a/a3/Birdman_poster.jpg';

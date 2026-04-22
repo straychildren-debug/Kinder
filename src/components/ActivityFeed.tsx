@@ -1,14 +1,17 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
   getGlobalActivity,
   subscribeToActivity,
 } from '@/lib/activity';
+import { getUserById, getContentById } from '@/lib/db';
 import { AWARD_META } from '@/lib/awards';
-import type { ActivityEvent, AwardType } from '@/lib/types';
+import type { ActivityEvent, AwardType, User, ContentItem } from '@/lib/types';
+import PublicProfileModal from './PublicProfileModal';
+import ContentDetailsModal from './ContentDetailsModal';
 
 const TYPE_ICON: Record<string, { icon: string; color: string }> = {
   reviewed_content: { icon: 'rate_review', color: 'text-sky-600' },
@@ -27,68 +30,11 @@ function formatWhen(iso: string): string {
   return d.toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' });
 }
 
-function eventText(e: ActivityEvent): React.ReactNode {
-  const name = e.userName || 'Участник';
-  const p = e.payload || {};
-  switch (e.type) {
-    case 'reviewed_content': {
-      const title = (p.title as string) || 'на контент';
-      return (
-        <>
-          <b>{name}</b> оставил(а) отзыв на <b>«{title}»</b>
-        </>
-      );
-    }
-    case 'published_content': {
-      const title = (p.title as string) || 'новый контент';
-      return (
-        <>
-          <b>{name}</b> опубликовал(а) <b>«{title}»</b>
-        </>
-      );
-    }
-    case 'joined_club': {
-      const club = (p.club_name as string) || 'клуб';
-      return (
-        <>
-          <b>{name}</b> вступил(а) в клуб <b>«{club}»</b>
-        </>
-      );
-    }
-    case 'completed_marathon': {
-      const title = (p.title as string) || 'марафон';
-      return (
-        <>
-          <b>{name}</b> завершил(а) марафон <b>«{title}»</b>
-        </>
-      );
-    }
-    case 'earned_award': {
-      const type = (p.type as AwardType) || 'first_review';
-      const meta = AWARD_META[type];
-      return (
-        <>
-          <b>{name}</b> получил(а) награду{' '}
-          <b>«{meta?.title || 'Достижение'}»</b>
-        </>
-      );
-    }
-    default:
-      return <b>{name}</b>;
-  }
-}
-
-function eventHref(e: ActivityEvent): string | null {
-  if (e.type === 'joined_club' && e.refId) return `/clubs/${e.refId}`;
-  if (e.type === 'completed_marathon' && e.refId) {
-    // нет прямой страницы марафона — можно вернуться в клуб, но clubId не известен здесь
-    return null;
-  }
-  return null;
-}
-
 export default function ActivityFeed({ limit = 5 }: { limit?: number }) {
+  const router = useRouter();
   const [items, setItems] = useState<ActivityEvent[] | null>(null);
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [selectedContent, setSelectedContent] = useState<ContentItem | null>(null);
 
   useEffect(() => {
     let alive = true;
@@ -114,6 +60,110 @@ export default function ActivityFeed({ limit = 5 }: { limit?: number }) {
       unsub();
     };
   }, [limit]);
+
+  async function openUser(userId: string) {
+    const u = await getUserById(userId);
+    if (u) setSelectedUser(u);
+  }
+
+  async function openContent(contentId: string) {
+    const c = await getContentById(contentId);
+    if (c) setSelectedContent(c);
+  }
+
+  function renderEventText(e: ActivityEvent): React.ReactNode {
+    const name = e.userName || 'Участник';
+    const p = e.payload || {};
+    const nameBtn = (
+      <button
+        type="button"
+        onClick={() => openUser(e.userId)}
+        className="font-black hover:underline underline-offset-2 decoration-on-surface/40"
+      >
+        {name}
+      </button>
+    );
+
+    switch (e.type) {
+      case 'reviewed_content': {
+        const title = (p.title as string) || 'на контент';
+        return (
+          <>
+            {nameBtn} оставил(а) отзыв на{' '}
+            {e.refId ? (
+              <button
+                type="button"
+                onClick={() => openContent(e.refId!)}
+                className="font-black hover:underline underline-offset-2 decoration-on-surface/40"
+              >
+                «{title}»
+              </button>
+            ) : (
+              <b>«{title}»</b>
+            )}
+          </>
+        );
+      }
+      case 'published_content': {
+        const title = (p.title as string) || 'новый контент';
+        return (
+          <>
+            {nameBtn} опубликовал(а){' '}
+            {e.refId ? (
+              <button
+                type="button"
+                onClick={() => openContent(e.refId!)}
+                className="font-black hover:underline underline-offset-2 decoration-on-surface/40"
+              >
+                «{title}»
+              </button>
+            ) : (
+              <b>«{title}»</b>
+            )}
+          </>
+        );
+      }
+      case 'joined_club': {
+        const club = (p.club_name as string) || 'клуб';
+        return (
+          <>
+            {nameBtn} вступил(а) в клуб{' '}
+            {e.refId ? (
+              <button
+                type="button"
+                onClick={() => router.push(`/clubs/${e.refId}`)}
+                className="font-black hover:underline underline-offset-2 decoration-on-surface/40"
+              >
+                «{club}»
+              </button>
+            ) : (
+              <b>«{club}»</b>
+            )}
+          </>
+        );
+      }
+      case 'completed_marathon': {
+        const title = (p.title as string) || 'марафон';
+        return (
+          <>
+            {nameBtn} завершил(а) марафон <b>«{title}»</b>
+          </>
+        );
+      }
+      case 'earned_award': {
+        const type = (p.type as AwardType) || 'first_review';
+        const meta = AWARD_META[type];
+        return (
+          <>
+            {nameBtn} получил(а) награду{' '}
+            <b>«{meta?.title || 'Достижение'}»</b>
+          </>
+        );
+      }
+      default:
+        return nameBtn;
+    }
+  }
 
   return (
     <aside className="bg-surface p-8 rounded-3xl border border-on-surface/5 shadow-sm">
@@ -141,27 +191,6 @@ export default function ActivityFeed({ limit = 5 }: { limit?: number }) {
           <AnimatePresence initial={false}>
             {items.map((e) => {
               const meta = TYPE_ICON[e.type] || TYPE_ICON.reviewed_content;
-              const href = eventHref(e);
-              const body = (
-                <div className="flex items-start gap-3">
-                  <div className={`flex-shrink-0 w-9 h-9 rounded-xl bg-white border border-on-surface/5 flex items-center justify-center ${meta.color}`}>
-                    <span
-                      className="material-symbols-outlined text-[18px]"
-                      style={{ fontVariationSettings: "'FILL' 1" }}
-                    >
-                      {meta.icon}
-                    </span>
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <p className="text-xs text-on-surface leading-snug">
-                      {eventText(e)}
-                    </p>
-                    <p className="mt-1 text-[9px] font-black uppercase tracking-widest text-on-surface-variant/50">
-                      {formatWhen(e.createdAt)}
-                    </p>
-                  </div>
-                </div>
-              );
               return (
                 <motion.li
                   key={e.id}
@@ -172,12 +201,47 @@ export default function ActivityFeed({ limit = 5 }: { limit?: number }) {
                   transition={{ duration: 0.25 }}
                   className="rounded-2xl hover:bg-on-surface/[0.03] p-2 -mx-2"
                 >
-                  {href ? <Link href={href}>{body}</Link> : body}
+                  <div className="flex items-start gap-3">
+                    <div className={`flex-shrink-0 w-9 h-9 rounded-xl bg-white border border-on-surface/5 flex items-center justify-center ${meta.color}`}>
+                      <span
+                        className="material-symbols-outlined text-[18px]"
+                        style={{ fontVariationSettings: "'FILL' 1" }}
+                      >
+                        {meta.icon}
+                      </span>
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-xs text-on-surface leading-snug">
+                        {renderEventText(e)}
+                      </p>
+                      <p className="mt-1 text-[9px] font-black uppercase tracking-widest text-on-surface-variant/50">
+                        {formatWhen(e.createdAt)}
+                      </p>
+                    </div>
+                  </div>
                 </motion.li>
               );
             })}
           </AnimatePresence>
         </ul>
+      )}
+
+      {selectedUser && (
+        <PublicProfileModal
+          user={selectedUser}
+          onClose={() => setSelectedUser(null)}
+          onOpenContent={(c) => {
+            setSelectedUser(null);
+            setSelectedContent(c);
+          }}
+        />
+      )}
+
+      {selectedContent && (
+        <ContentDetailsModal
+          content={selectedContent}
+          onClose={() => setSelectedContent(null)}
+        />
       )}
     </aside>
   );

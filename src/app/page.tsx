@@ -3,13 +3,14 @@
 import React, { useEffect, useRef, useState } from "react";
 import TopNavBar from "@/components/TopNavBar";
 import BottomNavBar from "@/components/BottomNavBar";
-import { getApprovedContent, getTopAuthorsByLikes, getTopCommenters, getTopPublicists } from "@/lib/db";
+import { getApprovedContent, getTopAuthorsByLikes, getTopCommenters, getTopPublicists, getUserById } from "@/lib/db";
 import { useAuth } from "@/components/AuthProvider";
 import Link from "next/link";
 import Image from "next/image";
-import { ContentItem, LeaderboardUser } from "@/lib/types";
+import { ContentItem, LeaderboardUser, User } from "@/lib/types";
 import { defaultBlurDataURL } from "@/lib/image-blur";
 import ContentDetailsModal from "@/components/ContentDetailsModal";
+import PublicProfileModal from "@/components/PublicProfileModal";
 import { FeedSkeletonList } from "@/components/Skeleton";
 import { MotionListItem } from "@/components/Motion";
 import ActivityFeed from "@/components/ActivityFeed";
@@ -26,6 +27,12 @@ export default function Home() {
   const [approvedContent, setApprovedContent] = useState<ContentItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedContent, setSelectedContent] = useState<ContentItem | null>(null);
+  const [selectedLeaderboardUser, setSelectedLeaderboardUser] = useState<User | null>(null);
+
+  async function openLeaderboardUser(userId: string) {
+    const u = await getUserById(userId);
+    if (u) setSelectedLeaderboardUser(u);
+  }
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<OmnisearchResult>(EMPTY_RESULTS);
   const [searching, setSearching] = useState(false);
@@ -37,10 +44,23 @@ export default function Home() {
   const [popularPlaylists, setPopularPlaylists] = useState<Playlist[]>([]);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [activeFilter, setActiveFilter] = useState<'all' | 'movie' | 'book'>('all');
+  const [page, setPage] = useState(1);
 
-  const visibleContent = activeFilter === 'all' 
-    ? approvedContent 
+  const PAGE_SIZE = 12;
+  const filteredContent = activeFilter === 'all'
+    ? approvedContent
     : approvedContent.filter(item => item.type === activeFilter);
+  const totalPages = Math.max(1, Math.ceil(filteredContent.length / PAGE_SIZE));
+  const currentPage = Math.min(page, totalPages);
+  const visibleContent = filteredContent.slice(
+    (currentPage - 1) * PAGE_SIZE,
+    currentPage * PAGE_SIZE,
+  );
+
+  // Сброс на первую страницу при смене фильтра или перезагрузке ленты.
+  useEffect(() => {
+    setPage(1);
+  }, [activeFilter, approvedContent.length]);
 
   const handleQuery = (val: string) => {
     setQuery(val);
@@ -469,7 +489,7 @@ export default function Home() {
             </div>
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-4 gap-y-6">
-              {visibleContent.slice(0, 6).map((item, index) => (
+              {visibleContent.map((item, index) => (
                 <MotionListItem key={item.id} index={index} className="h-full">
                 <button
                   onClick={() => setSelectedContent(item)}
@@ -525,6 +545,19 @@ export default function Home() {
               ))}
             </div>
           )}
+
+          {!loading && filteredContent.length > PAGE_SIZE && (
+            <Pagination
+              page={currentPage}
+              total={totalPages}
+              onChange={(p) => {
+                setPage(p);
+                if (typeof window !== 'undefined') {
+                  window.scrollTo({ top: window.scrollY, behavior: 'auto' });
+                }
+              }}
+            />
+          )}
         </section>
 
         {/* Лента активности сообщества */}
@@ -534,9 +567,21 @@ export default function Home() {
 
         {/* Details Modal */}
         {selectedContent && (
-          <ContentDetailsModal 
-            content={selectedContent} 
-            onClose={() => setSelectedContent(null)} 
+          <ContentDetailsModal
+            content={selectedContent}
+            onClose={() => setSelectedContent(null)}
+          />
+        )}
+
+        {/* Профиль героя форума */}
+        {selectedLeaderboardUser && (
+          <PublicProfileModal
+            user={selectedLeaderboardUser}
+            onClose={() => setSelectedLeaderboardUser(null)}
+            onOpenContent={(c) => {
+              setSelectedLeaderboardUser(null);
+              setSelectedContent(c);
+            }}
           />
         )}
 
@@ -549,28 +594,31 @@ export default function Home() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* Top Authors */}
-            <LeaderboardColumn 
-              title="Лучшие авторы" 
+            <LeaderboardColumn
+              title="Лучшие авторы"
               subtitle="Больше всего лайков за отзывы"
-              icon="stars" 
-              users={topAuthors} 
+              icon="stars"
+              users={topAuthors}
               metricLabel="лайков"
+              onUserClick={openLeaderboardUser}
             />
             {/* Top Commenters */}
-            <LeaderboardColumn 
-              title="Комментаторы" 
+            <LeaderboardColumn
+              title="Комментаторы"
               subtitle="Самые активные в обсуждениях"
-              icon="forum" 
-              users={topCommenters} 
+              icon="forum"
+              users={topCommenters}
               metricLabel="ответов"
+              onUserClick={openLeaderboardUser}
             />
             {/* Top Publicists */}
-            <LeaderboardColumn 
-              title="Публицисты" 
+            <LeaderboardColumn
+              title="Публицисты"
               subtitle="Главные поставщики контента"
-              icon="library_add" 
-              users={topPublicists} 
+              icon="library_add"
+              users={topPublicists}
               metricLabel="публ."
+              onUserClick={openLeaderboardUser}
             />
           </div>
         </section>
@@ -600,18 +648,20 @@ export default function Home() {
   );
 }
 
-function LeaderboardColumn({ 
-  title, 
-  subtitle, 
-  icon, 
-  users, 
-  metricLabel 
-}: { 
-  title: string, 
-  subtitle: string, 
-  icon: string, 
-  users: LeaderboardUser[], 
-  metricLabel: string 
+function LeaderboardColumn({
+  title,
+  subtitle,
+  icon,
+  users,
+  metricLabel,
+  onUserClick,
+}: {
+  title: string,
+  subtitle: string,
+  icon: string,
+  users: LeaderboardUser[],
+  metricLabel: string,
+  onUserClick?: (userId: string) => void,
 }) {
   return (
     <div className="bg-surface rounded-3xl p-6 border border-on-surface/5 flex flex-col h-full shadow-sm hover:shadow-md transition-shadow">
@@ -629,7 +679,13 @@ function LeaderboardColumn({
         {users.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-32 opacity-20 italic text-xs">Нет данных</div>
         ) : users.map((u, i) => (
-          <div key={u.id} className="flex items-center gap-3 group">
+          <button
+            type="button"
+            key={u.id}
+            onClick={() => onUserClick?.(u.id)}
+            disabled={!onUserClick}
+            className="flex items-center gap-3 group w-full text-left rounded-xl p-1 -m-1 hover:bg-on-surface/[0.03] transition-colors disabled:hover:bg-transparent disabled:cursor-default"
+          >
             <div className="relative w-10 h-10 flex-shrink-0">
               <div className="relative w-full h-full rounded-full bg-surface-container overflow-hidden border border-on-surface/5">
                 {u.avatarUrl ? (
@@ -657,9 +713,89 @@ function LeaderboardColumn({
             {i === 0 && (
               <span className="material-symbols-outlined text-amber-500 text-[16px]" style={{ fontVariationSettings: "'FILL' 1" }}>emoji_events</span>
             )}
-          </div>
+          </button>
         ))}
       </div>
     </div>
+  );
+}
+
+// Компактная пагинация: «< 1 … 4 5 6 … N >». Показывает до пяти номеров + многоточия.
+function paginationRange(current: number, total: number): (number | 'dots')[] {
+  if (total <= 7) {
+    return Array.from({ length: total }, (_, i) => i + 1);
+  }
+  const pages: (number | 'dots')[] = [1];
+  const start = Math.max(2, current - 1);
+  const end = Math.min(total - 1, current + 1);
+  if (start > 2) pages.push('dots');
+  for (let i = start; i <= end; i++) pages.push(i);
+  if (end < total - 1) pages.push('dots');
+  pages.push(total);
+  return pages;
+}
+
+function Pagination({
+  page,
+  total,
+  onChange,
+}: {
+  page: number;
+  total: number;
+  onChange: (page: number) => void;
+}) {
+  const range = paginationRange(page, total);
+  const btnBase =
+    'min-w-9 h-9 px-3 rounded-xl flex items-center justify-center text-xs font-black tracking-tight transition-colors border';
+  return (
+    <nav
+      aria-label="Пагинация публикаций"
+      className="mt-10 flex items-center justify-center gap-1.5"
+    >
+      <button
+        type="button"
+        onClick={() => onChange(Math.max(1, page - 1))}
+        disabled={page === 1}
+        aria-label="Предыдущая страница"
+        className={`${btnBase} bg-surface text-on-surface border-on-surface/5 hover:border-on-surface/20 disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:border-on-surface/5`}
+      >
+        <span className="material-symbols-rounded text-[18px]">chevron_left</span>
+      </button>
+
+      {range.map((p, idx) =>
+        p === 'dots' ? (
+          <span
+            key={`dots-${idx}`}
+            className="min-w-6 text-center text-on-surface-variant/40 text-xs font-black select-none"
+          >
+            …
+          </span>
+        ) : (
+          <button
+            key={p}
+            type="button"
+            onClick={() => onChange(p)}
+            aria-current={p === page ? 'page' : undefined}
+            className={`${btnBase} ${
+              p === page
+                ? 'bg-on-surface text-surface border-on-surface shadow-sm'
+                : 'bg-surface text-on-surface border-on-surface/5 hover:border-on-surface/20'
+            }`}
+          >
+            {p}
+          </button>
+        ),
+      )}
+
+      <button
+        type="button"
+        onClick={() => onChange(Math.min(total, page + 1))}
+        disabled={page === total}
+        aria-label="Следующая страница"
+        className={`${btnBase} bg-surface text-on-surface border-on-surface/5 hover:border-on-surface/20 disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:border-on-surface/5`}
+      >
+        <span className="material-symbols-rounded text-[18px]">chevron_right</span>
+      </button>
+    </nav>
   );
 }
