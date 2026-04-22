@@ -92,12 +92,12 @@ export default function PublicProfileModal({ user, onClose, onOpenContent }: Pub
               {user.avatarUrl ? (
                 <Image src={user.avatarUrl} alt={user.name} fill sizes="80px" className="object-cover" />
               ) : (
-                <div className="w-full h-full bg-accent-lilac/5 flex items-center justify-center text-2xl font-black text-accent-lilac uppercase tracking-tighter">
+                <div className="w-full h-full bg-accent-lilac/5 flex items-center justify-center text-2xl font-black text-accent-lilac uppercase">
                   {user.name.charAt(0)}
                 </div>
               )}
             </div>
-            <h2 className="text-xl font-black tracking-tight text-on-surface mb-1">{user.name}</h2>
+            <h2 className="text-xl font-black text-on-surface mb-1">{user.name}</h2>
             <span className="text-[9px] font-black uppercase tracking-[0.2em] text-on-surface-variant/50">
               {user.role === 'superadmin' ? 'Суперадмин' : user.role === 'admin' ? 'Администратор' : 'Участник сообщества'}
             </span>

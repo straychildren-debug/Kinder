@@ -44,16 +44,16 @@ body {
   min-height: 100dvh;
   margin: 0;
   -webkit-font-smoothing: antialiased;
-  letter-spacing: normal; /* Standard letter spacing for better readability */
+  letter-spacing: 0.015em; /* Micro-kerning for optimal clarity and premium feel */
 }
 
-/* Neutralize Tailwind tracking classes that were causing compression */
+/* Neutralize all tracking classes that cause compression */
 .tracking-tight, .tracking-tighter {
-  letter-spacing: normal !important;
+  letter-spacing: inherit !important;
 }
 
 .tracking-widest {
-  letter-spacing: 0.15em !important;
+  letter-spacing: 0.12em !important;
 }
 
 @utility pb-safe {

@@ -83,7 +83,7 @@ export default function TopNavBar({
                   <span className="text-lg md:text-xl font-black">K</span>
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-lg md:text-xl font-black tracking-tighter text-on-surface uppercase leading-tight">
+                  <span className="text-lg md:text-xl font-black text-on-surface uppercase leading-tight">
                     Kinder
                   </span>
                   <span className="text-[7px] font-black text-on-surface-muted uppercase tracking-[0.3em] leading-none mb-0.5">
