@@ -46,10 +46,11 @@ export default function PlaylistDetailPage() {
     'from-[#164E63] via-[#0891B2] to-[#0E7490]', // Oceanic Teal
   ];
 
-  const gradient = React.useMemo(() => {
-    if (!params?.id) return GRADIENTS[0];
+  const { gradient, gradientIndex } = React.useMemo(() => {
+    if (!params?.id) return { gradient: GRADIENTS[0], gradientIndex: 0 };
     const charCodeSum = (params.id as string).split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
-    return GRADIENTS[charCodeSum % GRADIENTS.length];
+    const index = charCodeSum % GRADIENTS.length;
+    return { gradient: GRADIENTS[index], gradientIndex: index };
   }, [params?.id]);
 
   const load = async () => {
