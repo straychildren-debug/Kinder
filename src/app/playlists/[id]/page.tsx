@@ -38,10 +38,10 @@ export default function PlaylistDetailPage() {
 
   // Пакет градиентов (Mesh Gradients) - такой же как в PlaylistCard
   const GRADIENTS = [
+    'from-[#450A0A] via-[#7F1D1D] to-[#991B1B]', // Crimson Heritage (Exact mockup color)
     'from-[#0F172A] via-[#1E293B] to-[#34495E]', // Deep Space
     'from-[#1E1B4B] via-[#312E81] to-[#4338CA]', // Indigo Night
     'from-[#022C22] via-[#064E3B] to-[#065F46]', // Emerald Deep
-    'from-[#450A0A] via-[#7F1D1D] to-[#991B1B]', // Crimson Rose
     'from-[#3B0764] via-[#581C87] to-[#701A75]', // Purple Haze
     'from-[#164E63] via-[#0891B2] to-[#0E7490]', // Oceanic Teal
   ];
@@ -162,7 +162,7 @@ export default function PlaylistDetailPage() {
         <TopNavBar title="Подборка" showBack={true} backPath="/playlists" transparent={true} />
         <main className="max-w-lg mx-auto">
           {/* Skeleton Header */}
-          <div className="h-80 bg-surface-container animate-pulse rounded-b-[2.5rem]" />
+          <div className="h-80 bg-surface-container animate-pulse rounded-b-3xl" />
           <div className="px-6 pt-10">
             <div className="grid grid-cols-3 gap-3">
               {[0, 1, 2, 3, 4, 5].map((i) => (
@@ -207,7 +207,7 @@ export default function PlaylistDetailPage() {
         {!editing ? (
           <section className="relative pt-24 px-6 pb-12">
             {/* Visual Hero Header */}
-            <div className="absolute top-0 inset-x-0 h-80 -z-20 overflow-hidden rounded-b-[3rem]">
+            <div className="absolute top-0 inset-x-0 h-80 -z-20 overflow-hidden rounded-b-3xl">
               <div className={`absolute inset-0 bg-gradient-to-br ${gradient} opacity-90`} />
               <div className="absolute top-[-10%] left-[-10%] w-[60%] h-[60%] rounded-full bg-white/10 blur-[80px] animate-pulse" />
               <div className="absolute bottom-[10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-primary/20 blur-[60px]" />
@@ -222,7 +222,7 @@ export default function PlaylistDetailPage() {
             </div>
 
             {/* Glassmorphism Summary Card */}
-            <div className="glass-panel border-white/10 p-6 rounded-[2.5rem] backdrop-blur-2xl shadow-2xl relative mt-32">
+            <div className="glass-panel border-white/10 p-6 rounded-3xl backdrop-blur-2xl shadow-2xl relative mt-32">
               <div className="flex justify-between items-start gap-4 mb-4">
                 <div className="space-y-1">
                   <div className="flex items-center gap-2">

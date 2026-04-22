@@ -12,10 +12,10 @@ interface PlaylistCardProps {
 
 // Пакет премиальных градиентов (Mesh Gradients)
 const GRADIENTS = [
+  'from-[#450A0A] via-[#7F1D1D] to-[#991B1B]', // Crimson Heritage (Exact mockup color)
   'from-[#0F172A] via-[#1E293B] to-[#34495E]', // Deep Space
   'from-[#1E1B4B] via-[#312E81] to-[#4338CA]', // Indigo Night
   'from-[#022C22] via-[#064E3B] to-[#065F46]', // Emerald Deep
-  'from-[#450A0A] via-[#7F1D1D] to-[#991B1B]', // Crimson Rose
   'from-[#3B0764] via-[#581C87] to-[#701A75]', // Purple Haze
   'from-[#164E63] via-[#0891B2] to-[#0E7490]', // Oceanic Teal
 ];
@@ -33,68 +33,66 @@ export default function PlaylistCard({ playlist, className = '' }: PlaylistCardP
   return (
     <Link href={`/playlists/${playlist.id}`} className={`block group ${className}`}>
       <motion.div
-        whileHover={{ y: -4, scale: 1.01 }}
+        whileHover={{ scale: 1.01 }}
         whileTap={{ scale: 0.99 }}
-        className="relative min-h-[160px] w-full rounded-[2.5rem] overflow-hidden shadow-2xl border border-white/10 group-hover:shadow-primary/20 transition-all duration-500 flex flex-row"
+        className="relative w-full rounded-3xl overflow-hidden shadow-2xl border border-white/10 group-hover:shadow-primary/20 transition-all duration-500"
       >
-        {/* Фоновый градиент (Mesh Effect) */}
-        <div className={`absolute inset-0 bg-gradient-to-br ${gradient} z-0 opacity-90`} />
+        {/* Фоновый градиент (Premium Mesh) */}
+        <div className={`absolute inset-0 bg-gradient-to-br ${gradient} z-0 opacity-95 group-hover:opacity-100 transition-opacity`} />
         
-        {/* Абстрактные световые пятна для эффекта Mesh */}
-        <div className="absolute top-[-20%] left-[-10%] w-[80%] h-[120%] rounded-full bg-white/10 blur-[100px] animate-pulse" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[80%] rounded-full bg-primary/20 blur-[80px]" />
+        {/* Абстрактные световые эффекты */}
+        <div className="absolute top-[-20%] left-[-10%] w-[100%] h-[120%] rounded-full bg-white/5 blur-[100px] animate-pulse" />
+        <div className="absolute bottom-[-10%] right-[-20%] w-[60%] h-[80%] rounded-full bg-primary/10 blur-[80px]" />
 
-        {/* Если есть обложка, накладываем её поверх */}
-        {playlist.coverUrl && (
-          <div 
-            className="absolute inset-0 z-10 bg-cover bg-center opacity-30 mix-blend-overlay grayscale group-hover:grayscale-0 transition-all duration-700"
-            style={{ backgroundImage: `url(${playlist.coverUrl})` }}
-          />
-        )}
+        {/* Content Container (Vertical Stack as per mockup) */}
+        <div className="relative z-20 flex flex-col p-6 sm:p-7 gap-5">
+          {/* TITLE - Top Level, Full Width */}
+          <div className="w-full">
+            <h3 className="text-2xl sm:text-3xl font-black text-white leading-tight tracking-tight group-hover:text-white transition-colors">
+              {playlist.title}
+            </h3>
+          </div>
 
-          <div className="relative z-20 flex flex-1 flex-row p-6 items-stretch gap-6">
+          {/* LOWER SECTION - Metadata & Posters */}
+          <div className="flex flex-row items-end justify-between gap-4">
             {/* Info Section (Left) */}
-            <div className="flex-1 flex flex-col justify-center min-w-0 text-left">
-              <h3 className="text-xl font-black text-white leading-tight mb-2 line-clamp-2 tracking-tight group-hover:text-primary transition-colors">
-                {playlist.title}
-              </h3>
-              
+            <div className="flex flex-col gap-3">
               <div className="flex flex-row items-center gap-3">
-                <div className="h-0.5 w-6 bg-primary rounded-full" />
+                <div className="h-0.5 w-6 bg-accent-neon rounded-full shadow-[0_0_10px_rgba(168,85,247,0.5)]" />
                 <p className="text-[10px] font-black text-white/50 uppercase tracking-[0.2em]">
                   {playlist.itemCount || 0} ЭЛЕМЕНТОВ
                 </p>
               </div>
-  
+
               {playlist.author && (
-                <div className="mt-4 flex items-center justify-start gap-2">
-                <div className="w-5 h-5 rounded-full overflow-hidden border border-white/20">
-                  {playlist.author.avatarUrl ? (
-                    <img src={playlist.author.avatarUrl} alt={playlist.author.name} className="w-full h-full object-cover" />
-                  ) : (
-                    <div className="w-full h-full bg-white/10 flex items-center justify-center text-[10px] text-white">
-                      {playlist.author.name[0]}
-                    </div>
-                  )}
+                <div className="flex items-center gap-2">
+                  <div className="w-6 h-6 rounded-full overflow-hidden border border-white/20 shadow-sm">
+                    {playlist.author.avatarUrl ? (
+                      <img src={playlist.author.avatarUrl} alt={playlist.author.name} className="w-full h-full object-cover" />
+                    ) : (
+                      <div className="w-full h-full bg-white/10 flex items-center justify-center text-[10px] text-white">
+                        {playlist.author.name[0]}
+                      </div>
+                    )}
+                  </div>
+                  <p className="text-xs font-semibold text-white/60 lowercase">
+                    @{playlist.author.name.replace(/\s+/g, '').toLowerCase()}
+                  </p>
                 </div>
-                <p className="text-xs font-semibold text-white/70">
-                  @{playlist.author.name}
-                </p>
-              </div>
-            )}
-          </div>
+              )}
+            </div>
 
             {/* Posters Gallery (Right) */}
-            <div className="flex items-center justify-end shrink-0">
+            <div className="flex items-center justify-end shrink-0 pl-4">
               {playlist.previewImages && playlist.previewImages.length > 0 ? (
-                <div className="flex -space-x-3 sm:-space-x-4">
+                <div className="flex -space-x-4">
                   {playlist.previewImages.slice(0, 5).map((img, i) => (
                     <motion.div 
                       key={i}
                       initial={{ opacity: 0, x: 20 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: i * 0.1 }}
-                      className="w-10 h-14 sm:w-16 sm:h-24 rounded-lg sm:rounded-xl border-2 border-white/20 overflow-hidden shadow-2xl transform transition-all group-hover:scale-110 group-hover:rotate-2 group-hover:shadow-primary/30"
+                      className="w-10 h-14 sm:w-16 sm:h-24 rounded-lg border border-white/20 overflow-hidden shadow-2xl transform transition-all group-hover:scale-110 group-hover:shadow-primary/30"
                       style={{ zIndex: 10 - i }}
                     >
                       <img src={img} alt="" className="w-full h-full object-cover" />
@@ -102,19 +100,16 @@ export default function PlaylistCard({ playlist, className = '' }: PlaylistCardP
                   ))}
                 </div>
               ) : (
-              <div className="w-32 h-24 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center">
-                <span className="material-symbols-outlined text-white/20 text-3xl">collections</span>
-              </div>
-            )}
+                <div className="w-16 h-24 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center">
+                  <span className="material-symbols-outlined text-white/20 text-3xl">collections</span>
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
-        {/* Floating Arrow (Desktop only) */}
-        <div className="absolute top-1/2 -translate-y-1/2 right-6 w-12 h-12 rounded-2xl bg-white/10 backdrop-blur-md border border-white/10 hidden md:flex items-center justify-center z-30 opacity-0 group-hover:opacity-100 transition-all group-hover:right-8">
-          <span className="material-symbols-outlined text-white text-[24px]" style={{ fontVariationSettings: "'FILL' 1" }}>
-            arrow_forward
-          </span>
-        </div>
+        {/* Glossy Overlay effect */}
+        <div className="absolute inset-0 z-10 pointer-events-none opacity-20 group-hover:opacity-40 transition-opacity bg-gradient-to-tr from-white/10 via-transparent to-white/5" />
       </motion.div>
     </Link>
   );

@@ -59,12 +59,12 @@ export default function PlaylistsPage() {
   return (
     <>
       <TopNavBar title="Подборки" showBack={true} backPath="/" />
-      <main className="pt-24 pb-32 px-6 max-w-lg mx-auto">
-        <section className="pb-6">
-          <span className="text-xs font-medium text-on-surface-muted mb-1.5 block">
+      <main className="pt-24 pb-32 max-w-lg mx-auto">
+        <section className="pb-6 px-6">
+          <span className="text-xs font-medium text-on-surface-muted mb-1.5 block uppercase tracking-wider">
             Коллекции читателей
           </span>
-          <h1 className="text-2xl font-bold tracking-tight leading-tight text-on-surface">
+          <h1 className="text-3xl font-black tracking-tight leading-tight text-on-surface">
             Подборки
           </h1>
           <p className="mt-2 text-sm font-medium text-on-surface-muted leading-relaxed">
@@ -73,46 +73,48 @@ export default function PlaylistsPage() {
         </section>
 
         {/* Tabs */}
-        <div className="flex gap-1 p-1 bg-surface-container-low rounded-xl mb-6">
-          <button
-            onClick={() => setTab('discover')}
-            className={`flex-1 py-1.5 rounded-lg text-xs font-bold transition-all relative ${
-              tab === 'discover'
-                ? 'bg-on-surface text-surface shadow-[0_0_20px_rgba(168,85,247,0.4)]'
-                : 'text-on-surface-muted hover:text-on-surface'
-            }`}
-          >
-            {tab === 'discover' && (
-              <motion.div 
-                layoutId="tabGlow"
-                className="absolute inset-0 bg-primary/20 blur-xl rounded-lg -z-10"
-              />
-            )}
-            Обзор
-          </button>
-          <button
-            onClick={() => setTab('mine')}
-            disabled={!user}
-            className={`flex-1 py-1.5 rounded-lg text-xs font-bold transition-all relative disabled:opacity-40 ${
-              tab === 'mine'
-                ? 'bg-on-surface text-surface shadow-[0_0_20px_rgba(168,85,247,0.4)]'
-                : 'text-on-surface-muted hover:text-on-surface'
-            }`}
-          >
-            {tab === 'mine' && (
-              <motion.div 
-                layoutId="tabGlow"
-                className="absolute inset-0 bg-primary/20 blur-xl rounded-lg -z-10"
-              />
-            )}
-            Мои подборки
-          </button>
+        <div className="px-6 mb-6">
+          <div className="flex gap-1 p-1 bg-surface-container-low rounded-xl">
+            <button
+              onClick={() => setTab('discover')}
+              className={`flex-1 py-1.5 rounded-lg text-xs font-bold transition-all relative ${
+                tab === 'discover'
+                  ? 'bg-on-surface text-surface shadow-[0_0_20px_rgba(168,85,247,0.4)]'
+                  : 'text-on-surface-muted hover:text-on-surface'
+              }`}
+            >
+              {tab === 'discover' && (
+                <motion.div 
+                  layoutId="tabGlow"
+                  className="absolute inset-0 bg-primary/20 blur-xl rounded-lg -z-10"
+                />
+              )}
+              Обзор
+            </button>
+            <button
+              onClick={() => setTab('mine')}
+              disabled={!user}
+              className={`flex-1 py-1.5 rounded-lg text-xs font-bold transition-all relative disabled:opacity-40 ${
+                tab === 'mine'
+                  ? 'bg-on-surface text-surface shadow-[0_0_20px_rgba(168,85,247,0.4)]'
+                  : 'text-on-surface-muted hover:text-on-surface'
+              }`}
+            >
+              {tab === 'mine' && (
+                <motion.div 
+                  layoutId="tabGlow"
+                  className="absolute inset-0 bg-primary/20 blur-xl rounded-lg -z-10"
+                />
+              )}
+              Мои подборки
+            </button>
+          </div>
         </div>
 
         {tab === 'mine' && user && (
-          <div className="mb-6">
+          <div className="px-6 mb-6">
             {creating ? (
-              <div className="bg-surface rounded-2xl p-4 border border-on-surface/5 space-y-3">
+              <div className="bg-surface rounded-2xl p-4 border border-on-surface/5 space-y-3 shadow-xl">
                 <input
                   value={newTitle}
                   onChange={(e) => setNewTitle(e.target.value)}
@@ -202,7 +204,7 @@ export default function PlaylistsPage() {
             </p>
           </div>
         ) : (
-          <div className="flex flex-col gap-6">
+          <div className="flex flex-col gap-px bg-on-surface/5">
             {lists.map((pl) => (
               <PlaylistCard key={pl.id} playlist={pl} />
             ))}
