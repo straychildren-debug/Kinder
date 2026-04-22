@@ -15,6 +15,7 @@ import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
 import { createPortal } from 'react-dom';
+import PublicProfileModal from './PublicProfileModal';
 
 interface ContentDetailsModalProps {
   content: ContentItem | null;
@@ -67,6 +68,7 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
   // Duels active on this content
   const [contentDuels, setContentDuels] = useState<Duel[]>([]);
   const [challengingId, setChallengingId] = useState<string | null>(null);
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -540,13 +542,13 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
                  <div key={review.id} className="bg-surface rounded-2xl p-5 border border-on-surface/5">
                    <div className="flex items-start justify-between mb-4 gap-3">
                      <div className="flex items-center gap-3 min-w-0">
-                       <div className="relative w-9 h-9 rounded-full bg-surface-container flex items-center justify-center text-on-surface-muted font-semibold overflow-hidden border border-on-surface/5 shrink-0">
+                       <button onClick={() => review.user && setSelectedUser(review.user)} className="relative w-9 h-9 rounded-full bg-surface-container flex items-center justify-center text-on-surface-muted font-semibold overflow-hidden border border-on-surface/5 shrink-0 hover:scale-105 transition-transform">
                          {review.user?.avatarUrl ? (
                            <Image src={review.user.avatarUrl} alt={review.user.name || ''} fill sizes="36px" className="object-cover" />
                          ) : review.user?.name.charAt(0) || 'U'}
-                       </div>
+                        </button>
                        <div className="min-w-0">
-                         <p className="font-semibold text-sm text-on-surface truncate">{review.user?.name || 'Пользователь'}</p>
+                         <button onClick={() => review.user && setSelectedUser(review.user)} className="font-semibold text-sm text-on-surface truncate hover:text-primary transition-colors block text-left">{review.user?.name || 'Пользователь'}</button>
                          <div className="flex items-center gap-2 mt-0.5">
                            {review.rating ? (
                              <div className="flex items-center gap-0.5" aria-label={`Оценка ${review.rating} из 5`}>
@@ -945,6 +947,17 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
           </div>
         )}
       </div>
+
+      {selectedUser && (
+        <PublicProfileModal
+          user={selectedUser}
+          onClose={() => setSelectedUser(null)}
+          onOpenContent={(c) => {
+            setSelectedUser(null);
+            setContent(c);
+          }}
+        />
+      )}
     </div>,
     document.body
   );
