@@ -271,7 +271,7 @@ export default function Leaderboard() {
                       </div>
                     </div>
                   </div>
-                  <div className="flex items-center gap-4 sm:gap-7 pr-2">
+                  <div className="flex items-center gap-4 sm:gap-10 pr-2">
                     {/* Points */}
                     <div className="flex flex-col items-center min-w-[36px]">
                       <span className="material-symbols-rounded text-amber-500 text-[18px]" style={{ fontVariationSettings: "'FILL' 1" }}>emoji_events</span>
@@ -291,8 +291,6 @@ export default function Leaderboard() {
                       <span className="material-symbols-rounded text-primary text-[18px]">history_edu</span>
                       <span className="text-[11px] font-black text-on-surface mt-0.5">{user.stats?.reviews || 0}</span>
                     </div>
-
-                    <span className="material-symbols-outlined text-on-surface-variant opacity-20 group-hover:translate-x-1 transition-transform ml-2">chevron_right</span>
                   </div>
                 </div>
               ))}
