@@ -653,53 +653,51 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
                    )}
 
                    {!isEditing && (
-                   <div className="pt-4 border-t border-on-surface/5 flex justify-between items-center">
-                        <div className="flex items-center bg-white/[0.03] backdrop-blur-md rounded-full p-1 border border-white/[0.05] shadow-sm">
-                          {/* Voting Group */}
-                          <div className="flex items-center">
+                   <div className="pt-6 border-t border-on-surface/5">
+                        <div className="w-full flex items-center bg-white/[0.03] backdrop-blur-xl rounded-full p-1.5 border border-primary/20 shadow-[0_0_20px_-5px_rgba(139,92,246,0.2)]">
+                          {/* Voting Section */}
+                          <div className="flex items-center flex-1 justify-around sm:justify-start sm:gap-8 px-4">
                             {!isOwn ? (
                               <>
                                 <button
                                   onClick={() => handleRateReview(review.id, 5)}
-                                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full transition-all hover:bg-white/5 ${
-                                    review.myVote === 5 ? 'text-emerald-500' : 'text-on-surface-variant/40'
+                                  className={`flex items-center gap-2.5 transition-all hover:scale-110 ${
+                                    review.myVote === 5 ? 'text-primary' : 'text-on-surface-variant/50'
                                   }`}
                                 >
-                                  <span className="material-symbols-outlined text-[18px]" style={{ fontVariationSettings: review.myVote === 5 ? "'FILL' 1" : "'FILL' 0" }}>thumb_up</span>
-                                  <span className="text-xs font-bold">{review.likesCount || 0}</span>
+                                  <span className="material-symbols-rounded text-[22px]" style={{ fontVariationSettings: review.myVote === 5 ? "'FILL' 1" : "'FILL' 0" }}>thumb_up</span>
+                                  <span className="text-sm font-black">{review.likesCount || 0}</span>
                                 </button>
-                                <div className="w-px h-3 bg-white/10 mx-0.5" />
                                 <button
                                   onClick={() => handleRateReview(review.id, 1)}
-                                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full transition-all hover:bg-white/5 ${
-                                    review.myVote === 1 ? 'text-red-500' : 'text-on-surface-variant/40'
+                                  className={`flex items-center gap-2.5 transition-all hover:scale-110 ${
+                                    review.myVote === 1 ? 'text-red-500' : 'text-on-surface-variant/50'
                                   }`}
                                 >
-                                  <span className="material-symbols-outlined text-[18px]" style={{ fontVariationSettings: review.myVote === 1 ? "'FILL' 1" : "'FILL' 0" }}>thumb_down</span>
-                                  <span className="text-xs font-bold">{review.dislikesCount || 0}</span>
+                                  <span className="material-symbols-rounded text-[22px]" style={{ fontVariationSettings: review.myVote === 1 ? "'FILL' 1" : "'FILL' 0" }}>thumb_down</span>
+                                  <span className="text-sm font-black">{review.dislikesCount || 0}</span>
                                 </button>
                               </>
                             ) : (
-                              <div className="flex items-center gap-3 px-4 py-1.5 text-on-surface-variant/40">
-                                <div className="flex items-center gap-1.5">
-                                  <span className="material-symbols-outlined text-[16px]">thumb_up</span>
-                                  <span className="text-xs font-bold">{review.likesCount || 0}</span>
+                              <div className="flex items-center gap-8 text-on-surface-variant/30">
+                                <div className="flex items-center gap-2.5">
+                                  <span className="material-symbols-rounded text-[20px]">thumb_up</span>
+                                  <span className="text-sm font-black">{review.likesCount || 0}</span>
                                 </div>
-                                <div className="w-px h-3 bg-white/10" />
-                                <div className="flex items-center gap-1.5">
-                                  <span className="material-symbols-outlined text-[16px]">thumb_down</span>
-                                  <span className="text-xs font-bold">{review.dislikesCount || 0}</span>
+                                <div className="flex items-center gap-2.5">
+                                  <span className="material-symbols-rounded text-[20px]">thumb_down</span>
+                                  <span className="text-sm font-black">{review.dislikesCount || 0}</span>
                                 </div>
                               </div>
                             )}
                           </div>
 
-                          {/* Action Group (Duels & Comments) */}
-                          <div className="flex items-center gap-1 pr-1">
-                            {/* Divider */}
-                            <div className="w-px h-4 bg-white/10 mx-1" />
-                            
-                            {/* Duel Button */}
+                          {/* High Divider */}
+                          <div className="w-px h-8 bg-white/10 mx-2" />
+
+                          {/* Interaction Section */}
+                          <div className="flex items-center gap-2 px-2 shrink-0">
+                            {/* Duel if applicable */}
                             {canChallenge(review) && (
                               <button
                                 type="button"
@@ -708,32 +706,12 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
                                   handleChallenge(review);
                                 }}
                                 disabled={challengingId === review.id}
-                                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-amber-500 hover:bg-amber-500/10 transition-all disabled:opacity-50"
-                                title="Вызвать на дуэль"
+                                className="flex items-center justify-center w-10 h-10 rounded-full text-amber-500 hover:bg-amber-500/10 transition-all"
+                                title="Дуэль"
                               >
-                                <span className="material-symbols-outlined text-[18px]">swords</span>
-                                <span className="text-xs font-bold hidden sm:inline">
-                                  {challengingId === review.id ? '...' : 'Дуэль'}
-                                </span>
+                                <span className="material-symbols-rounded text-[22px]">swords</span>
                               </button>
                             )}
-
-                            {/* Locked in active duel */}
-                            {lockedReviewIds.has(review.id) && (() => {
-                              const d = contentDuels.find(x =>
-                                x.status === 'active' &&
-                                (x.challengerReviewId === review.id || x.defenderReviewId === review.id)
-                              );
-                              return d ? (
-                                <Link
-                                  href={`/duels/${d.id}`}
-                                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-amber-600 bg-amber-500/10"
-                                >
-                                  <span className="material-symbols-outlined text-[18px]">swords</span>
-                                  <span className="text-xs font-bold">На арене</span>
-                                </Link>
-                              ) : null;
-                            })()}
 
                             {/* Comments Toggle */}
                             <button
@@ -742,15 +720,20 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
                                 e.stopPropagation();
                                 toggleComments(review.id);
                               }}
-                              className={`flex items-center gap-1.5 px-4 py-1.5 rounded-full transition-all ${
-                                expandedReviewId === review.id ? 'bg-primary text-white shadow-lg' : 'text-primary hover:bg-primary/10'
+                              className={`flex items-center gap-2.5 px-6 py-2.5 rounded-full transition-all ${
+                                expandedReviewId === review.id 
+                                  ? 'bg-primary text-white shadow-[0_0_15px_rgba(139,92,246,0.5)]' 
+                                  : 'text-primary hover:bg-primary/10'
                               }`}
                             >
-                              <span className="material-symbols-outlined text-[18px]" style={{ fontVariationSettings: expandedReviewId === review.id ? "'FILL' 1" : "'FILL' 0" }}>chat_bubble</span>
-                              <span className="text-xs font-bold">{review.commentCount || 0}</span>
+                              <span className="material-symbols-rounded text-[22px]" style={{ fontVariationSettings: expandedReviewId === review.id ? "'FILL' 1" : "'FILL' 0" }}>chat_bubble</span>
+                              <span className="text-xs font-black uppercase tracking-widest">
+                                {review.commentCount || 0} <span className="hidden sm:inline">комментариев</span>
+                              </span>
                             </button>
                           </div>
                         </div>
+                      </div>
                       </div>
                   )}
 
