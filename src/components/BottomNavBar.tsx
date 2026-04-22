@@ -14,10 +14,10 @@ export default function BottomNavBar({ activeTab = 'home' }: BottomNavBarProps) 
   const { scrollY } = useScroll();
 
   useMotionValueEvent(scrollY, "change", (latest) => {
-    const previous = scrollY.getPrevious() ?? 0;
-    if (latest > previous && latest > 150) {
+    const velocity = scrollY.getVelocity();
+    if (velocity > 50 && latest > 150) {
       setIsVisible(false);
-    } else {
+    } else if (velocity < -50 || latest <= 150) {
       setIsVisible(true);
     }
   });
