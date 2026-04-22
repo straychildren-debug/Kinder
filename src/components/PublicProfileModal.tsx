@@ -337,13 +337,22 @@ export default function PublicProfileModal({ user, onClose, onOpenContent }: Pub
                     {/* Divider */}
                     <div className="w-px h-6 bg-on-surface/5 mx-2" />
 
-                    {/* Comments Info */}
-                    <div className="flex items-center gap-2.5 px-6 py-2.5 text-primary opacity-60">
+                    {/* Comments Info - Now a button to open full content */}
+                    <button 
+                      type="button"
+                      onClick={() => {
+                        if (selectedReview.content) {
+                          onOpenContent?.(selectedReview.content);
+                          setSelectedReview(null);
+                        }
+                      }}
+                      className="flex items-center gap-2.5 px-6 py-2.5 text-primary hover:bg-primary/10 rounded-full transition-all active:scale-95"
+                    >
                       <span className="material-symbols-rounded text-[20px]">chat_bubble</span>
                       <span className="text-[10px] font-black uppercase tracking-widest">
                         {selectedReview.commentCount || 0}
                       </span>
-                    </div>
+                    </button>
                   </div>
                 </div>
 
