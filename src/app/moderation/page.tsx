@@ -36,9 +36,9 @@ export default function ModerationPage() {
     if (view === 'pending') {
       items = await getPendingContent();
     } else if (view === 'approved') {
-      items = await getApprovedContent(user?.id);
+      items = await getApprovedContent({ moderatorId: user?.id });
     } else if (view === 'rejected') {
-      items = await getRejectedContent(user?.id);
+      items = await getRejectedContent({ moderatorId: user?.id });
     }
     setItemsList(items);
     setLoading(false);

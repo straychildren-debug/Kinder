@@ -220,14 +220,31 @@ export async function getApprovedContentCount(type?: 'movie' | 'book'): Promise<
   return count || 0;
 }
 
-export async function getRejectedContent(moderatorId?: string): Promise<ContentItem[]> {
+export async function getRejectedContent(options: { 
+  moderatorId?: string;
+  type?: 'movie' | 'book';
+  page?: number;
+  pageSize?: number;
+} = {}): Promise<ContentItem[]> {
+  const { moderatorId, type, page, pageSize } = options;
+
   let query = supabase
     .from('content')
     .select('*')
     .eq('status', 'rejected');
   
+  if (type) {
+    query = query.eq('type', type);
+  }
+
   if (moderatorId) {
     query = query.filter('metadata->>moderatedBy', 'eq', moderatorId);
+  }
+
+  if (page !== undefined && pageSize !== undefined) {
+    const from = (page - 1) * pageSize;
+    const to = from + pageSize - 1;
+    query = query.range(from, to);
   }
 
   const { data, error } = await query.order('created_at', { ascending: false });

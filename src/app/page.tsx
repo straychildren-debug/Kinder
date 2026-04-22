@@ -18,6 +18,7 @@ import { omnisearch, type OmnisearchResult } from "@/lib/search";
 import { getActiveDuels } from "@/lib/duels";
 import { getPersonalizedRecommendations } from "@/lib/recommendations";
 import { getPublicPlaylists, type Playlist } from "@/lib/playlists";
+import Pagination from "@/components/Pagination";
 import type { Duel } from "@/lib/types";
 
 const EMPTY_RESULTS: OmnisearchResult = { content: [], clubs: [], users: [] };
