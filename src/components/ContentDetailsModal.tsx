@@ -734,7 +734,6 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
                           </div>
                         </div>
                       </div>
-                      </div>
                   )}
 
                   {/* Comments Section */}

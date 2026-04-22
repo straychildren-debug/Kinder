@@ -136,7 +136,9 @@ export default function PublicProfileModal({ user, onClose, onOpenContent }: Pub
                 <div className="flex items-center justify-center gap-1.5">
                   <span>{tab.label}</span>
                   {tab.count > 0 && (
-                    <span className={`px-1 rounded-sm bg-current opacity-10 text-[8px]`}>{tab.count}</span>
+                    <span className={`ml-1.5 px-1.5 py-0.5 rounded-full bg-current/10 text-[9px] font-black`}>
+                      {tab.count}
+                    </span>
                   )}
                 </div>
                 {activeTab === tab.id && (
