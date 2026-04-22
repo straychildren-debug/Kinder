@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import TopNavBar from "@/components/TopNavBar";
 import BottomNavBar from "@/components/BottomNavBar";
 import Link from "next/link";
-import { getApprovedContent } from "@/lib/db";
+import { getApprovedContent, getApprovedContentCount } from "@/lib/db";
 import { getWishlist } from "@/lib/wishlist";
 import { useAuth } from "@/components/AuthProvider";
 import { ContentItem } from "@/lib/types";
@@ -15,6 +15,9 @@ import CatalogTabs, { CatalogTab } from "@/components/CatalogTabs";
 import Image from "next/image";
 import { defaultBlurDataURL } from "@/lib/image-blur";
 import { formatAuthor } from "@/lib/format";
+import Pagination from "@/components/Pagination";
+
+const PAGE_SIZE = 20;
 
 export default function Movies() {
   const { user } = useAuth();
@@ -23,14 +26,25 @@ export default function Movies() {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<CatalogTab>('catalog');
   const [selectedContent, setSelectedContent] = useState<ContentItem | null>(null);
+  
+  // Pagination state
+  const [page, setPage] = useState(1);
+  const [totalItems, setTotalItems] = useState(0);
 
   useEffect(() => {
     async function load() {
       try {
-        const allContent = await getApprovedContent();
-        setMovies(allContent.filter(c => c.type === 'movie'));
+        setLoading(true);
+        // Fetch only approved movies for the current page
+        const [paginatedMovies, count] = await Promise.all([
+          getApprovedContent({ type: 'movie', page, pageSize: PAGE_SIZE }),
+          getApprovedContentCount('movie')
+        ]);
+        
+        setMovies(paginatedMovies);
+        setTotalItems(count);
 
-        if (user) {
+        if (user && wishlistMovies.length === 0) {
           const wish = await getWishlist(user.id);
           const userMovies = wish
             .map(w => w.content)
@@ -44,7 +58,9 @@ export default function Movies() {
       }
     }
     load();
-  }, [user]);
+  }, [user, page]); // Reload when page changes
+
+  const totalPages = Math.ceil(totalItems / PAGE_SIZE);
 
   const displayMovies = activeTab === 'catalog' ? movies : wishlistMovies;
 
@@ -156,6 +172,19 @@ export default function Movies() {
             ))}
           </div>
         )}
+
+        {activeTab === 'catalog' && (
+          <Pagination 
+            page={page} 
+            total={totalPages} 
+            onChange={(p) => {
+              setPage(p);
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+            ariaLabel="Пагинация фильмов"
+          />
+        )}
+
 
         {/* Details Modal */}
         {selectedContent && (

@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import TopNavBar from "@/components/TopNavBar";
 import BottomNavBar from "@/components/BottomNavBar";
-import { getApprovedContent } from "@/lib/db";
+import { getApprovedContent, getApprovedContentCount } from "@/lib/db";
 import { getWishlist } from "@/lib/wishlist";
 import { useAuth } from "@/components/AuthProvider";
 import { ContentItem } from "@/lib/types";
@@ -14,6 +14,9 @@ import CatalogTabs, { CatalogTab } from "@/components/CatalogTabs";
 import Image from "next/image";
 import { defaultBlurDataURL } from "@/lib/image-blur";
 import { formatAuthor } from "@/lib/format";
+import Pagination from "@/components/Pagination";
+
+const PAGE_SIZE = 20;
 
 export default function Library() {
   const { user } = useAuth();
@@ -22,14 +25,25 @@ export default function Library() {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<CatalogTab>('catalog');
   const [selectedContent, setSelectedContent] = useState<ContentItem | null>(null);
+  
+  // Pagination state
+  const [page, setPage] = useState(1);
+  const [totalItems, setTotalItems] = useState(0);
 
   useEffect(() => {
     async function load() {
       try {
-        const allContent = await getApprovedContent();
-        setBooks(allContent.filter(c => c.type === 'book'));
+        setLoading(true);
+        // Fetch only approved books for the current page
+        const [paginatedBooks, count] = await Promise.all([
+          getApprovedContent({ type: 'book', page, pageSize: PAGE_SIZE }),
+          getApprovedContentCount('book')
+        ]);
         
-        if (user) {
+        setBooks(paginatedBooks);
+        setTotalItems(count);
+        
+        if (user && wishlistBooks.length === 0) {
           const wish = await getWishlist(user.id);
           const userBooks = wish
             .map(w => w.content)
@@ -43,7 +57,9 @@ export default function Library() {
       }
     }
     load();
-  }, [user]);
+  }, [user, page]); // Reload when page changes
+
+  const totalPages = Math.ceil(totalItems / PAGE_SIZE);
 
   const displayBooks = activeTab === 'catalog' ? books : wishlistBooks;
 
@@ -131,6 +147,18 @@ export default function Library() {
               </MotionListItem>
             ))}
           </div>
+        )}
+
+        {activeTab === 'catalog' && (
+          <Pagination 
+            page={page} 
+            total={totalPages} 
+            onChange={(p) => {
+              setPage(p);
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+            ariaLabel="Пагинация книг"
+          />
         )}
 
         {/* Details Modal */}
