@@ -10,39 +10,28 @@ interface BottomNavBarProps {
 }
 
 export default function BottomNavBar({ activeTab = 'home' }: BottomNavBarProps) {
-  const [isVisible, setIsVisible] = useState(true);
+  const [isHidden, setIsHidden] = useState(false);
 
   useEffect(() => {
-    let lastScrollY = window.scrollY;
-    let ticking = false;
-
-    const updateScrollDir = () => {
-      const scrollY = window.scrollY;
-      
-      if (Math.abs(scrollY - lastScrollY) < 5) {
-        ticking = false;
+    let lastScroll = window.scrollY;
+    
+    const handleScroll = () => {
+      const currentScroll = window.scrollY;
+      if (currentScroll <= 0) {
+        setIsHidden(false);
         return;
       }
       
-      if (scrollY > lastScrollY && scrollY > 150) {
-        setIsVisible(false);
-      } else if (scrollY < lastScrollY || scrollY <= 150) {
-        setIsVisible(true);
+      if (currentScroll > lastScroll && currentScroll > 100) {
+        setIsHidden(true);
+      } else if (currentScroll < lastScroll) {
+        setIsHidden(false);
       }
-      
-      lastScrollY = scrollY > 0 ? scrollY : 0;
-      ticking = false;
+      lastScroll = currentScroll;
     };
 
-    const onScroll = () => {
-      if (!ticking) {
-        window.requestAnimationFrame(updateScrollDir);
-        ticking = true;
-      }
-    };
-
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const tabs = [
@@ -54,15 +43,10 @@ export default function BottomNavBar({ activeTab = 'home' }: BottomNavBarProps) 
   ];
 
   return (
-    <motion.nav 
-      variants={{
-        visible: { y: 0, opacity: 1 },
-        hidden: { y: 150, opacity: 0 }
-      }}
-      initial="visible"
-      animate={isVisible ? "visible" : "hidden"}
-      transition={{ type: 'spring', stiffness: 260, damping: 20 }}
-      className="fixed bottom-safe left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-sm z-50 md:hidden pb-4"
+    <nav 
+      className={`fixed bottom-4 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-sm z-[999] md:hidden transition-transform duration-300 ease-in-out ${
+        isHidden ? "translate-y-[200%]" : "translate-y-0"
+      }`}
     >
       <div className="glass-panel neon-border rounded-3xl flex justify-between items-center px-2 py-2 overflow-hidden shadow-2xl">
         {tabs.map((tab) => {
@@ -102,6 +86,6 @@ export default function BottomNavBar({ activeTab = 'home' }: BottomNavBarProps) 
           );
         })}
       </div>
-    </motion.nav>
+    </nav>
   );
 }
