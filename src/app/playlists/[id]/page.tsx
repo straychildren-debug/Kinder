@@ -38,7 +38,7 @@ export default function PlaylistDetailPage() {
 
   // Пакет градиентов (Mesh Gradients) - такой же как в PlaylistCard
   const GRADIENTS = [
-    'from-[#450A0A] via-[#7F1D1D] to-[#991B1B]', // Crimson Heritage (Exact mockup color)
+    'from-[#2d0006] via-[#590013] to-[#8a0021]', // Deep Ruby (Mockup Exact)
     'from-[#0F172A] via-[#1E293B] to-[#34495E]', // Deep Space
     'from-[#1E1B4B] via-[#312E81] to-[#4338CA]', // Indigo Night
     'from-[#022C22] via-[#064E3B] to-[#065F46]', // Emerald Deep
@@ -277,7 +277,7 @@ export default function PlaylistDetailPage() {
                 )}
 
                 <div className="flex items-center gap-3">
-                  <div className="h-0.5 w-6 bg-primary rounded-full" />
+                  <div className={`h-0.5 w-6 ${gradientIndex === 0 ? 'bg-[#ff004d]' : 'bg-primary'} rounded-full shadow-[0_0_10px_rgba(255,0,77,0.5)]`} />
                   <span className="text-[10px] font-black text-white/40 uppercase tracking-[0.2em]">
                     {playlist.itemCount || 0} элементов
                   </span>
@@ -466,7 +466,7 @@ export default function PlaylistDetailPage() {
                     onClick={() => setOpened(c)}
                     className="w-full h-full flex flex-col text-left outline-none"
                   >
-                    <div className="relative aspect-[2/3] w-full rounded-[1.5rem] overflow-hidden bg-white/5 border border-white/10 shadow-lg group-hover:shadow-primary/20 transition-all duration-500">
+                    <div className={`relative aspect-[2/3] w-full rounded-2xl overflow-hidden bg-white/5 border-[1.5px] ${gradientIndex === 0 ? 'border-[#ff004d] shadow-[0_0_15px_rgba(255,0,77,0.3)]' : 'border-white/10 shadow-lg'} group-hover:shadow-primary/20 transition-all duration-500`}>
                       {c.imageUrl ? (
                         <Image
                           src={c.imageUrl}
