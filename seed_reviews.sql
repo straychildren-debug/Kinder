@@ -48,7 +48,7 @@ begin
                 'authenticated',
                 jsonb_build_object(
                     'full_name', rec.full_name,
-                    'avatar_url', 'https://api.dicebear.com/7.x/avataaars/svg?seed=' || rec.seed
+                    'avatar_url', 'https://api.dicebear.com/9.x/avataaars/svg?seed=' || rec.seed
                 ),
                 now(),
                 now()
@@ -66,16 +66,16 @@ set
     avatar_url = m.avatar_url
 from (
     values
-        ('fake01@seed.local', 'Артём Кузнецов', 'https://api.dicebear.com/7.x/avataaars/svg?seed=artem'),
-        ('fake02@seed.local', 'Мария Орлова', 'https://api.dicebear.com/7.x/avataaars/svg?seed=maria'),
-        ('fake03@seed.local', 'Игорь Петров', 'https://api.dicebear.com/7.x/avataaars/svg?seed=igor'),
-        ('fake04@seed.local', 'Светлана Иванова', 'https://api.dicebear.com/7.x/avataaars/svg?seed=svetlana'),
-        ('fake05@seed.local', 'Дмитрий Соколов', 'https://api.dicebear.com/7.x/avataaars/svg?seed=dmitri'),
-        ('fake06@seed.local', 'Анна Новикова', 'https://api.dicebear.com/7.x/avataaars/svg?seed=anna'),
-        ('fake07@seed.local', 'Алексей Козлов', 'https://api.dicebear.com/7.x/avataaars/svg?seed=alexey'),
-        ('fake08@seed.local', 'Екатерина Смирнова', 'https://api.dicebear.com/7.x/avataaars/svg?seed=ekaterina'),
-        ('fake09@seed.local', 'Павел Лебедев', 'https://api.dicebear.com/7.x/avataaars/svg?seed=pavel'),
-        ('fake10@seed.local', 'Ольга Волкова', 'https://api.dicebear.com/7.x/avataaars/svg?seed=olga')
+        ('fake01@seed.local', 'Артём Кузнецов', 'https://api.dicebear.com/9.x/avataaars/svg?seed=artem'),
+        ('fake02@seed.local', 'Мария Орлова', 'https://api.dicebear.com/9.x/avataaars/svg?seed=maria'),
+        ('fake03@seed.local', 'Игорь Петров', 'https://api.dicebear.com/9.x/avataaars/svg?seed=igor'),
+        ('fake04@seed.local', 'Светлана Иванова', 'https://api.dicebear.com/9.x/avataaars/svg?seed=svetlana'),
+        ('fake05@seed.local', 'Дмитрий Соколов', 'https://api.dicebear.com/9.x/avataaars/svg?seed=dmitri'),
+        ('fake06@seed.local', 'Анна Новикова', 'https://api.dicebear.com/9.x/avataaars/svg?seed=anna'),
+        ('fake07@seed.local', 'Алексей Козлов', 'https://api.dicebear.com/9.x/avataaars/svg?seed=alexey'),
+        ('fake08@seed.local', 'Екатерина Смирнова', 'https://api.dicebear.com/9.x/avataaars/svg?seed=ekaterina'),
+        ('fake09@seed.local', 'Павел Лебедев', 'https://api.dicebear.com/9.x/avataaars/svg?seed=pavel'),
+        ('fake10@seed.local', 'Ольга Волкова', 'https://api.dicebear.com/9.x/avataaars/svg?seed=olga')
 ) as m(email, full_name, avatar_url)
 where p.email = m.email;
 
@@ -193,6 +193,13 @@ set stats = jsonb_set(
     to_jsonb((select count(*) from public.reviews r where r.user_id = p.id))
 )
 where p.email like '%@seed.local';
+
+-- Migrate avatars already seeded с устаревшим 7.x/png — переносим на 9.x/svg
+-- (9.x + SVG стабильно рендерится через Next Image при dangerouslyAllowSVG).
+update public.profiles
+   set avatar_url = replace(avatar_url, '/7.x/avataaars/png', '/9.x/avataaars/svg')
+ where email like '%@seed.local'
+   and avatar_url like '%/7.x/avataaars/png%';
 
 -- Quick check:
 -- select c.title, count(r.id) as reviews, round(avg(r.rating)::numeric, 2) as avg_rating

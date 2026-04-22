@@ -2,6 +2,11 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   images: {
+    // Dicebear и резервные SVG-аватары возвращают SVG — разрешаем с жёстким CSP,
+    // чтобы Next.js Image оптимизатор не ругался.
+    dangerouslyAllowSVG: true,
+    contentDispositionType: "attachment",
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
     remotePatterns: [
       // Supabase Storage — обложки, картинки клубов, файлы сообщений
       {
@@ -19,10 +24,15 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "api.dicebear.com",
       },
-      // Placeholder обложки для сид-контента
+      // Реальные обложки книг (OpenLibrary)
       {
         protocol: "https",
-        hostname: "picsum.photos",
+        hostname: "covers.openlibrary.org",
+      },
+      // Реальные постеры фильмов и обложки книг (Wikipedia / Wikimedia Commons)
+      {
+        protocol: "https",
+        hostname: "upload.wikimedia.org",
       },
     ],
   },
