@@ -653,101 +653,105 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
                    )}
 
                    {!isEditing && (
-                   <div className="flex items-center justify-between border-t border-on-surface/5 pt-4 gap-2">
-                       <div className="flex items-center gap-2">
-                          {!isOwn && (
-                            <>
+                   <div className="pt-4 border-t border-on-surface/5 flex justify-between items-center">
+                        <div className="flex items-center bg-white/[0.03] backdrop-blur-md rounded-full p-1 border border-white/[0.05] shadow-sm">
+                          {/* Voting Group */}
+                          <div className="flex items-center">
+                            {!isOwn ? (
+                              <>
+                                <button
+                                  onClick={() => handleRateReview(review.id, 5)}
+                                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full transition-all hover:bg-white/5 ${
+                                    review.myVote === 5 ? 'text-emerald-500' : 'text-on-surface-variant/40'
+                                  }`}
+                                >
+                                  <span className="material-symbols-outlined text-[18px]" style={{ fontVariationSettings: review.myVote === 5 ? "'FILL' 1" : "'FILL' 0" }}>thumb_up</span>
+                                  <span className="text-xs font-bold">{review.likesCount || 0}</span>
+                                </button>
+                                <div className="w-px h-3 bg-white/10 mx-0.5" />
+                                <button
+                                  onClick={() => handleRateReview(review.id, 1)}
+                                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full transition-all hover:bg-white/5 ${
+                                    review.myVote === 1 ? 'text-red-500' : 'text-on-surface-variant/40'
+                                  }`}
+                                >
+                                  <span className="material-symbols-outlined text-[18px]" style={{ fontVariationSettings: review.myVote === 1 ? "'FILL' 1" : "'FILL' 0" }}>thumb_down</span>
+                                  <span className="text-xs font-bold">{review.dislikesCount || 0}</span>
+                                </button>
+                              </>
+                            ) : (
+                              <div className="flex items-center gap-3 px-4 py-1.5 text-on-surface-variant/40">
+                                <div className="flex items-center gap-1.5">
+                                  <span className="material-symbols-outlined text-[16px]">thumb_up</span>
+                                  <span className="text-xs font-bold">{review.likesCount || 0}</span>
+                                </div>
+                                <div className="w-px h-3 bg-white/10" />
+                                <div className="flex items-center gap-1.5">
+                                  <span className="material-symbols-outlined text-[16px]">thumb_down</span>
+                                  <span className="text-xs font-bold">{review.dislikesCount || 0}</span>
+                                </div>
+                              </div>
+                            )}
+                          </div>
+
+                          {/* Action Group (Duels & Comments) */}
+                          <div className="flex items-center gap-1 pr-1">
+                            {/* Divider */}
+                            <div className="w-px h-4 bg-white/10 mx-1" />
+                            
+                            {/* Duel Button */}
+                            {canChallenge(review) && (
                               <button
-                                onClick={() => handleRateReview(review.id, 5)}
-                                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border transition-all ${
-                                  review.myVote === 5
-                                    ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-600'
-                                    : 'bg-surface-container-lowest border-on-surface/5 text-on-surface-muted hover:text-emerald-500 hover:border-emerald-500/20'
-                                }`}
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleChallenge(review);
+                                }}
+                                disabled={challengingId === review.id}
+                                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-amber-500 hover:bg-amber-500/10 transition-all disabled:opacity-50"
+                                title="Вызвать на дуэль"
                               >
-                                <span className="material-symbols-outlined text-[18px]" style={{ fontVariationSettings: review.myVote === 5 ? "'FILL' 1" : "'FILL' 0" }}>thumb_up</span>
-                                <span className="text-xs font-semibold">{review.likesCount || 0}</span>
+                                <span className="material-symbols-outlined text-[18px]">swords</span>
+                                <span className="text-xs font-bold hidden sm:inline">
+                                  {challengingId === review.id ? '...' : 'Дуэль'}
+                                </span>
                               </button>
+                            )}
 
-                              <button
-                                onClick={() => handleRateReview(review.id, 1)}
-                                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border transition-all ${
-                                  review.myVote === 1
-                                    ? 'bg-red-500/10 border-red-500/20 text-red-600'
-                                    : 'bg-surface-container-lowest border-on-surface/5 text-on-surface-muted hover:text-red-500 hover:border-red-500/20'
-                                }`}
-                              >
-                                <span className="material-symbols-outlined text-[18px]" style={{ fontVariationSettings: review.myVote === 1 ? "'FILL' 1" : "'FILL' 0" }}>thumb_down</span>
-                                <span className="text-xs font-semibold">{review.dislikesCount || 0}</span>
-                              </button>
-                            </>
-                          )}
-                          {isOwn && (
-                            <div className="flex items-center gap-3 text-xs font-medium text-on-surface-muted">
-                              <span className="flex items-center gap-1">
-                                <span className="material-symbols-outlined text-[16px]">thumb_up</span>
-                                {review.likesCount || 0}
-                              </span>
-                              <span className="flex items-center gap-1">
-                                <span className="material-symbols-outlined text-[16px]">thumb_down</span>
-                                {review.dislikesCount || 0}
-                              </span>
-                            </div>
-                          )}
-                       </div>
+                            {/* Locked in active duel */}
+                            {lockedReviewIds.has(review.id) && (() => {
+                              const d = contentDuels.find(x =>
+                                x.status === 'active' &&
+                                (x.challengerReviewId === review.id || x.defenderReviewId === review.id)
+                              );
+                              return d ? (
+                                <Link
+                                  href={`/duels/${d.id}`}
+                                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-amber-600 bg-amber-500/10"
+                                >
+                                  <span className="material-symbols-outlined text-[18px]">swords</span>
+                                  <span className="text-xs font-bold">На арене</span>
+                                </Link>
+                              ) : null;
+                            })()}
 
-                     <div className="flex items-center gap-1.5 shrink-0">
-                       {/* Challenge to duel */}
-                       {canChallenge(review) && (
-                         <button
-                           type="button"
-                           onClick={(e) => {
-                             e.stopPropagation();
-                             handleChallenge(review);
-                           }}
-                           disabled={challengingId === review.id}
-                           className="flex items-center gap-1 text-primary hover:bg-primary hover:text-white transition-all bg-primary/10 border border-primary/20 px-2.5 py-1.5 rounded-lg cursor-pointer disabled:opacity-60 active:scale-95 shadow-sm"
-                           title="Вызвать на дуэль"
-                         >
-                           <span className="material-symbols-outlined text-[16px]">swords</span>
-                           <span className="text-xs font-semibold hidden sm:inline">
-                             {challengingId === review.id ? '...' : 'Дуэль'}
-                           </span>
-                         </button>
-                       )}
-
-                       {/* Locked in active duel */}
-                       {lockedReviewIds.has(review.id) && (() => {
-                         const d = contentDuels.find(x =>
-                           x.status === 'active' &&
-                           (x.challengerReviewId === review.id || x.defenderReviewId === review.id)
-                         );
-                         return d ? (
-                           <Link
-                             href={`/duels/${d.id}`}
-                             className="flex items-center gap-1 text-amber-700 bg-amber-50 border border-amber-200 px-2.5 py-1.5 rounded-lg"
-                             title="В дуэли"
-                           >
-                             <span className="material-symbols-outlined text-[16px]">swords</span>
-                             <span className="text-xs font-semibold">На арене</span>
-                           </Link>
-                         ) : null;
-                       })()}
-
-                       {/* Comments Toggle */}
-                       <button
-                         type="button"
-                         onClick={(e) => {
-                           e.stopPropagation();
-                           toggleComments(review.id);
-                         }}
-                         className="flex items-center gap-1.5 text-primary hover:text-white hover:bg-primary/20 transition-all bg-primary/5 px-3 py-1.5 rounded-lg cursor-pointer relative z-10 border border-primary/10"
-                       >
-                         <span className="material-symbols-outlined text-[16px]">chat_bubble</span>
-                         <span className="text-xs font-semibold">{review.commentCount || 0}</span>
-                       </button>
-                     </div>
-                  </div>
+                            {/* Comments Toggle */}
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                toggleComments(review.id);
+                              }}
+                              className={`flex items-center gap-1.5 px-4 py-1.5 rounded-full transition-all ${
+                                commentsOpen[review.id] ? 'bg-primary text-white shadow-lg' : 'text-primary hover:bg-primary/10'
+                              }`}
+                            >
+                              <span className="material-symbols-outlined text-[18px]" style={{ fontVariationSettings: commentsOpen[review.id] ? "'FILL' 1" : "'FILL' 0" }}>chat_bubble</span>
+                              <span className="text-xs font-bold">{review.commentCount || 0}</span>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
                   )}
 
                   {/* Comments Section */}
