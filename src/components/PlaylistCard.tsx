@@ -13,11 +13,9 @@ interface PlaylistCardProps {
 // Пакет премиальных градиентов (Mesh Gradients)
 const GRADIENTS = [
   'from-[#2d0006] via-[#590013] to-[#8a0021]', // Deep Ruby (Mockup Exact)
-  'from-[#0F172A] via-[#1E293B] to-[#34495E]', // Deep Space
-  'from-[#1E1B4B] via-[#312E81] to-[#4338CA]', // Indigo Night
-  'from-[#022C22] via-[#064E3B] to-[#065F46]', // Emerald Deep
-  'from-[#3B0764] via-[#581C87] to-[#701A75]', // Purple Haze
-  'from-[#164E63] via-[#0891B2] to-[#0E7490]', // Oceanic Teal
+  'from-[#1a0005] via-[#4d0010] to-[#7d001b]', // Midnight Garnet
+  'from-[#3d000a] via-[#6d0018] to-[#9d0022]', // Royal Burgundy
+  'from-[#220004] via-[#550012] to-[#85001e]', // Velvet Crimson
 ];
 
 export default function PlaylistCard({ playlist, className = '' }: PlaylistCardProps) {
@@ -30,9 +28,9 @@ export default function PlaylistCard({ playlist, className = '' }: PlaylistCardP
 
   const gradient = GRADIENTS[gradientIndex];
   
-  // Яркий неоновый цвет для рамок в зависимости от градиента
-  const neonBorderColor = gradientIndex === 0 ? 'border-[#ff004d]' : 'border-white/30';
-  const neonShadow = gradientIndex === 0 ? 'shadow-[0_0_15px_rgba(255,0,77,0.7)]' : 'shadow-[0_0_15px_rgba(255,255,255,0.2)]';
+  // Яркий неоновый цвет для рамок (всегда рубиновый для этой темы)
+  const neonBorderColor = 'border-[#ff004d]';
+  const neonShadow = 'shadow-[0_0_15px_rgba(255,0,77,0.7)]';
 
   return (
     <Link href={`/playlists/${playlist.id}`} className={`block w-full group ${className}`}>
@@ -46,7 +44,7 @@ export default function PlaylistCard({ playlist, className = '' }: PlaylistCardP
         
         {/* Абстрактные световые эффекты */}
         <div className="absolute top-[-30%] left-[-10%] w-[120%] h-[120%] rounded-full bg-white/5 blur-[120px] pointer-events-none" />
-        <div className={`absolute bottom-[-10%] right-[-20%] w-[60%] h-[80%] rounded-full ${gradientIndex === 0 ? 'bg-[#ff004d]/20' : 'bg-primary/10'} blur-[80px] pointer-events-none`} />
+        <div className={`absolute bottom-[-10%] right-[-20%] w-[60%] h-[80%] rounded-full bg-[#ff004d]/20 blur-[80px] pointer-events-none`} />
 
         {/* Content Container */}
         <div className="relative z-20 flex flex-col p-6 sm:p-7 gap-6">
