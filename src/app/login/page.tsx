@@ -71,7 +71,6 @@ export default function LoginPage() {
       <div className="w-full max-w-sm space-y-8 py-10 md:py-20">
         {/* Logo Section */}
         <div className="text-center space-y-3">
-          <div className="text-center space-y-3">
           <div className="inline-flex items-center justify-center w-14 h-14 bg-primary text-white rounded-2xl shadow-xl mb-1 shadow-primary/20">
             <span className="text-2xl font-black italic">K</span>
           </div>
