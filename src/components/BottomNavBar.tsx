@@ -2,8 +2,8 @@
 
 import Link from 'next/link';
 import React from 'react';
-import { motion, useScroll, useMotionValueEvent } from 'framer-motion';
-import { useState } from 'react';
+import { motion } from 'framer-motion';
+import { useState, useEffect } from 'react';
 
 interface BottomNavBarProps {
   activeTab?: 'home' | 'books' | 'movies' | 'clubs' | 'users' | 'profile';
@@ -11,16 +11,39 @@ interface BottomNavBarProps {
 
 export default function BottomNavBar({ activeTab = 'home' }: BottomNavBarProps) {
   const [isVisible, setIsVisible] = useState(true);
-  const { scrollY } = useScroll();
 
-  useMotionValueEvent(scrollY, "change", (latest) => {
-    const velocity = scrollY.getVelocity();
-    if (velocity > 50 && latest > 150) {
-      setIsVisible(false);
-    } else if (velocity < -50 || latest <= 150) {
-      setIsVisible(true);
-    }
-  });
+  useEffect(() => {
+    let lastScrollY = window.scrollY;
+    let ticking = false;
+
+    const updateScrollDir = () => {
+      const scrollY = window.scrollY;
+      
+      if (Math.abs(scrollY - lastScrollY) < 5) {
+        ticking = false;
+        return;
+      }
+      
+      if (scrollY > lastScrollY && scrollY > 150) {
+        setIsVisible(false);
+      } else if (scrollY < lastScrollY || scrollY <= 150) {
+        setIsVisible(true);
+      }
+      
+      lastScrollY = scrollY > 0 ? scrollY : 0;
+      ticking = false;
+    };
+
+    const onScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(updateScrollDir);
+        ticking = true;
+      }
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   const tabs = [
     { id: 'home', icon: 'home', label: 'Главная', href: '/' },
@@ -34,7 +57,7 @@ export default function BottomNavBar({ activeTab = 'home' }: BottomNavBarProps) 
     <motion.nav 
       variants={{
         visible: { y: 0, opacity: 1 },
-        hidden: { y: "150%", opacity: 0 }
+        hidden: { y: 150, opacity: 0 }
       }}
       initial="visible"
       animate={isVisible ? "visible" : "hidden"}
