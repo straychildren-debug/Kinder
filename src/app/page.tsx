@@ -545,7 +545,7 @@ export default function Home() {
                         <p className="text-[10px] font-black text-white/50 uppercase tracking-[0.2em] mb-1 truncate leading-none">
                           {(item.author || item.director || 'Автор')}
                         </p>
-                        <h3 className="text-sm md:text-base font-bold text-white leading-tight line-clamp-2 tracking-tight">
+                        <h3 className="text-sm md:text-base font-bold text-white leading-relaxed line-clamp-2">
                           {item.title}
                         </h3>
                       </div>
