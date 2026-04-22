@@ -3,11 +3,12 @@
 import React, { useEffect, useState } from "react";
 import TopNavBar from "@/components/TopNavBar";
 import BottomNavBar from "@/components/BottomNavBar";
-import { getUsersRanked } from "@/lib/db";
-import { User, ContentItem } from "@/lib/types";
+import { getUsersRanked, getTopAuthorsByLikes, getTopCommenters, getTopPublicists, getUserById } from "@/lib/db";
+import { User, ContentItem, LeaderboardUser } from "@/lib/types";
 import Image from "next/image";
 import PublicProfileModal from "@/components/PublicProfileModal";
 import ContentDetailsModal from "@/components/ContentDetailsModal";
+import LeaderboardColumn from "@/components/LeaderboardColumn";
 
 export default function Leaderboard() {
   const [period, setPeriod] = useState<'all' | 'month'>('all');
@@ -16,15 +17,37 @@ export default function Leaderboard() {
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [openedContent, setOpenedContent] = useState<ContentItem | null>(null);
 
+  const [topAuthors, setTopAuthors] = useState<LeaderboardUser[]>([]);
+  const [topCommenters, setTopCommenters] = useState<LeaderboardUser[]>([]);
+  const [topPublicists, setTopPublicists] = useState<LeaderboardUser[]>([]);
+
   useEffect(() => {
     async function load() {
       setLoading(true);
-      const topUsers = await getUsersRanked(period);
-      setRankedUsers(topUsers);
-      setLoading(false);
+      try {
+        const [topUsers, authors, commenters, publicists] = await Promise.all([
+          getUsersRanked(period),
+          getTopAuthorsByLikes(5),
+          getTopCommenters(5),
+          getTopPublicists(5)
+        ]);
+        setRankedUsers(topUsers);
+        setTopAuthors(authors);
+        setTopCommenters(commenters);
+        setTopPublicists(publicists);
+      } catch (err) {
+        console.error('Leaderboard load failed:', err);
+      } finally {
+        setLoading(false);
+      }
     }
     load();
   }, [period]);
+
+  async function openLeaderboardUser(userId: string) {
+    const u = await getUserById(userId);
+    if (u) setSelectedUser(u);
+  }
 
   const top3 = rankedUsers.slice(0, 3);
   const restUsers = rankedUsers.slice(3);
@@ -174,6 +197,43 @@ export default function Leaderboard() {
               )}
             </div>
           </div>
+        )}
+
+        {/* Heroes of the Community Section */}
+        {!loading && (
+          <section className="mb-20">
+            <div className="flex flex-col gap-2 mb-10">
+              <h2 className="text-2xl font-black text-on-surface tracking-tighter uppercase leading-none">Герои сообщества</h2>
+              <div className="h-1 w-12 bg-amber-500 rounded-full"></div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <LeaderboardColumn
+                title="Лучшие авторы"
+                subtitle="Больше всего лайков за отзывы"
+                icon="stars"
+                users={topAuthors}
+                metricLabel="лайков"
+                onUserClick={openLeaderboardUser}
+              />
+              <LeaderboardColumn
+                title="Комментаторы"
+                subtitle="Самые активные в обсуждениях"
+                icon="forum"
+                users={topCommenters}
+                metricLabel="ответов"
+                onUserClick={openLeaderboardUser}
+              />
+              <LeaderboardColumn
+                title="Публицисты"
+                subtitle="Главные поставщики контента"
+                icon="library_add"
+                users={topPublicists}
+                metricLabel="публ."
+                onUserClick={openLeaderboardUser}
+              />
+            </div>
+          </section>
         )}
 
         {/* Leaderboard Table */}

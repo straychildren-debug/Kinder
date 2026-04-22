@@ -3,7 +3,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import TopNavBar from "@/components/TopNavBar";
 import BottomNavBar from "@/components/BottomNavBar";
-import { getApprovedContent, getTopAuthorsByLikes, getTopCommenters, getTopPublicists, getUserById } from "@/lib/db";
+import { getApprovedContent, getUserById } from "@/lib/db";
 import { useAuth } from "@/components/AuthProvider";
 import Link from "next/link";
 import Image from "next/image";
@@ -38,9 +38,6 @@ export default function Home() {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<OmnisearchResult>(EMPTY_RESULTS);
   const [searching, setSearching] = useState(false);
-  const [topAuthors, setTopAuthors] = useState<LeaderboardUser[]>([]);
-  const [topCommenters, setTopCommenters] = useState<LeaderboardUser[]>([]);
-  const [topPublicists, setTopPublicists] = useState<LeaderboardUser[]>([]);
   const [activeDuels, setActiveDuels] = useState<Duel[]>([]);
   const [recommendations, setRecommendations] = useState<ContentItem[]>([]);
   const [popularPlaylists, setPopularPlaylists] = useState<Playlist[]>([]);
@@ -81,18 +78,12 @@ export default function Home() {
   useEffect(() => {
     async function load() {
       try {
-        const [contentData, authors, commenters, publicists, duels, playlists] = await Promise.all([
+        const [contentData, duels, playlists] = await Promise.all([
           getApprovedContent(),
-          getTopAuthorsByLikes(5),
-          getTopCommenters(5),
-          getTopPublicists(5),
           getActiveDuels(user?.id, 3),
           getPublicPlaylists(6)
         ]);
         setApprovedContent(contentData);
-        setTopAuthors(authors);
-        setTopCommenters(commenters);
-        setTopPublicists(publicists);
         setActiveDuels(duels);
         setPopularPlaylists(playlists);
       } catch (err) {
@@ -567,43 +558,6 @@ export default function Home() {
           />
         )}
 
-        {/* Leaderboards Section */}
-        <section className="pb-16">
-          <div className="flex flex-col gap-2 mb-10">
-            <h2 className="text-3xl font-black text-on-surface tracking-tighter uppercase leading-none">Герои нашего форума</h2>
-            <div className="h-1 w-12 bg-amber-500 rounded-full"></div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* Top Authors */}
-            <LeaderboardColumn
-              title="Лучшие авторы"
-              subtitle="Больше всего лайков за отзывы"
-              icon="stars"
-              users={topAuthors}
-              metricLabel="лайков"
-              onUserClick={openLeaderboardUser}
-            />
-            {/* Top Commenters */}
-            <LeaderboardColumn
-              title="Комментаторы"
-              subtitle="Самые активные в обсуждениях"
-              icon="forum"
-              users={topCommenters}
-              metricLabel="ответов"
-              onUserClick={openLeaderboardUser}
-            />
-            {/* Top Publicists */}
-            <LeaderboardColumn
-              title="Публицисты"
-              subtitle="Главные поставщики контента"
-              icon="library_add"
-              users={topPublicists}
-              metricLabel="публ."
-              onUserClick={openLeaderboardUser}
-            />
-          </div>
-        </section>
 
         {!user && (
           <div className="bg-surface-container-high/40 backdrop-blur-sm p-8 rounded-3xl border border-on-surface/5 mb-16 relative overflow-hidden group">
@@ -630,75 +584,4 @@ export default function Home() {
   );
 }
 
-function LeaderboardColumn({
-  title,
-  subtitle,
-  icon,
-  users,
-  metricLabel,
-  onUserClick,
-}: {
-  title: string,
-  subtitle: string,
-  icon: string,
-  users: LeaderboardUser[],
-  metricLabel: string,
-  onUserClick?: (userId: string) => void,
-}) {
-  return (
-    <div className="bg-surface rounded-3xl p-6 border border-on-surface/5 flex flex-col h-full shadow-sm hover:shadow-md transition-shadow">
-      <div className="flex items-center gap-3 mb-1">
-        <div className="w-10 h-10 rounded-xl bg-on-surface/5 flex items-center justify-center text-on-surface">
-          <span className="material-symbols-outlined text-[20px]">{icon}</span>
-        </div>
-        <h3 className="font-black text-sm text-on-surface uppercase tracking-tight leading-none">{title}</h3>
-      </div>
-      <p className="text-[10px] font-bold text-on-surface-variant/40 uppercase tracking-widest mb-6 ml-[52px]">
-        {subtitle}
-      </p>
-
-      <div className="space-y-3 flex-1">
-        {users.length === 0 ? (
-          <div className="flex flex-col items-center justify-center h-32 opacity-20 italic text-xs">Нет данных</div>
-        ) : users.map((u, i) => (
-          <button
-            type="button"
-            key={u.id}
-            onClick={() => onUserClick?.(u.id)}
-            disabled={!onUserClick}
-            className="flex items-center gap-3 group w-full text-left rounded-xl p-1 -m-1 hover:bg-on-surface/[0.03] transition-colors disabled:hover:bg-transparent disabled:cursor-default"
-          >
-            <div className="relative w-10 h-10 flex-shrink-0">
-              <div className="relative w-full h-full rounded-full bg-surface-container overflow-hidden border border-on-surface/5">
-                {u.avatarUrl ? (
-                  <Image src={u.avatarUrl} alt={u.name} fill className="object-cover" />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center text-[10px] font-black">{u.name.charAt(0)}</div>
-                )}
-              </div>
-              {/* Rank Badge */}
-              <div className={`absolute -top-1 -right-1 w-5 h-5 rounded-full flex items-center justify-center text-[9px] font-black border-2 border-surface z-10 shadow-sm ${
-                i === 0 ? 'bg-amber-400 text-amber-950' : 
-                i === 1 ? 'bg-slate-300 text-slate-900' : 
-                i === 2 ? 'bg-orange-400 text-orange-950' : 
-                'bg-surface-container-high text-on-surface-variant'
-              }`}>
-                {i + 1}
-              </div>
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-xs font-black text-on-surface truncate tracking-tight">{u.name}</p>
-              <p className="text-[10px] font-bold text-on-surface-variant/60 uppercase tracking-tighter">
-                {u.metricValue} {metricLabel}
-              </p>
-            </div>
-            {i === 0 && (
-              <span className="material-symbols-outlined text-amber-500 text-[16px]" style={{ fontVariationSettings: "'FILL' 1" }}>emoji_events</span>
-            )}
-          </button>
-        ))}
-      </div>
-    </div>
-  );
-}
 
