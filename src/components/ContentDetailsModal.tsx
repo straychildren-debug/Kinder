@@ -743,10 +743,10 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
                                 toggleComments(review.id);
                               }}
                               className={`flex items-center gap-1.5 px-4 py-1.5 rounded-full transition-all ${
-                                commentsOpen[review.id] ? 'bg-primary text-white shadow-lg' : 'text-primary hover:bg-primary/10'
+                                expandedReviewId === review.id ? 'bg-primary text-white shadow-lg' : 'text-primary hover:bg-primary/10'
                               }`}
                             >
-                              <span className="material-symbols-outlined text-[18px]" style={{ fontVariationSettings: commentsOpen[review.id] ? "'FILL' 1" : "'FILL' 0" }}>chat_bubble</span>
+                              <span className="material-symbols-outlined text-[18px]" style={{ fontVariationSettings: expandedReviewId === review.id ? "'FILL' 1" : "'FILL' 0" }}>chat_bubble</span>
                               <span className="text-xs font-bold">{review.commentCount || 0}</span>
                             </button>
                           </div>
