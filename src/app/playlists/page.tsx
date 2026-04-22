@@ -59,8 +59,8 @@ export default function PlaylistsPage() {
   return (
     <>
       <TopNavBar title="Подборки" showBack={true} backPath="/" />
-      <main className="pt-24 pb-32 max-w-lg mx-auto">
-        <section className="pb-6 px-6">
+      <main className="pt-24 pb-32 px-6 max-w-lg mx-auto">
+        <section className="pb-6">
           <span className="text-xs font-medium text-on-surface-muted mb-1.5 block uppercase tracking-wider">
             Коллекции читателей
           </span>
@@ -73,7 +73,7 @@ export default function PlaylistsPage() {
         </section>
 
         {/* Tabs */}
-        <div className="px-6 mb-6">
+        <div className="mb-6">
           <div className="flex gap-1 p-1 bg-surface-container-low rounded-xl">
             <button
               onClick={() => setTab('discover')}
@@ -112,7 +112,7 @@ export default function PlaylistsPage() {
         </div>
 
         {tab === 'mine' && user && (
-          <div className="px-6 mb-6">
+          <div className="mb-6">
             {creating ? (
               <div className="bg-surface rounded-2xl p-4 border border-on-surface/5 space-y-3 shadow-xl">
                 <input
@@ -204,7 +204,7 @@ export default function PlaylistsPage() {
             </p>
           </div>
         ) : (
-          <div className="flex flex-col gap-px bg-on-surface/5">
+          <div className="flex flex-col gap-6">
             {lists.map((pl) => (
               <PlaylistCard key={pl.id} playlist={pl} />
             ))}
