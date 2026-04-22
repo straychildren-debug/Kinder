@@ -146,50 +146,45 @@ export default function ActivityFeed({ limit = 5 }: { limit?: number }) {
                   className="group relative rounded-[32px] bg-white/[0.02] hover:bg-white/[0.05] p-4 border border-white/[0.03] hover:border-white/[0.08] transition-all duration-500"
                 >
                   {/* Item Header */}
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center gap-3">
-                      <div className="relative">
-                        <button 
-                          onClick={() => openUser(e.userId)}
-                          className="w-10 h-10 rounded-full border border-white/10 overflow-hidden bg-surface-container-high transition-transform group-hover:scale-105"
-                        >
-                          {e.userAvatar ? (
-                            <img src={e.userAvatar} alt="" className="w-full h-full object-cover" />
-                          ) : (
-                            <div className="w-full h-full flex items-center justify-center text-white/40">
-                              <span className="material-symbols-rounded text-xl">person</span>
-                            </div>
-                          )}
-                        </button>
-                        {/* Status Dot */}
-                        <div className={`absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-surface dark:border-[#1a1a1a] ${status === 'online' ? 'bg-emerald-500' : 'bg-zinc-500'}`} />
-                      </div>
-                      
-                      <div className="flex flex-col min-w-0">
-                        <div className="flex items-center gap-2">
-                          <button 
-                            onClick={() => openUser(e.userId)}
-                            className="text-sm font-bold text-white hover:text-primary transition-colors truncate max-w-[100px] sm:max-w-[150px]"
-                            title={e.userName || 'Участник'}
-                          >
-                            {e.userName || 'Участник'}
-                          </button>
-                          <span className="text-[10px] text-white/40 font-medium shrink-0">
-                            {formatWhen(e.createdAt)}
-                          </span>
-                        </div>
-                        <span className={`text-[10px] font-black uppercase tracking-wider ${config.color} truncate`}>
-                          {config.label} {e.type === 'earned_award' ? '' : '«' + contentTitle + '»'}
-                        </span>
-                      </div>
+                  <div className="flex items-start gap-3 mb-4">
+                    {/* Avatar Group */}
+                    <div className="relative shrink-0">
+                      <button 
+                        onClick={() => openUser(e.userId)}
+                        className="w-10 h-10 rounded-full border border-white/10 overflow-hidden bg-surface-container-high transition-transform group-hover:scale-105"
+                      >
+                        {e.userAvatar ? (
+                          <img src={e.userAvatar} alt="" className="w-full h-full object-cover" />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center text-white/40">
+                            <span className="material-symbols-rounded text-xl">person</span>
+                          </div>
+                        )}
+                      </button>
+                    </div>
+                    
+                    {/* Name & Action Content */}
+                    <div className="flex-1 min-w-0 flex flex-col pt-0.5">
+                      <button 
+                        onClick={() => openUser(e.userId)}
+                        className="text-sm font-bold text-white hover:text-primary transition-colors text-left line-clamp-2 leading-tight mb-1"
+                      >
+                        {e.userName || 'Участник'}
+                      </button>
+                      <span className={`text-[10px] font-black uppercase tracking-wider ${config.color} leading-tight`}>
+                        {config.label} {e.type === 'earned_award' ? '' : '«' + contentTitle + '»'}
+                      </span>
                     </div>
 
-                    {/* Status Badge */}
-                    <div className={`flex items-center gap-1.5 px-3 py-1 rounded-full border shrink-0 ${status === 'online' ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-500' : 'bg-white/5 border-white/10 text-white/40'}`}>
-                      <div className={`w-1 h-1 rounded-full ${status === 'online' ? 'bg-emerald-500 shadow-[0_0_5px_#10b981]' : 'bg-white/20'}`} />
-                      <span className="text-[9px] font-black uppercase tracking-widest leading-none">
-                        {status === 'online' ? 'Онлайн' : 'Оффлайн'}
+                    {/* Time & Status Dot */}
+                    <div className="flex items-center gap-2 shrink-0 pt-1">
+                      <span className="text-[10px] text-white/40 font-medium">
+                        {formatWhen(e.createdAt)}
                       </span>
+                      <div 
+                        className={`w-2 h-2 rounded-full shadow-sm transition-colors duration-500 ${status === 'online' ? 'bg-emerald-500 shadow-[0_0_8px_#10b981]' : 'bg-red-500/50 shadow-[0_0_8px_#ef4444]'}`} 
+                        title={status === 'online' ? 'Онлайн' : 'Оффлайн'}
+                      />
                     </div>
                   </div>
 
