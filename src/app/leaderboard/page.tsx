@@ -97,12 +97,12 @@ export default function Leaderboard() {
             {top3[0] && (
               <div 
                 onClick={() => setSelectedUser(top3[0])}
-                className="md:col-span-6 bg-surface rounded-3xl p-5 relative overflow-hidden group shadow-xl border border-accent-amber/10 golden-glow cursor-pointer hover:scale-[1.01] transition-all"
+                className="md:col-span-6 bg-gradient-to-br from-orange-500 to-amber-600 rounded-3xl p-5 relative overflow-hidden group shadow-[0_0_50px_-10px_rgba(249,115,22,0.4)] border border-white/20 cursor-pointer hover:scale-[1.02] transition-all duration-500"
               >
                 <div className="absolute -top-4 -right-4 text-[120px] font-black text-accent-amber/10 select-none leading-none">1</div>
                 <div className="relative z-10">
                   <div className="flex items-center gap-6 mb-6">
-                    <div className="relative w-20 h-20 rounded-full overflow-hidden shadow-xl bg-surface-container flex items-center justify-center font-black text-xl text-on-surface shrink-0">
+                    <div className="relative w-20 h-20 rounded-full overflow-hidden shadow-2xl bg-white/10 flex items-center justify-center font-black text-xl text-white shrink-0 border-2 border-white/50">
                       {top3[0].avatarUrl ? (
                         <Image alt={top3[0].name} fill sizes="80px" className="object-cover" src={top3[0].avatarUrl} />
                       ) : (
@@ -111,28 +111,28 @@ export default function Leaderboard() {
                     </div>
                     <div>
                       <div className="flex items-center gap-2 mb-1">
-                         <span className="material-symbols-outlined text-accent-amber text-lg" style={{ fontVariationSettings: "'FILL' 1" }}>workspace_premium</span>
-                         <h3 className="text-2xl font-black text-on-surface">{top3[0].name}</h3>
+                         <span className="material-symbols-outlined text-white text-lg" style={{ fontVariationSettings: "'FILL' 1" }}>workspace_premium</span>
+                         <h3 className="text-2xl font-black text-white">{top3[0].name}</h3>
                       </div>
-                      <div className="flex items-center gap-2 text-on-surface-variant">
+                      <div className="flex items-center gap-2 text-white/80">
                         <span className="material-symbols-outlined text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>verified</span>
-                        <span className="text-[10px] font-black uppercase tracking-widest opacity-60">
+                        <span className="text-[10px] font-black uppercase tracking-widest opacity-80">
                           {top3[0].role === 'superadmin' ? 'Суперадмин' : top3[0].role === 'admin' ? 'Администратор' : 'Ведущий критик'}
                         </span>
                       </div>
                     </div>
                   </div>
                   <div className="grid grid-cols-3 gap-3">
-                    <div className="bg-surface-container-low p-2.5 rounded-xl border border-on-surface/5 shadow-sm">
-                      <p className="text-[8px] uppercase font-black tracking-widest text-on-surface-muted mb-0.5 opacity-50">Публикации</p>
-                      <p className="text-xl font-black text-on-surface">{top3[0].stats?.publications || 0}</p>
+                    <div className="bg-white/10 backdrop-blur-md p-2.5 rounded-xl border border-white/10 shadow-sm">
+                      <p className="text-[8px] uppercase font-black tracking-widest text-white/60 mb-0.5">Публикации</p>
+                      <p className="text-xl font-black text-white">{top3[0].stats?.publications || 0}</p>
                     </div>
-                    <div className="bg-surface-container-low p-2.5 rounded-xl border border-on-surface/5 shadow-sm">
-                      <p className="text-[8px] uppercase font-black tracking-widest text-on-surface-muted mb-0.5 opacity-50">Отзывы</p>
-                      <p className="text-xl font-black text-on-surface">{top3[0].stats?.reviews || 0}</p>
+                    <div className="bg-white/10 backdrop-blur-md p-2.5 rounded-xl border border-white/10 shadow-sm">
+                      <p className="text-[8px] uppercase font-black tracking-widest text-white/60 mb-0.5">Отзывы</p>
+                      <p className="text-xl font-black text-white">{top3[0].stats?.reviews || 0}</p>
                     </div>
-                    <div className="bg-accent-amber p-2.5 rounded-xl shadow-md shadow-accent-amber/20">
-                      <p className="text-[8px] uppercase font-black tracking-widest text-white/60 mb-0.5">Очки</p>
+                    <div className="bg-white/20 backdrop-blur-md p-2.5 rounded-xl border border-white/20 shadow-lg">
+                      <p className="text-[8px] uppercase font-black tracking-widest text-white/80 mb-0.5">Очки</p>
                       <p className="text-xl font-black text-white">{(top3[0].stats?.publications || 0) * 10 + (top3[0].stats?.reviews || 0) * 2}</p>
                     </div>
                   </div>
