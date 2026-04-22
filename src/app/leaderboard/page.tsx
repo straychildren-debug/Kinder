@@ -214,6 +214,7 @@ export default function Leaderboard() {
                 icon="stars"
                 users={topAuthors}
                 metricLabel="лайков"
+                variant="purple"
                 onUserClick={openLeaderboardUser}
               />
               <LeaderboardColumn
@@ -222,6 +223,7 @@ export default function Leaderboard() {
                 icon="forum"
                 users={topCommenters}
                 metricLabel="ответов"
+                variant="blue"
                 onUserClick={openLeaderboardUser}
               />
               <LeaderboardColumn
@@ -230,6 +232,7 @@ export default function Leaderboard() {
                 icon="library_add"
                 users={topPublicists}
                 metricLabel="публ."
+                variant="orange"
                 onUserClick={openLeaderboardUser}
               />
             </div>
