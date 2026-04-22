@@ -10,8 +10,11 @@ const plusJakartaSans = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Кинотека — Сообщество кино и литературы",
+  title: "Киндер — Сообщество кино и литературы",
   description: "Создавайте, обсуждайте и делитесь отзывами на фильмы и книги вместе с сообществом",
+  icons: {
+    icon: "/favicon.svg",
+  },
 };
 
 export default function RootLayout({

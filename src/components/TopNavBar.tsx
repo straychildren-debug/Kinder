@@ -16,7 +16,7 @@ interface TopNavBarProps {
 }
 
 export default function TopNavBar({ 
-  title = 'Кинотека', 
+  title = 'Киндер', 
   showBack = false, 
   backPath,
   transparent = false 
