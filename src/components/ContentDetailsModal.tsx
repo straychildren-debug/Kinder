@@ -923,11 +923,11 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
                     )}
 
                     {/* Content Overlay */}
-                    <div className="absolute inset-x-0 bottom-0 pt-10 pb-2 px-2 bg-gradient-to-t from-black via-black/40 to-transparent z-10 transition-transform duration-500 group-hover:translate-y-[-2px]">
-                      <p className="text-[8px] font-black text-white/50 uppercase tracking-[0.15em] mb-0.5 truncate leading-none">
+                    <div className="absolute inset-x-0 bottom-0 pt-12 pb-3 px-3 bg-gradient-to-t from-black/90 via-black/40 to-transparent z-10 transition-transform duration-500 group-hover:translate-y-[-2px]">
+                      <p className="text-[10px] font-black text-white/40 uppercase tracking-[0.15em] mb-1 truncate leading-none">
                         {s.author || s.director || 'Автор'}
                       </p>
-                      <h3 className="text-[10px] font-bold text-white leading-tight line-clamp-2 tracking-tight">
+                      <h3 className="text-xs font-bold text-white leading-tight line-clamp-2 tracking-tight">
                         {s.title}
                       </h3>
                     </div>
