@@ -28,7 +28,13 @@ export default function PublicProfileModal({ user, onClose, onOpenContent }: Pub
   const [loading, setLoading] = useState(true);
   const [selectedReview, setSelectedReview] = useState<Review | null>(null);
   const [mounted, setMounted] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 10;
   const { user: currentUser } = useAuth();
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [activeTab]);
 
   useEffect(() => {
     setMounted(true);
@@ -204,7 +210,7 @@ export default function PublicProfileModal({ user, onClose, onOpenContent }: Pub
                     {publications.length === 0 ? (
                       <EmptyState icon="auto_stories" text="Нет публикаций" />
                     ) : (
-                      publications.map((item) => (
+                      publications.slice((currentPage - 1) * pageSize, currentPage * pageSize).map((item) => (
                         <ContentCard key={item.id} item={item} onClick={() => onOpenContent?.(item)} />
                       ))
                     )}
@@ -222,7 +228,7 @@ export default function PublicProfileModal({ user, onClose, onOpenContent }: Pub
                     {bookmarks.length === 0 ? (
                       <EmptyState icon="bookmark" text="Список закладок пуст" />
                     ) : (
-                      bookmarks.map((wish) => (
+                      bookmarks.slice((currentPage - 1) * pageSize, currentPage * pageSize).map((wish) => (
                         wish.content && <ContentCard key={wish.id} item={wish.content} onClick={() => onOpenContent?.(wish.content!)} />
                       ))
                     )}
@@ -240,7 +246,7 @@ export default function PublicProfileModal({ user, onClose, onOpenContent }: Pub
                     {reviews.length === 0 ? (
                       <EmptyState icon="rate_review" text="Пользователь еще не оставлял отзывы" />
                     ) : (
-                      reviews.map((review) => (
+                      reviews.slice((currentPage - 1) * pageSize, currentPage * pageSize).map((review) => (
                         <ReviewItem key={review.id} review={review} onClick={() => setSelectedReview(review)} />
                       ))
                     )}
@@ -249,6 +255,41 @@ export default function PublicProfileModal({ user, onClose, onOpenContent }: Pub
               </AnimatePresence>
             )}
           </div>
+
+          {/* Pagination Controls */}
+          {!loading && (
+            (() => {
+              const currentListLength = activeTab === 'publications' ? publications.length : activeTab === 'bookmarks' ? bookmarks.length : reviews.length;
+              const totalPages = Math.ceil(currentListLength / pageSize);
+              
+              if (totalPages <= 1) return null;
+              
+              return (
+                <div className="px-6 py-4 bg-surface border-t border-on-surface/[0.03] flex items-center justify-between">
+                  <button
+                    disabled={currentPage === 1}
+                    onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                    className="w-10 h-10 rounded-full bg-on-surface/[0.03] flex items-center justify-center text-on-surface-variant disabled:opacity-20 transition-all active:scale-90"
+                  >
+                    <span className="material-symbols-outlined text-[18px]">chevron_left</span>
+                  </button>
+                  
+                  <div className="flex flex-col items-center">
+                    <span className="text-[9px] font-black uppercase tracking-[0.2em] text-on-surface-variant/40 mb-0.5">Страница</span>
+                    <span className="text-xs font-black text-on-surface">{currentPage} <span className="text-on-surface-variant/30 mx-1">из</span> {totalPages}</span>
+                  </div>
+                  
+                  <button
+                    disabled={currentPage === totalPages}
+                    onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                    className="w-10 h-10 rounded-full bg-on-surface/[0.03] flex items-center justify-center text-on-surface-variant disabled:opacity-20 transition-all active:scale-90"
+                  >
+                    <span className="material-symbols-outlined text-[18px]">chevron_right</span>
+                  </button>
+                </div>
+              );
+            })()
+          )}
         </motion.div>
 
         {/* Full Review Sub-Modal */}
