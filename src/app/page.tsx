@@ -227,38 +227,40 @@ export default function Home() {
           <section className="mb-10 px-2 grid grid-cols-2 gap-3">
             <Link
               href="/discover"
-              className="group flex flex-col gap-2 bg-surface rounded-2xl p-4 border border-on-surface/5 hover:border-on-surface/10 transition-all active:scale-[0.99]"
+              className="group flex flex-col gap-2 glass-panel rounded-3xl p-5 border-0 shadow-lg hover:shadow-[0_0_20px_rgba(168,85,247,0.3)] transition-all active:scale-[0.98] overflow-hidden relative"
             >
-              <div className="w-10 h-10 rounded-xl bg-on-surface/5 flex items-center justify-center">
+              <div className="absolute top-0 right-0 w-24 h-24 bg-accent-neon/20 rounded-full blur-2xl -mr-10 -mt-10 group-hover:bg-accent-neon/30 transition-colors" />
+              <div className="w-12 h-12 rounded-2xl bg-surface/50 border border-white/10 flex items-center justify-center backdrop-blur-md mb-2">
                 <span
-                  className="material-symbols-outlined text-[20px] text-on-surface"
+                  className="material-symbols-outlined text-[24px] text-accent-neon"
                   style={{ fontVariationSettings: "'FILL' 1" }}
                 >
                   swipe
                 </span>
               </div>
-              <div>
-                <p className="text-sm font-semibold text-on-surface leading-tight">Откройте для себя</p>
-                <p className="text-[11px] font-medium text-on-surface-muted mt-0.5 leading-snug">
+              <div className="relative z-10">
+                <p className="text-base font-black text-white leading-tight tracking-tight">Откройте для себя</p>
+                <p className="text-xs font-semibold text-on-surface-muted mt-1 leading-snug">
                   Свайпните карточки
                 </p>
               </div>
             </Link>
             <Link
               href="/feed"
-              className="group flex flex-col gap-2 bg-surface rounded-2xl p-4 border border-on-surface/5 hover:border-on-surface/10 transition-all active:scale-[0.99]"
+              className="group flex flex-col gap-2 glass-panel rounded-3xl p-5 border-0 shadow-lg hover:shadow-[0_0_20px_rgba(52,211,153,0.2)] transition-all active:scale-[0.98] overflow-hidden relative"
             >
-              <div className="w-10 h-10 rounded-xl bg-on-surface/5 flex items-center justify-center">
+              <div className="absolute top-0 right-0 w-24 h-24 bg-accent-emerald/20 rounded-full blur-2xl -mr-10 -mt-10 group-hover:bg-accent-emerald/30 transition-colors" />
+              <div className="w-12 h-12 rounded-2xl bg-surface/50 border border-white/10 flex items-center justify-center backdrop-blur-md mb-2">
                 <span
-                  className="material-symbols-outlined text-[20px] text-on-surface"
+                  className="material-symbols-outlined text-[24px] text-accent-emerald"
                   style={{ fontVariationSettings: "'FILL' 1" }}
                 >
                   dynamic_feed
                 </span>
               </div>
-              <div>
-                <p className="text-sm font-semibold text-on-surface leading-tight">Моя лента</p>
-                <p className="text-[11px] font-medium text-on-surface-muted mt-0.5 leading-snug">
+              <div className="relative z-10">
+                <p className="text-base font-black text-white leading-tight tracking-tight">Моя лента</p>
+                <p className="text-xs font-semibold text-on-surface-muted mt-1 leading-snug">
                   От ваших подписок
                 </p>
               </div>
@@ -271,17 +273,17 @@ export default function Home() {
           <section className="mb-12 px-2">
             <div className="flex items-center justify-between mb-5">
               <div>
-                <span className="text-xs font-medium text-on-surface-muted mb-1.5 block">Дебаты критиков</span>
-                <h2 className="text-2xl font-bold tracking-tight text-on-surface leading-tight">Арена мнений</h2>
+                <span className="text-xs font-bold text-accent-neon uppercase tracking-widest mb-1.5 block drop-shadow-md">Дебаты критиков</span>
+                <h2 className="text-3xl font-black tracking-tight text-white leading-tight drop-shadow-lg">Арена мнений</h2>
               </div>
               <Link
                 href="/duels"
-                className="text-xs font-semibold text-on-surface-muted hover:text-on-surface transition-colors"
+                className="text-xs font-black text-on-surface-variant hover:text-white transition-colors uppercase tracking-wider"
               >
                 Все
               </Link>
             </div>
-            <div className="space-y-3">
+            <div className="space-y-4">
               {activeDuels.map((duel) => {
                 const c = duel.challengerVotes || 0;
                 const d = duel.defenderVotes || 0;
@@ -291,48 +293,56 @@ export default function Home() {
                   <Link
                     key={duel.id}
                     href={`/duels/${duel.id}`}
-                    className="block bg-surface rounded-2xl p-4 border border-on-surface/5 hover:border-on-surface/10 transition-all active:scale-[0.995]"
+                    className="relative block w-full rounded-3xl overflow-hidden glass-panel border-0 neon-border p-5 group active:scale-[0.98] transition-all duration-300 shadow-[0_10px_30px_rgba(0,0,0,0.5)]"
                   >
-                    <div className="flex items-start gap-3 mb-3">
-                      <div className="relative w-10 h-14 rounded-lg overflow-hidden bg-surface-container border border-on-surface/5 shrink-0">
-                        {duel.content?.imageUrl ? (
-                          <Image
-                            src={duel.content.imageUrl}
-                            alt={duel.content.title}
-                            fill
-                            sizes="40px"
-                            placeholder="blur"
-                            blurDataURL={defaultBlurDataURL}
-                            className="object-cover"
-                          />
-                        ) : null}
+                    <div className="absolute inset-0 bg-gradient-to-r from-accent-emerald/10 via-transparent to-accent-rose/10 opacity-50 group-hover:opacity-100 transition-opacity duration-500" />
+                    
+                    <div className="relative z-10 text-center mb-6">
+                      <p className="text-[9px] font-black text-white/50 uppercase tracking-[0.2em] mb-1.5 drop-shadow-md">
+                        {duel.content?.type === 'movie' ? 'Кино' : 'Книга'}
+                      </p>
+                      <h3 className="text-base font-black text-white leading-tight drop-shadow-lg max-w-[85%] mx-auto line-clamp-2">
+                        {duel.content?.title || 'Публикация'}
+                      </h3>
+                    </div>
+
+                    <div className="relative z-10 flex items-center justify-between">
+                      <div className="flex-1 flex flex-col items-center">
+                        <div className="relative w-14 h-14 rounded-full bg-surface border-2 border-accent-emerald shadow-[0_0_20px_rgba(52,211,153,0.3)] flex items-center justify-center overflow-hidden mb-2 group-hover:shadow-[0_0_30px_rgba(52,211,153,0.6)] transition-shadow">
+                          {duel.challengerReview?.user?.avatarUrl ? (
+                            <Image src={duel.challengerReview.user.avatarUrl} alt="1" fill className="object-cover" />
+                          ) : (
+                             <span className="text-lg font-black text-accent-emerald">{duel.challengerReview?.user?.name?.charAt(0) || '1'}</span>
+                          )}
+                        </div>
+                        <span className="text-[10px] font-bold text-accent-emerald text-center drop-shadow-md line-clamp-1 w-full px-2 uppercase tracking-tight">
+                          {duel.challengerReview?.user?.name || 'Критик 1'}
+                        </span>
+                        <span className="text-2xl font-black text-white mt-1 drop-shadow-lg tracking-tighter">{cPct}%</span>
                       </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-[10px] font-medium text-on-surface-muted uppercase tracking-wider mb-0.5">
-                          {duel.content?.type === 'movie' ? 'Кино' : 'Книга'}
-                        </p>
-                        <p className="text-sm font-semibold text-on-surface leading-snug line-clamp-2">
-                          {duel.content?.title || 'Публикация'}
-                        </p>
+
+                      <div className="shrink-0 px-2 flex flex-col items-center justify-center -translate-y-4">
+                        <span className="text-4xl font-black italic text-transparent bg-clip-text bg-gradient-to-br from-accent-neon to-white drop-shadow-[0_0_15px_rgba(168,85,247,0.8)] leading-none">VS</span>
+                      </div>
+
+                      <div className="flex-1 flex flex-col items-center">
+                        <div className="relative w-14 h-14 rounded-full bg-surface border-2 border-accent-rose shadow-[0_0_20px_rgba(251,113,133,0.3)] flex items-center justify-center overflow-hidden mb-2 group-hover:shadow-[0_0_30px_rgba(251,113,133,0.6)] transition-shadow">
+                          {duel.defenderReview?.user?.avatarUrl ? (
+                            <Image src={duel.defenderReview.user.avatarUrl} alt="2" fill className="object-cover" />
+                          ) : (
+                             <span className="text-lg font-black text-accent-rose">{duel.defenderReview?.user?.name?.charAt(0) || '2'}</span>
+                          )}
+                        </div>
+                        <span className="text-[10px] font-bold text-accent-rose text-center drop-shadow-md line-clamp-1 w-full px-2 uppercase tracking-tight">
+                          {duel.defenderReview?.user?.name || 'Критик 2'}
+                        </span>
+                        <span className="text-2xl font-black text-white mt-1 drop-shadow-lg tracking-tighter">{100 - cPct}%</span>
                       </div>
                     </div>
-                    <div className="flex items-center justify-between text-[11px] font-semibold mb-1.5">
-                      <span className="text-emerald-600 truncate max-w-[40%]">
-                        {duel.challengerReview?.user?.name || 'Критик 1'}
-                      </span>
-                      <span className="text-rose-600 truncate max-w-[40%] text-right">
-                        {duel.defenderReview?.user?.name || 'Критик 2'}
-                      </span>
-                    </div>
-                    <div className="relative h-2 rounded-full bg-surface-container-low overflow-hidden">
-                      <div
-                        className="absolute top-0 left-0 h-full bg-emerald-400/80"
-                        style={{ width: `${cPct}%` }}
-                      />
-                      <div
-                        className="absolute top-0 right-0 h-full bg-rose-400/80"
-                        style={{ width: `${100 - cPct}%` }}
-                      />
+
+                    <div className="relative z-10 mt-6 h-2 rounded-full bg-surface/50 overflow-hidden flex shadow-inner backdrop-blur-md">
+                      <div className="h-full bg-accent-emerald shadow-[0_0_10px_rgba(52,211,153,0.8)] transition-all duration-1000 ease-out" style={{ width: `${cPct}%` }} />
+                      <div className="h-full bg-accent-rose shadow-[0_0_10px_rgba(251,113,133,0.8)] transition-all duration-1000 ease-out" style={{ width: `${100 - cPct}%` }} />
                     </div>
                   </Link>
                 );
@@ -450,8 +460,8 @@ export default function Home() {
         <section className="mb-12">
           <div className="flex items-center justify-between mb-8 px-2">
             <div>
-              <span className="text-xs font-medium text-on-surface-muted mb-1.5 block">Рекомендации</span>
-              <h2 className="text-2xl font-bold tracking-tight text-on-surface leading-tight">Новые публикации</h2>
+              <span className="text-xs font-bold text-accent-neon uppercase tracking-widest mb-1.5 block drop-shadow-md">Новое в комьюнити</span>
+              <h2 className="text-3xl font-black tracking-tight text-white leading-tight drop-shadow-lg">Публикации</h2>
             </div>
           </div>
 
@@ -466,10 +476,10 @@ export default function Home() {
                 key={f.id}
                 onClick={() => setActiveFilter(f.id as any)}
                 className={`
-                  flex items-center gap-2 px-4 py-2 rounded-xl whitespace-nowrap text-xs font-bold transition-all duration-300 border
+                  flex items-center gap-2 px-5 py-2.5 rounded-xl whitespace-nowrap text-xs font-black uppercase tracking-wider transition-all duration-300 border
                   ${activeFilter === f.id 
-                    ? 'bg-on-surface text-surface border-on-surface shadow-lg shadow-black/5 scale-[1.02]' 
-                    : 'bg-surface-container/40 text-on-surface/30 border-transparent hover:border-on-surface/10 hover:text-on-surface/50'}
+                    ? 'bg-accent-neon text-white border-accent-neon shadow-[0_4px_15px_rgba(168,85,247,0.5)] scale-[1.05]' 
+                    : 'glass-panel text-on-surface-variant border-white/5 hover:border-white/20 hover:text-white'}
                 `}
               >
                 <span className="material-symbols-rounded" style={{ fontSize: '16px', fontVariationSettings: activeFilter === f.id ? "'FILL' 1" : "'FILL' 0" }}>{f.icon}</span>

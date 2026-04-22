@@ -57,7 +57,7 @@ export default function TopNavBar({ title = 'Кинотека', showBack = false
 
   return (
     <>
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-2xl border-b border-on-surface/5 px-4 md:px-8 py-4">
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-[#0B0E14]/80 backdrop-blur-2xl border-b border-accent-neon/20 px-4 md:px-8 py-4 shadow-[0_4px_30px_rgba(168,85,247,0.1)]">
         <div className="max-w-full mx-auto flex items-center justify-between">
           <div className="flex items-center gap-4">
             {showBack ? (
@@ -69,8 +69,8 @@ export default function TopNavBar({ title = 'Кинотека', showBack = false
               </button>
             ) : (
               <Link href="/" className="flex items-center gap-2 md:gap-3 group">
-                <div className="w-9 h-9 md:w-10 md:h-10 bg-on-surface text-surface rounded-xl flex items-center justify-center shadow-md group-hover:scale-110 transition-transform duration-300">
-                  <span className="text-lg md:text-xl font-black italic">K</span>
+                <div className="w-9 h-9 md:w-10 md:h-10 bg-accent-neon text-white rounded-xl flex items-center justify-center shadow-[0_0_15px_rgba(168,85,247,0.5)] group-hover:shadow-[0_0_25px_rgba(168,85,247,0.8)] group-hover:scale-110 transition-all duration-300">
+                  <span className="text-lg md:text-xl font-black">K</span>
                 </div>
                 <div className="flex flex-col">
                   <span className="text-lg md:text-xl font-black tracking-tighter text-on-surface uppercase leading-tight">
@@ -88,7 +88,7 @@ export default function TopNavBar({ title = 'Кинотека', showBack = false
             {user && (
               <Link
                 href="/create"
-                className="w-10 h-10 rounded-full flex items-center justify-center bg-accent-lilac/10 text-on-accent-lilac hover:bg-accent-lilac/30 transition-all border border-accent-lilac/10 shadow-sm active:scale-95"
+                className="w-10 h-10 rounded-full flex items-center justify-center bg-accent-neon/10 text-accent-neon hover:bg-accent-neon/20 transition-all border border-accent-neon/30 shadow-[0_0_10px_rgba(168,85,247,0.2)] active:scale-95"
               >
                 <span className="material-symbols-outlined text-[20px] md:text-[22px]">add</span>
               </Link>
