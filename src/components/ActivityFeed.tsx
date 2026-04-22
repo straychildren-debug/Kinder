@@ -99,7 +99,7 @@ export default function ActivityFeed({ limit = 5 }: { limit?: number }) {
 
       <div className="relative z-10 flex items-center justify-between mb-8">
         <div className="flex flex-col">
-          <h3 className="text-2xl font-black text-white tracking-tighter uppercase leading-none flex items-center gap-3">
+          <h3 className="text-2xl font-black text-white uppercase leading-none flex items-center gap-3">
             <span className="material-symbols-rounded text-primary text-3xl">Auto_Awesome</span>
             Лента Kinder
           </h3>

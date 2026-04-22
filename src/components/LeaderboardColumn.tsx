@@ -27,7 +27,7 @@ export default function LeaderboardColumn({
         <div className="w-10 h-10 rounded-xl bg-on-surface/5 flex items-center justify-center text-on-surface">
           <span className="material-symbols-outlined text-[20px]">{icon}</span>
         </div>
-        <h3 className="font-black text-sm text-on-surface uppercase tracking-tight leading-none">{title}</h3>
+        <h3 className="font-black text-sm text-on-surface uppercase leading-none">{title}</h3>
       </div>
       <p className="text-[10px] font-bold text-on-surface-variant/40 uppercase tracking-widest mb-6 ml-[52px]">
         {subtitle}
@@ -63,8 +63,8 @@ export default function LeaderboardColumn({
               </div>
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-xs font-black text-on-surface truncate tracking-tight">{u.name}</p>
-              <p className="text-[10px] font-bold text-on-surface-variant/60 uppercase tracking-tighter">
+              <p className="text-xs font-black text-on-surface truncate">{u.name}</p>
+              <p className="text-[10px] font-bold text-on-surface-variant/60 uppercase">
                 {u.metricValue} {metricLabel}
               </p>
             </div>

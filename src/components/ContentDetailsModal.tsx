@@ -387,7 +387,7 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
                    </span>
                  </div>
                </div>
-               <h1 className="text-3xl font-black text-on-surface leading-tight tracking-tighter mb-1">
+               <h1 className="text-3xl font-black text-on-surface leading-tight mb-1">
                  {content.title}
                </h1>
                <p className="text-on-surface-variant font-medium text-base mb-4">
@@ -398,7 +398,7 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
                <div className="flex flex-col items-center justify-center bg-surface-container-high/40 backdrop-blur-sm rounded-2xl py-6 px-8 border border-on-surface/5 mb-6">
                  <div className="flex items-center gap-3">
                    <span className="material-symbols-outlined text-[24px] text-amber-500" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
-                   <span className="text-3xl font-black tracking-tighter text-on-surface">{content.rating?.toFixed(1) || '0.0'}</span>
+                   <span className="text-3xl font-black text-on-surface">{content.rating?.toFixed(1) || '0.0'}</span>
                    <div className="w-px h-6 bg-on-surface/10 mx-1"></div>
                    <span className="text-[10px] font-bold uppercase tracking-widest opacity-40">{content.reviewCount || 0} оценок</span>
                  </div>

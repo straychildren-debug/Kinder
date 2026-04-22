@@ -61,7 +61,7 @@ export default function Leaderboard() {
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
             <div>
               <span className="text-xs font-medium text-on-surface-muted mb-1.5 block">Сообщество знатоков</span>
-              <h2 className="text-2xl font-bold tracking-tight text-on-surface leading-tight">Рейтинг пользователей</h2>
+              <h2 className="text-2xl font-bold text-on-surface leading-tight">Рейтинг пользователей</h2>
             </div>
             <div className="flex gap-2 mb-4">
               <button 
@@ -112,7 +112,7 @@ export default function Leaderboard() {
                     <div>
                       <div className="flex items-center gap-2 mb-1">
                          <span className="material-symbols-outlined text-accent-amber text-lg" style={{ fontVariationSettings: "'FILL' 1" }}>workspace_premium</span>
-                         <h3 className="text-2xl font-black tracking-tight text-on-surface">{top3[0].name}</h3>
+                         <h3 className="text-2xl font-black text-on-surface">{top3[0].name}</h3>
                       </div>
                       <div className="flex items-center gap-2 text-on-surface-variant">
                         <span className="material-symbols-outlined text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>verified</span>
@@ -149,7 +149,7 @@ export default function Leaderboard() {
                   className="bg-surface rounded-3xl p-4 flex items-center justify-between group shadow-sm border border-on-surface/5 hover:shadow-md transition-all cursor-pointer hover:scale-[1.01]"
                 >
                   <div className="flex items-center gap-4">
-                    <div className="text-2xl font-black text-slate-300 mr-2 tracking-tighter">02</div>
+                    <div className="text-2xl font-black text-slate-300 mr-2">02</div>
                     <div className="relative w-14 h-14 rounded-xl overflow-hidden bg-surface-container flex items-center justify-center font-black text-lg text-on-surface border border-on-surface/5 shadow-inner">
                       {top3[1].avatarUrl ? (
                         <Image alt={top3[1].name} fill sizes="56px" className="object-cover" src={top3[1].avatarUrl} />
@@ -176,7 +176,7 @@ export default function Leaderboard() {
                   className="bg-surface rounded-3xl p-4 flex items-center justify-between group shadow-sm border border-on-surface/5 hover:shadow-md transition-all cursor-pointer hover:scale-[1.01]"
                 >
                   <div className="flex items-center gap-4">
-                    <div className="text-2xl font-black text-orange-200 mr-2 tracking-tighter">03</div>
+                    <div className="text-2xl font-black text-orange-200 mr-2">03</div>
                     <div className="relative w-14 h-14 rounded-xl overflow-hidden bg-surface-container flex items-center justify-center font-black text-lg text-on-surface border border-on-surface/5 shadow-inner">
                       {top3[2].avatarUrl ? (
                         <Image alt={top3[2].name} fill sizes="56px" className="object-cover" src={top3[2].avatarUrl} />
@@ -203,7 +203,7 @@ export default function Leaderboard() {
         {!loading && (
           <section className="mb-20">
             <div className="flex flex-col gap-2 mb-10">
-              <h2 className="text-2xl font-black text-on-surface tracking-tighter uppercase leading-none">Герои сообщества</h2>
+              <h2 className="text-2xl font-black text-on-surface uppercase leading-none">Герои сообщества</h2>
               <div className="h-1 w-12 bg-amber-500 rounded-full"></div>
             </div>
 
@@ -260,7 +260,7 @@ export default function Leaderboard() {
                       )}
                     </div>
                     <div>
-                      <p className="font-black text-sm text-on-surface tracking-tight group-hover:text-primary transition-colors">{user.name}</p>
+                      <p className="font-black text-sm text-on-surface group-hover:text-primary transition-colors">{user.name}</p>
                       <div className="flex gap-1 mt-1">
                         <span className={`text-[8px] px-1.5 py-0.5 rounded-full font-black uppercase tracking-widest ${
                           user.role === 'superadmin' ? 'bg-purple-100 text-purple-700' : 
