@@ -112,7 +112,7 @@ export default function Leaderboard() {
                     <div>
                       <div className="flex items-center gap-2 mb-1">
                          <span className="material-symbols-outlined text-white text-lg" style={{ fontVariationSettings: "'FILL' 1" }}>workspace_premium</span>
-                         <h3 className="text-2xl font-black text-white">{top3[0].name}</h3>
+                         <h3 className="text-lg font-black text-white">{top3[0].name}</h3>
                       </div>
                       <div className="flex items-center gap-2 text-white/80">
                         <span className="material-symbols-outlined text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>verified</span>
@@ -123,6 +123,10 @@ export default function Leaderboard() {
                     </div>
                   </div>
                   <div className="grid grid-cols-3 gap-3">
+                    <div className="bg-white/20 backdrop-blur-md p-2.5 rounded-xl border border-white/20 shadow-lg">
+                      <p className="text-[8px] uppercase font-black tracking-widest text-white/80 mb-0.5">Очки</p>
+                      <p className="text-xl font-black text-white">{(top3[0].stats?.publications || 0) * 10 + (top3[0].stats?.reviews || 0) * 2}</p>
+                    </div>
                     <div className="bg-white/10 backdrop-blur-md p-2.5 rounded-xl border border-white/10 shadow-sm">
                       <p className="text-[8px] uppercase font-black tracking-widest text-white/60 mb-0.5">Публикации</p>
                       <p className="text-xl font-black text-white">{top3[0].stats?.publications || 0}</p>
@@ -130,10 +134,6 @@ export default function Leaderboard() {
                     <div className="bg-white/10 backdrop-blur-md p-2.5 rounded-xl border border-white/10 shadow-sm">
                       <p className="text-[8px] uppercase font-black tracking-widest text-white/60 mb-0.5">Отзывы</p>
                       <p className="text-xl font-black text-white">{top3[0].stats?.reviews || 0}</p>
-                    </div>
-                    <div className="bg-white/20 backdrop-blur-md p-2.5 rounded-xl border border-white/20 shadow-lg">
-                      <p className="text-[8px] uppercase font-black tracking-widest text-white/80 mb-0.5">Очки</p>
-                      <p className="text-xl font-black text-white">{(top3[0].stats?.publications || 0) * 10 + (top3[0].stats?.reviews || 0) * 2}</p>
                     </div>
                   </div>
                 </div>
