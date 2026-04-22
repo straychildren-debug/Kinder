@@ -393,7 +393,7 @@ function CreatePageContent() {
                       </button>
                       <label
                         htmlFor="cover-upload"
-                        className="w-14 h-14 rounded-full bg-white text-on-surface flex items-center justify-center shadow-2xl cursor-pointer hover:scale-110 active:scale-95 transition-transform"
+                        className="w-14 h-14 rounded-full bg-on-surface text-surface flex items-center justify-center shadow-2xl cursor-pointer hover:scale-110 active:scale-95 transition-transform"
                       >
                         <span className="material-symbols-outlined">sync</span>
                       </label>

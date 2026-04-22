@@ -56,7 +56,7 @@ export default function WrappedPage() {
           <button
             onClick={() => setPeriod('year')}
             className={`flex-1 py-2 rounded-lg text-xs font-semibold transition-all ${
-              period === 'year' ? 'bg-white text-on-surface shadow-sm' : 'text-on-surface-muted'
+              period === 'year' ? 'bg-on-surface text-surface shadow-sm' : 'text-on-surface-muted'
             }`}
           >
             Этот год
@@ -64,7 +64,7 @@ export default function WrappedPage() {
           <button
             onClick={() => setPeriod('all')}
             className={`flex-1 py-2 rounded-lg text-xs font-semibold transition-all ${
-              period === 'all' ? 'bg-white text-on-surface shadow-sm' : 'text-on-surface-muted'
+              period === 'all' ? 'bg-on-surface text-surface shadow-sm' : 'text-on-surface-muted'
             }`}
           >
             Всё время
@@ -397,10 +397,10 @@ function EmptyBlock({
 }) {
   return (
     <div className="text-center py-20 px-6 bg-surface rounded-3xl border border-on-surface/5">
-      <div className="w-14 h-14 rounded-2xl bg-surface-container flex items-center justify-center mx-auto mb-5">
-        <span className="material-symbols-outlined text-[24px] text-on-surface-muted">{icon}</span>
+      <div className="w-14 h-14 rounded-full bg-on-surface text-surface flex items-center justify-center shadow-2xl cursor-pointer hover:scale-110 active:scale-95 transition-transform">
+        <span className="material-symbols-outlined text-[24px]">{icon}</span>
       </div>
-      <p className="text-on-surface font-semibold text-base mb-1">{title}</p>
+      <p className="text-on-surface font-semibold text-base mb-1 mt-5">{title}</p>
       <p className="text-on-surface-muted text-sm font-medium leading-relaxed max-w-xs mx-auto">
         {subtitle}
       </p>

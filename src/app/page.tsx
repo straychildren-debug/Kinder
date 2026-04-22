@@ -524,9 +524,6 @@ export default function Home() {
 
                       {/* Content Overlay */}
                       <div className="absolute inset-x-0 bottom-0 pt-20 pb-4 px-4 bg-gradient-to-t from-black via-black/40 to-transparent z-10 transition-transform">
-                        <p className="text-[10px] font-black text-white/50 uppercase tracking-[0.2em] mb-1 truncate leading-none">
-                          {(item.author || item.director || 'Автор')}
-                        </p>
                         <h3 className="text-sm md:text-base font-bold text-white leading-relaxed line-clamp-2">
                           {item.title}
                         </h3>

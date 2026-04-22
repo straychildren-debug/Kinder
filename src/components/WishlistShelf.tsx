@@ -106,9 +106,6 @@ export default function WishlistShelf({
 
                 {/* Content Overlay */}
                 <div className="absolute inset-x-0 bottom-0 pt-10 pb-2 px-2 bg-gradient-to-t from-black via-black/40 to-transparent z-10 transition-transform">
-                  <p className="text-[8px] font-black text-white/50 uppercase tracking-[0.15em] mb-0.5 truncate leading-none">
-                    {formatAuthor((c as any).author || (c as any).director || '') || 'Автор'}
-                  </p>
                   <h4 className="text-[10px] font-bold text-white leading-tight line-clamp-2 tracking-tight">
                     {c.title}
                   </h4>

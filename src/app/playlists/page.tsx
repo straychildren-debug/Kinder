@@ -77,7 +77,7 @@ export default function PlaylistsPage() {
             onClick={() => setTab('discover')}
             className={`flex-1 py-2 rounded-lg text-xs font-semibold transition-all ${
               tab === 'discover'
-                ? 'bg-white text-on-surface shadow-sm'
+                ? 'bg-on-surface text-surface shadow-sm'
                 : 'text-on-surface-muted'
             }`}
           >
@@ -88,7 +88,7 @@ export default function PlaylistsPage() {
             disabled={!user}
             className={`flex-1 py-2 rounded-lg text-xs font-semibold transition-all disabled:opacity-40 ${
               tab === 'mine'
-                ? 'bg-white text-on-surface shadow-sm'
+                ? 'bg-on-surface text-surface shadow-sm'
                 : 'text-on-surface-muted'
             }`}
           >
