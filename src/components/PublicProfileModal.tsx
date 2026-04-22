@@ -338,7 +338,7 @@ function ReviewItem({ review, onClick }: { review: Review; onClick: () => void }
   return (
     <button
       onClick={onClick}
-      className="w-full text-left bg-white p-4 rounded-2xl border border-on-surface/[0.03] shadow-sm hover:bg-surface-container-low hover:shadow-md transition-all group"
+      className="w-full text-left bg-white/[0.02] backdrop-blur-md p-4 rounded-2xl border border-white/[0.05] shadow-sm hover:bg-white/[0.05] hover:border-white/[0.1] transition-all group"
     >
       <div className="flex gap-3 mb-3">
         {review.content && (
