@@ -107,7 +107,7 @@ async function fetchPlaylistCoversAndCounts(playlistIds: string[]): Promise<{
     }
     
     const existingPreviews = topContentByPlaylist.get(r.playlist_id) || [];
-    if (existingPreviews.length < 3) {
+    if (existingPreviews.length < 5) {
       topContentByPlaylist.set(r.playlist_id, [...existingPreviews, r.content_id]);
     }
   });
