@@ -19,6 +19,7 @@ import { getActiveDuels } from "@/lib/duels";
 import { getPersonalizedRecommendations } from "@/lib/recommendations";
 import { getPublicPlaylists, type Playlist } from "@/lib/playlists";
 import Pagination from "@/components/Pagination";
+import PlaylistCard from "@/components/PlaylistCard";
 import type { Duel } from "@/lib/types";
 
 const EMPTY_RESULTS: OmnisearchResult = { content: [], clubs: [], users: [] };
@@ -424,33 +425,13 @@ export default function Home() {
               </Link>
             </div>
             <div className="-mx-4 overflow-x-auto scrollbar-none">
-              <div className="flex gap-3 px-4 pb-2 snap-x snap-mandatory">
+              <div className="flex gap-4 px-4 pb-4 snap-x snap-mandatory">
                 {popularPlaylists.map((pl) => (
-                  <Link
-                    key={pl.id}
-                    href={`/playlists/${pl.id}`}
-                    className="group shrink-0 w-56 snap-start bg-surface rounded-2xl p-4 border border-on-surface/5 hover:border-on-surface/10 transition-all active:scale-[0.99]"
-                  >
-                    <div className="w-11 h-11 rounded-xl bg-on-surface/5 flex items-center justify-center mb-3">
-                      <span
-                        className="material-symbols-outlined text-[22px] text-on-surface"
-                        style={{ fontVariationSettings: "'FILL' 1" }}
-                      >
-                        playlist_play
-                      </span>
-                    </div>
-                    <h3 className="text-sm font-semibold text-on-surface leading-snug line-clamp-2 mb-1">
-                      {pl.title}
-                    </h3>
-                    <p className="text-[11px] font-medium text-on-surface-muted leading-snug line-clamp-2">
-                      {pl.description || `${pl.itemCount || 0} ${(pl.itemCount || 0) === 1 ? 'элемент' : 'элементов'}`}
-                    </p>
-                    {pl.author && (
-                      <p className="mt-2.5 text-[11px] font-semibold text-on-surface-muted truncate">
-                        @{pl.author.name}
-                      </p>
-                    )}
-                  </Link>
+                  <PlaylistCard 
+                    key={pl.id} 
+                    playlist={pl} 
+                    className="shrink-0 w-64 snap-start" 
+                  />
                 ))}
               </div>
             </div>

@@ -13,6 +13,7 @@ import {
   type Playlist,
 } from '@/lib/playlists';
 import { useRouter } from 'next/navigation';
+import PlaylistCard from '@/components/PlaylistCard';
 
 export default function PlaylistsPage() {
   const { user } = useAuth();
@@ -188,7 +189,7 @@ export default function PlaylistsPage() {
             </p>
           </div>
         ) : (
-          <div className="space-y-3">
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
             {lists.map((pl) => (
               <PlaylistCard key={pl.id} playlist={pl} />
             ))}
@@ -200,56 +201,3 @@ export default function PlaylistsPage() {
   );
 }
 
-function PlaylistCard({ playlist }: { playlist: Playlist }) {
-  const cover = playlist.coverUrl || playlist.firstItemImage;
-  return (
-    <Link
-      href={`/playlists/${playlist.id}`}
-      className="block bg-surface rounded-2xl p-4 border border-on-surface/5 hover:border-on-surface/10 transition-all active:scale-[0.995]"
-    >
-      <div className="flex items-start gap-4">
-        <div className="relative w-16 h-16 rounded-xl overflow-hidden bg-surface-container border border-on-surface/5 shrink-0 flex items-center justify-center">
-          {cover ? (
-            <Image
-              src={cover}
-              alt={playlist.title}
-              fill
-              sizes="64px"
-              className="object-cover"
-            />
-          ) : (
-            <span className="material-symbols-outlined text-[28px] text-on-surface-muted">
-              playlist_play
-            </span>
-          )}
-        </div>
-        <div className="flex-1 min-w-0">
-          <div className="flex items-start justify-between gap-2">
-            <h3 className="text-sm font-semibold text-on-surface leading-snug line-clamp-2">
-              {playlist.title}
-            </h3>
-            {!playlist.isPublic && (
-              <span className="shrink-0 text-[9px] font-semibold uppercase tracking-wider text-on-surface-muted bg-surface-container px-1.5 py-0.5 rounded-md">
-                Приват
-              </span>
-            )}
-          </div>
-          {playlist.description && (
-            <p className="text-xs text-on-surface-muted font-medium leading-snug mt-1 line-clamp-2">
-              {playlist.description}
-            </p>
-          )}
-          <div className="flex items-center gap-3 mt-2 text-[11px] font-medium text-on-surface-muted">
-            {playlist.author && (
-              <span className="truncate max-w-[50%]">@{playlist.author.name}</span>
-            )}
-            <span>
-              {playlist.itemCount || 0}{' '}
-              {(playlist.itemCount || 0) === 1 ? 'элемент' : 'элементов'}
-            </span>
-          </div>
-        </div>
-      </div>
-    </Link>
-  );
-}

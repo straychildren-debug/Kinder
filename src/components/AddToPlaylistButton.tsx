@@ -137,8 +137,8 @@ export default function AddToPlaylistButton({ contentId }: Props) {
                               : 'bg-surface-container-low border border-transparent hover:bg-surface-container'
                           }`}
                         >
-                          <div className="w-9 h-9 rounded-lg bg-white flex items-center justify-center shrink-0">
-                            <span className="material-symbols-outlined text-[18px] text-on-surface-muted">
+                          <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-[#0F172A] to-[#34495E] flex items-center justify-center shrink-0 border border-white/10">
+                            <span className="material-symbols-outlined text-[16px] text-white">
                               playlist_play
                             </span>
                           </div>
