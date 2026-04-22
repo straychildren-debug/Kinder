@@ -140,17 +140,9 @@ export default function Movies() {
                     )}
                     
                     {/* Top Left: Category */}
-                    <div className="absolute top-2 left-2 px-1.5 py-1 rounded-lg bg-black/60 backdrop-blur-md flex items-center gap-1.5 z-20 border border-white/10">
-                      <span className="material-symbols-rounded text-white" style={{ fontSize: '10px', fontVariationSettings: "'FILL' 1" }}>movie</span>
-                      <span className="text-[9px] font-black text-white leading-none uppercase tracking-widest">Кино</span>
+                    <div className="absolute top-2 left-2 p-1.5 rounded-lg bg-black/60 backdrop-blur-md flex items-center justify-center z-20 border border-white/10">
+                      <span className="material-symbols-rounded text-white" style={{ fontSize: '11px', fontVariationSettings: "'FILL' 1" }}>movie</span>
                     </div>
-
-                    {/* Bottom Left: Year */}
-                    {movie.year && (
-                      <div className="absolute bottom-2 left-2 px-1.5 py-1 rounded-lg bg-black/40 backdrop-blur-md flex items-center justify-center border border-white/10 z-20">
-                        <span className="text-[9px] font-black text-white leading-none">{movie.year}</span>
-                      </div>
-                    )}
 
                     {/* Bottom Right: Rating */}
                     {movie.rating && (

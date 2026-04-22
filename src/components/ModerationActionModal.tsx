@@ -62,10 +62,10 @@ export default function ModerationActionModal({ content, onClose, onDecision, is
             </div>
           )}
           
-          {/* Glass Tag */}
-          <div className="absolute top-6 right-6 px-5 py-2.5 rounded-2xl bg-white/20 backdrop-blur-xl border border-white/30 shadow-2xl z-10 animate-in fade-in slide-in-from-right-4 duration-700 delay-300">
-            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white drop-shadow-sm">
-              {content.type === 'movie' ? 'Фильм' : 'Книга'}
+          {/* Glass Tag (Icon Only) */}
+          <div className="absolute top-6 right-6 p-3 rounded-2xl bg-white/20 backdrop-blur-xl border border-white/30 shadow-2xl z-10 animate-in fade-in slide-in-from-right-4 duration-700 delay-300 flex items-center justify-center">
+            <span className="material-symbols-rounded text-white drop-shadow-sm" style={{ fontSize: '20px', fontVariationSettings: "'FILL' 1" }}>
+              {content.type === 'movie' ? 'movie' : 'menu_book'}
             </span>
           </div>
           

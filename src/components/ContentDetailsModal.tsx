@@ -371,9 +371,13 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
                    </div>
                  </div>
                )}
-               <span className="inline-block px-3 py-1 bg-surface-container-high/50 text-on-surface-muted text-[10px] font-bold uppercase tracking-widest rounded-lg mb-3">
-                 {content.type === 'movie' ? 'Кино' : 'Книга'}
-               </span>
+               <div className="flex justify-center mb-4">
+                 <div className="px-3 py-1.5 bg-surface-container-high/50 text-on-surface-muted rounded-xl flex items-center justify-center border border-on-surface/5 backdrop-blur-sm">
+                   <span className="material-symbols-rounded" style={{ fontSize: '18px', fontVariationSettings: "'FILL' 1" }}>
+                     {content.type === 'movie' ? 'movie' : 'menu_book'}
+                   </span>
+                 </div>
+               </div>
                <h1 className="text-3xl font-black text-on-surface leading-tight tracking-tighter mb-1">
                  {content.title}
                </h1>
@@ -899,19 +903,12 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
                   <div className="relative aspect-[2/3] w-full rounded-xl overflow-hidden bg-surface-container border border-on-surface/5 shadow-sm">
                     {/* Upper Badges */}
                     <div className="absolute top-1.5 left-1.5 z-20">
-                      <div className="px-1.5 py-0.5 rounded-md bg-black/40 backdrop-blur-md flex items-center gap-1 shadow-lg border border-white/10">
-                        <span className="material-symbols-rounded text-white" style={{ fontSize: '9px', fontVariationSettings: "'FILL' 1" }}>{s.type === 'movie' ? 'movie' : 'menu_book'}</span>
-                        <span className="text-[7px] font-black text-white leading-none uppercase tracking-widest">{s.type === 'movie' ? 'Кино' : 'Книга'}</span>
+                      <div className="p-1 px-1.5 rounded-md bg-black/40 backdrop-blur-md flex items-center justify-center shadow-lg border border-white/10">
+                        <span className="material-symbols-rounded text-white" style={{ fontSize: '11px', fontVariationSettings: "'FILL' 1" }}>
+                          {s.type === 'movie' ? 'movie' : 'menu_book'}
+                        </span>
                       </div>
                     </div>
-                    
-                    {s.year && (
-                      <div className="absolute top-1.5 right-1.5 z-20">
-                        <div className="px-1.5 py-0.5 rounded-md bg-black/40 backdrop-blur-md flex items-center gap-1 shadow-lg border border-white/10">
-                          <span className="text-[9px] font-bold text-white tracking-tight">{s.year}</span>
-                        </div>
-                      </div>
-                    )}
 
                     {s.imageUrl && (
                       <Image

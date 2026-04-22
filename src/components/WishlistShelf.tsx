@@ -68,13 +68,12 @@ export default function WishlistShelf({
             <div className="w-full bg-white p-1 pb-2.5 rounded-[12px] border border-on-surface/[0.03] shadow-[0_2px_8px_rgba(0,0,0,0.02)] group-hover:shadow-[0_4px_16px_rgba(0,0,0,0.05)] transition-all duration-500">
               {/* Poster Container with 2/3 Aspect Ratio */}
               <div className="relative aspect-[2/3] rounded-[8px] overflow-hidden bg-surface-container-low/50 border border-on-surface/[0.03]">
-                {/* Year Badge */}
-                {c.year && (
-                  <div className="absolute top-1 left-1 px-1.5 py-0.5 rounded-md bg-black/60 backdrop-blur-md flex items-center gap-1 z-20 border border-white/10">
-                    <span className="material-symbols-rounded text-white" style={{ fontSize: '11px', fontVariationSettings: "'FILL' 1" }}>event</span>
-                    <span className="text-[10px] font-bold text-white leading-none">{c.year}</span>
-                  </div>
-                )}
+                {/* Icon Badge Overlay */}
+                <div className="absolute top-1.5 left-1.5 p-1 rounded-md bg-black/60 backdrop-blur-md border border-white/10 flex items-center justify-center z-10 transition-transform">
+                  <span className="material-symbols-rounded text-white" style={{ fontSize: '10px', fontVariationSettings: "'FILL' 1" }}>
+                    {c.type === 'movie' ? 'movie' : 'menu_book'}
+                  </span>
+                </div>
 
                 {/* Badge Overlay */}
                 <div className="absolute top-1.5 right-1.5 z-20">

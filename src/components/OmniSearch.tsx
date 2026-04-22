@@ -152,10 +152,11 @@ export default function OmniSearch({ open, onClose }: OmniSearchProps) {
                             <p className="text-sm font-black text-on-surface truncate">
                               {c.title}
                             </p>
-                            <p className="text-[10px] font-black uppercase tracking-widest text-on-surface-variant/60 mt-0.5">
-                              {c.type === 'movie' ? 'Кино' : 'Книга'}
-                              {c.year ? ` · ${c.year}` : ''}
-                            </p>
+                            <div className="flex items-center gap-1.5 mt-0.5 opacity-60">
+                              <span className="material-symbols-rounded" style={{ fontSize: '14px', fontVariationSettings: "'FILL' 1" }}>
+                                {c.type === 'movie' ? 'movie' : 'menu_book'}
+                              </span>
+                            </div>
                           </div>
                         </Link>
                       ))}

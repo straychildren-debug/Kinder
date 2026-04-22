@@ -161,9 +161,7 @@ function StackCard({
 
           {/* Integrated Text Content */}
           <div className="absolute inset-x-0 bottom-0 p-8 pt-24 text-white z-10 transition-transform duration-700" style={{ transform: isTop ? 'translateY(0)' : 'translateY(10px)' }}>
-            <p className="text-[10px] font-black text-white/50 uppercase tracking-[0.3em] mb-2 leading-none">
-              {item.year ? `${item.year}` : ''}
-            </p>
+            <div className="mb-2 h-1" />
             <h3 className="text-2xl font-black leading-tight tracking-tight line-clamp-2 max-w-[90%] mb-3">
               {item.title}
             </h3>

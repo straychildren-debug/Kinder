@@ -273,12 +273,6 @@ export default function ModerationPage() {
                             )}
 
                             <div className="absolute top-2.5 right-2.5 flex flex-col gap-1.5 z-20">
-                              {/* Year Badge */}
-                              {item.year && (
-                                <div className="px-2 py-1 rounded-lg bg-black/60 backdrop-blur-md flex items-center justify-center border border-white/10">
-                                  <span className="text-[10px] font-black text-white leading-none">{item.year}</span>
-                                </div>
-                              )}
                               {/* Rating Badge */}
                               {item.rating && (
                                 <div className="px-2 py-1 rounded-lg bg-amber-400 backdrop-blur-md flex items-center justify-center gap-1 border border-amber-500/20 shadow-lg shadow-amber-500/20">
