@@ -179,7 +179,7 @@ export default function AddToPlaylistButton({ contentId }: Props) {
                           <button
                             onClick={handleCreateAndAdd}
                             disabled={!newTitle.trim()}
-                            className="flex-1 py-2.5 bg-on-surface text-surface rounded-xl font-semibold text-xs disabled:opacity-40"
+                            className="flex-1 py-3 btn-premium rounded-xl text-xs"
                           >
                             Создать и добавить
                           </button>

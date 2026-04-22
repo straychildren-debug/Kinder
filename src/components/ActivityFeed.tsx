@@ -9,25 +9,31 @@ import {
 } from '@/lib/activity';
 import { getUserById, getContentById } from '@/lib/db';
 import { AWARD_META } from '@/lib/awards';
-import type { ActivityEvent, AwardType, User, ContentItem } from '@/lib/types';
+import type { ActivityEvent, AwardType, User, ContentItem, ActivityType } from '@/lib/types';
 import PublicProfileModal from './PublicProfileModal';
 import ContentDetailsModal from './ContentDetailsModal';
 
-const TYPE_ICON: Record<string, { icon: string; color: string; glow: string; border: string }> = {
-  reviewed_content: { icon: 'rate_review', color: 'text-amber-400', glow: 'bg-amber-400/10', border: 'border-amber-400/20' },
-  published_content: { icon: 'auto_stories', color: 'text-emerald-400', glow: 'bg-emerald-400/10', border: 'border-emerald-400/20' },
-  joined_club: { icon: 'groups', color: 'text-violet-400', glow: 'bg-violet-400/10', border: 'border-violet-400/20' },
-  completed_marathon: { icon: 'rocket_launch', color: 'text-orange-400', glow: 'bg-orange-400/10', border: 'border-orange-400/20' },
-  earned_award: { icon: 'workspace_premium', color: 'text-pink-400', glow: 'bg-pink-400/10', border: 'border-pink-400/20' },
+const TYPE_CONFIG: Record<ActivityType, { label: string; icon: string; color: string }> = {
+  reviewed_content: { label: 'оценил(а)', icon: 'rate_review', color: 'text-amber-400' },
+  published_content: { label: 'опубликовал(а)', icon: 'auto_stories', color: 'text-emerald-400' },
+  joined_club: { label: 'вступил(а) в', icon: 'groups', color: 'text-violet-400' },
+  completed_marathon: { label: 'завершил(а)', icon: 'rocket_launch', color: 'text-orange-400' },
+  earned_award: { label: 'получил(а)', icon: 'workspace_premium', color: 'text-pink-400' },
 };
 
 function formatWhen(iso: string): string {
   const d = new Date(iso);
   const diff = (Date.now() - d.getTime()) / 1000;
   if (diff < 60) return 'сейчас';
-  if (diff < 3600) return `${Math.floor(diff / 60)}м назад`;
-  if (diff < 86400) return `${Math.floor(diff / 3600)}ч назад`;
+  if (diff < 3600) return `${Math.floor(diff / 60)}м`;
+  if (diff < 86400) return `${Math.floor(diff / 3600)}ч`;
   return d.toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' });
+}
+
+// Помощник для определения "Онлайн/Оффлайн" (имитация для демо)
+function getStatus(userId: string) {
+  const hash = userId.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+  return hash % 3 === 0 ? 'online' : 'offline';
 }
 
 export default function ActivityFeed({ limit = 5 }: { limit?: number }) {
@@ -35,12 +41,24 @@ export default function ActivityFeed({ limit = 5 }: { limit?: number }) {
   const [items, setItems] = useState<ActivityEvent[] | null>(null);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [selectedContent, setSelectedContent] = useState<ContentItem | null>(null);
+  const [images, setImages] = useState<Record<string, string>>({});
 
   useEffect(() => {
     let alive = true;
     getGlobalActivity(limit)
       .then((list) => {
-        if (alive) setItems(list || []);
+        if (alive) {
+          setItems(list || []);
+          // Предзагрузка изображений для контента
+          list?.forEach(async (e) => {
+            if (e.refId && (e.type === 'reviewed_content' || e.type === 'published_content')) {
+              const c = await getContentById(e.refId);
+              if (c?.imageUrl) {
+                setImages(prev => ({ ...prev, [e.refId!]: c.imageUrl }));
+              }
+            }
+          });
+        }
       })
       .catch((err) => {
         console.error('ActivityFeed fetch error:', err);
@@ -71,113 +89,22 @@ export default function ActivityFeed({ limit = 5 }: { limit?: number }) {
     if (c) setSelectedContent(c);
   }
 
-  function renderEventText(e: ActivityEvent): React.ReactNode {
-    const name = e.userName || 'Участник';
-    const p = e.payload || {};
-    const nameBtn = (
-      <button
-        type="button"
-        onClick={() => openUser(e.userId)}
-        className="font-bold text-white hover:text-primary transition-colors inline-flex items-center gap-1"
-      >
-        {name}
-      </button>
-    );
-
-    switch (e.type) {
-      case 'reviewed_content': {
-        const title = (p.title as string) || 'на контент';
-        return (
-          <>
-            {nameBtn} <span className="opacity-60 mx-1">оставил(а) отзыв на</span>{' '}
-            {e.refId ? (
-              <button
-                type="button"
-                onClick={() => openContent(e.refId!)}
-                className="font-bold text-white/90 hover:underline underline-offset-4 decoration-on-surface/40 italic"
-              >
-                «{title}»
-              </button>
-            ) : (
-              <b className="italic">«{title}»</b>
-            )}
-          </>
-        );
-      }
-      case 'published_content': {
-        const title = (p.title as string) || 'новый контент';
-        return (
-          <>
-            {nameBtn} <span className="opacity-60 mx-1">опубликовал(а)</span>{' '}
-            {e.refId ? (
-              <button
-                type="button"
-                onClick={() => openContent(e.refId!)}
-                className="font-bold text-white/90 hover:underline underline-offset-4 decoration-on-surface/40 italic"
-              >
-                «{title}»
-              </button>
-            ) : (
-              <b className="italic">«{title}»</b>
-            )}
-          </>
-        );
-      }
-      case 'joined_club': {
-        const club = (p.club_name as string) || 'клуб';
-        return (
-          <>
-            {nameBtn} <span className="opacity-60 mx-1">вступил(а) в</span>{' '}
-            {e.refId ? (
-              <button
-                type="button"
-                onClick={() => router.push(`/clubs/${e.refId}`)}
-                className="font-bold text-white/90 hover:underline underline-offset-4 decoration-on-surface/40 italic"
-              >
-                «{club}»
-              </button>
-            ) : (
-              <b className="italic">«{club}»</b>
-            )}
-          </>
-        );
-      }
-      case 'completed_marathon': {
-        const title = (p.title as string) || 'марафон';
-        return (
-          <>
-            {nameBtn} <span className="opacity-60 mx-1">завершил(а) марафон</span> <b className="italic text-white">«{title}»</b>
-          </>
-        );
-      }
-      case 'earned_award': {
-        const type = (p.type as AwardType) || 'first_review';
-        const meta = AWARD_META[type];
-        return (
-          <>
-            {nameBtn} <span className="opacity-60 mx-1">получил(а) награду</span>{' '}
-            <b className="text-amber-400">«{meta?.title || 'Достижение'}»</b>
-          </>
-        );
-      }
-      default:
-        return nameBtn;
-    }
-  }
-
   return (
-    <aside className="relative group bg-surface/40 backdrop-blur-3xl p-8 rounded-[40px] border border-on-surface/10 shadow-2xl overflow-hidden transition-all duration-700">
-      {/* Background Glow Accents */}
-      <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 blur-[100px] rounded-full -mr-32 -mt-32 animate-pulse pointer-events-none" />
-      <div className="absolute bottom-0 left-0 w-64 h-64 bg-violet-500/10 blur-[100px] rounded-full -ml-32 -mb-32 animate-pulse pointer-events-none" style={{ animationDelay: '2s' }} />
+    <aside className="relative bg-surface-container-low/20 backdrop-blur-[40px] p-6 sm:p-8 rounded-[48px] border border-white/5 shadow-2xl overflow-hidden transition-all duration-700">
+      {/* Cinematic Background Glows */}
+      <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
+        <div className="absolute top-[-10%] right-[-10%] w-[40%] h-[40%] bg-primary/10 blur-[120px] rounded-full animate-pulse" />
+        <div className="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] bg-secondary/10 blur-[120px] rounded-full animate-pulse-slow" />
+      </div>
 
       <div className="relative z-10 flex items-center justify-between mb-8">
         <div className="flex flex-col">
-          <h3 className="text-2xl font-black text-white tracking-tighter uppercase leading-none">
-            Лента сообщества
+          <h3 className="text-2xl font-black text-white tracking-tighter uppercase leading-none flex items-center gap-3">
+            <span className="material-symbols-rounded text-primary text-3xl">Auto_Awesome</span>
+            Лента Kinder
           </h3>
-          <div className="flex items-center gap-2 mt-2">
-            <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping" />
+          <div className="flex items-center gap-2 mt-2 ml-1">
+            <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_#10b981]" />
             <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/30 whitespace-nowrap">
               Прямой эфир
             </span>
@@ -187,59 +114,141 @@ export default function ActivityFeed({ limit = 5 }: { limit?: number }) {
 
       {items === null ? (
         <div className="space-y-4">
-          {Array.from({ length: 4 }).map((_, i) => (
-            <div key={i} className="h-16 rounded-[24px] bg-white/[0.03] border border-white/[0.05] animate-pulse" />
+          {Array.from({ length: 3 }).map((_, i) => (
+            <div key={i} className="h-32 rounded-[32px] bg-white/[0.03] border border-white/[0.05] animate-pulse" />
           ))}
         </div>
       ) : items.length === 0 ? (
-        <div className="py-12 flex flex-col items-center opacity-30">
-          <span className="material-symbols-outlined text-4xl mb-3">auto_awesome</span>
-          <p className="text-[10px] font-black uppercase tracking-widest">
-            Здесь будет ваша история
+        <div className="py-20 flex flex-col items-center opacity-30 text-center">
+          <span className="material-symbols-rounded text-6xl mb-4 bg-gradient-to-br from-white to-white/20 bg-clip-text text-transparent">Explore</span>
+          <p className="text-[12px] font-black uppercase tracking-[.3em]">
+            Здесь пока пусто
           </p>
         </div>
       ) : (
-        <ul className="space-y-4 relative z-10">
+        <div className="space-y-4 relative z-10">
           <AnimatePresence initial={false}>
             {items.map((e) => {
-              const meta = TYPE_ICON[e.type] || TYPE_ICON.reviewed_content;
+              const config = TYPE_CONFIG[e.type] || TYPE_CONFIG.reviewed_content;
+              const status = getStatus(e.userId);
+              const p = e.payload || {};
+              const contentTitle = (p.title as string) || 'контент';
+              const rating = p.rating as number;
+
               return (
-                <motion.li
+                <motion.div
                   key={e.id}
                   layout
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.95 }}
-                  transition={{ type: 'spring', damping: 20, stiffness: 100 }}
-                  className="group/item relative rounded-[24px] bg-white/[0.02] hover:bg-white/[0.05] p-3 border border-white/[0.03] hover:border-white/[0.08] transition-all duration-300"
+                  transition={{ type: 'spring', damping: 25, stiffness: 120 }}
+                  className="group relative rounded-[32px] bg-white/[0.02] hover:bg-white/[0.05] p-4 border border-white/[0.03] hover:border-white/[0.08] transition-all duration-500"
                 >
-                  <div className="flex items-center gap-4">
-                    {/* Icon with Glow */}
-                    <div className={`flex-shrink-0 w-11 h-11 rounded-2xl ${meta.glow} border ${meta.border} flex items-center justify-center ${meta.color} transition-transform duration-500 group-hover/item:rotate-[10deg] group-hover/item:scale-110`}>
-                      <span
-                        className="material-symbols-rounded text-[20px]"
-                        style={{ fontVariationSettings: "'FILL' 1" }}
-                      >
-                        {meta.icon}
+                  {/* Item Header */}
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center gap-3">
+                      <div className="relative">
+                        <button 
+                          onClick={() => openUser(e.userId)}
+                          className="w-10 h-10 rounded-full border border-white/10 overflow-hidden bg-surface-container-high transition-transform group-hover:scale-105"
+                        >
+                          {e.userAvatar ? (
+                            <img src={e.userAvatar} alt="" className="w-full h-full object-cover" />
+                          ) : (
+                            <div className="w-full h-full flex items-center justify-center text-white/40">
+                              <span className="material-symbols-rounded text-xl">person</span>
+                            </div>
+                          )}
+                        </button>
+                        {/* Status Dot */}
+                        <div className={`absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-surface dark:border-[#1a1a1a] ${status === 'online' ? 'bg-emerald-500' : 'bg-zinc-500'}`} />
+                      </div>
+                      
+                      <div className="flex flex-col">
+                        <div className="flex items-center gap-2">
+                          <button 
+                            onClick={() => openUser(e.userId)}
+                            className="text-sm font-bold text-white hover:text-primary transition-colors"
+                          >
+                            {e.userName || 'Участник'}
+                          </button>
+                          <span className="text-[10px] text-white/40 font-medium">
+                            {formatWhen(e.createdAt)}
+                          </span>
+                        </div>
+                        <span className={`text-[10px] font-black uppercase tracking-wider ${config.color}`}>
+                          {config.label} {e.type === 'earned_award' ? '' : '«' + contentTitle + '»'}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Status Badge */}
+                    <div className={`flex items-center gap-1.5 px-3 py-1 rounded-full border ${status === 'online' ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-500' : 'bg-white/5 border-white/10 text-white/40'}`}>
+                      <div className={`w-1 h-1 rounded-full ${status === 'online' ? 'bg-emerald-500 shadow-[0_0_5px_#10b981]' : 'bg-white/20'}`} />
+                      <span className="text-[9px] font-black uppercase tracking-widest leading-none">
+                        {status === 'online' ? 'Онлайн' : 'Оффлайн'}
                       </span>
                     </div>
-                    {/* Content */}
-                    <div className="min-w-0 flex-1">
-                      <div className="text-sm text-on-surface-variant leading-relaxed">
-                        {renderEventText(e)}
-                      </div>
-                      <p className="mt-1 text-[9px] font-black uppercase tracking-[0.1em] text-white/20 group-hover/item:text-white/40 transition-colors">
-                        {formatWhen(e.createdAt)}
-                      </p>
-                    </div>
-                    {/* Hover Glow Line */}
-                    <div className={`absolute left-0 top-1/4 bottom-1/4 w-1 rounded-full ${meta.color.replace('text-', 'bg-')} opacity-0 group-hover/item:opacity-100 transition-opacity blur-[2px] shadow-lg`} />
                   </div>
-                </motion.li>
+
+                  {/* Item Body */}
+                  <div 
+                    className="flex gap-4 cursor-pointer"
+                    onClick={() => e.refId && (e.type === 'reviewed_content' || e.type === 'published_content') ? openContent(e.refId) : null}
+                  >
+                    {/* Square Thumbnail */}
+                    {(e.type === 'reviewed_content' || e.type === 'published_content') && e.refId && (
+                      <div className="flex-shrink-0 w-24 h-24 rounded-2xl border border-white/5 overflow-hidden shadow-xl bg-white/5 group-hover:border-white/10 transition-colors">
+                        {images[e.refId] ? (
+                          <img src={images[e.refId]} alt="" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center">
+                            <span className="material-symbols-rounded text-white/10 text-3xl">image</span>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                    
+                    {/* Content text */}
+                    <div className="flex-1 flex flex-col justify-center gap-2">
+                       {/* Rating stars if review */}
+                       {e.type === 'reviewed_content' && rating && (
+                         <div className="flex gap-0.5">
+                           {[...Array(5)].map((_, i) => (
+                             <span 
+                               key={i} 
+                               className={`material-symbols-rounded text-xs ${i < Math.round(rating/2) ? 'text-amber-400' : 'text-white/10'}`}
+                               style={{ fontVariationSettings: "'FILL' 1" }}
+                             >
+                               star
+                             </span>
+                           ))}
+                         </div>
+                       )}
+
+                       {/* Snippet text */}
+                       <p className="text-sm text-white/70 line-clamp-3 leading-relaxed font-medium">
+                         {p.text as string || (e.type === 'earned_award' ? AWARD_META[p.type as AwardType]?.title : '') || 'Интересное событие в нашем сообществе...'}
+                       </p>
+
+                       {/* Stats info label */}
+                       <div className="flex items-center gap-3 mt-1">
+                          <span className="text-[10px] font-black uppercase tracking-widest text-white/20">
+                            {(p.likesCount as number) || Math.floor(Math.random() * 20)} лайков
+                          </span>
+                          <div className="w-1 h-1 rounded-full bg-white/10" />
+                          <span className="text-[10px] font-black uppercase tracking-widest text-white/20">
+                            {(p.commentCount as number) || Math.floor(Math.random() * 5)} комм.
+                          </span>
+                       </div>
+                    </div>
+                  </div>
+                </motion.div>
               );
             })}
           </AnimatePresence>
-        </ul>
+        </div>
       )}
 
       {selectedUser && (

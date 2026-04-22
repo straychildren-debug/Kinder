@@ -78,10 +78,10 @@ export default function PlaylistsPage() {
             <button
               onClick={() => setTab('discover')}
               className={`flex-1 py-1.5 rounded-lg text-xs font-bold transition-all relative ${
-                tab === 'discover'
-                  ? 'bg-on-surface text-surface shadow-[0_0_20px_rgba(168,85,247,0.4)]'
-                  : 'text-on-surface-muted hover:text-on-surface'
-              }`}
+                  tab === 'discover'
+                    ? 'bg-primary text-white shadow-[0_0_20px_rgba(168,85,247,0.4)] scale-105'
+                    : 'text-on-surface-muted hover:text-on-surface'
+                }`}
             >
               {tab === 'discover' && (
                 <motion.div 
@@ -95,10 +95,10 @@ export default function PlaylistsPage() {
               onClick={() => setTab('mine')}
               disabled={!user}
               className={`flex-1 py-1.5 rounded-lg text-xs font-bold transition-all relative disabled:opacity-40 ${
-                tab === 'mine'
-                  ? 'bg-on-surface text-surface shadow-[0_0_20px_rgba(168,85,247,0.4)]'
-                  : 'text-on-surface-muted hover:text-on-surface'
-              }`}
+                  tab === 'mine'
+                    ? 'bg-primary text-white shadow-[0_0_20px_rgba(168,85,247,0.4)] scale-105'
+                    : 'text-on-surface-muted hover:text-on-surface'
+                }`}
             >
               {tab === 'mine' && (
                 <motion.div 
@@ -144,7 +144,7 @@ export default function PlaylistsPage() {
                   <button
                     onClick={handleCreate}
                     disabled={!newTitle.trim() || busyCreate}
-                    className="flex-1 py-2.5 bg-on-surface text-surface rounded-xl font-semibold text-xs transition-transform active:scale-95 disabled:opacity-40"
+                    className="flex-1 py-3 btn-premium rounded-xl text-xs"
                   >
                     {busyCreate ? 'Создаём…' : 'Создать'}
                   </button>

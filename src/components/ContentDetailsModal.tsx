@@ -409,7 +409,7 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
                   className={`w-full flex items-center justify-center gap-2 py-3.5 rounded-2xl font-bold text-sm border transition-all ${
                     wishlisted
                       ? 'bg-on-surface/5 text-on-surface border-on-surface/10'
-                      : 'bg-on-surface text-surface border-on-surface active:scale-95 shadow-lg shadow-black/10'
+                      : 'btn-premium'
                   }`}
                 >
                   <motion.span
@@ -447,7 +447,7 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
             {!showReviewForm && user && !reviews.find(r => r.userId === user.id) && (
               <button
                 onClick={() => setShowReviewForm(true)}
-                className="bg-on-surface text-surface px-4 py-2 rounded-xl font-semibold text-sm active:scale-95 transition-transform"
+                className="btn-premium px-4 py-2 rounded-xl font-semibold text-sm active:scale-95 transition-transform"
               >
                 Написать
               </button>
@@ -506,7 +506,7 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
                   <button
                     onClick={handleSubmitReview}
                     disabled={submittingReview || !newReviewText.trim()}
-                    className="bg-on-surface text-surface px-5 py-2 rounded-xl font-semibold text-sm disabled:opacity-50 hover:bg-on-surface/90 transition-colors"
+                    className="btn-premium px-5 py-2 rounded-xl font-semibold text-sm disabled:opacity-50 transition-colors"
                   >
                     {submittingReview ? 'Отправка...' : 'Опубликовать'}
                   </button>
@@ -631,7 +631,7 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
                          <button
                            onClick={() => handleSaveEditReview(review.id)}
                            disabled={savingEdit || !editReviewText.trim()}
-                           className="bg-on-surface text-surface px-4 py-1.5 rounded-lg font-semibold text-sm disabled:opacity-50 transition-colors"
+                           className="btn-premium px-4 py-1.5 rounded-lg font-semibold text-sm disabled:opacity-50 transition-colors"
                          >
                            {savingEdit ? 'Сохранение...' : 'Сохранить'}
                          </button>
@@ -697,7 +697,7 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
                              handleChallenge(review);
                            }}
                            disabled={challengingId === review.id}
-                           className="flex items-center gap-1 text-on-surface hover:bg-on-surface hover:text-surface transition-colors bg-surface-container-low border border-on-surface/10 px-2.5 py-1.5 rounded-lg cursor-pointer disabled:opacity-60"
+                           className="flex items-center gap-1 text-primary hover:bg-primary hover:text-white transition-all bg-primary/10 border border-primary/20 px-2.5 py-1.5 rounded-lg cursor-pointer disabled:opacity-60 active:scale-95 shadow-sm"
                            title="Вызвать на дуэль"
                          >
                            <span className="material-symbols-outlined text-[16px]">swords</span>
@@ -732,7 +732,7 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
                            e.stopPropagation();
                            toggleComments(review.id);
                          }}
-                         className="flex items-center gap-1.5 text-on-surface-variant hover:text-on-surface transition-colors bg-surface-container px-3 py-1.5 rounded-lg cursor-pointer relative z-10"
+                         className="flex items-center gap-1.5 text-primary hover:text-white hover:bg-primary/20 transition-all bg-primary/5 px-3 py-1.5 rounded-lg cursor-pointer relative z-10 border border-primary/10"
                        >
                          <span className="material-symbols-outlined text-[16px]">chat_bubble</span>
                          <span className="text-xs font-semibold">{review.commentCount || 0}</span>
@@ -772,7 +772,7 @@ export default function ContentDetailsModal({ content: initialContent, onClose }
                                   handleSubmitComment(review.id);
                                 }}
                                 disabled={!newCommentText.trim()}
-                                className="w-10 h-10 bg-on-surface text-surface rounded-xl flex items-center justify-center disabled:opacity-50 transition-all active:scale-95 shrink-0 cursor-pointer"
+                                className="w-10 h-10 btn-premium rounded-xl flex items-center justify-center disabled:opacity-50 transition-all active:scale-95 shrink-0 cursor-pointer"
                               >
                                 <span className="material-symbols-outlined text-[18px]">arrow_upward</span>
                               </button>

@@ -71,7 +71,8 @@ export default function LoginPage() {
       <div className="w-full max-w-sm space-y-8 py-10 md:py-20">
         {/* Logo Section */}
         <div className="text-center space-y-3">
-          <div className="inline-flex items-center justify-center w-14 h-14 bg-on-surface text-surface rounded-2xl shadow-xl mb-1">
+          <div className="text-center space-y-3">
+          <div className="inline-flex items-center justify-center w-14 h-14 bg-primary text-white rounded-2xl shadow-xl mb-1 shadow-primary/20">
             <span className="text-2xl font-black italic">K</span>
           </div>
           <h1 className="text-3xl md:text-4xl font-black tracking-tight text-on-surface leading-tight uppercase">Киндер</h1>
@@ -167,7 +168,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-4 bg-on-surface text-surface rounded-2xl font-black text-[11px] uppercase tracking-[0.2em] transition-all active:scale-95 disabled:opacity-50 shadow-2xl shadow-on-surface/20"
+              className="w-full py-4 btn-premium rounded-2xl text-[11px] uppercase tracking-[0.2em]"
             >
               {loading ? 'Загрузка...' : mode === 'login' ? 'Войти в систему' : 'Создать аккаунт'}
             </button>

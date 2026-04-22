@@ -308,7 +308,7 @@ export default function ProfileSidebar({ isOpen, onClose }: ProfileSidebarProps)
             <Link
               href="/login"
               onClick={onClose}
-              className="w-full py-4 bg-on-surface text-surface rounded-2xl font-black text-center text-[10px] uppercase tracking-[0.2em] transition-all hover:scale-[1.02] active:scale-95 shadow-xl shadow-on-surface/10"
+              className="w-full py-4 btn-premium rounded-2xl text-[10px] uppercase tracking-[0.2em]"
             >
               Войти
             </Link>

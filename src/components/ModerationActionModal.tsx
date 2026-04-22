@@ -138,10 +138,9 @@ export default function ModerationActionModal({ content, onClose, onDecision, is
             <button
               onClick={handleApprove}
               disabled={isProcessing || showRejectionInput}
-              className="flex-[3] h-13 rounded-2xl bg-[#0f172a] hover:bg-black disabled:opacity-20 text-white font-bold text-[10px] uppercase tracking-[0.2em] flex items-center justify-center gap-3 shadow-xl transition-all active:scale-95 group relative overflow-hidden"
+              className="flex-[3] h-13 btn-premium rounded-2xl text-[10px] uppercase tracking-[0.2em] flex items-center justify-center gap-3"
             >
-              <div className="absolute inset-0 bg-gradient-to-tr from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-              <span className="material-symbols-outlined text-[18px] text-emerald-400 opacity-80 group-hover:opacity-100">task_alt</span>
+              <span className="material-symbols-outlined text-[18px] text-emerald-300">task_alt</span>
               Одобрить
             </button>
 
