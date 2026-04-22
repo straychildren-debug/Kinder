@@ -274,7 +274,7 @@ export default function Home() {
             <div className="flex items-center justify-between mb-5">
               <div>
                 <span className="text-xs font-bold text-accent-neon uppercase tracking-widest mb-1.5 block drop-shadow-md">Дебаты критиков</span>
-                <h2 className="text-3xl font-black tracking-tight text-white leading-tight drop-shadow-lg">Арена мнений</h2>
+                <h2 className="text-3xl font-black text-white leading-tight drop-shadow-lg">Арена мнений</h2>
               </div>
               <Link
                 href="/duels"
@@ -318,11 +318,11 @@ export default function Home() {
                         <span className="text-[10px] font-bold text-accent-emerald text-center drop-shadow-md line-clamp-1 w-full px-2 uppercase tracking-tight">
                           {duel.challengerReview?.user?.name || 'Критик 1'}
                         </span>
-                        <span className="text-2xl font-black text-white mt-1 drop-shadow-lg tracking-tighter">{cPct}%</span>
+                        <span className="text-2xl font-black text-white mt-1 drop-shadow-lg">{cPct}%</span>
                       </div>
 
-                      <div className="shrink-0 px-2 flex flex-col items-center justify-center -translate-y-4">
-                        <span className="text-4xl font-black italic text-transparent bg-clip-text bg-gradient-to-br from-accent-neon to-white drop-shadow-[0_0_15px_rgba(168,85,247,0.8)] leading-none">VS</span>
+                      <div className="shrink-0 px-3 flex flex-col items-center justify-center -translate-y-4">
+                        <span className="text-5xl font-black italic text-transparent bg-clip-text bg-gradient-to-br from-accent-neon to-white drop-shadow-[0_0_20px_rgba(168,85,247,0.8)] leading-tight p-2">VS</span>
                       </div>
 
                       <div className="flex-1 flex flex-col items-center">

@@ -44,6 +44,7 @@ body {
   min-height: 100dvh;
   margin: 0;
   -webkit-font-smoothing: antialiased;
+  letter-spacing: 0.025em;
 }
 
 @utility pb-safe {
