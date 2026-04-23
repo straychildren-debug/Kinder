@@ -36,14 +36,6 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  async rewrites() {
-    return [
-      {
-        source: '/supabase/:path*',
-        destination: 'https://rreomovpzlbzxmxkmebr.supabase.co/:path*',
-      },
-    ];
-  },
 };
 
 export default nextConfig;
