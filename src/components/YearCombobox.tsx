@@ -14,14 +14,14 @@ export default function YearCombobox({ value, onChange, placeholder = '2024' }: 
   const containerRef = useRef<HTMLDivElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
   
-  const currentYear = new Date().getFullYear();
-  // Годы от текущего+2 до 1890
-  const years = Array.from({ length: 150 }, (_, i) => (currentYear + 2 - i).toString());
+  // Максимальный год по запросу пользователя — 2026
+  const years = Array.from({ length: 150 }, (_, i) => (2026 - i).toString());
 
-  // Если значение точно совпадает с годом из списка, показываем весь список.
-  // Фильтруем только если пользователь в процессе ввода (например, "199").
-  const isExactMatch = years.includes(value);
-  const filteredYears = value && !isExactMatch ? years.filter(y => y.includes(value)) : years;
+  // Логика фильтрации:
+  // Если введено менее 4 символов (в процессе набора, например "201") — фильтруем.
+  // Если введено 4 символа (полный год) или значение точно совпадает с одним из списка — показываем всё.
+  const isExactMatch = years.includes(value?.trim());
+  const filteredYears = (value && value.length < 4 && !isExactMatch) ? years.filter(y => y.includes(value)) : years;
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
