@@ -325,44 +325,44 @@ export default function MyReviewsPage() {
                     </div>
                   )}
 
-                  {/* Stats Footer (Premium Chips Style) */}
+                  {/* Stats Footer (Premium Chips Style - Informational) */}
                   {!isEditing && (
                     <div className="mt-6 pt-5 border-t border-on-surface/[0.03] flex items-center gap-3">
-                      <button className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/[0.03] border border-white/[0.05] group/stat hover:bg-emerald-500/10 active:scale-95 transition-all duration-300">
+                      <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/[0.03] border border-white/[0.05] transition-all duration-300">
                         <span 
-                          className="material-symbols-outlined text-[16px] text-emerald-500/80 group-hover/stat:text-emerald-500 transition-colors"
+                          className="material-symbols-outlined text-[16px] text-emerald-500/80"
                           style={{ fontVariationSettings: "'FILL' 1" }}
                         >
                           thumb_up
                         </span>
-                        <span className="text-[11px] font-black text-on-surface-variant/70 group-hover/stat:text-on-surface transition-colors">
+                        <span className="text-[11px] font-black text-on-surface-variant/70">
                           {review.likesCount || 0}
                         </span>
-                      </button>
+                      </div>
                       
-                      <button className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/[0.03] border border-white/[0.05] group/stat hover:bg-rose-500/10 active:scale-95 transition-all duration-300">
+                      <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/[0.03] border border-white/[0.05] transition-all duration-300">
                         <span 
-                          className="material-symbols-outlined text-[16px] text-rose-500/80 group-hover/stat:text-rose-500 transition-colors"
+                          className="material-symbols-outlined text-[16px] text-rose-500/80"
                           style={{ fontVariationSettings: "'FILL' 1" }}
                         >
                           thumb_down
                         </span>
-                        <span className="text-[11px] font-black text-on-surface-variant/70 group-hover/stat:text-on-surface transition-colors">
+                        <span className="text-[11px] font-black text-on-surface-variant/70">
                           {review.dislikesCount || 0}
                         </span>
-                      </button>
+                      </div>
 
-                      <button className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/[0.03] border border-white/[0.05] group/stat hover:bg-primary/10 active:scale-95 transition-all duration-300">
+                      <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/[0.03] border border-white/[0.05] transition-all duration-300">
                         <span 
-                          className="material-symbols-outlined text-[16px] text-accent-lilac group-hover/stat:text-primary transition-colors"
+                          className="material-symbols-outlined text-[16px] text-accent-lilac"
                           style={{ fontVariationSettings: "'FILL' 1" }}
                         >
                           chat_bubble
                         </span>
-                        <span className="text-[11px] font-black text-on-surface-variant/70 group-hover/stat:text-on-surface transition-colors">
+                        <span className="text-[11px] font-black text-on-surface-variant/70">
                           {review.commentCount || 0}
                         </span>
-                      </button>
+                      </div>
                     </div>
                   )}
                 </div>
