@@ -175,7 +175,7 @@ export default function DuelDetailPage() {
           <SidePanel
             side="challenger"
             review={duel.challengerReview}
-            accent={duel.challengerReview?.rating === 5 ? 'emerald' : 'rose'}
+            accent="rose"
             mySide={duel.mySide}
             winnerReviewId={duel.winnerReviewId}
             votes={c}
@@ -196,7 +196,7 @@ export default function DuelDetailPage() {
           <SidePanel
             side="defender"
             review={duel.defenderReview}
-            accent={duel.defenderReview?.rating === 5 ? 'emerald' : 'rose'}
+            accent="emerald"
             mySide={duel.mySide}
             winnerReviewId={duel.winnerReviewId}
             votes={d}
@@ -339,7 +339,7 @@ function SidePanel({
   const isLoser = !!winnerReviewId && review?.id !== winnerReviewId;
   const accentRing = accent === 'emerald' ? 'border-emerald-400/40 shadow-emerald-500/5' : 'border-rose-400/40 shadow-rose-500/5';
   const accentText = accent === 'emerald' ? 'text-emerald-600' : 'text-rose-600';
-  const sideLabel = review?.rating === 5 ? 'ЗА' : 'ПРОТИВ';
+  const sideLabel = side === 'challenger' ? 'ПРОТИВ' : 'ЗА';
 
   return (
     <div

@@ -1,7 +1,7 @@
 const { Client } = require('pg');
 const fs = require('fs');
 
-const connectionString = 'postgresql://postgres:UdhRKFn9pwtVJjRrN9Vb@db.rreomovpzlbzxmxkmebr.supabase.co:5432/postgres';
+const connectionString = 'postgresql://postgres.rreomovpzlbzxmxkmebr:UdhRKFn9pwtVJjRrN9Vb@aws-0-eu-west-1.pooler.supabase.com:6543/postgres';
 
 const client = new Client({
   connectionString,
@@ -14,7 +14,7 @@ async function run() {
   try {
     await client.connect();
     console.log('Connected to Supabase PostgreSQL...');
-    const sql = fs.readFileSync('storage_setup.sql', 'utf8');
+    const sql = fs.readFileSync('duels_notifications.sql', 'utf8');
     await client.query(sql);
     console.log('SQL executed successfully!');
   } catch (err) {

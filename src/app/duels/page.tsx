@@ -127,19 +127,19 @@ function DuelListCard({ duel }: { duel: Duel }) {
 
       {/* Sides */}
       <div className="flex items-center gap-3 text-xs mb-3">
-        <SideLabel review={duel.challengerReview} accent="emerald" />
+        <SideLabel review={duel.challengerReview} accent="rose" />
         <span className="text-on-surface-muted font-semibold">vs</span>
-        <SideLabel review={duel.defenderReview} accent="rose" align="right" />
+        <SideLabel review={duel.defenderReview} accent="emerald" align="right" />
       </div>
 
       {/* Progress */}
       <div className="relative h-2 rounded-full bg-surface-container-low overflow-hidden">
         <div
-          className="absolute top-0 left-0 h-full bg-emerald-400/80 transition-all"
+          className="absolute top-0 left-0 h-full bg-rose-400/80 transition-all"
           style={{ width: `${cPct}%` }}
         />
         <div
-          className="absolute top-0 right-0 h-full bg-rose-400/80 transition-all"
+          className="absolute top-0 right-0 h-full bg-emerald-400/80 transition-all"
           style={{ width: `${100 - cPct}%` }}
         />
       </div>
