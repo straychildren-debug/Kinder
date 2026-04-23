@@ -26,7 +26,12 @@ export default function MyReviewsPage() {
 
   // Close menu on click outside
   useEffect(() => {
-    const handleGlobalClick = () => setMenuOpenId(null);
+    const handleGlobalClick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (!target.closest('.review-menu-container')) {
+        setMenuOpenId(null);
+      }
+    };
     window.addEventListener('click', handleGlobalClick);
     return () => window.removeEventListener('click', handleGlobalClick);
   }, []);
@@ -202,14 +207,14 @@ export default function MyReviewsPage() {
 
                     {/* Three Dots Menu Button */}
                     {!isEditing && (
-                      <div className="absolute top-0 right-0 z-10">
+                      <div className="absolute top-0 right-0 z-10 review-menu-container">
                         <button
                           onClick={(e) => {
-                            e.stopPropagation();
+                            e.nativeEvent.stopImmediatePropagation();
                             setMenuOpenId(isMenuOpen ? null : review.id);
                           }}
                           className={`w-9 h-9 rounded-full flex items-center justify-center transition-all ${
-                            isMenuOpen ? 'bg-on-surface text-surface' : 'bg-on-surface/[0.03] text-on-surface-variant hover:bg-on-surface/[0.08]'
+                            isMenuOpen ? 'bg-white text-black shadow-lg' : 'bg-white/[0.05] text-white/50 hover:bg-white/[0.1] hover:text-white'
                           }`}
                         >
                           <span className="material-symbols-outlined text-[20px]">more_vert</span>
@@ -218,28 +223,30 @@ export default function MyReviewsPage() {
                         {/* Dropdown Menu */}
                         {isMenuOpen && (
                           <div 
-                            className="absolute top-11 right-0 w-44 bg-[#16191E]/95 backdrop-blur-2xl rounded-2xl border border-white/10 shadow-2xl overflow-hidden py-1.5 z-20 animate-in fade-in zoom-in-95 duration-200 origin-top-right"
+                            className="absolute top-11 right-0 w-48 bg-[#1A1D23]/95 backdrop-blur-3xl rounded-[20px] border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] overflow-hidden py-2 z-20 animate-in fade-in zoom-in-95 duration-200 origin-top-right scale-100"
                             onClick={(e) => e.stopPropagation()}
                           >
                             <button
-                              onClick={() => {
+                              onClick={(e) => {
+                                e.stopPropagation();
                                 startEdit(review);
                                 setMenuOpenId(null);
                               }}
-                              className="w-full flex items-center gap-3 px-4 py-2.5 text-xs font-bold text-on-surface hover:bg-white/[0.05] transition-colors"
+                              className="w-full flex items-center gap-3 px-5 py-3 text-[13px] font-bold text-white/80 hover:bg-white/[0.08] hover:text-white transition-all active:bg-white/[0.12]"
                             >
-                              <span className="material-symbols-outlined text-[18px]">edit</span>
+                              <span className="material-symbols-outlined text-[20px] opacity-70">edit</span>
                               Редактировать
                             </button>
-                            <div className="mx-2 my-1 border-t border-white/[0.05]" />
+                            <div className="mx-3 my-1 border-t border-white/[0.05]" />
                             <button
-                              onClick={() => {
+                              onClick={(e) => {
+                                e.stopPropagation();
                                 removeReview(review);
                                 setMenuOpenId(null);
                               }}
-                              className="w-full flex items-center gap-3 px-4 py-2.5 text-xs font-bold text-red-400 hover:bg-red-400/10 transition-colors"
+                              className="w-full flex items-center gap-3 px-5 py-3 text-[13px] font-bold text-rose-400 hover:bg-rose-400/10 transition-all active:bg-rose-400/20"
                             >
-                              <span className="material-symbols-outlined text-[18px]">delete</span>
+                              <span className="material-symbols-outlined text-[20px] opacity-70">delete</span>
                               Удалить
                             </button>
                           </div>
@@ -321,7 +328,7 @@ export default function MyReviewsPage() {
                   {/* Stats Footer (Premium Chips Style) */}
                   {!isEditing && (
                     <div className="mt-6 pt-5 border-t border-on-surface/[0.03] flex items-center gap-3">
-                      <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/[0.03] border border-white/[0.05] group/stat hover:bg-emerald-500/10 transition-all duration-300">
+                      <button className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/[0.03] border border-white/[0.05] group/stat hover:bg-emerald-500/10 active:scale-95 transition-all duration-300">
                         <span 
                           className="material-symbols-outlined text-[16px] text-emerald-500/80 group-hover/stat:text-emerald-500 transition-colors"
                           style={{ fontVariationSettings: "'FILL' 1" }}
@@ -331,9 +338,9 @@ export default function MyReviewsPage() {
                         <span className="text-[11px] font-black text-on-surface-variant/70 group-hover/stat:text-on-surface transition-colors">
                           {review.likesCount || 0}
                         </span>
-                      </div>
+                      </button>
                       
-                      <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/[0.03] border border-white/[0.05] group/stat hover:bg-rose-500/10 transition-all duration-300">
+                      <button className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/[0.03] border border-white/[0.05] group/stat hover:bg-rose-500/10 active:scale-95 transition-all duration-300">
                         <span 
                           className="material-symbols-outlined text-[16px] text-rose-500/80 group-hover/stat:text-rose-500 transition-colors"
                           style={{ fontVariationSettings: "'FILL' 1" }}
@@ -343,9 +350,9 @@ export default function MyReviewsPage() {
                         <span className="text-[11px] font-black text-on-surface-variant/70 group-hover/stat:text-on-surface transition-colors">
                           {review.dislikesCount || 0}
                         </span>
-                      </div>
+                      </button>
 
-                      <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/[0.03] border border-white/[0.05] group/stat hover:bg-primary/10 transition-all duration-300">
+                      <button className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/[0.03] border border-white/[0.05] group/stat hover:bg-primary/10 active:scale-95 transition-all duration-300">
                         <span 
                           className="material-symbols-outlined text-[16px] text-accent-lilac group-hover/stat:text-primary transition-colors"
                           style={{ fontVariationSettings: "'FILL' 1" }}
@@ -355,7 +362,7 @@ export default function MyReviewsPage() {
                         <span className="text-[11px] font-black text-on-surface-variant/70 group-hover/stat:text-on-surface transition-colors">
                           {review.commentCount || 0}
                         </span>
-                      </div>
+                      </button>
                     </div>
                   )}
                 </div>
