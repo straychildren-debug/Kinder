@@ -13,9 +13,9 @@ export default function YearCombobox({ value, onChange, placeholder = '2024' }: 
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
-  
-  // Максимальный год по запросу пользователя — 2026
-  const years = Array.from({ length: 150 }, (_, i) => (2026 - i).toString());
+  // Максимальный год по запросу пользователя — текущий год
+  const currentYear = new Date().getFullYear();
+  const years = Array.from({ length: 150 }, (_, i) => (currentYear - i).toString());
 
   // Логика фильтрации:
   // Если введено менее 4 символов (в процессе набора, например "201") — фильтруем.
