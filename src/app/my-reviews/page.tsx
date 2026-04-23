@@ -22,6 +22,14 @@ export default function MyReviewsPage() {
   const [editText, setEditText] = useState('');
   const [editRating, setEditRating] = useState(0);
   const [saving, setSaving] = useState(false);
+  const [menuOpenId, setMenuOpenId] = useState<string | null>(null);
+
+  // Close menu on click outside
+  useEffect(() => {
+    const handleGlobalClick = () => setMenuOpenId(null);
+    window.addEventListener('click', handleGlobalClick);
+    return () => window.removeEventListener('click', handleGlobalClick);
+  }, []);
 
   const load = async () => {
     if (!user) return;
@@ -140,73 +148,137 @@ export default function MyReviewsPage() {
             {reviews.map((review) => {
               const content = review.content;
               const isEditing = editingId === review.id;
+              const isMenuOpen = menuOpenId === review.id;
+
               return (
-                <div key={review.id} className="bg-surface rounded-2xl p-4 border border-on-surface/5">
-                  {/* Content row */}
-                  <button
-                    onClick={() => openContent(review)}
-                    className="w-full flex items-start gap-3 text-left group"
-                  >
-                    <div className="relative w-14 h-20 rounded-lg overflow-hidden bg-surface-container border border-on-surface/5 shrink-0">
+                <div 
+                  key={review.id} 
+                  className={`relative rounded-[32px] p-6 border transition-all duration-500 overflow-hidden ${
+                    isEditing 
+                      ? 'bg-surface border-primary ring-1 ring-primary/20' 
+                      : 'bg-surface-container-low/40 backdrop-blur-[20px] border-on-surface/[0.05] shadow-xl shadow-black/5'
+                  }`}
+                >
+                  {/* Glass Background Accents */}
+                  <div className="absolute -top-24 -right-24 w-48 h-48 bg-accent-lilac/5 blur-[60px] rounded-full pointer-events-none" />
+                  <div className="absolute -bottom-24 -left-24 w-48 h-48 bg-primary/5 blur-[60px] rounded-full pointer-events-none" />
+
+                  {/* Header Row: Content Info + Menu */}
+                  <div className="relative flex items-start gap-4 mb-5">
+                    <button
+                      onClick={() => openContent(review)}
+                      className="relative w-16 h-16 rounded-2xl overflow-hidden bg-surface-container border border-on-surface/5 shrink-0 shadow-lg group"
+                    >
                       {content?.imageUrl ? (
                         <Image
                           src={content.imageUrl}
                           alt={content.title}
                           fill
-                          sizes="56px"
+                          sizes="64px"
                           placeholder="blur"
                           blurDataURL={defaultBlurDataURL}
-                          className="object-cover group-hover:scale-[1.04] transition-transform duration-500"
+                          className="object-cover group-hover:scale-110 transition-transform duration-700"
                         />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center text-on-surface-muted">
-                          <span className="material-symbols-outlined text-xl">
+                          <span className="material-symbols-outlined text-2xl">
                             {content?.type === 'movie' ? 'movie' : 'menu_book'}
                           </span>
                         </div>
                       )}
+                    </button>
 
-                      {/* Type Badge Overlay */}
-                      <div className="absolute top-1 left-1 p-1 rounded-md bg-black/60 backdrop-blur-md border border-white/10 flex items-center justify-center z-10 animate-in fade-in zoom-in duration-500">
-                        <span className="material-symbols-rounded text-white" style={{ fontSize: '10px', fontVariationSettings: "'FILL' 1" }}>
-                          {content?.type === 'movie' ? 'movie' : 'menu_book'}
-                        </span>
-                      </div>
-
-                      {/* Rating Badge Overlay */}
-                      {review.rating && (
-                        <div className="absolute bottom-1 right-1 px-1 py-0.5 rounded-md bg-black/60 backdrop-blur-md border border-white/10 flex items-center gap-0.5 z-10">
-                          <span className="material-symbols-rounded text-amber-400" style={{ fontVariationSettings: "'FILL' 1", fontSize: '10px' }}>star</span>
-                          <span className="text-[10px] font-bold text-white">{review.rating}</span>
-                        </div>
-                      )}
-                    </div>
-                    <div className="flex-1 min-w-0 flex flex-col justify-center">
-                      <h3 className="text-sm font-semibold text-on-surface leading-snug line-clamp-2 group-hover:text-primary transition-colors">
+                    <div className="flex-1 min-w-0 pr-10">
+                      <p className="text-[10px] font-black uppercase tracking-[0.2em] text-on-surface-variant/50 mb-1">
+                        {content?.type === 'movie' ? 'Кинорецензия' : 'О книге'}
+                      </p>
+                      <h3 className="text-sm font-black text-on-surface leading-tight truncate">
                         {content?.title || 'Публикация'}
                       </h3>
-                      <div className="flex items-center gap-1 mt-1">
-                        <span className="text-xs font-medium text-on-surface-muted">
-                          {new Date(review.createdAt).toLocaleDateString('ru-RU')}
-                        </span>
-                      </div>
+                      <p className="text-[10px] font-bold text-on-surface-variant/40 mt-1">
+                        {new Date(review.createdAt).toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' })}
+                      </p>
                     </div>
-                  </button>
+
+                    {/* Three Dots Menu Button */}
+                    {!isEditing && (
+                      <div className="absolute top-0 right-0 z-10">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setMenuOpenId(isMenuOpen ? null : review.id);
+                          }}
+                          className={`w-9 h-9 rounded-full flex items-center justify-center transition-all ${
+                            isMenuOpen ? 'bg-on-surface text-surface' : 'bg-on-surface/[0.03] text-on-surface-variant hover:bg-on-surface/[0.08]'
+                          }`}
+                        >
+                          <span className="material-symbols-outlined text-[20px]">more_vert</span>
+                        </button>
+
+                        {/* Dropdown Menu */}
+                        {isMenuOpen && (
+                          <div 
+                            className="absolute top-11 right-0 w-44 bg-[#16191E]/95 backdrop-blur-2xl rounded-2xl border border-white/10 shadow-2xl overflow-hidden py-1.5 z-20 animate-in fade-in zoom-in-95 duration-200 origin-top-right"
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            <button
+                              onClick={() => {
+                                startEdit(review);
+                                setMenuOpenId(null);
+                              }}
+                              className="w-full flex items-center gap-3 px-4 py-2.5 text-xs font-bold text-on-surface hover:bg-white/[0.05] transition-colors"
+                            >
+                              <span className="material-symbols-outlined text-[18px]">edit</span>
+                              Редактировать
+                            </button>
+                            <div className="mx-2 my-1 border-t border-white/[0.05]" />
+                            <button
+                              onClick={() => {
+                                removeReview(review);
+                                setMenuOpenId(null);
+                              }}
+                              className="w-full flex items-center gap-3 px-4 py-2.5 text-xs font-bold text-red-400 hover:bg-red-400/10 transition-colors"
+                            >
+                              <span className="material-symbols-outlined text-[18px]">delete</span>
+                              Удалить
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Rating Stars Row */}
+                  {!isEditing && review.rating && (
+                    <div className="flex items-center gap-1 mb-4">
+                      {[1, 2, 3, 4, 5].map((s) => (
+                        <span
+                          key={s}
+                          className={`material-symbols-outlined text-[16px] ${
+                            s <= (review.rating || 0) ? 'text-amber-500' : 'text-on-surface-variant/10'
+                          }`}
+                          style={{ fontVariationSettings: s <= (review.rating || 0) ? "'FILL' 1" : "'FILL' 0" }}
+                        >
+                          star
+                        </span>
+                      ))}
+                    </div>
+                  )}
 
                   {/* Review text / edit */}
                   {isEditing ? (
-                    <div className="mt-4">
-                      <div className="flex items-center gap-1.5 mb-3">
-                        <span className="text-xs font-medium text-on-surface-muted mr-1">Оценка:</span>
+                    <div className="relative z-10">
+                      <div className="flex items-center gap-2 mb-4 bg-on-surface/[0.03] p-3 rounded-2xl border border-on-surface/[0.05]">
+                        <span className="text-[10px] font-black uppercase tracking-widest text-on-surface-variant px-1">Ваша оценка:</span>
                         {[1, 2, 3, 4, 5].map((star) => (
                           <button
                             key={star}
                             type="button"
                             onClick={() => setEditRating(star)}
-                            className="transition-transform hover:scale-110"
+                            className="transition-all hover:scale-125"
                           >
                             <span
-                              className={`material-symbols-outlined text-xl ${star <= editRating ? 'text-amber-500' : 'text-on-surface-variant/20'}`}
+                              className={`material-symbols-outlined text-2xl ${star <= editRating ? 'text-amber-500 drop-shadow-[0_0_8px_rgba(245,158,11,0.3)]' : 'text-on-surface-variant/20'}`}
                               style={{ fontVariationSettings: star <= editRating ? "'FILL' 1" : "'FILL' 0" }}
                             >
                               star
@@ -217,64 +289,57 @@ export default function MyReviewsPage() {
                       <textarea
                         value={editText}
                         onChange={(e) => setEditText(e.target.value)}
-                        className="w-full bg-surface-container-lowest border border-on-surface/10 rounded-xl p-3 text-sm font-medium text-on-surface focus:outline-none focus:border-on-surface/40 min-h-[100px] resize-none"
+                        placeholder="Опишите свои впечатления..."
+                        className="w-full bg-surface-container-lowest/50 border border-on-surface/10 rounded-[24px] p-5 text-sm font-medium text-on-surface focus:outline-none focus:border-accent-lilac/40 focus:ring-4 focus:ring-accent-lilac/5 min-h-[140px] shadow-inner transition-all"
                       />
-                      <div className="flex justify-end gap-2 mt-3">
+                      <div className="flex justify-end gap-3 mt-5">
                         <button
                           onClick={cancelEdit}
-                          className="px-4 py-1.5 rounded-lg font-semibold text-on-surface-variant text-sm hover:bg-surface-container transition-colors"
+                          className="px-6 py-2.5 rounded-xl font-bold text-on-surface-variant text-xs hover:bg-on-surface/[0.05] transition-all"
                         >
                           Отмена
                         </button>
                         <button
                           onClick={() => saveEdit(review)}
                           disabled={saving || !editText.trim()}
-                          className="bg-on-surface text-surface px-4 py-1.5 rounded-lg font-semibold text-sm disabled:opacity-50"
+                          className="bg-on-surface text-surface px-8 py-2.5 rounded-xl font-bold text-xs shadow-lg shadow-black/20 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50"
                         >
-                          {saving ? 'Сохранение...' : 'Сохранить'}
+                          {saving ? 'Сохранение...' : 'Обновить отзыв'}
                         </button>
                       </div>
                     </div>
                   ) : (
-                    review.text && (
-                      <p className="mt-3 text-sm text-on-surface leading-relaxed whitespace-pre-wrap line-clamp-4">
-                        {review.text}
-                      </p>
-                    )
+                    <div className="relative">
+                       {review.text && (
+                        <p className="text-[13px] font-medium text-on-surface/80 leading-relaxed italic whitespace-pre-wrap">
+                          {review.text}
+                        </p>
+                      )}
+                    </div>
                   )}
 
-                  {/* Footer actions */}
+                  {/* Stats Footer */}
                   {!isEditing && (
-                    <div className="mt-4 pt-3 border-t border-on-surface/5 flex items-center justify-between">
-                      <div className="flex items-center gap-3 text-xs font-medium text-on-surface-muted">
-                        <span className="flex items-center gap-1">
+                    <div className="mt-6 pt-5 border-t border-on-surface/[0.03] flex items-center gap-6">
+                      <div className="flex items-center gap-2 group/stat">
+                        <div className="w-8 h-8 rounded-full bg-on-surface/[0.03] flex items-center justify-center text-on-surface-variant group-hover/stat:bg-emerald-500/10 group-hover/stat:text-emerald-500 transition-colors">
                           <span className="material-symbols-outlined text-[16px]">thumb_up</span>
-                          {review.likesCount || 0}
-                        </span>
-                        <span className="flex items-center gap-1">
-                          <span className="material-symbols-outlined text-[16px]">thumb_down</span>
-                          {review.dislikesCount || 0}
-                        </span>
-                        <span className="flex items-center gap-1">
-                          <span className="material-symbols-outlined text-[16px]">chat_bubble</span>
-                          {review.commentCount || 0}
-                        </span>
+                        </div>
+                        <span className="text-xs font-black text-on-surface-variant/60">{review.likesCount || 0}</span>
                       </div>
-                      <div className="flex items-center gap-1">
-                        <button
-                          onClick={() => startEdit(review)}
-                          className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-semibold text-on-surface-variant hover:bg-surface-container transition-colors"
-                        >
-                          <span className="material-symbols-outlined text-[16px]">edit</span>
-                          Изменить
-                        </button>
-                        <button
-                          onClick={() => removeReview(review)}
-                          className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-semibold text-red-600 hover:bg-red-50 transition-colors"
-                        >
-                          <span className="material-symbols-outlined text-[16px]">delete</span>
-                          Удалить
-                        </button>
+                      
+                      <div className="flex items-center gap-2 group/stat">
+                        <div className="w-8 h-8 rounded-full bg-on-surface/[0.03] flex items-center justify-center text-on-surface-variant group-hover/stat:bg-rose-500/10 group-hover/stat:text-rose-500 transition-colors">
+                          <span className="material-symbols-outlined text-[16px]">thumb_down</span>
+                        </div>
+                        <span className="text-xs font-black text-on-surface-variant/60">{review.dislikesCount || 0}</span>
+                      </div>
+
+                      <div className="flex items-center gap-2 group/stat">
+                        <div className="w-8 h-8 rounded-full bg-on-surface/[0.03] flex items-center justify-center text-on-surface-variant group-hover/stat:bg-primary/10 group-hover/stat:text-primary transition-colors">
+                          <span className="material-symbols-outlined text-[16px]">chat_bubble</span>
+                        </div>
+                        <span className="text-xs font-black text-on-surface-variant/60">{review.commentCount || 0}</span>
                       </div>
                     </div>
                   )}
