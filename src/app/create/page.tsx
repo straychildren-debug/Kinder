@@ -9,6 +9,7 @@ import BottomNavBar from '@/components/BottomNavBar';
 import { createContent, updateContent, uploadCover, getContentById } from '@/lib/db';
 import type { ContentType } from '@/lib/types';
 import Image from 'next/image';
+import GenreSelect from '@/components/GenreSelect';
 
 function CreatePageContent() {
   const { user } = useAuth();
@@ -36,7 +37,7 @@ function CreatePageContent() {
   const [isbn, setIsbn] = useState('');
   
   // Общие
-  const [genres, setGenres] = useState('');
+  const [genres, setGenres] = useState<string[]>([]);
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorText, setErrorText] = useState('');
@@ -55,7 +56,7 @@ function CreatePageContent() {
           setTitle(item.title);
           setDescription(item.description);
           setImageUrl(item.imageUrl || '');
-          setGenres((item.genre as string[])?.join(', ') || '');
+          setGenres((item.genre as string[]) || []);
           setDraftId(item.id);
 
           if (item.type === 'movie') {
@@ -182,8 +183,6 @@ function CreatePageContent() {
     if (coverFile) {
       finalImageUrl = await uploadCover(coverFile);
     }
-
-    const parsedGenres = genres ? genres.split(',').map(s => s.trim()) : [];
     
     const metadata = type === 'movie' 
       ? { 
@@ -191,14 +190,14 @@ function CreatePageContent() {
           actors: actors ? actors.split(',').map(s => s.trim()) : [], 
           year: year ? parseInt(year) : undefined, 
           duration, 
-          genre: parsedGenres 
+          genre: genres 
         }
       : { 
           author, 
           pages: pages ? parseInt(pages) : undefined, 
           publisher, 
           isbn, 
-          genre: parsedGenres 
+          genre: genres 
         };
 
     return {
@@ -405,12 +404,11 @@ function CreatePageContent() {
 
               <div>
                 <label className="block text-[10px] font-black text-on-surface-variant uppercase tracking-widest mb-3 opacity-60">Жанры</label>
-                <input
-                  type="text"
-                  value={genres}
-                  onChange={e => setGenres(e.target.value)}
-                  placeholder="Драма, Фантастика (через запятую)"
-                  className="w-full px-5 py-3 rounded-xl bg-surface-container text-on-surface placeholder:text-on-surface-variant/30 focus:outline-none focus:ring-2 focus:ring-on-surface/5 transition-all text-sm font-medium border border-on-surface/5 shadow-inner"
+                <GenreSelect
+                  type={type}
+                  selectedGenres={genres}
+                  onChange={setGenres}
+                  maxGenres={3}
                 />
               </div>
             </div>
