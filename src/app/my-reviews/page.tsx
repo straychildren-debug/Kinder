@@ -155,8 +155,8 @@ export default function MyReviewsPage() {
                   key={review.id} 
                   className={`relative rounded-[32px] p-6 border transition-all duration-500 overflow-hidden ${
                     isEditing 
-                      ? 'bg-surface border-primary ring-1 ring-primary/20' 
-                      : 'bg-surface-container-low/40 backdrop-blur-[20px] border-on-surface/[0.05] shadow-xl shadow-black/5'
+                      ? 'bg-[#16191E] border-primary ring-1 ring-primary/20' 
+                      : 'bg-white/[0.03] backdrop-blur-[30px] border-white/[0.08] border-t-white/[0.12] shadow-2xl shadow-black/20'
                   }`}
                 >
                   {/* Glass Background Accents */}
