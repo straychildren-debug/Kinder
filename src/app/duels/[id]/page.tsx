@@ -340,10 +340,13 @@ function SidePanel({
   const accentRing = accent === 'emerald' ? 'border-emerald-400/40 shadow-emerald-500/5' : 'border-rose-400/40 shadow-rose-500/5';
   const accentText = accent === 'emerald' ? 'text-emerald-600' : 'text-rose-600';
   const sideLabel = side === 'challenger' ? 'ПРОТИВ' : 'ЗА';
+  const accentGradient = accent === 'emerald' 
+    ? 'bg-gradient-to-br from-surface via-surface to-emerald-500/[0.15]' 
+    : 'bg-gradient-to-br from-surface via-surface to-rose-500/[0.15]';
 
   return (
     <div
-      className={`relative bg-surface rounded-[28px] p-6 border transition-all duration-500 ${
+      className={`relative rounded-[28px] p-6 border transition-all duration-500 ${accentGradient} ${
         isMine ? `${accentRing} border-2` : 'border-on-surface/5'
       } ${isLoser ? 'opacity-40 grayscale-[0.5]' : 'shadow-xl shadow-black/5'} overflow-hidden`}
     >
