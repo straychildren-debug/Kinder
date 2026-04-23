@@ -12,12 +12,16 @@ interface YearComboboxProps {
 export default function YearCombobox({ value, onChange, placeholder = '2024' }: YearComboboxProps) {
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const listRef = useRef<HTMLDivElement>(null);
   
   const currentYear = new Date().getFullYear();
   // Годы от текущего+2 до 1890
   const years = Array.from({ length: 150 }, (_, i) => (currentYear + 2 - i).toString());
 
-  const filteredYears = value ? years.filter(y => y.includes(value)) : years;
+  // Если значение точно совпадает с годом из списка, показываем весь список.
+  // Фильтруем только если пользователь в процессе ввода (например, "199").
+  const isExactMatch = years.includes(value);
+  const filteredYears = value && !isExactMatch ? years.filter(y => y.includes(value)) : years;
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -28,6 +32,20 @@ export default function YearCombobox({ value, onChange, placeholder = '2024' }: 
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+  useEffect(() => {
+    if (isOpen && isExactMatch) {
+      // Даем React время отрендерить список
+      setTimeout(() => {
+        if (listRef.current) {
+          const selectedEl = listRef.current.querySelector('[data-selected="true"]');
+          if (selectedEl) {
+            selectedEl.scrollIntoView({ block: 'center' });
+          }
+        }
+      }, 50);
+    }
+  }, [isOpen, isExactMatch]);
 
   return (
     <div className="relative" ref={containerRef}>
@@ -52,6 +70,7 @@ export default function YearCombobox({ value, onChange, placeholder = '2024' }: 
       <AnimatePresence>
         {isOpen && (
           <motion.div
+            ref={listRef}
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
@@ -63,6 +82,7 @@ export default function YearCombobox({ value, onChange, placeholder = '2024' }: 
                 <button
                   key={year}
                   type="button"
+                  data-selected={value === year}
                   onClick={() => {
                     onChange(year);
                     setIsOpen(false);
