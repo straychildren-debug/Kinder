@@ -10,6 +10,8 @@ import { createContent, updateContent, uploadCover, getContentById } from '@/lib
 import type { ContentType } from '@/lib/types';
 import Image from 'next/image';
 import GenreSelect from '@/components/GenreSelect';
+import YearCombobox from '@/components/YearCombobox';
+import DurationPickerModal from '@/components/DurationPickerModal';
 
 function CreatePageContent() {
   const { user } = useAuth();
@@ -471,25 +473,23 @@ function CreatePageContent() {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-[10px] font-black text-on-surface-variant uppercase tracking-widest mb-3 opacity-60">Год</label>
-                  <input
-                    type="number"
-                    value={year}
-                    onChange={e => setYear(e.target.value)}
-                    placeholder="2024"
-                    className="w-full px-5 py-3 rounded-xl bg-surface-container text-on-surface focus:outline-none focus:ring-2 focus:ring-on-surface/5 transition-all text-sm font-medium border border-on-surface/5 shadow-inner"
-                  />
+                  <YearCombobox value={year} onChange={setYear} placeholder="2024" />
                 </div>
                 <div>
                   <label className="block text-[10px] font-black text-on-surface-variant uppercase tracking-widest mb-3 opacity-60">
                     {type === 'movie' ? 'Хронометраж' : 'Страниц'}
                   </label>
-                  <input
-                    type={type === 'movie' ? 'text' : 'number'}
-                    value={type === 'movie' ? duration : pages}
-                    onChange={e => type === 'movie' ? setDuration(e.target.value) : setPages(e.target.value)}
-                    placeholder={type === 'movie' ? '2ч 15мин' : '450'}
-                    className="w-full px-5 py-3 rounded-xl bg-surface-container text-on-surface focus:outline-none focus:ring-4 focus:ring-on-surface/[0.03] transition-all text-sm font-medium border border-on-surface/5 shadow-inner"
-                  />
+                  {type === 'movie' ? (
+                    <DurationPickerModal value={duration} onChange={setDuration} />
+                  ) : (
+                    <input
+                      type="number"
+                      value={pages}
+                      onChange={e => setPages(e.target.value)}
+                      placeholder="450"
+                      className="w-full px-5 py-3 rounded-xl bg-surface-container text-on-surface focus:outline-none focus:ring-4 focus:ring-on-surface/[0.03] transition-all text-sm font-medium border border-on-surface/5 shadow-inner"
+                    />
+                  )}
                 </div>
               </div>
             </div>
