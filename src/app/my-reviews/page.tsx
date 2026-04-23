@@ -318,28 +318,43 @@ export default function MyReviewsPage() {
                     </div>
                   )}
 
-                  {/* Stats Footer */}
+                  {/* Stats Footer (Premium Chips Style) */}
                   {!isEditing && (
-                    <div className="mt-6 pt-5 border-t border-on-surface/[0.03] flex items-center gap-6">
-                      <div className="flex items-center gap-2 group/stat">
-                        <div className="w-8 h-8 rounded-full bg-on-surface/[0.03] flex items-center justify-center text-on-surface-variant group-hover/stat:bg-emerald-500/10 group-hover/stat:text-emerald-500 transition-colors">
-                          <span className="material-symbols-outlined text-[16px]">thumb_up</span>
-                        </div>
-                        <span className="text-xs font-black text-on-surface-variant/60">{review.likesCount || 0}</span>
+                    <div className="mt-6 pt-5 border-t border-on-surface/[0.03] flex items-center gap-3">
+                      <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/[0.03] border border-white/[0.05] group/stat hover:bg-emerald-500/10 transition-all duration-300">
+                        <span 
+                          className="material-symbols-outlined text-[16px] text-emerald-500/80 group-hover/stat:text-emerald-500 transition-colors"
+                          style={{ fontVariationSettings: "'FILL' 1" }}
+                        >
+                          thumb_up
+                        </span>
+                        <span className="text-[11px] font-black text-on-surface-variant/70 group-hover/stat:text-on-surface transition-colors">
+                          {review.likesCount || 0}
+                        </span>
                       </div>
                       
-                      <div className="flex items-center gap-2 group/stat">
-                        <div className="w-8 h-8 rounded-full bg-on-surface/[0.03] flex items-center justify-center text-on-surface-variant group-hover/stat:bg-rose-500/10 group-hover/stat:text-rose-500 transition-colors">
-                          <span className="material-symbols-outlined text-[16px]">thumb_down</span>
-                        </div>
-                        <span className="text-xs font-black text-on-surface-variant/60">{review.dislikesCount || 0}</span>
+                      <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/[0.03] border border-white/[0.05] group/stat hover:bg-rose-500/10 transition-all duration-300">
+                        <span 
+                          className="material-symbols-outlined text-[16px] text-rose-500/80 group-hover/stat:text-rose-500 transition-colors"
+                          style={{ fontVariationSettings: "'FILL' 1" }}
+                        >
+                          thumb_down
+                        </span>
+                        <span className="text-[11px] font-black text-on-surface-variant/70 group-hover/stat:text-on-surface transition-colors">
+                          {review.dislikesCount || 0}
+                        </span>
                       </div>
 
-                      <div className="flex items-center gap-2 group/stat">
-                        <div className="w-8 h-8 rounded-full bg-on-surface/[0.03] flex items-center justify-center text-on-surface-variant group-hover/stat:bg-primary/10 group-hover/stat:text-primary transition-colors">
-                          <span className="material-symbols-outlined text-[16px]">chat_bubble</span>
-                        </div>
-                        <span className="text-xs font-black text-on-surface-variant/60">{review.commentCount || 0}</span>
+                      <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/[0.03] border border-white/[0.05] group/stat hover:bg-primary/10 transition-all duration-300">
+                        <span 
+                          className="material-symbols-outlined text-[16px] text-accent-lilac group-hover/stat:text-primary transition-colors"
+                          style={{ fontVariationSettings: "'FILL' 1" }}
+                        >
+                          chat_bubble
+                        </span>
+                        <span className="text-[11px] font-black text-on-surface-variant/70 group-hover/stat:text-on-surface transition-colors">
+                          {review.commentCount || 0}
+                        </span>
                       </div>
                     </div>
                   )}
